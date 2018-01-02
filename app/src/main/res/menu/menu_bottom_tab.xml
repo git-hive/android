@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_home"
+        android:title="@string/home"
+        />
+    <item
+        android:id="@+id/action_feed"
+        android:title="@string/feed"
+        />
+    <item
+        android:id="@+id/action_association"
+        android:title="@string/association"
+        />
+    <item
+        android:id="@+id/action_shop"
+        android:title="@string/shop"
+        />
+    <item
+        android:id="@+id/action_map"
+        android:title="@string/map"
+        />
+</menu>
