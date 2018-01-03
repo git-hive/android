@@ -2,7 +2,7 @@ package com.hive.hive.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.hive.hive.AssociationFragment;
 import com.hive.hive.FeedFragment;
@@ -14,7 +14,7 @@ import com.hive.hive.ShopFragment;
  * Created by vplentz on 03/01/18.
  */
 
-public class ViewPagerAdapter extends FragmentPagerAdapter {
+public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     private static int NUM_ITEMS = 5;
 
     public ViewPagerAdapter(FragmentManager fragmentManager) {
