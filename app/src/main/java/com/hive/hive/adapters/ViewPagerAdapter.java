@@ -4,12 +4,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.hive.hive.AssociationFragment;
-import com.hive.hive.FeedFragment;
-import com.hive.hive.HomeFragment;
-import com.hive.hive.MapsFragment;
-import com.hive.hive.ShopFragment;
-
 /**
  * Created by vplentz on 03/01/18.
  */

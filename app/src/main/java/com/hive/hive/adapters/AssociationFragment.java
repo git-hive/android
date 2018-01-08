@@ -1,4 +1,4 @@
-package com.hive.hive;
+package com.hive.hive.adapters;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,19 +6,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class ShopFragment extends Fragment {
-   private static final String ARG_PARAM1 = "param1";
+import com.hive.hive.R;
+
+
+public class AssociationFragment extends Fragment {
+    private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     private String mParam1;
     private String mParam2;
 
-    public ShopFragment() {
+    public AssociationFragment() {
         // Required empty public constructor
     }
 
-    public static ShopFragment newInstance(String param1, String param2) {
-        ShopFragment fragment = new ShopFragment();
+    public static AssociationFragment newInstance(String param1, String param2) {
+        AssociationFragment fragment = new AssociationFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -39,6 +42,6 @@ public class ShopFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_shop, container, false);
+        return inflater.inflate(R.layout.fragment_association, container, false);
     }
 }

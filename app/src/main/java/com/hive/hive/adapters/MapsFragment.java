@@ -1,26 +1,29 @@
-package com.hive.hive;
-
+package com.hive.hive.adapters;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class FeedFragment extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
+import com.hive.hive.R;
+
+
+public class MapsFragment extends Fragment {
+     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     private String mParam1;
     private String mParam2;
 
-    public FeedFragment() {
+
+    public MapsFragment() {
         // Required empty public constructor
     }
 
-    public static FeedFragment newInstance(String param1, String param2) {
-        FeedFragment fragment = new FeedFragment();
+
+    public static MapsFragment newInstance(String param1, String param2) {
+        MapsFragment fragment = new MapsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -29,10 +32,10 @@ public class FeedFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_feed, container, false);
+        return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
 }
