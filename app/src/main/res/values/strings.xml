@@ -1,5 +1,5 @@
 <resources>
-    
+
     <!-- Working Directory Strings-->
     <string name="app_name">Hive</string>
     <string name="feed">Feed</string>
@@ -15,5 +15,23 @@
     <string name="sign_in">Entrar</string>
     <string name="forgot_password"><u>Esqueci minha senha</u></string>
     <string name="sign_up"><u>Ainda não faz parte de uma colméia? Junte-se a nós :)</u></string>
-    
+    <string name="title_activity_signup">Sign Up</string>
+
+    <!-- Strings related to sign up -->
+    <string name="hi_header">Nos fale sobre você :)</string>
+    <string name="my_name_is">Olá, o meu nome é</string>
+    <string name="born">eu nasci dia</string>
+    <string name="my_cpf">e o meu CPF é</string>
+    <string name="email">e email</string>
+    <string name="my_password_be">Quero que a minha senha seja:</string>
+    <string name="terms">Eu li e concordo com os <u><i>Termos e Condições</i></u></string>
+    <string name="ready">Pronto</string>
+
+        <!--sign up hints-->
+    <string name="h_name"><i>Seu nome completo</i></string>
+    <string name="h_ddmmaa"><i>DD/MM/AA</i></string>
+    <string name="h_cpf"><i>000.000.000-00</i></string>
+    <string name="h_email"><i>exemplo@mail.com</i></string>
+    <string name="h_password_conf"><i>Senha</i></string>
+
 </resources>

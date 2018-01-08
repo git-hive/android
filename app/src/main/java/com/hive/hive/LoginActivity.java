@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -19,7 +20,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Getting References From Login Activity
         Button mSignIn = findViewById(R.id.mSignIn);
-
+        TextView mSignUp = findViewById(R.id.mSignUp);
 
         // If the Android version is lower than Jellybean, use this call to hide
         // the status bar.
@@ -46,8 +47,18 @@ public class LoginActivity extends AppCompatActivity {
                 startNewActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(startNewActivityIntent);
                 finish(); // Call once you redirect to another activity
+            }
+        });
 
-
+        mSignUp.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Context context = LoginActivity.this.getApplicationContext();
+                Class destinationActivity = SignupActivity.class;
+                Intent startNewActivityIntent = new Intent(context, destinationActivity);
+                //startNewActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(startNewActivityIntent);
+                //finish(); // Call once you redirect to another activity
             }
         });
 
