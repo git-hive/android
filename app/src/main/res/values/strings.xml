@@ -1,5 +1,7 @@
 <resources>
-    
+    <!-- Snackbar Strings -->
+    <string name="auth_failure">Falha na autenticação</string>
+
     <!-- Working Directory Strings-->
     <string name="app_name">Hive</string>
     <string name="feed">Feed</string>
