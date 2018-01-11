@@ -33,5 +33,6 @@
     <string name="h_cpf"><i>000.000.000-00</i></string>
     <string name="h_email"><i>exemplo@mail.com</i></string>
     <string name="h_password_conf"><i>Senha</i></string>
-
+    <string name="today">O que você deseja fazer hoje?</string>
+    <string name='hello'>Olá mundo</string>
 </resources>
