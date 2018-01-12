@@ -1,4 +1,4 @@
-package com.hive.hive;
+package com.hive.hive.login;
 
 import android.content.Context;
 import android.os.Build;
@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.hive.hive.R;
 
 public class SignupActivity extends AppCompatActivity {
 

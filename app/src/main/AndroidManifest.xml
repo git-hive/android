@@ -14,8 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".LoginActivity"
+        <activity android:name=".main.MainActivity" android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".login.LoginActivity"
          android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignupActivity"></activity>
+        <activity android:name=".login.SignupActivity"></activity>
     </application>
 
 </manifest>

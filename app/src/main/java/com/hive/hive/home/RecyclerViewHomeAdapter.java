@@ -1,4 +1,4 @@
-package com.hive.hive.adapters;
+package com.hive.hive.home;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,8 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hive.hive.R;
-import com.hive.hive.ViewHolders.AssociationViewHolder;
-import com.hive.hive.ViewHolders.RequestViewHolder;
 import com.hive.hive.model.AssociationPost;
 import com.hive.hive.model.Request;
 

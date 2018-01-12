@@ -9,7 +9,7 @@
     android:layout_height="match_parent"
     android:adjustViewBounds="true"
     android:orientation="vertical"
-    tools:context="com.hive.hive.LoginActivity">
+    tools:context="com.hive.hive.login.LoginActivity">
     <ScrollView
         android:layout_height="match_parent"
         android:layout_width="match_parent">

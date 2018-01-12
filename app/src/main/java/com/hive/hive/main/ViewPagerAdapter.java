@@ -1,14 +1,14 @@
-package com.hive.hive.adapters;
+package com.hive.hive.main;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.hive.hive.fragments.AssociationFragment;
-import com.hive.hive.fragments.FeedFragment;
-import com.hive.hive.fragments.HomeFragment;
-import com.hive.hive.fragments.MapsFragment;
-import com.hive.hive.fragments.ShopFragment;
+import com.hive.hive.association.AssociationFragment;
+import com.hive.hive.feed.FeedFragment;
+import com.hive.hive.home.HomeFragment;
+import com.hive.hive.map.MapFragment;
+import com.hive.hive.store.StoreFragment;
 
 /**
  * Created by vplentz on 03/01/18.
@@ -32,15 +32,15 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0: // Fragment # 0 - This will show FirstFragment
-                return HomeFragment.newInstance("0", "Page # 1");
+                return HomeFragment.newInstance();
             case 1: // Fragment # 0 - This will show FirstFragment different title
-                return FeedFragment.newInstance("1", "Page # 2");
+                return FeedFragment.newInstance();
             case 2: // Fragment # 1 - This will show SecondFragment
-                return AssociationFragment.newInstance("2", "Page # 3");
+                return AssociationFragment.newInstance();
             case 3: // Fragment # 1 - This will show SecondFragment
-                return ShopFragment.newInstance("3", "Page # 4");
+                return StoreFragment.newInstance();
             case 4: // Fragment # 1 - This will show SecondFragment
-                return MapsFragment.newInstance("4", "Page # 5");
+                return MapFragment.newInstance();
             default:
                 return null;
         }
