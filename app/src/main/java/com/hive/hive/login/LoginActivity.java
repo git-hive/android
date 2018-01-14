@@ -1,8 +1,6 @@
 package com.hive.hive.login;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
+import android.content.Context; import android.content.Intent; import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -12,7 +10,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -23,11 +30,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.hive.hive.R;
 import com.hive.hive.main.MainActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -39,12 +50,14 @@ public class LoginActivity extends AppCompatActivity {
 
     //Google Sign-in client
     private GoogleSignInClient mGoogleSignInClient;
+    private CallbackManager mCallbackManager;
 
     //Firebase Authenticator
     private FirebaseAuth mAuth;
 
     //Layout Elements
     private SignInButton mGoogleSignInBT;
+    private LoginButton mFacebookSignInBtn;
     private TextView mSignUpTV;
 
     @Override
@@ -54,7 +67,11 @@ public class LoginActivity extends AppCompatActivity {
 
         // Getting Layout Elements References From Login Activity
         mGoogleSignInBT = findViewById(R.id.text_google_sign_in_button);
+        mFacebookSignInBtn = findViewById(R.id.text_facebook_sign_in_button);
         mSignUpTV = findViewById(R.id.mSignUp);
+
+        // Set facebook login request permissions
+        mFacebookSignInBtn.setReadPermissions("email", "public_profile");
 
         //Sign-in options
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -114,6 +131,31 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        // Register facebook login callback
+        mCallbackManager = CallbackManager.Factory.create();
+        mFacebookSignInBtn.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                handleFacebookAccessToken(loginResult.getAccessToken());
+
+                Context context = LoginActivity.this.getApplicationContext();
+                Intent startMainActivityIntent = new Intent(context, MainActivity.class);
+
+                startMainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(startMainActivityIntent);
+
+                finish();
+            }
+
+            @Override
+            public void onCancel() {}
+
+            @Override
+            public void onError(FacebookException error) {
+                Toast.makeText(LoginActivity.this, "Facebook login failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     /**
@@ -133,6 +175,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RC_SIGN_IN) {    //Return from SignIn
@@ -166,6 +209,35 @@ public class LoginActivity extends AppCompatActivity {
                             Log.w(TAG, "signInWithCredential: failure", task.getException());
                             Snackbar.make(findViewById(R.id.activity_main), R.string.auth_failure, Snackbar.LENGTH_SHORT).show();
                             // updateUI(null);
+                        }
+                    }
+                });
+    }
+
+    /**
+     * Authenticates in Firebase with Facbebook Account
+     * @param token - token received from facebook callback
+     */
+    private void handleFacebookAccessToken(AccessToken token) {
+        Log.d(TAG, "handleFacebookAccessToken:" + token);
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithCredential:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            Toast.makeText(
+                                    LoginActivity.this,
+                                    "Authentication failed.",
+                                    Toast.LENGTH_SHORT
+                            ).show();
                         }
                     }
                 });
