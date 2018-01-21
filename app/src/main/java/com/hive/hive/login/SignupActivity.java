@@ -7,26 +7,31 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.hive.hive.R;
 
 public class SignupActivity extends AppCompatActivity {
+    private FirebaseAuth mAuth;
+
+    private TextView mFullNameTV;
+    private TextView mEmailTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        //Getting Views and Buttons References
-        Button mCompleteSignUp = findViewById(R.id.mCompleteSignUp);
-        //----------------------------------//
-
+        mFullNameTV = findViewById(R.id.textViewSignUpFullName);
+        mEmailTV = findViewById(R.id.textViewSignUpEmail);
 
         if (Build.VERSION.SDK_INT < 16) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }else{
+        } else {
             View decorView = getWindow().getDecorView();
             // Hide the status bar.
             int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
@@ -39,6 +44,10 @@ public class SignupActivity extends AppCompatActivity {
             }
         }
 
+        mAuth = FirebaseAuth.getInstance();
+        updateUI(mAuth.getCurrentUser());
+
+        Button mCompleteSignUp = findViewById(R.id.mCompleteSignUp);
         mCompleteSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,5 +57,13 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void updateUI(FirebaseUser user) {
+        if (user == null)
+            return;
+
+        mFullNameTV.setText(user.getDisplayName());
+        mEmailTV.setText(user.getEmail());
     }
 }
