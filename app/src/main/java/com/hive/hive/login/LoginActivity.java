@@ -109,10 +109,10 @@ public class LoginActivity extends AppCompatActivity {
                 signIn();
 
                 Context context = LoginActivity.this.getApplicationContext();
-                Intent startMainActivityIntent = new Intent(context, MainActivity.class);
+                Intent startSignUpActivity = new Intent(context, SignupActivity.class);
                 
-                startMainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(startMainActivityIntent);
+                startSignUpActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(startSignUpActivity);
 
                 finish();
             }
