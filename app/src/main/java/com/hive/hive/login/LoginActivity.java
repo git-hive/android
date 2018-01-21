@@ -139,10 +139,10 @@ public class LoginActivity extends AppCompatActivity {
                 handleFacebookAccessToken(loginResult.getAccessToken());
 
                 Context context = LoginActivity.this.getApplicationContext();
-                Intent startMainActivityIntent = new Intent(context, MainActivity.class);
+                Intent tartSignUpActivity = new Intent(context, SignupActivity.class);
 
-                startMainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(startMainActivityIntent);
+                tartSignUpActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(tartSignUpActivity);
 
                 finish();
             }
