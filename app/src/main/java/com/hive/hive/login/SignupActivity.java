@@ -10,16 +10,18 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.hive.hive.R;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignupActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -32,6 +34,8 @@ public class SignupActivity extends AppCompatActivity {
     private RadioButton mTermsAgreementRB;
     private Button mSignUpComplete;
 
+    private Map<String, String> inputValues;
+
     private DatePickerDialog.OnDateSetListener mOnDateSetListener;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,7 @@ public class SignupActivity extends AppCompatActivity {
         mEmailTV = findViewById(R.id.textViewSignUpEmail);
         mPassword = findViewById(R.id.textViewSignUpPassword);
         mTermsAgreementRB = findViewById(R.id.radioButtonSignUpTermsAgreement);
+        inputValues = new HashMap<>();
 
         if (Build.VERSION.SDK_INT < 16) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -60,14 +65,19 @@ public class SignupActivity extends AppCompatActivity {
             }
         }
 
+        // Get firebase user and update fields with it
         mAuth = FirebaseAuth.getInstance();
         updateUI(mAuth.getCurrentUser());
 
+        // Handle form submission
         mSignUpComplete = findViewById(R.id.buttonSignUpComplete);
         mSignUpComplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                updateUser();
+                boolean allValid = validateInputs();
+                if (allValid) {
+                    updateUser();
+                }
             }
         });
 
@@ -96,6 +106,10 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Updates input fields with the data provided by social auth
+     * @param user Firebase user authenticated in the LoginActivity
+     */
     private void updateUI(FirebaseUser user) {
         if (user == null)
             return;
@@ -104,6 +118,9 @@ public class SignupActivity extends AppCompatActivity {
         mEmailTV.setText(user.getEmail());
     }
 
+    /**
+     * Configures and displays a date picker used in the birth day field
+     */
     public void showDatePickerDialog() {
         // Use the current date as the default date in the picker
         final Calendar c = Calendar.getInstance();
@@ -123,53 +140,86 @@ public class SignupActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    private void updateUser() {
+    /**
+     * Validate all form inputs
+     * @return true is all fields are valid, false otherwise
+     */
+    private boolean validateInputs() {
         // Check name
-        String name = mFullNameTV.getText().toString().trim();
+        String name = getText(mFullNameTV);
         if (TextUtils.isEmpty(name)) {
             mFullNameTV.setError("Name is required");
-            return;
+            return false;
         }
+        inputValues.put("name", name);
 
-        // Check bithday
-        String bithday = mBirthdayTV.getText().toString().trim();
-        if (TextUtils.isEmpty(bithday)) {
+        // Check birthday
+        String birthday = getText(mBirthdayTV);
+        if (TextUtils.isEmpty(birthday)) {
             mBirthdayTV.setError("Birth date is required");
-            return;
+            return false;
         }
+        inputValues.put("birthday", birthday);
 
         // TODO: proper CPF validation
-        String cpf = mCPF.getText().toString().trim();
+        String cpf = getText(mCPF);
         if (TextUtils.isEmpty(cpf)) {
             mCPF.setError("CPF is required");
-            return;
+            return false;
         }
+        inputValues.put("cpf", cpf);
 
         // Check user email
-        String email = mEmailTV.getText().toString().trim();
+        String email = getText(mEmailTV);
         // Check blank
         if (TextUtils.isEmpty(email)) {
             mEmailTV.setError("Email is required");
-            return;
+            return false;
         }
 
         // Check invalid
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             mEmailTV.setError("Invalid email address");
-            return;
+            return false;
         }
+        inputValues.put("email", email);
 
         // TODO: proper password validation
-        String password = mPassword.getText().toString().trim();
+        String password = getText(mPassword);
         if (TextUtils.isEmpty(password)) {
             mPassword.setError("Password is required");
-            return;
+            return false;
         }
+        inputValues.put("password", password);
 
         // Check if user agreed with the terms
         if (!mTermsAgreementRB.isChecked()) {
             mTermsAgreementRB.setError("You need to agree with the terms to use the app");
-            return;
+            return false;
         }
+
+        // TODO: store inputValues in firestore
+
+        return false;
+    }
+
+    /**
+     * Stores field data into firestore
+     */
+    private void updateUser() {
+        Toast.makeText(
+                SignupActivity.this,
+                "Action not implemented yet",
+                Toast.LENGTH_SHORT)
+                .show();
+    }
+
+    /**
+     * Extracts a trimmed string from a TextView element
+     * @param v Field that contains the value to be extracted
+     * @return TextView value as a trimmed string
+     */
+    private String getText(TextView v) {
+        return v.getText().toString().trim();
     }
 }
