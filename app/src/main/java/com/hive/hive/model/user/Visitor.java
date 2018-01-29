@@ -7,4 +7,10 @@ import com.hive.hive.model.user.Role;
  */
 
 public class Visitor extends Role {
+
+    //Constructor
+    public Visitor(String id, String name) {
+        super(id, name);
+    }
+
 }
