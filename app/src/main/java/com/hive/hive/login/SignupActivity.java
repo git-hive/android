@@ -1,10 +1,13 @@
 package com.hive.hive.login;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -15,9 +18,14 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
+import com.hive.hive.main.MainActivity;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -25,6 +33,7 @@ import java.util.Map;
 
 public class SignupActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
 
     private TextView mFullNameTV;
     private TextView mBirthdayTV;
@@ -34,6 +43,7 @@ public class SignupActivity extends AppCompatActivity {
     private RadioButton mTermsAgreementRB;
     private Button mSignUpComplete;
 
+    // Sign up form inputs
     private Map<String, String> inputValues;
 
     private DatePickerDialog.OnDateSetListener mOnDateSetListener;
@@ -41,6 +51,8 @@ public class SignupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+
+        db = FirebaseFirestore.getInstance();
 
         mFullNameTV = findViewById(R.id.textViewSignUpFullName);
         mCPF = findViewById(R.id.textViewSignUpCPF);
@@ -67,6 +79,8 @@ public class SignupActivity extends AppCompatActivity {
 
         // Get firebase user and update fields with it
         mAuth = FirebaseAuth.getInstance();
+
+        // Update TextView inputs with social auth data
         updateUI(mAuth.getCurrentUser());
 
         // Handle form submission
@@ -108,14 +122,14 @@ public class SignupActivity extends AppCompatActivity {
 
     /**
      * Updates input fields with the data provided by social auth
+     *
      * @param user Firebase user authenticated in the LoginActivity
      */
     private void updateUI(FirebaseUser user) {
-        if (user == null)
-            return;
-
-        mFullNameTV.setText(user.getDisplayName());
-        mEmailTV.setText(user.getEmail());
+        if (user != null) {
+            mFullNameTV.setText(user.getDisplayName());
+            mEmailTV.setText(user.getEmail());
+        }
     }
 
     /**
@@ -142,6 +156,7 @@ public class SignupActivity extends AppCompatActivity {
 
     /**
      * Validate all form inputs
+     *
      * @return true is all fields are valid, false otherwise
      */
     private boolean validateInputs() {
@@ -171,13 +186,6 @@ public class SignupActivity extends AppCompatActivity {
 
         // Check user email
         String email = getText(mEmailTV);
-        // Check blank
-        if (TextUtils.isEmpty(email)) {
-            mEmailTV.setError("Email is required");
-            return false;
-        }
-
-        // Check invalid
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             mEmailTV.setError("Invalid email address");
             return false;
@@ -198,24 +206,38 @@ public class SignupActivity extends AppCompatActivity {
             return false;
         }
 
-        // TODO: store inputValues in firestore
-
-        return false;
+        return true;
     }
 
     /**
      * Stores field data into firestore
      */
     private void updateUser() {
-        Toast.makeText(
-                SignupActivity.this,
-                "Action not implemented yet",
-                Toast.LENGTH_SHORT)
-                .show();
+        db
+                .collection("users")
+                .document(mAuth.getUid())
+                .set(inputValues)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Context ctx = SignupActivity.this.getApplicationContext();
+                        Intent startMainActivity = new Intent(ctx, MainActivity.class);
+                        startActivity(startMainActivity);
+                        finish();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // TODO: handle firestore failure properly
+                        Toast.makeText(SignupActivity.this, "Failed to insert user", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     /**
      * Extracts a trimmed string from a TextView element
+     *
      * @param v Field that contains the value to be extracted
      * @return TextView value as a trimmed string
      */
