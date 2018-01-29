@@ -1,6 +1,5 @@
 package com.hive.hive.login;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,24 +33,29 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
+import com.hive.hive.main.MainActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
-    //Logging TAG
+    // Logging TAG
     private static final String TAG = LoginActivity.class.getSimpleName();
 
-    //Sign-in request code
+    // Sign-in request code
     private static final int RC_SIGN_IN = 9001;
 
-    //Google Sign-in client
+    // Google Sign-in client
     private GoogleSignInClient mGoogleSignInClient;
     private CallbackManager mCallbackManager;
 
-    //Firebase Authenticator
+    // Firebase Authenticator
     private FirebaseAuth mAuth;
+    // Firestore database
+    private FirebaseFirestore db;
 
-    //Layout Elements
+    // Layout Elements
     private SignInButton mGoogleSignInBT;
     private LoginButton mFacebookSignInBtn;
     private TextView mSignUpTV;
@@ -82,6 +86,8 @@ public class LoginActivity extends AppCompatActivity {
                 actionBar.hide();
         }
 
+        db = FirebaseFirestore.getInstance();
+
         // get email and pwd fields
         mUserTV = findViewById(R.id.mUser);
         mUserTV = findViewById(R.id.mPassword);
@@ -101,7 +107,7 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    checkUserAndStartSignUpActivity();
+                                    checkUserAndSwitchActivity();
                                 } else {
                                     Log.w(TAG, "auth with email failed");
                                 }
@@ -148,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onSuccess(LoginResult loginResult) {
                 handleFacebookAccessToken(loginResult.getAccessToken());
 
-                checkUserAndStartSignUpActivity();
+                checkUserAndSwitchActivity();
             }
 
             @Override
@@ -167,7 +173,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        checkUserAndStartSignUpActivity();
+        checkUserAndSwitchActivity();
     }
 
     @Override
@@ -204,7 +210,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithCredential: success");
-                            checkUserAndStartSignUpActivity();
+                            checkUserAndSwitchActivity();
                         } else {
                             Log.w(TAG, "signInWithCredential: failure", task.getException());
                             Snackbar.make(findViewById(R.id.activity_main), R.string.auth_failure, Snackbar.LENGTH_SHORT).show();
@@ -229,7 +235,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            checkUserAndStartSignUpActivity();
+                            checkUserAndSwitchActivity();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -243,16 +249,33 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    private void checkUserAndStartSignUpActivity() {
+    private void checkUserAndSwitchActivity() {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
-            Context context = LoginActivity.this.getApplicationContext();
-            Intent tartSignUpActivity = new Intent(context, SignupActivity.class);
 
-            tartSignUpActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(tartSignUpActivity);
+            // Try to retrieve firestore data
+            db
+                .collection("users")
+                .document(mAuth.getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        // Switch to SignUpActivity by default
+                        Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot snap = task.getResult();
+                            if (snap.exists()) {
+                                // If user data exists on Firestore switch to MainActivity
+                                intent = new Intent(LoginActivity.this, MainActivity.class);
+                            }
+                        }
 
-            finish();
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
         }
     }
 }
