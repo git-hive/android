@@ -43,16 +43,17 @@
 
                 <EditText
 
-                    android:paddingTop="10dp"
+                    android:id="@+id/textViewSignUpFullName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:gravity="center"
                     android:hint="@string/h_name"
                     android:inputType="text"
-                    android:textColor="#000000"
                     android:padding="5dp"
-                    android:textSize="22sp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:paddingTop="10dp"
+                    android:textColor="#000000"
+                    android:textSize="22sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -68,15 +69,19 @@
                     android:text="@string/born"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
+
                 <EditText
-                    android:textColor="#000000"
+                    android:id="@+id/textViewSignUpBirthday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:hint="@string/h_ddmmaa"
+                    android:inputType="date"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
-                    android:layout_marginLeft="15dp"
-                    android:textSize="22sp"
-                    android:hint="@string/h_ddmmaa"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:textColor="#000000"
+                    android:textSize="22sp" />
+
             </LinearLayout>
 
 
@@ -95,12 +100,13 @@
                     android:layout_height="wrap_content" />
 
                 <EditText
-                    android:layout_marginLeft="15dp"
-                    android:textColor="#000000"
-                    android:textSize="22sp"
-                    android:hint="@string/h_cpf"
+                    android:id="@+id/textViewSignUpCPF"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:hint="@string/h_cpf"
+                    android:textColor="#000000"
+                    android:textSize="22sp" />
 
             </LinearLayout>
 
@@ -118,13 +124,16 @@
                     android:text="@string/email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
+
                 <EditText
-                    android:layout_marginLeft="15dp"
-                    android:textColor="#000000"
-                    android:textSize="22sp"
-                    android:hint="@string/h_email"
+                    android:id="@+id/textViewSignUpEmail"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:hint="@string/h_email"
+                    android:inputType="textEmailAddress"
+                    android:textColor="#000000"
+                    android:textSize="22sp" />
             </LinearLayout>
 
             <TextView
@@ -141,19 +150,16 @@
                 android:gravity="center_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <EditText
-                    android:textColor="#000000"
-                    android:textSize="22sp"
+                    android:id="@+id/textViewSignUpPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:hint="@string/password"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content" />
-                <EditText
-                    android:layout_marginLeft="10dp"
+                    android:inputType="textPassword"
                     android:textColor="#000000"
-                    android:textSize="22sp"
-                    android:hint="@string/h_password_conf"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content" />
+                    android:textSize="22sp" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -161,12 +167,14 @@
                 android:paddingBottom="25dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <RadioButton
-                    android:textColor="#000000"
-                    android:layout_gravity="bottom"
-                    android:textSize="22sp"
+                    android:id="@+id/radioButtonSignUpTermsAgreement"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:textColor="#000000"
+                    android:textSize="22sp" />
 
                 <TextView
                     android:layout_marginBottom="4dp"
@@ -180,14 +188,14 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/mCompleteSignUp"
-                android:textColor="#FFFFFF"
-                android:backgroundTint="@color/colorOrange"
-                android:layout_gravity="center_horizontal"
-                android:textSize="14sp"
-                android:text="@string/ready"
+                android:id="@+id/buttonSignUpComplete"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="@color/colorOrange"
+                android:text="@string/ready"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
