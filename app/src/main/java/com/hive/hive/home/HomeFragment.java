@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hive.hive.R;
-import com.hive.hive.model.AssociationPost;
-import com.hive.hive.model.Request;
+import com.hive.hive.model.association.Request;
+import com.hive.hive.model.forum.ForumPost;
 
 import java.util.ArrayList;
 
@@ -39,13 +39,13 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         DUMMYARRAY = new ArrayList<>();
-        DUMMYARRAY.add(new AssociationPost());
+        DUMMYARRAY.add(new ForumPost());
         DUMMYARRAY.add(new Request());
-        DUMMYARRAY.add(new AssociationPost());
+        DUMMYARRAY.add(new ForumPost());
         DUMMYARRAY.add(new Request());
-        DUMMYARRAY.add(new AssociationPost());
+        DUMMYARRAY.add(new ForumPost());
         DUMMYARRAY.add(new Request());
-        DUMMYARRAY.add(new AssociationPost());
+        DUMMYARRAY.add(new ForumPost());
         DUMMYARRAY.add(new Request());
 
         mRecyclerViewHome = v.findViewById(R.id.recyclerViewFeed);
