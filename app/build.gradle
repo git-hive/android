@@ -17,6 +17,10 @@ android {
         }
     }
 }
+\
+ext {
+    GOOGLE_SERVICES_VERSION = '11.8.0'
+}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -30,10 +34,12 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
     // Firebase Authentication
-    compile 'com.google.firebase:firebase-auth:11.8.0'
+    compile "com.google.firebase:firebase-core:$GOOGLE_SERVICES_VERSION"
+    compile "com.google.firebase:firebase-auth:$GOOGLE_SERVICES_VERSION"
+    compile "com.google.firebase:firebase-firestore:$GOOGLE_SERVICES_VERSION"
 
     // Google Sign In SDK (only required for Google Sign In)
-    compile 'com.google.android.gms:play-services-auth:11.8.0'
+    compile "com.google.android.gms:play-services-auth:$GOOGLE_SERVICES_VERSION"
 
     compile 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
     compile 'com.android.support:design:27.0.2'
