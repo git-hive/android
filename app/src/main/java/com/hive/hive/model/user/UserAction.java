@@ -1,7 +1,5 @@
 package com.hive.hive.model.user;
 
-import com.hive.hive.model.marketplace.PointsTransaction;
-
 /**
  * Created by naraujo on 1/28/18.
  */
@@ -12,18 +10,20 @@ public abstract class UserAction {
     private long createdAt;
     private long updatedAt;
     private String authorId;
-    private PointsTransaction pointsTransaction;
+    private String pointsTransactionId;
 
 
 
     //--- Constructor
-    public UserAction(String id, String authorId, PointsTransaction pointsTransaction) {
+
+    public UserAction(String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId) {
         this.id = id;
-        this.createdAt = System.currentTimeMillis();
-        this.updatedAt = System.currentTimeMillis();
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
         this.authorId = authorId;
-        this.pointsTransaction = pointsTransaction;
+        this.pointsTransactionId = pointsTransactionId;
     }
+
 
     //--- Getters
 
@@ -43,8 +43,8 @@ public abstract class UserAction {
         return authorId;
     }
 
-    public PointsTransaction getPointsTransaction() {
-        return pointsTransaction;
+    public String getPointsTransactionId() {
+        return pointsTransactionId;
     }
 
 
@@ -66,7 +66,7 @@ public abstract class UserAction {
         this.authorId = authorId;
     }
 
-    public void setPointsTransaction(PointsTransaction pointsTransaction) {
-        this.pointsTransaction = pointsTransaction;
+    public void setPointsTransactionId(String pointsTransactionId) {
+        this.pointsTransactionId = pointsTransactionId;
     }
 }
