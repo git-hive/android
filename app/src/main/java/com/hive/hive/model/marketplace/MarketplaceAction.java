@@ -7,4 +7,8 @@ import com.hive.hive.model.user.UserAction;
  */
 
 public class MarketplaceAction extends UserAction {
+
+    public MarketplaceAction(String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId) {
+        super(id, createdAt, updatedAt, authorId, pointsTransactionId);
+    }
 }
