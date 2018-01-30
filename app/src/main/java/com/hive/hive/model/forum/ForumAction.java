@@ -13,6 +13,10 @@ public abstract class ForumAction extends UserAction {
 
     //--- Constructors
 
+
+    public ForumAction() {
+    }
+
     public ForumAction(String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId, String forumId) {
         super(id, createdAt, updatedAt, authorId, pointsTransactionId);
         this.forumId = forumId;

@@ -16,6 +16,10 @@ public abstract class UserAction {
 
     //--- Constructor
 
+
+    public UserAction() {
+    }
+
     public UserAction(String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId) {
         this.id = id;
         this.createdAt = createdAt;

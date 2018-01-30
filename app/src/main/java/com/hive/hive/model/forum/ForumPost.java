@@ -20,6 +20,10 @@ public class ForumPost extends ForumAction {
 
     //--- Constructors
 
+
+    public ForumPost() {
+    }
+
     public ForumPost(
             String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId,
             String forumId, String title, String content, int supportScore,
