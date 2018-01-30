@@ -21,11 +21,12 @@ public class ForumPost extends ForumAction {
     //--- Constructors
 
     public ForumPost(
-            String id, String authorId, PointsTransaction pointsTransaction, String forumId,
-            String title, String content, int supportScore, ArrayList<String> categoriesIds,
-            ArrayList<String> commentsIds, ArrayList<String> supportsIds)
+            String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId,
+            String forumId, String title, String content, int supportScore,
+            ArrayList<String> categoriesIds, ArrayList<String> commentsIds,
+            ArrayList<String> supportsIds)
     {
-        super(id, authorId, pointsTransaction, forumId);
+        super(id, createdAt, updatedAt, authorId, pointsTransactionId, forumId);
         this.title = title;
         this.content = content;
         this.supportScore = supportScore;

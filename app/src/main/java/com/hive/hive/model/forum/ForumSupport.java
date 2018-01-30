@@ -12,10 +12,14 @@ public class ForumSupport extends ForumAction {
 
     //--- Constructor
 
-    public ForumSupport(String id, String authorId, PointsTransaction pointsTransaction, String forumId, String targetActionId) {
-        super(id, authorId, pointsTransaction, forumId);
+    public ForumSupport(
+            String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId,
+            String forumId, String targetActionId)
+    {
+        super(id, createdAt, updatedAt, authorId, pointsTransactionId, forumId);
         this.targetActionId = targetActionId;
     }
+
 
     //-- Getters
 

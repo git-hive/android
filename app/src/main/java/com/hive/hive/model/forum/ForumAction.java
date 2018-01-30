@@ -13,10 +13,11 @@ public abstract class ForumAction extends UserAction {
 
     //--- Constructors
 
-    public ForumAction(String id, String authorId, PointsTransaction pointsTransaction, String forumId) {
-        super(id, authorId, pointsTransaction);
+    public ForumAction(String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId, String forumId) {
+        super(id, createdAt, updatedAt, authorId, pointsTransactionId);
         this.forumId = forumId;
     }
+
 
     //--- Getters
 
