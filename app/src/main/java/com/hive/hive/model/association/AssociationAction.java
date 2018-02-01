@@ -12,6 +12,10 @@ public class AssociationAction extends UserAction {
 
     //--- Constructors
 
+
+    public AssociationAction() {
+    }
+
     public AssociationAction(String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId, String associationId) {
         super(id, createdAt, updatedAt, authorId, pointsTransactionId);
         this.associationId = associationId;

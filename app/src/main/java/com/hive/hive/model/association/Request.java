@@ -20,6 +20,9 @@ public class Request extends AssociationAction {
     //--- Constructor
 
 
+    public Request() {
+    }
+
     public Request(
             String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId,
             String associationId, String title, String content, int supportScore,
