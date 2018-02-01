@@ -8,7 +8,7 @@ import com.hive.hive.model.marketplace.PointsTransaction;
 
 public class ForumSupport extends ForumAction {
 
-    String targetActionId;
+    private String targetActionId;
 
     //--- Constructor
 
