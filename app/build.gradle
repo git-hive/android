@@ -41,6 +41,10 @@ dependencies {
     // Google Sign In SDK (only required for Google Sign In)
     compile "com.google.android.gms:play-services-auth:$GOOGLE_SERVICES_VERSION"
 
+    //  Google Maps
+    compile "com.google.android.gms:play-services-maps:$GOOGLE_SERVICES_VERSION"
+
+
     compile 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
     compile 'com.android.support:design:27.0.2'
     implementation 'com.android.support:cardview-v7:27.0.2'

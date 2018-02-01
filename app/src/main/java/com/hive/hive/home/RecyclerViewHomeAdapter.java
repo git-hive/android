@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hive.hive.R;
-import com.hive.hive.model.AssociationPost;
-import com.hive.hive.model.Request;
+import com.hive.hive.model.association.Request;
+import com.hive.hive.model.forum.ForumPost;
 
 import java.util.List;
 
@@ -46,7 +46,7 @@ public class RecyclerViewHomeAdapter extends RecyclerView.Adapter<RecyclerView.V
     public int getItemViewType(int position) {
         if(items.get(position) instanceof Request)
             return REQUEST;
-        else if(items.get(position) instanceof AssociationPost)
+        else if(items.get(position) instanceof ForumPost)
             return ASSOCIATIONPOST;
         return -1;
     }
