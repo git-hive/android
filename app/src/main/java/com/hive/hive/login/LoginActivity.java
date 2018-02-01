@@ -213,6 +213,7 @@ public class LoginActivity extends AppCompatActivity {
                 // start google sign in intent
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                 startActivityForResult(signInIntent, RC_SIGN_IN);
+                progressUser();
             }
         });
 
@@ -265,6 +266,7 @@ public class LoginActivity extends AppCompatActivity {
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
                 Log.w(TAG, "google sign in failed", e);
+                returnFromProgress();
             }
         }
 
@@ -358,16 +360,26 @@ public class LoginActivity extends AppCompatActivity {
     }
     //used to show login progress
     private void progressUser(){
+        //progressBar
         mPBLogin.setVisibility(View.VISIBLE);
+        //buttons
         mFacebookSignInBtn.setVisibility(View.GONE);
         mGoogleSignInBT.setVisibility(View.GONE);
         mButtonSignIn.setVisibility(View.GONE);
+        mButtonEmailLogin.setVisibility(View.GONE);
+        //edit texts
         mEditTextUser.setVisibility(View.GONE);
         mEditTextPassword.setVisibility(View.GONE);
+        //text views
         mTextViewSignUp.setVisibility(View.GONE);
         mTextViewPassword.setVisibility(View.GONE);
         mTextViewForgotPass.setVisibility(View.GONE);
         mTextViewUser.setVisibility(View.GONE);
-        mButtonEmailLogin.setVisibility(View.GONE);
+    }
+    //reshow buttons
+    private void returnFromProgress(){
+        mFacebookSignInBtn.setVisibility(View.VISIBLE);
+        mGoogleSignInBT.setVisibility(View.VISIBLE);
+        mButtonEmailLogin.setVisibility(View.VISIBLE);
     }
 }
