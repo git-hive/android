@@ -13,6 +13,7 @@
     <!-- Login Strings -->
     <string name="welcome_text"><b>Bem-vindo a sua Colméia</b></string>
     <string name="login">Login</string>
+    <string name="user">Usuário</string>
     <string name="password">Senha</string>
     <string name="sign_in">Entrar</string>
     <string name="forgot_password"><u>Esqueci minha senha</u></string>
@@ -25,9 +26,11 @@
     <string name="born">eu nasci dia</string>
     <string name="my_cpf">e o meu CPF é</string>
     <string name="email">e email</string>
+    <string name="email_login">Email</string>
     <string name="my_password_be">Quero que a minha senha seja:</string>
     <string name="terms">Eu li e concordo com os <u><i>Termos e Condições</i></u></string>
     <string name="ready">Pronto</string>
+    <string name="other_login_methods">Outros métodos de login</string>
 
     <!--sign up hints-->
     <string name="h_name"><i>Seu nome completo</i></string>

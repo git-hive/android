@@ -10,6 +10,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,10 +61,15 @@ public class LoginActivity extends AppCompatActivity {
     // Layout Elements
     private SignInButton mGoogleSignInBT;
     private LoginButton mFacebookSignInBtn;
-    private TextView mSignUpTV;
-    private TextView mUserTV;
-    private TextView mPwdTV;
-
+    private EditText mEditTextPassword;
+    private EditText mEditTextUser;
+    private TextView mTextViewPassword;
+    private TextView mTextViewUser;
+    private TextView mTextViewSignUp;
+    private TextView mTextViewForgotPass;
+    private Button mButtonSignIn;
+    private Button mButtonEmailLogin;
+    private ProgressBar mPBLogin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,19 +96,63 @@ public class LoginActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
+        mPBLogin = findViewById(R.id.progress_bar_login);
+        mTextViewPassword = findViewById(R.id.textViewPassword);
+        mTextViewUser = findViewById(R.id.textViewUser);
+        mTextViewForgotPass = findViewById(R.id.textViewForgotPassword);
+        mButtonSignIn = findViewById(R.id.buttonSignIn);
+        mButtonEmailLogin = findViewById(R.id.buttonEmailSignIn);
         // get email and pwd fields
-        mUserTV = findViewById(R.id.mUser);
-        mUserTV = findViewById(R.id.mPassword);
+        mEditTextUser = findViewById(R.id.editTextUser);
+        mEditTextPassword = findViewById(R.id.editTextPassword);
 
         // get common sign up button
-        mSignUpTV = findViewById(R.id.mSignUp);
+        mTextViewSignUp = findViewById(R.id.mSignUp);
+        // register click listener on email method
+        mButtonEmailLogin.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mTextViewUser.getVisibility() == View.GONE) {
+                    mTextViewUser.setVisibility(View.VISIBLE);
+                    mTextViewPassword.setVisibility(View.VISIBLE);
+                    mTextViewForgotPass.setVisibility(View.VISIBLE);
+                    mTextViewSignUp.setVisibility(View.VISIBLE);
+                    mEditTextUser.setVisibility(View.VISIBLE);
+                    mEditTextPassword.setVisibility(View.VISIBLE);
+                    mButtonSignIn.setVisibility(View.VISIBLE);
+                    mButtonEmailLogin.setText(R.string.other_login_methods);
+                    mFacebookSignInBtn.setVisibility(View.GONE);
+                    mGoogleSignInBT.setVisibility(View.GONE);
+                }else{
+                    mTextViewUser.setVisibility(View.GONE);
+                    mTextViewPassword.setVisibility(View.GONE);
+                    mTextViewForgotPass.setVisibility(View.GONE);
+                    mTextViewSignUp.setVisibility(View.GONE);
+                    mEditTextUser.setVisibility(View.GONE);
+                    mEditTextPassword.setVisibility(View.GONE);
+                    mButtonSignIn.setVisibility(View.GONE);
+                    mButtonEmailLogin.setVisibility(View.VISIBLE);
+                    mFacebookSignInBtn.setVisibility(View.VISIBLE);
+                    mGoogleSignInBT.setVisibility(View.VISIBLE);
+                    mButtonEmailLogin.setText(R.string.email_login);
 
+                }
+            }
+        });
         // register click listener on common sign up button
-        mSignUpTV.setOnClickListener(new OnClickListener() {
+        mTextViewSignUp.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = mUserTV.getText().toString().trim();
-                String pwd = mUserTV.getText().toString().trim();
+                if(mEditTextUser.getText().equals(null)){
+                    mEditTextUser.requestFocus();
+                    return;
+                }
+                if(mEditTextPassword.getText().equals(null)){
+                    mEditTextPassword.requestFocus();
+                    return;
+                }
+                String email = mEditTextUser.getText().toString().trim();
+                String pwd = mEditTextPassword.getText().toString().trim();
                 // TODO: validate email and pwd
                 mAuth.createUserWithEmailAndPassword(email, pwd)
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -109,13 +161,38 @@ public class LoginActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     checkUserAndSwitchActivity();
                                 } else {
-                                    Log.w(TAG, "auth with email failed");
+                                    Log.w(TAG, "sign up auth with email failed");
                                 }
                             }
                         });
             }
         });
+        mButtonSignIn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mEditTextUser.getText().equals(null)){
+                    mEditTextUser.requestFocus();
+                    return;
+                }
+                if(mEditTextPassword.getText().equals(null)){
+                    mEditTextPassword.requestFocus();
+                    return;
+                }
+                String email = mEditTextUser.getText().toString().trim();
+                String pwd = mEditTextPassword.getText().toString().trim();
 
+                mAuth.signInWithEmailAndPassword(email, pwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            checkUserAndSwitchActivity();
+                        } else {
+                            Log.w(TAG, "sign in auth with email failed");
+                        }
+                    }
+                });
+            }
+        });
         // google sign-in options
         GoogleSignInOptions gso = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -167,13 +244,13 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "Facebook login failed", Toast.LENGTH_SHORT).show();
             }
         });
+        checkUserAndSwitchActivity();
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        checkUserAndSwitchActivity();
     }
 
     @Override
@@ -252,7 +329,8 @@ public class LoginActivity extends AppCompatActivity {
     private void checkUserAndSwitchActivity() {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
-
+            //used to show user progress
+            progressUser();
             // Try to retrieve firestore data
             db
                 .collection("users")
@@ -277,5 +355,19 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
         }
+    }
+    //used to show login progress
+    private void progressUser(){
+        mPBLogin.setVisibility(View.VISIBLE);
+        mFacebookSignInBtn.setVisibility(View.GONE);
+        mGoogleSignInBT.setVisibility(View.GONE);
+        mButtonSignIn.setVisibility(View.GONE);
+        mEditTextUser.setVisibility(View.GONE);
+        mEditTextPassword.setVisibility(View.GONE);
+        mTextViewSignUp.setVisibility(View.GONE);
+        mTextViewPassword.setVisibility(View.GONE);
+        mTextViewForgotPass.setVisibility(View.GONE);
+        mTextViewUser.setVisibility(View.GONE);
+        mButtonEmailLogin.setVisibility(View.GONE);
     }
 }
