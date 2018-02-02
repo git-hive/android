@@ -1,6 +1,6 @@
 package com.hive.hive.model.association;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by naraujo on 1/28/18.
@@ -14,10 +14,10 @@ public class BudgetTransaction {
     private long date;
 
     private String authorId;
-    private ArrayList<String> budgetTransactionCategoriesIds;
+    private HashMap<String, BudgetTransactionCategories> budgetTransactionCategoriesIds;
 
     //--- Constructor
-    public BudgetTransaction(String id, long created_at, long updated_at, long date, String authorId, ArrayList<String> budgetTransactionCategoriesIds) {
+    public BudgetTransaction(String id, long created_at, long updated_at, long date, String authorId, HashMap<String, BudgetTransactionCategories> budgetTransactionCategoriesIds) {
         this.id = id;
         this.created_at = created_at;
         this.updated_at = updated_at;
@@ -70,11 +70,11 @@ public class BudgetTransaction {
         this.authorId = authorId;
     }
 
-    public void setBudgetTransactionCategoriesIds(ArrayList<String> budgetTransactionCategoriesIds) {
+    public void setBudgetTransactionCategoriesIds(HashMap<String, BudgetTransactionCategories> budgetTransactionCategoriesIds) {
         this.budgetTransactionCategoriesIds = budgetTransactionCategoriesIds;
     }
 
-    public ArrayList<String> getBudgetTransactionCategoriesIds() {
+    public HashMap<String, BudgetTransactionCategories> getBudgetTransactionCategoriesIds() {
         return budgetTransactionCategoriesIds;
     }
 }

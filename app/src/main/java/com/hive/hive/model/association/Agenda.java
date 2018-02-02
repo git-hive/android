@@ -1,6 +1,6 @@
 package com.hive.hive.model.association;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by naraujo on 1/28/18.
@@ -14,24 +14,27 @@ public class Agenda {
 
     private String sessionId;
     private String requisitionId;   //May be null
+    private String forumPostId;     //May be null
     private AgendaStatus status;
 
-    private ArrayList<Voting> votings;
+    private HashMap<String, Question> questions;
 
     //--- Constructors
 
     public Agenda(
             String id, String title, String content, String sessionId, String requisitionId,
-            AgendaStatus status, ArrayList<Voting> votings)
+            String forumPostId, AgendaStatus status, HashMap<String, Question> questions)
     {
         this.id = id;
         this.title = title;
         this.content = content;
         this.sessionId = sessionId;
         this.requisitionId = requisitionId;
+        this.forumPostId = forumPostId;
         this.status = status;
-        this.votings = votings;
+        this.questions = questions;
     }
+
 
     //--- Getters
 
@@ -55,12 +58,16 @@ public class Agenda {
         return requisitionId;
     }
 
+    public String getForumPostId() {
+        return forumPostId;
+    }
+
     public AgendaStatus getStatus() {
         return status;
     }
 
-    public ArrayList<Voting> getVotings() {
-        return votings;
+    public HashMap<String, Question> getQuestions() {
+        return questions;
     }
 
     //--- Setters
@@ -85,11 +92,15 @@ public class Agenda {
         this.requisitionId = requisitionId;
     }
 
+    public void setForumPostId(String forumPostId) {
+        this.forumPostId = forumPostId;
+    }
+
     public void setStatus(AgendaStatus status) {
         this.status = status;
     }
 
-    public void setVotings(ArrayList<Voting> votings) {
-        this.votings = votings;
+    public void setQuestions(HashMap<String, Question> questions) {
+        this.questions = questions;
     }
 }

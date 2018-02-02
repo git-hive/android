@@ -9,25 +9,16 @@ import com.hive.hive.model.user.Role;
 
 public class Associate extends Role {
 
-    private Association association;
-
-
     //--- Constructor
 
-    public Associate(String id, String name, Association association) {
-        super(id, name);
-        this.association = association;
+    public Associate(String id, String name, String associationId) {
+        super(id, name, associationId);
     }
 
     //--- Getters
 
-    public Association getAssociation() {
-        return association;
-    }
 
     //--- Setters
 
-    public void setAssociation(Association association) {
-        this.association = association;
-    }
+
 }

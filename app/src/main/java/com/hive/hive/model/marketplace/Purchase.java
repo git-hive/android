@@ -6,27 +6,20 @@ package com.hive.hive.model.marketplace;
 
 public class Purchase extends MarketplaceAction {
 
-    private String saleId;
-
     //--- Constructors
 
-    public Purchase(
-            String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId,
-            String saleId)
-    {
-        super(id, createdAt, updatedAt, authorId, pointsTransactionId);
-        this.saleId = saleId;
+    public Purchase(String saleId) {
+        super(saleId);
     }
+
+    public Purchase(String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId, String saleId) {
+        super(id, createdAt, updatedAt, authorId, pointsTransactionId, saleId);
+    }
+
 
     //--- Getters
 
-    public String getSaleId() {
-        return saleId;
-    }
 
     //--- Setters
 
-    public void setSaleId(String saleId) {
-        this.saleId = saleId;
-    }
 }

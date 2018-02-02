@@ -1,6 +1,7 @@
 package com.hive.hive.model.marketplace;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by naraujo on 1/28/18.
@@ -18,13 +19,13 @@ public class Partner {
     private String currentPlanId;
     private ArrayList<String> previousPlansIds;
 
-    private ArrayList<String> productsIds;
+    private HashMap<String, Product> products;
 
     //--- Constructor
 
     public Partner(
             String id, String name, String phone, String address, String email, String site,
-            String currentPlanId, ArrayList<String> previousPlansIds, ArrayList<String> productsIds)
+            String currentPlanId, ArrayList<String> previousPlansIds, HashMap<String, Product> products)
     {
         this.id = id;
         this.name = name;
@@ -34,7 +35,7 @@ public class Partner {
         this.site = site;
         this.currentPlanId = currentPlanId;
         this.previousPlansIds = previousPlansIds;
-        this.productsIds = productsIds;
+        this.products = products;
     }
 
     //--- Getters
@@ -71,8 +72,8 @@ public class Partner {
         return previousPlansIds;
     }
 
-    public ArrayList<String> getProductsIds() {
-        return productsIds;
+    public HashMap<String, Product> getProducts() {
+        return products;
     }
 
 
@@ -111,7 +112,7 @@ public class Partner {
         this.previousPlansIds = previousPlansIds;
     }
 
-    public void setProductsIds(ArrayList<String> productsIds) {
-        this.productsIds = productsIds;
+    public void setProducts(HashMap<String, Product> products) {
+        this.products = products;
     }
 }

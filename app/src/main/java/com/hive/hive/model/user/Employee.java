@@ -14,10 +14,11 @@ public class Employee extends Role {
 
     //-- Constructor
 
-    public Employee(String id, String name, LinkedHashMap<String, Contract> contracts) {
-        super(id, name);
+    public Employee(String id, String name, String associationId, LinkedHashMap<String, Contract> contracts) {
+        super(id, name, associationId);
         this.contracts = contracts;
     }
+
 
     //--- Getters
 

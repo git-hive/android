@@ -1,6 +1,11 @@
 package com.hive.hive.model.association;
 
+import com.hive.hive.model.event.Location;
+import com.hive.hive.model.forum.Forum;
+import com.hive.hive.model.user.Role;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by naraujo on 1/28/18.
@@ -13,40 +18,38 @@ public class Association {
     private String name;
 
     //--- User Related
-    private ArrayList<String> rolesIds;
+    private HashMap<String, Role> roles;
 
     //--- Forum Related
-    private ArrayList<String> forumIds;
+    private HashMap<String, Forum> forums;
 
     //--- Association related
     private int totalNumberOfAssociates;
-        //--- Request
-    private ArrayList<String> requestsIds;
-        //--- Voting
-    private ArrayList<String> sessionIds;
+        //--- Question
+    private HashMap<String, Session> sessions;
         //--- Transparency
-    private ArrayList<String> budgetTransactionsIds;
+    private HashMap<String, BudgetTransaction> budgetTransactions;
 
     //--- Event Related
-    private ArrayList<String> locationsIds;
+    private HashMap<String, Location> locations;
 
     //--- Constructor
 
     public Association(
-            String id, String name, ArrayList<String> rolesIds, ArrayList<String> forumIds,
-            int totalNumberOfAssociates, ArrayList<String> requestsIds, ArrayList<String> sessionIds,
-            ArrayList<String> budgetTransactionsIds, ArrayList<String> locationsIds)
+            String id, String name, HashMap<String, Role> roles, HashMap<String, Forum> forums,
+            int totalNumberOfAssociates, HashMap<String, Session> sessions, HashMap<String,
+            BudgetTransaction> budgetTransactions, HashMap<String, Location> locations)
     {
         this.id = id;
         this.name = name;
-        this.rolesIds = rolesIds;
-        this.forumIds = forumIds;
+        this.roles = roles;
+        this.forums = forums;
         this.totalNumberOfAssociates = totalNumberOfAssociates;
-        this.requestsIds = requestsIds;
-        this.sessionIds = sessionIds;
-        this.budgetTransactionsIds = budgetTransactionsIds;
-        this.locationsIds = locationsIds;
+        this.sessions = sessions;
+        this.budgetTransactions = budgetTransactions;
+        this.locations = locations;
     }
+
 
     //--- Getters
 
@@ -58,32 +61,28 @@ public class Association {
         return name;
     }
 
-    public ArrayList<String> getRolesIds() {
-        return rolesIds;
+    public HashMap<String, Role> getRoles() {
+        return roles;
     }
 
-    public ArrayList<String> getForumIds() {
-        return forumIds;
+    public HashMap<String, Forum> getForums() {
+        return forums;
     }
 
     public int getTotalNumberOfAssociates() {
         return totalNumberOfAssociates;
     }
 
-    public ArrayList<String> getRequestsIds() {
-        return requestsIds;
+    public HashMap<String, Session> getSessions() {
+        return sessions;
     }
 
-    public ArrayList<String> getSessionIds() {
-        return sessionIds;
+    public HashMap<String, BudgetTransaction> getBudgetTransactions() {
+        return budgetTransactions;
     }
 
-    public ArrayList<String> getBudgetTransactionsIds() {
-        return budgetTransactionsIds;
-    }
-
-    public ArrayList<String> getLocationsIds() {
-        return locationsIds;
+    public HashMap<String, Location> getLocations() {
+        return locations;
     }
 
 
@@ -98,31 +97,27 @@ public class Association {
         this.name = name;
     }
 
-    public void setRolesIds(ArrayList<String> rolesIds) {
-        this.rolesIds = rolesIds;
+    public void setRoles(HashMap<String, Role> roles) {
+        this.roles = roles;
     }
 
-    public void setForumIds(ArrayList<String> forumIds) {
-        this.forumIds = forumIds;
+    public void setForums(HashMap<String, Forum> forums) {
+        this.forums = forums;
     }
 
     public void setTotalNumberOfAssociates(int totalNumberOfAssociates) {
         this.totalNumberOfAssociates = totalNumberOfAssociates;
     }
 
-    public void setRequestsIds(ArrayList<String> requestsIds) {
-        this.requestsIds = requestsIds;
+    public void setSessions(HashMap<String, Session> sessions) {
+        this.sessions = sessions;
     }
 
-    public void setSessionIds(ArrayList<String> sessionIds) {
-        this.sessionIds = sessionIds;
+    public void setBudgetTransactions(HashMap<String, BudgetTransaction> budgetTransactions) {
+        this.budgetTransactions = budgetTransactions;
     }
 
-    public void setBudgetTransactionsIds(ArrayList<String> budgetTransactionsIds) {
-        this.budgetTransactionsIds = budgetTransactionsIds;
-    }
-
-    public void setLocationsIds(ArrayList<String> locationsIds) {
-        this.locationsIds = locationsIds;
+    public void setLocations(HashMap<String, Location> locations) {
+        this.locations = locations;
     }
 }

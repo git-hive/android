@@ -6,12 +6,12 @@ package com.hive.hive.model.association;
 
 public class AssociationSupport extends AssociationAction {
 
-    private String targetActionId;
+    private AssociationAction targetActionId;
 
     //--- Constructor
     public AssociationSupport(
             String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId,
-            String associationId, String targetActionId)
+            String associationId, AssociationAction targetActionId)
     {
         super(id, createdAt, updatedAt, authorId, pointsTransactionId, associationId);
         this.targetActionId = targetActionId;
@@ -19,13 +19,13 @@ public class AssociationSupport extends AssociationAction {
 
     //--- Getters
 
-    public String getTargetActionId() {
+    public AssociationAction getTargetActionId() {
         return targetActionId;
     }
 
     //--- Setters
 
-    public void setTargetActionId(String targetActionId) {
+    public void setTargetActionId(AssociationAction targetActionId) {
         this.targetActionId = targetActionId;
     }
 }

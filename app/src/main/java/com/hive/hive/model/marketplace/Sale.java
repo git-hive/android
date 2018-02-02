@@ -1,6 +1,6 @@
 package com.hive.hive.model.marketplace;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by naraujo on 1/28/18.
@@ -18,10 +18,27 @@ public class Sale {
     private long numberSold;
     private long maxNumberOfSales;
 
-    private ArrayList<String> productsIds; //Ids from products in this sale
+    private HashMap<String, Product> products; //Ids from products in this sale
+    private HashMap<String, Purchase> purchases;
 
     //--- Constructor
 
+    public Sale(
+            String id, long createdAt, long updatedAt, long expireAt, String description, int price,
+            long numberSold, long maxNumberOfSales, HashMap<String, Product> products,
+            HashMap<String, Purchase> purchases)
+    {
+        this.id = id;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.expireAt = expireAt;
+        this.description = description;
+        this.price = price;
+        this.numberSold = numberSold;
+        this.maxNumberOfSales = maxNumberOfSales;
+        this.products = products;
+        this.purchases = purchases;
+    }
 
 
     //--- Getters
@@ -58,8 +75,12 @@ public class Sale {
         return maxNumberOfSales;
     }
 
-    public ArrayList<String> getProductsIds() {
-        return productsIds;
+    public HashMap<String, Product> getProducts() {
+        return products;
+    }
+
+    public HashMap<String, Purchase> getPurchases() {
+        return purchases;
     }
 
     //--- Setters
@@ -96,7 +117,12 @@ public class Sale {
         this.maxNumberOfSales = maxNumberOfSales;
     }
 
-    public void setProductsIds(ArrayList<String> productsIds) {
-        this.productsIds = productsIds;
+    public void setProducts(HashMap<String, Product> products) {
+        this.products = products;
     }
+
+    public void setPurchases(HashMap<String, Purchase> purchases) {
+        this.purchases = purchases;
+    }
+
 }
