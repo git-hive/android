@@ -1,34 +1,38 @@
 package com.hive.hive.model.event;
 
-import com.hive.hive.model.user.UserAction;
+import com.google.android.gms.maps.model.LatLng;
+
+import java.util.ArrayList;
 
 /**
  * Created by naraujo on 1/28/18.
  */
 
-public class Checkin extends UserAction {
+public class Checkin extends EventAction {
 
-    private String eventId;
+    private LatLng checkedPosition;
 
     //--- Constructors
 
     public Checkin(
             String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId,
-            String eventId)
+            Event event, LatLng checkedPosition)
     {
-        super(id, createdAt, updatedAt, authorId, pointsTransactionId);
-        this.eventId = eventId;
+        super(id, createdAt, updatedAt, authorId, pointsTransactionId, event);
+        this.checkedPosition = checkedPosition;
     }
+
 
     //--- Getters
 
-    public String getEventId() {
-        return eventId;
+    public LatLng getCheckedPosition() {
+        return checkedPosition;
     }
 
     //--- Setters
 
-    public void setEventId(String eventId) {
-        this.eventId = eventId;
+    public void setCheckedPosition(LatLng checkedPosition) {
+        this.checkedPosition = checkedPosition;
     }
+
 }

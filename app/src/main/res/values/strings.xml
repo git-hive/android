@@ -5,7 +5,7 @@
     <!-- Working Directory Strings-->
     <string name="app_name">Hive</string>
     <string name="feed">Feed</string>
-    <string name="association">Associação</string>
+    <string name="associationId">Associação</string>
     <string name="shop">Loja</string>
     <string name="map">Mapa</string>
     <string name="home">Home</string>

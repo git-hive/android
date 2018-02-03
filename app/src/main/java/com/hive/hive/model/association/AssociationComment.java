@@ -11,7 +11,7 @@ public class AssociationComment extends AssociationAction {
     private String content;
     private int supportScore;
 
-    private String requestId;
+    private Request targetRequest;
 
     private ArrayList<String> supportIds;
 
@@ -19,13 +19,13 @@ public class AssociationComment extends AssociationAction {
 
     public AssociationComment(
             String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId,
-            String associationId, String content, int supportScore, String requestId,
+            String associationId, String content, int supportScore, Request targetRequest,
             ArrayList<String> supportIds)
     {
         super(id, createdAt, updatedAt, authorId, pointsTransactionId, associationId);
         this.content = content;
         this.supportScore = supportScore;
-        this.requestId = requestId;
+        this.targetRequest = targetRequest;
         this.supportIds = supportIds;
     }
 
@@ -39,8 +39,8 @@ public class AssociationComment extends AssociationAction {
         return supportScore;
     }
 
-    public String getRequestId() {
-        return requestId;
+    public Request getTargetRequest() {
+        return targetRequest;
     }
 
     public ArrayList<String> getSupportIds() {
@@ -57,8 +57,8 @@ public class AssociationComment extends AssociationAction {
         this.supportScore = supportScore;
     }
 
-    public void setRequestId(String requestId) {
-        this.requestId = requestId;
+    public void setTargetRequest(Request targetRequest) {
+        this.targetRequest = targetRequest;
     }
 
     public void setSupportIds(ArrayList<String> supportIds) {

@@ -1,8 +1,6 @@
 package com.hive.hive.model.forum;
 
-import com.hive.hive.model.marketplace.PointsTransaction;
-
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by naraujo on 1/28/18.
@@ -14,9 +12,9 @@ public class ForumPost extends ForumAction {
     private String content;
     private int supportScore;
 
-    private ArrayList<String> categoriesIds;
-    private ArrayList<String> commentsIds;
-    private ArrayList<String> supportsIds;
+    private HashMap<String, ForumCategory> categories;
+    private HashMap<String, ForumComment> comments;
+    private HashMap<String, ForumSupport> supports;
 
     //--- Constructors
 
@@ -27,16 +25,16 @@ public class ForumPost extends ForumAction {
     public ForumPost(
             String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId,
             String forumId, String title, String content, int supportScore,
-            ArrayList<String> categoriesIds, ArrayList<String> commentsIds,
-            ArrayList<String> supportsIds)
+            HashMap<String, ForumCategory> categories, HashMap<String, ForumComment> comments,
+            HashMap<String, ForumSupport> supports)
     {
         super(id, createdAt, updatedAt, authorId, pointsTransactionId, forumId);
         this.title = title;
         this.content = content;
         this.supportScore = supportScore;
-        this.categoriesIds = categoriesIds;
-        this.commentsIds = commentsIds;
-        this.supportsIds = supportsIds;
+        this.categories = categories;
+        this.comments = comments;
+        this.supports = supports;
     }
 
 
@@ -54,16 +52,16 @@ public class ForumPost extends ForumAction {
         return supportScore;
     }
 
-    public ArrayList<String> getCategories() {
-        return categoriesIds;
+    public HashMap<String, ForumCategory> getCategories() {
+        return categories;
     }
 
-    public ArrayList<String> getCommentsIds() {
-        return commentsIds;
+    public HashMap<String, ForumComment> getComments() {
+        return comments;
     }
 
-    public ArrayList<String> getSupportsIds() {
-        return supportsIds;
+    public HashMap<String, ForumSupport> getSupports() {
+        return supports;
     }
 
     //--- Setters
@@ -81,15 +79,15 @@ public class ForumPost extends ForumAction {
         this.supportScore = supportScore;
     }
 
-    public void setCategories(ArrayList<String> categories) {
-        this.categoriesIds = categories;
+    public void setCategories(HashMap<String, ForumCategory> categories) {
+        this.categories = categories;
     }
 
-    public void setCommentsIds(ArrayList<String> commentsIds) {
-        this.commentsIds = commentsIds;
+    public void setComments(HashMap<String, ForumComment> comments) {
+        this.comments = comments;
     }
 
-    public void setSupportsIds(ArrayList<String> supportsIds) {
-        this.supportsIds = supportsIds;
+    public void setSupports(HashMap<String, ForumSupport> supports) {
+        this.supports = supports;
     }
 }

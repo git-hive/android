@@ -2,7 +2,7 @@ package com.hive.hive.model.event;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by naraujo on 1/28/18.
@@ -14,16 +14,23 @@ public class Location {
     private String name;
     private LatLng coords;
 
-    private ArrayList<String> eventsIds;
+    private String associationId;
+
+    private HashMap<String, Event> events;
 
     //--- Construtor
 
-    public Location(String id, String name, LatLng coords, ArrayList<String> eventsIds) {
+    public Location(
+            String id, String name, LatLng coords,
+            String associationId, HashMap<String, Event> events)
+    {
         this.id = id;
         this.name = name;
         this.coords = coords;
-        this.eventsIds = eventsIds;
+        this.associationId = associationId;
+        this.events = events;
     }
+
 
     //--- Getters
 
@@ -39,8 +46,12 @@ public class Location {
         return coords;
     }
 
-    public ArrayList<String> getEventsIds() {
-        return eventsIds;
+    public String getAssociationId() {
+        return associationId;
+    }
+
+    public HashMap<String, Event> getEvents() {
+        return events;
     }
 
     //--- Setters
@@ -57,7 +68,11 @@ public class Location {
         this.coords = coords;
     }
 
-    public void setEventsIds(ArrayList<String> eventsIds) {
-        this.eventsIds = eventsIds;
+    public void setAssociationId(String associationId) {
+        this.associationId = associationId;
+    }
+
+    public void setEvents(HashMap<String, Event> events) {
+        this.events = events;
     }
 }

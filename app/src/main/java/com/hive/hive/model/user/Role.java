@@ -5,15 +5,19 @@ package com.hive.hive.model.user;
  */
 
 public abstract class Role {
+
    private String id;
    private String name;
+   private String associationId;
 
     // --- Constructors
 
-    public Role(String id, String name) {
+    public Role(String id, String name, String associationId) {
         this.id = id;
         this.name = name;
+        this.associationId = associationId;
     }
+
 
     // --- Getters
 
@@ -25,7 +29,10 @@ public abstract class Role {
         return name;
     }
 
-    // --- Setters
+    public String getAssociationId() {
+        return associationId;
+    }
+// --- Setters
 
     public void setId(String id) {
         this.id = id;
@@ -33,5 +40,9 @@ public abstract class Role {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setAssociationId(String associationId) {
+        this.associationId = associationId;
     }
 }

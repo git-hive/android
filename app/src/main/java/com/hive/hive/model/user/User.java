@@ -1,6 +1,6 @@
 package com.hive.hive.model.user;
 
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 
 /**
@@ -10,15 +10,15 @@ import java.util.LinkedHashMap;
 public class User {
 
     private String id;
-    private HashMap<String, Role> roles;
+    private HashSet<String> rolesIds;
     private LinkedHashMap<String, UserAction> actions;
 
 
     // --- Constructors
 
-    public User(String id, HashMap<String, Role> roles, LinkedHashMap<String, UserAction> actions) {
+    public User(String id, HashSet rolesIds, LinkedHashMap<String, UserAction> actions) {
         this.id = id;
-        this.roles = roles;
+        this.rolesIds = rolesIds;
         this.actions = actions;
     }
 
@@ -29,8 +29,8 @@ public class User {
         return id;
     }
 
-    public HashMap<String, Role> getRoles() {
-        return roles;
+    public HashSet<String> getRolesIds() {
+        return rolesIds;
     }
 
     public LinkedHashMap<String, UserAction> getActions() {
@@ -44,8 +44,8 @@ public class User {
         this.id = id;
     }
 
-    public void setRoles(HashMap<String, Role> roles) {
-        this.roles = roles;
+    public void setRolesIds(HashSet rolesIds) {
+        this.rolesIds = rolesIds;
     }
 
     public void setActions(LinkedHashMap<String, UserAction> actions) {

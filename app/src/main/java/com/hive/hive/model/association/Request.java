@@ -1,6 +1,6 @@
 package com.hive.hive.model.association;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by naraujo on 1/28/18.
@@ -12,9 +12,9 @@ public class Request extends AssociationAction {
     private String content;
     private int supportScore;
 
-    private ArrayList<String> categoriesIds;
-    private ArrayList<String> commentsIds;
-    private ArrayList<String> supportsIds;
+    private HashMap<String, RequestCategory> categories;
+    private HashMap<String, AssociationComment> comments;
+    private HashMap<String, AssociationSupport> supports;
 
 
     //--- Constructor
@@ -26,16 +26,16 @@ public class Request extends AssociationAction {
     public Request(
             String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId,
             String associationId, String title, String content, int supportScore,
-            ArrayList<String> categoriesIds, ArrayList<String> commentsIds,
-            ArrayList<String> supportsIds)
+            HashMap<String, RequestCategory> categories, HashMap<String, AssociationComment> comments,
+            HashMap<String, AssociationSupport> supports)
     {
         super(id, createdAt, updatedAt, authorId, pointsTransactionId, associationId);
         this.title = title;
         this.content = content;
         this.supportScore = supportScore;
-        this.categoriesIds = categoriesIds;
-        this.commentsIds = commentsIds;
-        this.supportsIds = supportsIds;
+        this.categories = categories;
+        this.comments = comments;
+        this.supports = supports;
     }
 
     //--- Getters
@@ -52,16 +52,16 @@ public class Request extends AssociationAction {
         return supportScore;
     }
 
-    public ArrayList<String> getCategoriesIds() {
-        return categoriesIds;
+    public HashMap<String, RequestCategory> getCategories() {
+        return categories;
     }
 
-    public ArrayList<String> getCommentsIds() {
-        return commentsIds;
+    public HashMap<String, AssociationComment> getComments() {
+        return comments;
     }
 
-    public ArrayList<String> getSupportsIds() {
-        return supportsIds;
+    public HashMap<String, AssociationSupport> getSupports() {
+        return supports;
     }
 
     //--- Setters
@@ -79,15 +79,15 @@ public class Request extends AssociationAction {
         this.supportScore = supportScore;
     }
 
-    public void setCategoriesIds(ArrayList<String> categoriesIds) {
-        this.categoriesIds = categoriesIds;
+    public void setCategories(HashMap<String, RequestCategory> categories) {
+        this.categories = categories;
     }
 
-    public void setCommentsIds(ArrayList<String> commentsIds) {
-        this.commentsIds = commentsIds;
+    public void setComments(HashMap<String, AssociationComment> comments) {
+        this.comments = comments;
     }
 
-    public void setSupportsIds(ArrayList<String> supportsIds) {
-        this.supportsIds = supportsIds;
+    public void setSupports(HashMap<String, AssociationSupport> supports) {
+        this.supports = supports;
     }
 }

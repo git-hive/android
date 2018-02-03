@@ -1,24 +1,26 @@
 package com.hive.hive.model.association;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by naraujo on 1/28/18.
  */
 
-public class Voting {
+public class Question {
 
     private String id;
+    private String sessionId;
     private String agendaId;
     private String question;
 
-    private ArrayList<VotingOption> options;
+    private HashMap<String, QuestionOptions> options;
 
     //--- Constructor
 
-    public Voting(String id, String agendaId, String question, ArrayList<VotingOption> options) {
+    public Question(String id, String sessionId, String agendaId, String question, HashMap<String, QuestionOptions> options) {
         this.id = id;
         this.agendaId = agendaId;
+        this.sessionId = sessionId;
         this.question = question;
         this.options = options;
     }
@@ -29,6 +31,10 @@ public class Voting {
         return id;
     }
 
+    public String getSessionId() {
+        return sessionId;
+    }
+
     public String getAgendaId() {
         return agendaId;
     }
@@ -37,7 +43,7 @@ public class Voting {
         return question;
     }
 
-    public ArrayList<VotingOption> getOptions() {
+    public HashMap<String, QuestionOptions> getOptions() {
         return options;
     }
 
@@ -48,6 +54,10 @@ public class Voting {
         this.id = id;
     }
 
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
     public void setAgendaId(String agendaId) {
         this.agendaId = agendaId;
     }
@@ -56,7 +66,7 @@ public class Voting {
         this.question = question;
     }
 
-    public void setOptions(ArrayList<VotingOption> options) {
+    public void setOptions(HashMap<String, QuestionOptions> options) {
         this.options = options;
     }
 }

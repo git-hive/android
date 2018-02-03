@@ -1,6 +1,6 @@
 package com.hive.hive.model.association;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by naraujo on 1/28/18.
@@ -15,16 +15,16 @@ public class Session {
     private String isGeneral;    //Geral/Setorial
 
     private String associationId;
-    private ArrayList<String> agendaIds;
+    private HashMap<String, Session> agendas;
 
-    public Session(String id, long startsAt, long endsAt, boolean isOrdinary, String isGeneral, String associationId, ArrayList<String> agendaIds) {
+    public Session(String id, long startsAt, long endsAt, boolean isOrdinary, String isGeneral, String associationId, HashMap<String, Session> agendas) {
         this.id = id;
         this.startsAt = startsAt;
         this.endsAt = endsAt;
         this.isOrdinary = isOrdinary;
         this.isGeneral = isGeneral;
         this.associationId = associationId;
-        this.agendaIds = agendaIds;
+        this.agendas = agendas;
     }
 
     //--- Getters
@@ -53,7 +53,7 @@ public class Session {
         return associationId;
     }
 
-    public ArrayList<String> getAgendaIds() {
-        return agendaIds;
+    public HashMap<String, Session> getAgendas() {
+        return agendas;
     }
 }

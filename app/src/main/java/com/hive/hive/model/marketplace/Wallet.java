@@ -1,6 +1,6 @@
 package com.hive.hive.model.marketplace;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by naraujo on 1/28/18.
@@ -12,11 +12,14 @@ public class Wallet {
     private int balance;
 
     private String userId;
-    private ArrayList<String> transactionsIds;
+
+    //HashMap with ID->Transaction for all Transactions in this wallet
+    private HashMap<String, PointsTransaction> transactionsIds;
+
 
     //--- Constructors
 
-    public Wallet(String id, int balance, String userId, ArrayList<String> transactionsIds) {
+    public Wallet(String id, int balance, String userId, HashMap<String, PointsTransaction> transactionsIds) {
         this.id = id;
         this.balance = balance;
         this.userId = userId;
@@ -37,7 +40,7 @@ public class Wallet {
         return userId;
     }
 
-    public ArrayList<String> getTransactionsIds() {
+    public HashMap<String, PointsTransaction> getTransactionsIds() {
         return transactionsIds;
     }
 
@@ -56,7 +59,7 @@ public class Wallet {
         this.userId = userId;
     }
 
-    public void setTransactionsIds(ArrayList<String> transactionsIds) {
+    public void setTransactionsIds(HashMap<String, PointsTransaction> transactionsIds) {
         this.transactionsIds = transactionsIds;
     }
 }

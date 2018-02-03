@@ -1,37 +1,35 @@
 package com.hive.hive.model.forum;
 
-import com.hive.hive.model.marketplace.PointsTransaction;
-
 /**
  * Created by naraujo on 1/28/18.
  */
 
 public class ForumSupport extends ForumAction {
 
-    private String targetActionId;
+    private ForumAction targetAction;
 
     //--- Constructor
 
     public ForumSupport(
             String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId,
-            String forumId, String targetActionId)
+            String forumId, ForumAction targetAction)
     {
         super(id, createdAt, updatedAt, authorId, pointsTransactionId, forumId);
-        this.targetActionId = targetActionId;
+        this.targetAction = targetAction;
     }
 
 
     //-- Getters
 
-    public String getTargetActionId() {
-        return targetActionId;
+    public ForumAction getTargetAction() {
+        return targetAction;
     }
 
 
     //-- Setters
 
-    public void setTargetActionId(String targetActionId) {
-        this.targetActionId = targetActionId;
+    public void setTargetAction(ForumAction targetAction) {
+        this.targetAction = targetAction;
     }
 }
 

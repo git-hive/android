@@ -10,16 +10,16 @@ public class Forum {
 
     private String id;
     private String name;
-    private String association;
+    private String associationId;
     private HashSet<String> allowedRoles;
 
 
     //--- Constructor
 
-    public Forum(String id, String name, String association, HashSet<String> allowedRoles) {
+    public Forum(String id, String name, String associationId, HashSet<String> allowedRoles) {
         this.id = id;
         this.name = name;
-        this.association = association;
+        this.associationId = associationId;
         this.allowedRoles = allowedRoles;
     }
 
@@ -33,8 +33,8 @@ public class Forum {
         return name;
     }
 
-    public String getAssociation() {
-        return association;
+    public String getAssociationId() {
+        return associationId;
     }
 
     public HashSet<String> getAllowedRoles() {
@@ -52,8 +52,8 @@ public class Forum {
         this.name = name;
     }
 
-    public void setAssociation(String association) {
-        this.association = association;
+    public void setAssociationId(String associationId) {
+        this.associationId = associationId;
     }
 
     public void setAllowedRoles(HashSet<String> allowedRoles) {

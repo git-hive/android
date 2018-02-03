@@ -1,6 +1,7 @@
 package com.hive.hive.model.event;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by naraujo on 1/28/18.
@@ -17,11 +18,16 @@ public class Event {
     private String authorId;
     private String locationId;
 
+    private HashMap<String, EventCategory> eventCategories;
     private ArrayList<String> checkInIds;   //Check-ins made at the event
 
     //--- Constructor
 
-    public Event(String name, long createdAt, long updatedAt, long startAt, long finishAt, String authorId, String locationId, ArrayList<String> checkInIds) {
+    public Event(
+            String name, long createdAt, long updatedAt, long startAt, long finishAt,
+            String authorId, String locationId, HashMap<String, EventCategory> eventCategories,
+            ArrayList<String> checkInIds)
+    {
         this.name = name;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -29,8 +35,10 @@ public class Event {
         this.finishAt = finishAt;
         this.authorId = authorId;
         this.locationId = locationId;
+        this.eventCategories = eventCategories;
         this.checkInIds = checkInIds;
     }
+
 
     //--- Getters
 
@@ -60,6 +68,10 @@ public class Event {
 
     public String getLocationId() {
         return locationId;
+    }
+
+    public HashMap<String, EventCategory> getEventCategories() {
+        return eventCategories;
     }
 
     public ArrayList<String> getCheckInIds() {
@@ -96,6 +108,10 @@ public class Event {
 
     public void setLocationId(String locationId) {
         this.locationId = locationId;
+    }
+
+    public void setEventCategories(HashMap<String, EventCategory> eventCategories) {
+        this.eventCategories = eventCategories;
     }
 
     public void setCheckInIds(ArrayList<String> checkInIds) {

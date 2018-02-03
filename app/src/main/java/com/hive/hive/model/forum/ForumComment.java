@@ -1,8 +1,6 @@
 package com.hive.hive.model.forum;
 
-import com.hive.hive.model.marketplace.PointsTransaction;
-
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by naraujo on 1/28/18.
@@ -15,19 +13,19 @@ public class ForumComment extends ForumAction {
 
     private String postId;
 
-    private ArrayList<String> supportIds;
+    private HashMap<String, ForumSupport> supports;
 
     //--- Constructor
 
     public ForumComment(
             String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId,
-            String forumId, String content, int supportScore, String postId, ArrayList<String> supportIds)
+            String forumId, String content, int supportScore, String postId, HashMap<String, ForumSupport> supports)
     {
         super(id, createdAt, updatedAt, authorId, pointsTransactionId, forumId);
         this.content = content;
         this.supportScore = supportScore;
         this.postId = postId;
-        this.supportIds = supportIds;
+        this.supports = supports;
     }
 
 
@@ -47,8 +45,8 @@ public class ForumComment extends ForumAction {
         return supportScore;
     }
 
-    public ArrayList<String> getSupportIds() {
-        return supportIds;
+    public HashMap<String, ForumSupport> getSupports() {
+        return supports;
     }
 
     //--- Setters
@@ -65,7 +63,7 @@ public class ForumComment extends ForumAction {
         this.supportScore = supportScore;
     }
 
-    public void setSupportIds(ArrayList<String> supportIds) {
-        this.supportIds = supportIds;
+    public void setSupports(HashMap<String, ForumSupport> supports) {
+        this.supports = supports;
     }
 }
