@@ -5,25 +5,43 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <Button
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <ImageButton
+            android:layout_margin="20dp"
             android:id="@+id/requestsBT"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/req" />
+            android:background="@drawable/ic_requisicoes"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:text="@string/req"/>
 
-        <Button
+
+        <ImageButton
+            android:layout_margin="20dp"
+
             android:id="@+id/trasnparencyBT"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:background="@drawable/ic_pesquisa"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:text="@string/trans" />
 
-        <Button
+        </LinearLayout>
+
+        <ImageButton
+            android:layout_margin="20dp"
+
+            android:layout_gravity="center_horizontal"
             android:id="@+id/voteBT"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:background="@drawable/ic_votacoes"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:text="@string/vote" />
     </LinearLayout>
 

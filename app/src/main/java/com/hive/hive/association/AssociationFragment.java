@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.hive.hive.R;
 import com.hive.hive.association.request.RequestActivity;
@@ -15,7 +16,7 @@ import com.hive.hive.association.request.RequestActivity;
 
 public class AssociationFragment extends Fragment {
 
-    Button requestBT;
+    ImageButton requestBT;
     public AssociationFragment() {
         // Required empty public constructor
     }
