@@ -46,6 +46,7 @@
     <string name="req">Requisições</string>
     <string name="vote">Votações</string>
     <string name="trans">Transparência</string>
+    <string name="assembleia">Assembléias</string>
 
 
     <!-- New requests settings -->
@@ -62,5 +63,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
 
 </resources>
