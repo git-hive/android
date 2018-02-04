@@ -33,11 +33,12 @@
     <string name="other_login_methods">Outros métodos de login</string>
 
     <!--sign up hints-->
-    <string name="h_name"><i>Seu nome completo</i></string>
-    <string name="h_ddmmaa"><i>DD/MM/AA</i></string>
-    <string name="h_cpf"><i>000.000.000-00</i></string>
-    <string name="h_email"><i>exemplo@mail.com</i></string>
-    <string name="h_password_conf"><i>Senha</i></string>
+    <string name="h_name"><i>Seu nome completo:</i></string>
+    <string name="h_ddmmaa"><i>Sua data de Aniversário!</i></string>
+    <string name="h_cpf"><i>Digite seu CPF:</i></string>
+    <string name="h_email"><i>Seu email:</i></string>
+    <string name="h_password_conf"><i>Senha:</i></string>
+    <string name="h_password_conf_again"><i>Confirme a Senha:</i></string>
     <string name="today">O que você deseja fazer hoje?</string>
     <string name='hello'>Olá mundo</string>
 

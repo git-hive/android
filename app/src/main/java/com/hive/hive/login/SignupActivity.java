@@ -8,12 +8,15 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,43 +25,77 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
 import com.hive.hive.main.MainActivity;
+import com.hive.hive.utils.Mask;
+import com.hive.hive.utils.Utils;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import android.text.TextWatcher;
+import android.widget.EditText;
+
 
 public class SignupActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    // Shape outside editables (Need this messy thing to set visibility GONE)
+    private TextInputLayout mFullNameTVUpperName;
+    private TextInputLayout mBirthdayTVUpperName;
+    private TextInputLayout mCPFUpperName;
+    private TextInputLayout mEmailTVUpperName;
+    private TextInputLayout mPasswordUpperName;
+    private TextInputLayout mPasswordAgainUpperName;
 
-    private TextView mFullNameTV;
-    private TextView mBirthdayTV;
-    private TextView mCPF;
-    private TextView mEmailTV;
-    private TextView mPassword;
+    // Editable Text
+    private TextInputEditText mFullNameTV;
+    private TextInputEditText mBirthdayTV;
+    private TextInputEditText mCPF;
+    private TextInputEditText mEmailTV;
+    private TextInputEditText mPassword;
+    private TextInputEditText mPasswordAgain;
+    private ProgressBar mSignupPB;
     private RadioButton mTermsAgreementRB;
     private Button mSignUpComplete;
+    private TextView mHelloTV;
+    private TextView mTermAgrementsTV;
 
     // Sign up form inputs
     private Map<String, String> inputValues;
-
+    private TextWatcher cpfMask;
     private DatePickerDialog.OnDateSetListener mOnDateSetListener;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+        // Hide keyboard when create screen
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
 
         db = FirebaseFirestore.getInstance();
 
+        //Refence which enable messy Gone in outside shape of editText
+        mFullNameTVUpperName = findViewById(R.id.textViewSignUpFullNameUpperName);
+        mCPFUpperName = findViewById(R.id.textViewSignUpCPFUpperName);
+        mEmailTVUpperName = findViewById(R.id.textViewSignUpEmailUpperName);
+        mPasswordUpperName = findViewById(R.id.textViewSignUpPasswordUpperName);
+        mPasswordAgainUpperName = findViewById(R.id.textViewSignUpPasswordAgainUpperName);
+        // Others
         mFullNameTV = findViewById(R.id.textViewSignUpFullName);
         mCPF = findViewById(R.id.textViewSignUpCPF);
         mEmailTV = findViewById(R.id.textViewSignUpEmail);
         mPassword = findViewById(R.id.textViewSignUpPassword);
+        mPasswordAgain = findViewById(R.id.textViewSignUpPasswordAgain);
         mTermsAgreementRB = findViewById(R.id.radioButtonSignUpTermsAgreement);
+        mSignupPB = findViewById(R.id.progress_bar_signup);
+        mHelloTV = findViewById(R.id.helloTV);
+        mTermAgrementsTV = findViewById(R.id.termsAgreementTV);
+
         inputValues = new HashMap<>();
 
         if (Build.VERSION.SDK_INT < 16) {
@@ -77,6 +114,13 @@ public class SignupActivity extends AppCompatActivity {
             }
         }
 
+
+
+        // Setting CPF listener to format
+        cpfMask = Mask.insert("###.###.###-##", (EditText) mCPF);
+        mCPF.addTextChangedListener(cpfMask);
+
+
         // Get firebase user and update fields with it
         mAuth = FirebaseAuth.getInstance();
 
@@ -90,24 +134,41 @@ public class SignupActivity extends AppCompatActivity {
             public void onClick(View v) {
                 boolean allValid = validateInputs();
                 if (allValid) {
+                    progressUser();
                     updateUser();
                 }
+
             }
         });
 
 
         mBirthdayTV = findViewById(R.id.textViewSignUpBirthday);
+        mBirthdayTVUpperName = findViewById(R.id.textViewSignUpBirthdayUpperName);
         // Create birth date date picker
         mOnDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                // Months vary from 0 to 11, so increment to look natural
-                month = month + 1;
-                // Create date string
-                String date = String.format("%d/%d/%d", dayOfMonth, month, year);
-                mBirthdayTV.setText(date);
+                // Calendar Class create proper date format
+                Calendar cal = Calendar.getInstance();
+                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                cal.set(Calendar.MONTH, month);
+                cal.set(Calendar.YEAR, year);
+
+                // Converting DD/MM/YYYY format
+                SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+                Date d = cal.getTime();
+                String strDate = dateFormatter.format(d);
+                mBirthdayTV.setText(strDate);
             }
         };
+
+        // Set birthday field on click listener to open the date picker
+        mBirthdayTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog();
+            }
+        });
 
         // Set birthday field on focus listener to open the date picker
         mBirthdayTV.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -118,6 +179,12 @@ public class SignupActivity extends AppCompatActivity {
                 }
             }
         });
+   }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mAuth.signOut();
     }
 
     /**
@@ -128,7 +195,11 @@ public class SignupActivity extends AppCompatActivity {
     private void updateUI(FirebaseUser user) {
         if (user != null) {
             mFullNameTV.setText(user.getDisplayName());
+            mFullNameTV.setSelection(mFullNameTV.getText().length());
             mEmailTV.setText(user.getEmail());
+            mEmailTV.setSelection(mEmailTV.getText().length());
+
+
         }
     }
 
@@ -164,6 +235,7 @@ public class SignupActivity extends AppCompatActivity {
         String name = getText(mFullNameTV);
         if (TextUtils.isEmpty(name)) {
             mFullNameTV.setError("Name is required");
+            mFullNameTV.requestFocus();
             return false;
         }
         inputValues.put("name", name);
@@ -172,14 +244,16 @@ public class SignupActivity extends AppCompatActivity {
         String birthday = getText(mBirthdayTV);
         if (TextUtils.isEmpty(birthday)) {
             mBirthdayTV.setError("Birth date is required");
+            mBirthdayTV.requestFocus();
             return false;
         }
         inputValues.put("birthday", birthday);
 
         // TODO: proper CPF validation
         String cpf = getText(mCPF);
-        if (TextUtils.isEmpty(cpf)) {
-            mCPF.setError("CPF is required");
+        if (TextUtils.isEmpty(cpf) ||  !Utils.isValid(cpf)) {
+            mCPF.setError("A valid CPF is required");
+            mCPF.requestFocus();
             return false;
         }
         inputValues.put("cpf", cpf);
@@ -188,6 +262,8 @@ public class SignupActivity extends AppCompatActivity {
         String email = getText(mEmailTV);
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             mEmailTV.setError("Invalid email address");
+            mEmailTV.requestFocus();
+
             return false;
         }
         inputValues.put("email", email);
@@ -196,13 +272,29 @@ public class SignupActivity extends AppCompatActivity {
         String password = getText(mPassword);
         if (TextUtils.isEmpty(password)) {
             mPassword.setError("Password is required");
+            mPassword.requestFocus();
+
             return false;
         }
+
+        String passwordAgain = getText(mPasswordAgain);
+        //Double checking Password
+        System.out.println(password.length()+"<______________________________>"+passwordAgain.length());
+        if (!password.equals(passwordAgain)) {
+            mPasswordAgain.setError("Password must match");
+            mPasswordAgain.requestFocus();
+
+            return false;
+        }
+
         inputValues.put("password", password);
+
 
         // Check if user agreed with the terms
         if (!mTermsAgreementRB.isChecked()) {
-            mTermsAgreementRB.setError("You need to agree with the terms to use the app");
+            mTermAgrementsTV.setError("You need to agree with the terms to use the app");
+            mTermAgrementsTV.requestFocus();
+
             return false;
         }
 
@@ -241,7 +333,53 @@ public class SignupActivity extends AppCompatActivity {
      * @param v Field that contains the value to be extracted
      * @return TextView value as a trimmed string
      */
-    private String getText(TextView v) {
+    public static String getText(TextInputEditText v) {
         return v.getText().toString().trim();
     }
+
+    private void progressUser(){
+        //progressBar
+        mSignupPB.setVisibility(View.VISIBLE);
+
+
+        // Messy
+        mFullNameTVUpperName.setVisibility(View.GONE);
+        mBirthdayTVUpperName.setVisibility(View.GONE);
+        mCPFUpperName.setVisibility(View.GONE);
+        mEmailTVUpperName.setVisibility(View.GONE);
+        mPasswordAgainUpperName.setVisibility(View.GONE);
+        mPasswordUpperName.setVisibility(View.GONE);
+        // Truly messy, hate java stuff!!!
+
+        mFullNameTV.setVisibility(View.GONE);
+        mBirthdayTV.setVisibility(View.GONE);
+        mCPF.setVisibility(View.GONE);
+        mEmailTV.setVisibility(View.GONE);
+        mPasswordAgain.setVisibility(View.GONE);
+        mPassword.setVisibility(View.GONE);
+        mTermsAgreementRB.setVisibility(View.GONE);
+        mSignUpComplete.setVisibility(View.GONE);
+        //mHelloTV.setVisibility(View.GONE);
+        mTermAgrementsTV.setVisibility(View.GONE);
+    }
+
+    private void returnFromProgressUser(){
+        //progressBar
+        mSignupPB.setVisibility(View.GONE);
+
+
+        mFullNameTV.setVisibility(View.VISIBLE);
+        mBirthdayTV.setVisibility(View.VISIBLE);
+        mCPF.setVisibility(View.VISIBLE);
+        mEmailTV.setVisibility(View.VISIBLE);
+        mPasswordAgain.setVisibility(View.VISIBLE);
+        mPassword.setVisibility(View.VISIBLE);
+        mTermsAgreementRB.setVisibility(View.VISIBLE);
+        mSignUpComplete.setVisibility(View.VISIBLE);
+    }
+
+
 }
+
+
+

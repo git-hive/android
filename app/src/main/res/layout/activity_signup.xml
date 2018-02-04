@@ -17,153 +17,122 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <LinearLayout
-                android:layout_width="match_parent"
+
+            <TextView
+                android:id="@+id/helloTV"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView
-                    android:textColor="#000000"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="25dp"
-                    android:textSize="22sp"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/hi_header"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                android:layout_gravity="center_horizontal"
+                android:paddingBottom="25dp"
+                android:paddingTop="10dp"
+                android:text="@string/hi_header"
+                android:textColor="#000000"
+                android:textSize="22sp" />
 
-                <TextView
 
-                    android:paddingTop="10dp"
-                    android:textColor="#000000"
-                    android:textSize="22sp"
-                    android:layout_gravity="left"
-                    android:text="@string/my_name_is"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/textViewSignUpFullNameUpperName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                <EditText
-
+                <android.support.design.widget.TextInputEditText
                     android:id="@+id/textViewSignUpFullName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center"
-                    android:hint="@string/h_name"
-                    android:inputType="text"
-                    android:padding="5dp"
-                    android:paddingTop="10dp"
-                    android:textColor="#000000"
-                    android:textSize="22sp" />
-            </LinearLayout>
+                    android:imeOptions="actionNext"
+                    android:inputType="textPersonName"
+                    android:hint="@string/h_name"/>
 
-            <LinearLayout
-                android:paddingTop="10dp"
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/textViewSignUpBirthdayUpperName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <TextView
 
-                    android:textColor="#000000"
-                    android:paddingBottom="3dp"
-                    android:layout_gravity="bottom"
-                    android:textSize="22sp"
-                    android:text="@string/born"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <EditText
+                <android.support.design.widget.TextInputEditText
                     android:id="@+id/textViewSignUpBirthday"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:hint="@string/h_ddmmaa"
                     android:inputType="date"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:textColor="#000000"
-                    android:textSize="22sp" />
+                    android:imeOptions="actionNext"
+                    android:hint="@string/h_ddmmaa"
+                    />
 
-            </LinearLayout>
+            </android.support.design.widget.TextInputLayout>
 
-
-            <LinearLayout
-                android:paddingTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:paddingBottom="3dp"
-                    android:textColor="#000000"
-                    android:layout_gravity="bottom"
-                    android:textSize="22sp"
-                    android:text="@string/my_cpf"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <EditText
-                    android:id="@+id/textViewSignUpCPF"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:hint="@string/h_cpf"
-                    android:textColor="#000000"
-                    android:textSize="22sp" />
-
-            </LinearLayout>
-
-
-
-            <LinearLayout
-                android:paddingTop="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:paddingBottom="3dp"
-                    android:textColor="#000000"
-                    android:layout_gravity="bottom"
-                    android:textSize="22sp"
-                    android:text="@string/email"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <EditText
-                    android:id="@+id/textViewSignUpEmail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:hint="@string/h_email"
-                    android:inputType="textEmailAddress"
-                    android:textColor="#000000"
-                    android:textSize="22sp" />
-            </LinearLayout>
-
-            <TextView
-                android:paddingTop="10dp"
-                android:textColor="#000000"
-                android:textSize="22sp"
-                android:text="@string/my_password_be"
+            <ProgressBar
+                android:id="@+id/progress_bar_signup"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                style="?android:attr/progressBarStyle"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                />
 
-
-            <LinearLayout
-                android:paddingTop="10dp"
-                android:gravity="center_horizontal"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/textViewSignUpCPFUpperName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <EditText
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/textViewSignUpCPF"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textFilter"
+                    android:imeOptions="actionNext"
+                    android:hint="@string/h_cpf"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/textViewSignUpEmailUpperName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/textViewSignUpEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:imeOptions="actionNext"
+                    android:hint="@string/h_email"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/textViewSignUpPasswordUpperName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputEditText
                     android:id="@+id/textViewSignUpPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/password"
                     android:inputType="textPassword"
-                    android:textColor="#000000"
-                    android:textSize="22sp" />
+                    android:hint="@string/h_password_conf"/>
 
-            </LinearLayout>
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/textViewSignUpPasswordAgainUpperName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/textViewSignUpPasswordAgain"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:hint="@string/h_password_conf_again"/>
+
+            </android.support.design.widget.TextInputLayout>
 
             <LinearLayout
-                android:paddingTop="25dp"
+                android:paddingTop="40dp"
                 android:paddingBottom="25dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -177,6 +146,7 @@
                     android:textSize="22sp" />
 
                 <TextView
+                    android:id="@+id/termsAgreementTV"
                     android:layout_marginBottom="4dp"
                     android:layout_gravity="bottom"
                     android:textColor="#000000"
