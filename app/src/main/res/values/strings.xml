@@ -43,7 +43,7 @@
     <string name='hello'>Olá mundo</string>
 
     <!-- Association Strings -->
-    <string name="req">Request</string>
+    <string name="req">Requisições</string>
     <string name="vote">Votação</string>
     <string name="trans">Transparência</string>
 

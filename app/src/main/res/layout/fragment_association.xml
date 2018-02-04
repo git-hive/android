@@ -1,48 +1,69 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
+    <FrameLayout
+        android:layout_width="300dp"
+        android:layout_height="320dp"
+        android:layout_gravity="center"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_gravity="center_vertical"
-            android:gravity="center_horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <TextView
+            android:textSize="16sp"
+            android:textColor="@color/colorOrange"
+            android:layout_marginLeft="45dp"
+            android:layout_marginTop="35dp"
+            android:layout_gravity="left"
+            android:text="@string/req"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
         <ImageButton
-            android:layout_margin="20dp"
+            android:layout_marginLeft="13dp"
+            android:layout_marginTop="48dp"
+            android:layout_gravity="left"
             android:id="@+id/requestsBT"
             android:background="@drawable/ic_requisicoes"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:text="@string/req"/>
 
-
+        <TextView
+            android:textSize="16sp"
+            android:textColor="@color/colorOrange"
+            android:layout_marginRight="35dp"
+            android:layout_marginTop="35dp"
+            android:layout_gravity="right"
+            android:text="@string/trans"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
         <ImageButton
-            android:layout_margin="20dp"
-
+            android:layout_marginRight="13dp"
+            android:layout_marginTop="48dp"
+            android:layout_gravity="right"
             android:id="@+id/trasnparencyBT"
-            android:background="@drawable/ic_pesquisa"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:background="@drawable/ic_transparencia"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:text="@string/trans" />
 
-        </LinearLayout>
-
         <ImageButton
-            android:layout_margin="20dp"
-
-            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center_horizontal|bottom"
             android:id="@+id/voteBT"
-            android:background="@drawable/ic_votacoes"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:background="@drawable/ic_assembleias"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:text="@string/vote" />
-    </LinearLayout>
+        <TextView
+            android:layout_marginTop="100dp"
+            android:textSize="16sp"
+            android:textColor="@color/colorOrange"
+            android:layout_gravity="center_horizontal|bottom"
+            android:text="@string/trans"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </FrameLayout>
 
 </FrameLayout>
