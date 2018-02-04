@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_marginHorizontal="20dp"
+    tools:context="com.hive.hive.association.request.NewRequestActivity">
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp">
+
+        <EditText
+            android:id="@+id/titleET"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/title"
+            android:inputType="textPersonName" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp">
+
+        <EditText
+            android:id="@+id/locationET"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/loc"
+            android:inputType="textPersonName" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <CheckBox
+        android:id="@+id/cat1CB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Categoria 1"
+        android:onClick="onCheckboxClicked"/>
+
+    <CheckBox
+        android:id="@+id/cat2CB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Categoria 2"
+        android:onClick="onCheckboxClicked"/>
+
+    <CheckBox
+        android:id="@+id/cat3CB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Categoria 3"
+        android:onClick="onCheckboxClicked"/>
+
+    <CheckBox
+        android:id="@+id/cat4CB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Categoria 4"
+        android:onClick="onCheckboxClicked"/>
+
+    <CheckBox
+        android:id="@+id/cat5CB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Categoria 5"
+        android:onClick="onCheckboxClicked"/>
+
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp">
+
+        <EditText
+            android:id="@+id/descriptionET"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/descrip"
+            android:inputType="textPersonName" />
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/saveBT"
+        android:background="@color/colorOrange"
+        android:textColor="@color/colorWhite"
+        android:padding="15dp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/send_req" />
+
+</LinearLayout>

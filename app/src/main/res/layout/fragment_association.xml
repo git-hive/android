@@ -1,12 +1,30 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.hive.hive.AssociationFragment">
-
-    <TextView
+    android:layout_height="match_parent">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/associationId" />
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/requestsBT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/req" />
+
+        <Button
+            android:id="@+id/trasnparencyBT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/trans" />
+
+        <Button
+            android:id="@+id/voteBT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/vote" />
+    </LinearLayout>
 
 </FrameLayout>

@@ -41,7 +41,22 @@
     <string name="today">O que você deseja fazer hoje?</string>
     <string name='hello'>Olá mundo</string>
 
+    <!-- Association Strings -->
+    <string name="req">Request</string>
+    <string name="vote">Votação</string>
+    <string name="trans">Transparência</string>
+
+
+    <!-- New requests settings -->
+    <string name="new_req">Nova Requisição</string>
+    <string name="title">Título</string>
+    <string name="loc">Localização</string>
+    <string name="descrip">Descrição</string>
+    <string name="send_req">Enviar Requisição</string>
     <!-- Facebook settings -->
     <string name="facebook_app_id">165818667480912</string>
     <string name="fb_login_protocol_scheme">fb165818667480912</string>
+    <string name="title_activity_request">RequestActivity</string>
+    <string name="title_activity_nrequest">NRequestActivity</string>
+
 </resources>
