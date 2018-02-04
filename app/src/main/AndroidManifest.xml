@@ -53,7 +53,7 @@
             android:label="@string/title_activity_request"
             android:theme="@style/AppTheme" />
         <activity android:name=".association.request.NewRequestActivity" />
-
+        <activity android:name=".association.votes.VotesActivity"></activity>
     </application>
 
 </manifest>
