@@ -45,7 +45,7 @@ public class NewRequestActivity extends AppCompatActivity {
                 Request request = new Request("0", 0, 0, FirebaseAuth.getInstance().getCurrentUser().getUid(),
                         "0", "0", titleET.getText().toString(),
                         descriptionET.getText().toString(), 0, categories, null, null);
-                DUMMYREQUESTS.requests.add(request);
+                DUMMYREQUESTS.requests.put(""+DUMMYREQUESTS.requests.size(), request);
                 Log.d("NEWREQUESTACTIVITY", DUMMYREQUESTS.requests.toString());
                 finish();
 

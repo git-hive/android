@@ -8,4 +8,8 @@
     tools:context="com.hive.hive.association.request.RequestActivity"
     tools:showIn="@layout/activity_request">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/requestRV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </android.support.constraint.ConstraintLayout>

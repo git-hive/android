@@ -23,7 +23,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/reqIV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@android:drawable/sym_def_app_icon" />
@@ -36,14 +36,14 @@
                 >
 
                 <TextView
-                    android:id="@+id/textViewReqTitle"
+                    android:id="@+id/reqTitleTV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Associação informa:"
                     android:gravity="center"/>
 
                 <TextView
-                    android:id="@+id/textViewReqMessage"
+                    android:id="@+id/reqMessageTV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Mensagem"

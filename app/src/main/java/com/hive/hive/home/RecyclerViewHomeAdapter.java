@@ -58,11 +58,11 @@ public class RecyclerViewHomeAdapter extends RecyclerView.Adapter<RecyclerView.V
         viewHolder =  null;
         switch (viewType) {
             case REQUEST:
-                View viewRequisition = inflater.inflate(R.layout.card_req, viewGroup, false);
+                View viewRequisition = inflater.inflate(R.layout.item_request, viewGroup, false);
                 viewHolder = new RequestViewHolder(viewRequisition);
                 break;
             case ASSOCIATIONPOST:
-                View viewAPost = inflater.inflate(R.layout.card_assoc, viewGroup, false);
+                View viewAPost = inflater.inflate(R.layout.item_association, viewGroup, false);
                 viewHolder = new AssociationViewHolder(viewAPost);
                 break;
         }
