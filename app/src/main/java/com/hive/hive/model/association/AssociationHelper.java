@@ -21,6 +21,8 @@ public class AssociationHelper {
     public static String COMMENTS_COLLECTION = "comments";
     public static String SUPPORTS_COLLECITON = "supports";
 
+    //--- Request
+
     public static Task<QuerySnapshot> getAllRequests(FirebaseFirestore db, String associationID) {
         return db
                 .collection(ASSOCIATION_COLLECTION)
@@ -60,6 +62,8 @@ public class AssociationHelper {
                 .document(requestID)
                 .set(request);
     }
+
+    //--- Support Request
 
     public static Task<DocumentSnapshot> getRequestSupport(
             FirebaseFirestore db,
@@ -165,6 +169,8 @@ public class AssociationHelper {
         });
     }
 
+    //--- Request comment
+
     public static Task<QuerySnapshot> getAllRequestComments(
             FirebaseFirestore db,
             String associationID,
@@ -228,7 +234,23 @@ public class AssociationHelper {
                 .delete();
     }
 
-    public static Task<Void> supportRequestComment(
+    //--- Support Request Comment
+
+    public static Task<QuerySnapshot> getSupportRequestComment(
+            FirebaseFirestore db,
+            String associationID,
+            String requestID
+    ) {
+        return db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(REQUESTS_COLLECTION)
+                .document(requestID)
+                .collection(COMMENTS_COLLECTION)
+                .get();
+    }
+
+    public static Task<Void> setSupportRequestComment(
             FirebaseFirestore db,
             String associationID,
             String requestID,
@@ -258,6 +280,41 @@ public class AssociationHelper {
 
                 // Set the actual comment support
                 transaction.set(supportRef, support);
+
+                return null;
+            }
+        });
+    }
+
+    public static Task<Void> removeSupportRequestComment(
+            FirebaseFirestore db,
+            String associationID,
+            String requestID,
+            String commentID,
+            String supportID
+    ) {
+        final DocumentReference commentRef = db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(REQUESTS_COLLECTION)
+                .document(requestID)
+                .collection(COMMENTS_COLLECTION)
+                .document(commentID);
+        final DocumentReference supportRef = commentRef
+                .collection(SUPPORTS_COLLECITON)
+                .document(supportID);
+
+        return db.runTransaction(new Transaction.Function<Void>() {
+            @Nullable
+            @Override
+            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                // Get and update score
+                DocumentSnapshot commentSnap = transaction.get(commentRef);
+                Double newScore = commentSnap.getDouble("score") - 1;
+                transaction.update(commentRef, "score", newScore);
+
+                // Remove comment support
+                transaction.delete(supportRef);
 
                 return null;
             }
