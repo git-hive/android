@@ -19,10 +19,16 @@ public class AssociationHelper {
     public static String ASSOCIATION_COLLECTION = "associations";
     public static String REQUESTS_COLLECTION = "requests";
     public static String COMMENTS_COLLECTION = "comments";
-    public static String SUPPORTS_COLLECITON = "supports";
+    public static String SUPPORTS_COLLECTION = "supports";
 
     //--- Request
 
+    /**
+     * Fetches all requests
+     * @param db Database reference
+     * @param associationID Document ID where to get requests from
+     * @return Task that results in all user actions documents
+     */
     public static Task<QuerySnapshot> getAllRequests(FirebaseFirestore db, String associationID) {
         return db
                 .collection(ASSOCIATION_COLLECTION)
@@ -31,16 +37,38 @@ public class AssociationHelper {
                 .get();
     }
 
-    public static Task<DocumentSnapshot> getRequest(FirebaseFirestore db, String associationID, String requisitionID) {
+    /**
+     * Fetches a single request document
+     * @param db Database reference
+     * @param associationID Association document ID where to get the request from
+     * @param requestID Request document ID
+     * @return Task that results in the request document
+     */
+    public static Task<DocumentSnapshot> getRequest(
+            FirebaseFirestore db,
+            String associationID,
+            String requestID
+    ) {
         return db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
                 .collection(REQUESTS_COLLECTION)
-                .document(requisitionID)
+                .document(requestID)
                 .get();
     }
 
-    public static Task<Void> deleteRequest(FirebaseFirestore db, String associationID, String requestID) {
+    /**
+     * Deletes a request document
+     * @param db Database reference
+     * @param associationID Association document ID where to get the request from
+     * @param requestID Request document ID
+     * @return Empty task that resolves successfully if the document was removed
+     */
+    public static Task<Void> deleteRequest(
+            FirebaseFirestore db,
+            String associationID,
+            String requestID
+    ) {
         return db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
@@ -49,6 +77,14 @@ public class AssociationHelper {
                 .delete();
     }
 
+    /**
+     * Sets an association request document
+     * @param db Database reference
+     * @param associationID Association document ID where to set the request to
+     * @param requestID Request document ID to be set
+     * @param request Document to be set under the provided id
+     * @return Empty task that resolves successfully if the document was set
+     */
     public static Task<Void> setRequest(
             FirebaseFirestore db,
             String associationID,
@@ -65,6 +101,14 @@ public class AssociationHelper {
 
     //--- Support Request
 
+    /**
+     * Fetches a single request support document
+     * @param db Database reference
+     * @param associationID Association document ID where to get the request from
+     * @param requestID Request ID where to get the support from
+     * @param supportID Support document ID to be fetched
+     * @return Task that results in the request document
+     */
     public static Task<DocumentSnapshot> getRequestSupport(
             FirebaseFirestore db,
             String associationID,
@@ -76,11 +120,20 @@ public class AssociationHelper {
                 .document(associationID)
                 .collection(REQUESTS_COLLECTION)
                 .document(requestID)
-                .collection(SUPPORTS_COLLECITON)
+                .collection(SUPPORTS_COLLECTION)
                 .document(supportID)
                 .get();
     }
 
+    /**
+     * Sets and request support document
+     * @param db Database reference
+     * @param associationID Association document ID where to get the request from
+     * @param requestID Request document ID to be supported
+     * @param supportID Support document ID to be set
+     * @param support Support document to be set under the support ID provided
+     * @return Empty task that resolves successfully if the document was set
+     */
     public static Task<Void> setRequestSupport(
             FirebaseFirestore db,
             String associationID,
@@ -95,7 +148,7 @@ public class AssociationHelper {
                 .document(requestID);
 
         final DocumentReference supportRef = requestRef
-                .collection(SUPPORTS_COLLECITON)
+                .collection(SUPPORTS_COLLECTION)
                 .document(supportID);
 
         return db.runTransaction(new Transaction.Function<Void>() {
@@ -115,6 +168,14 @@ public class AssociationHelper {
         });
     }
 
+    /**
+     * Removes a request support
+     * @param db Database reference
+     * @param associationID Association document ID where to get the request from
+     * @param requestID Request document ID where to
+     * @param supportID Support document ID to deleted
+     * @return Empty task that resolves successfully if the document was removed
+     */
     public static Task<Void> removeRequestSupport(
             FirebaseFirestore db,
             String associationID,
@@ -127,7 +188,7 @@ public class AssociationHelper {
                 .collection(REQUESTS_COLLECTION)
                 .document(requestID);
         final DocumentReference supportRef = requestRef
-                .collection(SUPPORTS_COLLECITON)
+                .collection(SUPPORTS_COLLECTION)
                 .document(supportID);
 
         return db.runTransaction(new Transaction.Function<Void>() {
@@ -147,6 +208,13 @@ public class AssociationHelper {
         });
     }
 
+    /**
+     * Increments the request score by one unit
+     * @param db Database reference
+     * @param associationID Association document ID where to get the request from
+     * @param requestID Request document ID who's score will be incremented
+     * @return Empty task that resolves successfully if the score was incremented
+     */
     public static Task<Void> incrementRequestScore(
             FirebaseFirestore db,
             String associationID,
@@ -171,6 +239,13 @@ public class AssociationHelper {
 
     //--- Request comment
 
+    /**
+     * Fetches all request comments
+     * @param db Database reference
+     * @param associationID Association document ID where to get the request from
+     * @param requestID Request document ID where to get the comments from
+     * @return Task that results in all request comment documents
+     */
     public static Task<QuerySnapshot> getAllRequestComments(
             FirebaseFirestore db,
             String associationID,
@@ -185,6 +260,14 @@ public class AssociationHelper {
                 .get();
     }
 
+    /**
+     * Fetches a single request comment
+     * @param db Database reference
+     * @param associationID Association document ID where to get the request from
+     * @param requestID Request document ID where to get the comment from
+     * @param commentID Comment document ID
+     * @return Task that results in the request comment document
+     */
     public static Task<DocumentSnapshot> getRequestComment(
             FirebaseFirestore db,
             String associationID,
@@ -201,6 +284,15 @@ public class AssociationHelper {
                 .get();
     }
 
+    /**
+     * Sets a request comment
+     * @param db Database reference
+     * @param associationID Association document ID where to get the request from
+     * @param requestID Request document ID where to get the comment from
+     * @param commentID Comment document ID
+     * @param comment Comment document to be set under the comment ID provided
+     * @return Empty task that resolves successfully if the document was set
+     */
     public static Task<Void> setRequestComment(
             FirebaseFirestore db,
             String associationID,
@@ -218,6 +310,14 @@ public class AssociationHelper {
                 .set(comment);
     }
 
+    /**
+     * Deletes a request comment
+     * @param db Database reference
+     * @param associationID Association document ID where to get the request from
+     * @param requestID Request document ID where to get the comment from
+     * @param commentID Comment document ID
+     * @return Empty task that resolves successfully if the document was deleted
+     */
     public static Task<Void> deleteRequestComment(
             FirebaseFirestore db,
             String associationID,
@@ -236,10 +336,19 @@ public class AssociationHelper {
 
     //--- Support Request Comment
 
-    public static Task<QuerySnapshot> getSupportRequestComment(
+    /**
+     * Gets all supports from a request comment
+     * @param db Database reference
+     * @param associationID Association document ID where to get the request from
+     * @param requestID Request document ID where to get the comment from
+     * @param commentID Comment document ID where to get the supports from
+     * @return Task that results in all request comment supports documents
+     */
+    public static Task<QuerySnapshot> getAllRequestCommentSupports(
             FirebaseFirestore db,
             String associationID,
-            String requestID
+            String requestID,
+            String commentID
     ) {
         return db
                 .collection(ASSOCIATION_COLLECTION)
@@ -247,10 +356,22 @@ public class AssociationHelper {
                 .collection(REQUESTS_COLLECTION)
                 .document(requestID)
                 .collection(COMMENTS_COLLECTION)
+                .document(commentID)
+                .collection(SUPPORTS_COLLECTION)
                 .get();
     }
 
-    public static Task<Void> setSupportRequestComment(
+    /**
+     * Sets a support on a request comment
+     * @param db Database reference
+     * @param associationID Association document ID where to get the request from
+     * @param requestID Request document ID where to get the comment from
+     * @param commentID Comment document ID where to set the support to
+     * @param supportID Support document ID to be set
+     * @param support Document to be set under the provided support ID
+     * @return Empty task that resolves successfully if document was set
+     */
+    public static Task<Void> setRequestCommentSupport(
             FirebaseFirestore db,
             String associationID,
             String requestID,
@@ -266,7 +387,7 @@ public class AssociationHelper {
                 .collection(COMMENTS_COLLECTION)
                 .document(commentID);
         final DocumentReference supportRef = commentRef
-                .collection(SUPPORTS_COLLECITON)
+                .collection(SUPPORTS_COLLECTION)
                 .document(supportID);
 
         return db.runTransaction(new Transaction.Function<Void>() {
@@ -286,7 +407,16 @@ public class AssociationHelper {
         });
     }
 
-    public static Task<Void> removeSupportRequestComment(
+    /**
+     * Deletes a support from a request comment
+     * @param db Database reference
+     * @param associationID Association document ID where to get the request from
+     * @param requestID Request document ID where to get the comment from
+     * @param commentID Comment document ID where to set the support to
+     * @param supportID Support document ID to be deleted
+     * @return Empty task that resolves successfully if document was deleted
+     */
+    public static Task<Void> deleteRequestCommentSupport(
             FirebaseFirestore db,
             String associationID,
             String requestID,
@@ -301,7 +431,7 @@ public class AssociationHelper {
                 .collection(COMMENTS_COLLECTION)
                 .document(commentID);
         final DocumentReference supportRef = commentRef
-                .collection(SUPPORTS_COLLECITON)
+                .collection(SUPPORTS_COLLECTION)
                 .document(supportID);
 
         return db.runTransaction(new Transaction.Function<Void>() {
