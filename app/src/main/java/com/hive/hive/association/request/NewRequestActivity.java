@@ -12,12 +12,15 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
+import com.hive.hive.model.association.AssociationHelper;
 import com.hive.hive.model.association.Request;
 import com.hive.hive.model.association.RequestCategory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class NewRequestActivity extends AppCompatActivity {
     HashMap<String, RequestCategory> categories;
@@ -42,11 +45,14 @@ public class NewRequestActivity extends AppCompatActivity {
         saveBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Request request = new Request("0", 0, 0, FirebaseAuth.getInstance().getCurrentUser().getUid(),
-                        "0", "0", titleET.getText().toString(),
+                //TODO association shouldnt be setted this way
+                String requestUUID = UUID.randomUUID().toString();
+                Request request = new Request(requestUUID, 0, 0, FirebaseAuth.getInstance().getCurrentUser().getUid(),
+                        "0", "gVw7dUkuw3SSZSYRXe8s", titleET.getText().toString(),
                         descriptionET.getText().toString(), 0, categories, null, null);
                 DUMMYREQUESTS.requests.put(""+DUMMYREQUESTS.requests.size(), request);
                 Log.d("NEWREQUESTACTIVITY", DUMMYREQUESTS.requests.toString());
+                AssociationHelper.setRequest(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", requestUUID, request);
                 finish();
 
             }
