@@ -26,8 +26,8 @@ public class AssociationHelper {
     /**
      * Fetches all requests
      * @param db Database reference
-     * @param associationID Document ID where to get requests from
-     * @return Task that results in all user actions documents
+     * @param associationID Document ID where to get the requests from
+     * @return Task that resolves in all request documents
      */
     public static Task<QuerySnapshot> getAllRequests(FirebaseFirestore db, String associationID) {
         return db
@@ -41,8 +41,8 @@ public class AssociationHelper {
      * Fetches a single request document
      * @param db Database reference
      * @param associationID Association document ID where to get the request from
-     * @param requestID Request document ID
-     * @return Task that results in the request document
+     * @param requestID Request document ID to be fetched
+     * @return Task that resolves in the request document
      */
     public static Task<DocumentSnapshot> getRequest(
             FirebaseFirestore db,
@@ -61,8 +61,8 @@ public class AssociationHelper {
      * Deletes a request document
      * @param db Database reference
      * @param associationID Association document ID where to get the request from
-     * @param requestID Request document ID
-     * @return Empty task that resolves successfully if the document was removed
+     * @param requestID Request document ID to be deleted
+     * @return Empty task that resolves successfully if the document was deleted
      */
     public static Task<Void> deleteRequest(
             FirebaseFirestore db,
@@ -99,7 +99,28 @@ public class AssociationHelper {
                 .set(request);
     }
 
-    //--- Support Request
+    //--- Request Support
+
+    /**
+     * Fetches all request support documents
+     * @param db Database reference
+     * @param associationID Association document ID where to get the request from
+     * @param requestID Request ID where to get the supports from
+     * @return Task that resolved in all request support documents
+     */
+    public static Task<QuerySnapshot> getAllRequestSupports(
+            FirebaseFirestore db,
+            String associationID,
+            String requestID
+    ) {
+        return db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(REQUESTS_COLLECTION)
+                .document(requestID)
+                .collection(SUPPORTS_COLLECTION)
+                .get();
+    }
 
     /**
      * Fetches a single request support document
@@ -107,7 +128,7 @@ public class AssociationHelper {
      * @param associationID Association document ID where to get the request from
      * @param requestID Request ID where to get the support from
      * @param supportID Support document ID to be fetched
-     * @return Task that results in the request document
+     * @return Task that resolved in the request document
      */
     public static Task<DocumentSnapshot> getRequestSupport(
             FirebaseFirestore db,
@@ -126,7 +147,7 @@ public class AssociationHelper {
     }
 
     /**
-     * Sets and request support document
+     * Sets a request support document
      * @param db Database reference
      * @param associationID Association document ID where to get the request from
      * @param requestID Request document ID to be supported
@@ -151,16 +172,17 @@ public class AssociationHelper {
                 .collection(SUPPORTS_COLLECTION)
                 .document(supportID);
 
+        // Set the request support and increment request score
         return db.runTransaction(new Transaction.Function<Void>() {
             @Nullable
             @Override
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                // Update request score
+                // Get and update request score
                 DocumentSnapshot requestSnap = transaction.get(requestRef);
                 Double newScore = requestSnap.getDouble("score") + 1;
                 transaction.update(requestRef, "score", newScore);
 
-                // Create the actual support
+                // Set request support
                 transaction.set(supportRef, support);
 
                 return null;
@@ -169,14 +191,14 @@ public class AssociationHelper {
     }
 
     /**
-     * Removes a request support
+     * Deletes a request support
      * @param db Database reference
      * @param associationID Association document ID where to get the request from
      * @param requestID Request document ID where to
      * @param supportID Support document ID to deleted
-     * @return Empty task that resolves successfully if the document was removed
+     * @return Empty task that resolves successfully if the document was deleted
      */
-    public static Task<Void> removeRequestSupport(
+    public static Task<Void> deleteRequestSupport(
             FirebaseFirestore db,
             String associationID,
             String requestID,
@@ -191,16 +213,17 @@ public class AssociationHelper {
                 .collection(SUPPORTS_COLLECTION)
                 .document(supportID);
 
+        // Delete request support and decrement request score
         return db.runTransaction(new Transaction.Function<Void>() {
             @Nullable
             @Override
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                // Update score
+                // Get and update request score
                 DocumentSnapshot requestSnap = transaction.get(requestRef);
                 Double newScore = requestSnap.getDouble("score") - 1;
                 transaction.update(requestRef, "score", newScore);
 
-                // Remove support
+                // Delete request support
                 transaction.delete(supportRef);
 
                 return null;
@@ -209,42 +232,82 @@ public class AssociationHelper {
     }
 
     /**
-     * Increments the request score by one unit
+     * Adds/Subtracts points from the request score
      * @param db Database reference
      * @param associationID Association document ID where to get the request from
-     * @param requestID Request document ID who's score will be incremented
-     * @return Empty task that resolves successfully if the score was incremented
+     * @param requestID Request document ID who score will be changed
+     * @param points Points to be added to the request score
+     * @return Empty task that resolves successfully if the score was changed
      */
-    public static Task<Void> incrementRequestScore(
+
+    public static Task<Void> addToRequestScore(
             FirebaseFirestore db,
             String associationID,
-            String requestID
+            String requestID,
+            final int points
     ) {
         final DocumentReference requestRef = db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
                 .collection(REQUESTS_COLLECTION)
                 .document(requestID);
+
+        // Get and update request score
         return db.runTransaction(new Transaction.Function<Void>() {
             @Nullable
             @Override
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                 DocumentSnapshot snap = transaction.get(requestRef);
-                Double newScore = snap.getDouble("score") + 1;
+                Double newScore = snap.getDouble("score") + points;
                 transaction.update(requestRef, "score", newScore);
                 return null;
             }
         });
     }
 
-    //--- Request comment
+    /**
+     * Adds points to the request score
+     * @param db Database reference
+     * @param associationID Association document ID where to get the request from
+     * @param requestID Request document ID who score will be incremented
+     * @param incrementBy Increment size
+     * @return Empty task that resolves successfully if the score was incremented
+     */
+    public static Task<Void> incrementRequestScore(
+            FirebaseFirestore db,
+            String associationID,
+            String requestID,
+            final int incrementBy
+    ) {
+        return addToRequestScore(db, associationID, requestID, incrementBy);
+    }
+
+
+    /**
+     * Removes points from the request score
+     * @param db Database reference
+     * @param associationID Association document ID where to get the request from
+     * @param requestID Request document ID who score will be decremented
+     * @param decrementBy Decrement size
+     * @return Empty task that resolves successfully if the score was decremented
+     */
+    public static Task<Void> decrementRequestScore(
+            FirebaseFirestore db,
+            String associationID,
+            String requestID,
+            final int decrementBy
+    ) {
+        return addToRequestScore(db, associationID, requestID, decrementBy * -1);
+    }
+
+    //--- Request Comment
 
     /**
      * Fetches all request comments
      * @param db Database reference
      * @param associationID Association document ID where to get the request from
      * @param requestID Request document ID where to get the comments from
-     * @return Task that results in all request comment documents
+     * @return Task that resolves in all request comment documents
      */
     public static Task<QuerySnapshot> getAllRequestComments(
             FirebaseFirestore db,
@@ -265,8 +328,8 @@ public class AssociationHelper {
      * @param db Database reference
      * @param associationID Association document ID where to get the request from
      * @param requestID Request document ID where to get the comment from
-     * @param commentID Comment document ID
-     * @return Task that results in the request comment document
+     * @param commentID Comment document ID to be fetched
+     * @return Task that resolved in the request comment document
      */
     public static Task<DocumentSnapshot> getRequestComment(
             FirebaseFirestore db,
@@ -315,7 +378,7 @@ public class AssociationHelper {
      * @param db Database reference
      * @param associationID Association document ID where to get the request from
      * @param requestID Request document ID where to get the comment from
-     * @param commentID Comment document ID
+     * @param commentID Comment document ID to be deleted
      * @return Empty task that resolves successfully if the document was deleted
      */
     public static Task<Void> deleteRequestComment(
@@ -342,7 +405,7 @@ public class AssociationHelper {
      * @param associationID Association document ID where to get the request from
      * @param requestID Request document ID where to get the comment from
      * @param commentID Comment document ID where to get the supports from
-     * @return Task that results in all request comment supports documents
+     * @return Task that resolves in all support documents from a request comment
      */
     public static Task<QuerySnapshot> getAllRequestCommentSupports(
             FirebaseFirestore db,
@@ -390,16 +453,17 @@ public class AssociationHelper {
                 .collection(SUPPORTS_COLLECTION)
                 .document(supportID);
 
+        // Set the comment support and increment the comment score
         return db.runTransaction(new Transaction.Function<Void>() {
             @Nullable
             @Override
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                // Get and update score
+                // Get and update comment score
                 DocumentSnapshot commentSnap = transaction.get(commentRef);
                 Double newScore = commentSnap.getDouble("score") + 1;
                 transaction.update(commentRef, "score", newScore);
 
-                // Set the actual comment support
+                // Set comment support
                 transaction.set(supportRef, support);
 
                 return null;
@@ -434,16 +498,17 @@ public class AssociationHelper {
                 .collection(SUPPORTS_COLLECTION)
                 .document(supportID);
 
+        // Delete the comment support and decrement the comment score
         return db.runTransaction(new Transaction.Function<Void>() {
             @Nullable
             @Override
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                // Get and update score
+                // Get and update comment score
                 DocumentSnapshot commentSnap = transaction.get(commentRef);
                 Double newScore = commentSnap.getDouble("score") - 1;
                 transaction.update(commentRef, "score", newScore);
 
-                // Remove comment support
+                // Remove request comment support
                 transaction.delete(supportRef);
 
                 return null;
