@@ -21,6 +21,10 @@ public class AssociationHelper {
     public static String COMMENTS_COLLECTION = "comments";
     public static String SUPPORTS_COLLECTION = "supports";
 
+    public static String SCORE_FIELD = "supportScore";
+
+    public static int SUPPORT_ACTION_VALUE = 1;
+
     //--- Request
 
     /**
@@ -179,8 +183,8 @@ public class AssociationHelper {
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                 // Get and update request score
                 DocumentSnapshot requestSnap = transaction.get(requestRef);
-                Double newScore = requestSnap.getDouble("score") + 1;
-                transaction.update(requestRef, "score", newScore);
+                Double newScore = requestSnap.getDouble(SCORE_FIELD) + SUPPORT_ACTION_VALUE;
+                transaction.update(requestRef, SCORE_FIELD, newScore);
 
                 // Set request support
                 transaction.set(supportRef, support);
@@ -220,8 +224,8 @@ public class AssociationHelper {
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                 // Get and update request score
                 DocumentSnapshot requestSnap = transaction.get(requestRef);
-                Double newScore = requestSnap.getDouble("score") - 1;
-                transaction.update(requestRef, "score", newScore);
+                Double newScore = requestSnap.getDouble(SCORE_FIELD) - SUPPORT_ACTION_VALUE;
+                transaction.update(requestRef, SCORE_FIELD, newScore);
 
                 // Delete request support
                 transaction.delete(supportRef);
@@ -258,8 +262,8 @@ public class AssociationHelper {
             @Override
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                 DocumentSnapshot snap = transaction.get(requestRef);
-                Double newScore = snap.getDouble("score") + points;
-                transaction.update(requestRef, "score", newScore);
+                Double newScore = snap.getDouble(SCORE_FIELD) + points;
+                transaction.update(requestRef, SCORE_FIELD, newScore);
                 return null;
             }
         });
@@ -460,8 +464,8 @@ public class AssociationHelper {
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                 // Get and update comment score
                 DocumentSnapshot commentSnap = transaction.get(commentRef);
-                Double newScore = commentSnap.getDouble("score") + 1;
-                transaction.update(commentRef, "score", newScore);
+                Double newScore = commentSnap.getDouble(SCORE_FIELD) + SUPPORT_ACTION_VALUE;
+                transaction.update(commentRef, SCORE_FIELD, newScore);
 
                 // Set comment support
                 transaction.set(supportRef, support);
@@ -505,8 +509,8 @@ public class AssociationHelper {
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                 // Get and update comment score
                 DocumentSnapshot commentSnap = transaction.get(commentRef);
-                Double newScore = commentSnap.getDouble("score") - 1;
-                transaction.update(commentRef, "score", newScore);
+                Double newScore = commentSnap.getDouble(SCORE_FIELD) - SUPPORT_ACTION_VALUE;
+                transaction.update(commentRef, SCORE_FIELD, newScore);
 
                 // Remove request comment support
                 transaction.delete(supportRef);
