@@ -11,8 +11,11 @@ public class AssociationComment extends AssociationAction {
     //--- SubCollections
     public static String SUPPORTS_COLLECTION = "supports";
 
+    //--- Fields
+    public static String SCORE_FIELD = "score";
+
     private String content;
-    private int supportScore;
+    private int score;
 
     private Request targetRequest;
 
@@ -22,12 +25,12 @@ public class AssociationComment extends AssociationAction {
 
     public AssociationComment(
             String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId,
-            String associationId, String content, int supportScore, Request targetRequest,
+            String associationId, String content, int score, Request targetRequest,
             ArrayList<String> supportIds)
     {
         super(id, createdAt, updatedAt, authorId, pointsTransactionId, associationId);
         this.content = content;
-        this.supportScore = supportScore;
+        this.score = score;
         this.targetRequest = targetRequest;
         this.supportIds = supportIds;
     }
@@ -38,8 +41,8 @@ public class AssociationComment extends AssociationAction {
         return content;
     }
 
-    public int getSupportScore() {
-        return supportScore;
+    public int getScore() {
+        return score;
     }
 
     public Request getTargetRequest() {
@@ -56,8 +59,8 @@ public class AssociationComment extends AssociationAction {
         this.content = content;
     }
 
-    public void setSupportScore(int supportScore) {
-        this.supportScore = supportScore;
+    public void setScore(int score) {
+        this.score = score;
     }
 
     public void setTargetRequest(Request targetRequest) {
