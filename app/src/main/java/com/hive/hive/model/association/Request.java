@@ -1,5 +1,8 @@
 package com.hive.hive.model.association;
 
+import com.google.firebase.firestore.DocumentReference;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -20,14 +23,11 @@ public class Request extends AssociationAction {
     private String content;
     private int score;
 
-    private HashMap<String, RequestCategory> categories;
-    private HashMap<String, AssociationComment> comments;
-    private HashMap<String, AssociationSupport> supports;
+    private ArrayList<DocumentReference> categories;
 
     //--- Constructors
 
-    public Request() {
-    }
+    public Request() {}
 
     public Request(
             String id,
@@ -39,7 +39,7 @@ public class Request extends AssociationAction {
             String title,
             String content,
             int score,
-            HashMap<String, RequestCategory> categories,
+            ArrayList<DocumentReference> categories,
             HashMap<String, AssociationComment> comments,
             HashMap<String, AssociationSupport> supports
     ) {
@@ -48,8 +48,6 @@ public class Request extends AssociationAction {
         this.content = content;
         this.score = score;
         this.categories = categories;
-        this.comments = comments;
-        this.supports = supports;
     }
 
     //--- Getters
@@ -66,16 +64,8 @@ public class Request extends AssociationAction {
         return score;
     }
 
-    public HashMap<String, RequestCategory> getCategories() {
+    public ArrayList<DocumentReference> getCategories() {
         return categories;
-    }
-
-    public HashMap<String, AssociationComment> getComments() {
-        return comments;
-    }
-
-    public HashMap<String, AssociationSupport> getSupports() {
-        return supports;
     }
 
     //--- Setters
@@ -92,15 +82,8 @@ public class Request extends AssociationAction {
         this.score = score;
     }
 
-    public void setCategories(HashMap<String, RequestCategory> categories) {
+    public void setCategories(ArrayList<DocumentReference> categories) {
         this.categories = categories;
     }
 
-    public void setComments(HashMap<String, AssociationComment> comments) {
-        this.comments = comments;
-    }
-
-    public void setSupports(HashMap<String, AssociationSupport> supports) {
-        this.supports = supports;
-    }
 }
