@@ -17,11 +17,8 @@ import com.google.firebase.firestore.Transaction;
 
 public class AssociationHelper {
     public static String ASSOCIATION_COLLECTION = "associations";
-    public static String REQUESTS_COLLECTION = "requests";
-    public static String COMMENTS_COLLECTION = "comments";
-    public static String SUPPORTS_COLLECTION = "supports";
 
-    public static String SCORE_FIELD = "supportScore";
+    public static String SCORE_FIELD = "score";
 
     public static int SUPPORT_ACTION_VALUE = 1;
 
@@ -37,7 +34,7 @@ public class AssociationHelper {
         return db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
-                .collection(REQUESTS_COLLECTION)
+                .collection(Association.REQUESTS_COLLECTION)
                 .get();
     }
 
@@ -56,7 +53,7 @@ public class AssociationHelper {
         return db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
-                .collection(REQUESTS_COLLECTION)
+                .collection(Association.REQUESTS_COLLECTION)
                 .document(requestID)
                 .get();
     }
@@ -76,7 +73,7 @@ public class AssociationHelper {
         return db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
-                .collection(REQUESTS_COLLECTION)
+                .collection(Association.REQUESTS_COLLECTION)
                 .document(requestID)
                 .delete();
     }
@@ -98,7 +95,7 @@ public class AssociationHelper {
         return db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
-                .collection(REQUESTS_COLLECTION)
+                .collection(Association.REQUESTS_COLLECTION)
                 .document(requestID)
                 .set(request);
     }
@@ -120,9 +117,9 @@ public class AssociationHelper {
         return db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
-                .collection(REQUESTS_COLLECTION)
+                .collection(Association.REQUESTS_COLLECTION)
                 .document(requestID)
-                .collection(SUPPORTS_COLLECTION)
+                .collection(Request.SUPPORTS_COLLECTION)
                 .get();
     }
 
@@ -143,9 +140,9 @@ public class AssociationHelper {
         return db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
-                .collection(REQUESTS_COLLECTION)
+                .collection(Association.REQUESTS_COLLECTION)
                 .document(requestID)
-                .collection(SUPPORTS_COLLECTION)
+                .collection(Request.SUPPORTS_COLLECTION)
                 .document(supportID)
                 .get();
     }
@@ -169,11 +166,11 @@ public class AssociationHelper {
         final DocumentReference requestRef = db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
-                .collection(REQUESTS_COLLECTION)
+                .collection(Association.REQUESTS_COLLECTION)
                 .document(requestID);
 
         final DocumentReference supportRef = requestRef
-                .collection(SUPPORTS_COLLECTION)
+                .collection(Request.SUPPORTS_COLLECTION)
                 .document(supportID);
 
         // Set the request support and increment request score
@@ -211,10 +208,10 @@ public class AssociationHelper {
         final DocumentReference requestRef = db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
-                .collection(REQUESTS_COLLECTION)
+                .collection(Association.REQUESTS_COLLECTION)
                 .document(requestID);
         final DocumentReference supportRef = requestRef
-                .collection(SUPPORTS_COLLECTION)
+                .collection(Request.SUPPORTS_COLLECTION)
                 .document(supportID);
 
         // Delete request support and decrement request score
@@ -253,7 +250,7 @@ public class AssociationHelper {
         final DocumentReference requestRef = db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
-                .collection(REQUESTS_COLLECTION)
+                .collection(Association.REQUESTS_COLLECTION)
                 .document(requestID);
 
         // Get and update request score
@@ -321,9 +318,9 @@ public class AssociationHelper {
         return db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
-                .collection(REQUESTS_COLLECTION)
+                .collection(Association.REQUESTS_COLLECTION)
                 .document(requestID)
-                .collection(COMMENTS_COLLECTION)
+                .collection(Request.COMMENTS_COLLECTION)
                 .get();
     }
 
@@ -344,9 +341,9 @@ public class AssociationHelper {
         return db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
-                .collection(REQUESTS_COLLECTION)
+                .collection(Association.REQUESTS_COLLECTION)
                 .document(requestID)
-                .collection(COMMENTS_COLLECTION)
+                .collection(Request.COMMENTS_COLLECTION)
                 .document(commentID)
                 .get();
     }
@@ -370,9 +367,9 @@ public class AssociationHelper {
         return db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
-                .collection(REQUESTS_COLLECTION)
+                .collection(Association.REQUESTS_COLLECTION)
                 .document(requestID)
-                .collection(COMMENTS_COLLECTION)
+                .collection(Request.COMMENTS_COLLECTION)
                 .document(commentID)
                 .set(comment);
     }
@@ -394,9 +391,9 @@ public class AssociationHelper {
         return db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
-                .collection(REQUESTS_COLLECTION)
+                .collection(Association.REQUESTS_COLLECTION)
                 .document(requestID)
-                .collection(COMMENTS_COLLECTION)
+                .collection(Request.COMMENTS_COLLECTION)
                 .document(commentID)
                 .delete();
     }
@@ -420,11 +417,11 @@ public class AssociationHelper {
         return db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
-                .collection(REQUESTS_COLLECTION)
+                .collection(Association.REQUESTS_COLLECTION)
                 .document(requestID)
-                .collection(COMMENTS_COLLECTION)
+                .collection(Request.COMMENTS_COLLECTION)
                 .document(commentID)
-                .collection(SUPPORTS_COLLECTION)
+                .collection(AssociationComment.SUPPORTS_COLLECTION)
                 .get();
     }
 
@@ -449,12 +446,12 @@ public class AssociationHelper {
         final DocumentReference commentRef = db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
-                .collection(REQUESTS_COLLECTION)
+                .collection(Association.REQUESTS_COLLECTION)
                 .document(requestID)
-                .collection(COMMENTS_COLLECTION)
+                .collection(Request.COMMENTS_COLLECTION)
                 .document(commentID);
         final DocumentReference supportRef = commentRef
-                .collection(SUPPORTS_COLLECTION)
+                .collection(AssociationComment.SUPPORTS_COLLECTION)
                 .document(supportID);
 
         // Set the comment support and increment the comment score
@@ -494,12 +491,12 @@ public class AssociationHelper {
         final DocumentReference commentRef = db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
-                .collection(REQUESTS_COLLECTION)
+                .collection(Association.REQUESTS_COLLECTION)
                 .document(requestID)
-                .collection(COMMENTS_COLLECTION)
+                .collection(Request.COMMENTS_COLLECTION)
                 .document(commentID);
         final DocumentReference supportRef = commentRef
-                .collection(SUPPORTS_COLLECTION)
+                .collection(AssociationComment.SUPPORTS_COLLECTION)
                 .document(supportID);
 
         // Delete the comment support and decrement the comment score

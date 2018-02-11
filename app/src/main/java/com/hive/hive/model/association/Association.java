@@ -13,6 +13,9 @@ import java.util.HashMap;
 
 public class Association {
 
+    //--- SubCollections
+    public static String REQUESTS_COLLECTION = "requests";
+
     //--- Base attributes
     private String id;
     private String name;

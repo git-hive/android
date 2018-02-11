@@ -6,6 +6,8 @@ package com.hive.hive.model.association;
 
 public class AssociationSupport extends AssociationAction {
 
+    public static int SUPPORT_ACTION_VALUE = 1;
+
     private AssociationAction targetActionId;
 
     //--- Constructor

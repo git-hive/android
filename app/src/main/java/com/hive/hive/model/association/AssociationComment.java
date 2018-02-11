@@ -8,6 +8,9 @@ import java.util.ArrayList;
 
 public class AssociationComment extends AssociationAction {
 
+    //--- SubCollections
+    public static String SUPPORTS_COLLECTION = "supports";
+
     private String content;
     private int supportScore;
 

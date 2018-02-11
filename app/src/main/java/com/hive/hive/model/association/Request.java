@@ -8,31 +8,42 @@ import java.util.HashMap;
 
 public class Request extends AssociationAction {
 
+    //--- SubCollections
+    public static String COMMENTS_COLLECTION = "comments";
+    public static String SUPPORTS_COLLECTION = "supports";
+
+
     private String title;
     private String content;
-    private int supportScore;
+    private int score;
 
     private HashMap<String, RequestCategory> categories;
     private HashMap<String, AssociationComment> comments;
     private HashMap<String, AssociationSupport> supports;
 
-
-    //--- Constructor
-
+    //--- Constructors
 
     public Request() {
     }
 
     public Request(
-            String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId,
-            String associationId, String title, String content, int supportScore,
-            HashMap<String, RequestCategory> categories, HashMap<String, AssociationComment> comments,
-            HashMap<String, AssociationSupport> supports)
-    {
+            String id,
+            long createdAt,
+            long updatedAt,
+            String authorId,
+            String pointsTransactionId,
+            String associationId,
+            String title,
+            String content,
+            int score,
+            HashMap<String, RequestCategory> categories,
+            HashMap<String, AssociationComment> comments,
+            HashMap<String, AssociationSupport> supports
+    ) {
         super(id, createdAt, updatedAt, authorId, pointsTransactionId, associationId);
         this.title = title;
         this.content = content;
-        this.supportScore = supportScore;
+        this.score = score;
         this.categories = categories;
         this.comments = comments;
         this.supports = supports;
@@ -48,8 +59,8 @@ public class Request extends AssociationAction {
         return content;
     }
 
-    public int getSupportScore() {
-        return supportScore;
+    public int getScore() {
+        return score;
     }
 
     public HashMap<String, RequestCategory> getCategories() {
@@ -66,7 +77,6 @@ public class Request extends AssociationAction {
 
     //--- Setters
 
-
     public void setTitle(String title) {
         this.title = title;
     }
@@ -75,8 +85,8 @@ public class Request extends AssociationAction {
         this.content = content;
     }
 
-    public void setSupportScore(int supportScore) {
-        this.supportScore = supportScore;
+    public void setScore(int score) {
+        this.score = score;
     }
 
     public void setCategories(HashMap<String, RequestCategory> categories) {
