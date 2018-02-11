@@ -12,6 +12,9 @@ public class Request extends AssociationAction {
     public static String COMMENTS_COLLECTION = "comments";
     public static String SUPPORTS_COLLECTION = "supports";
 
+    //--- Fields
+    public static String SCORE_FIELD = "score";
+
 
     private String title;
     private String content;
