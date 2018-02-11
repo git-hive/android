@@ -1,5 +1,7 @@
 package com.hive.hive.model.marketplace;
 
+import com.google.firebase.firestore.DocumentReference;
+
 /**
  * Created by naraujo on 1/28/18.
  */
@@ -12,7 +14,7 @@ public class Purchase extends MarketplaceAction {
         super(saleId);
     }
 
-    public Purchase(String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId, String saleId) {
+    public Purchase(String id, long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId, String saleId) {
         super(id, createdAt, updatedAt, authorId, pointsTransactionId, saleId);
     }
 

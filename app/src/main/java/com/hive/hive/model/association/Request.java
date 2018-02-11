@@ -5,10 +5,6 @@ import com.google.firebase.firestore.DocumentReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- * Created by naraujo on 1/28/18.
- */
-
 public class Request extends AssociationAction {
 
     //--- SubCollections
@@ -18,6 +14,7 @@ public class Request extends AssociationAction {
     //--- Fields
     public static String SCORE_FIELD = "score";
 
+    public static int SUPPORT_ACTION_VALUE = 1;
 
     private String title;
     private String content;
@@ -33,15 +30,13 @@ public class Request extends AssociationAction {
             String id,
             long createdAt,
             long updatedAt,
-            String authorId,
-            String pointsTransactionId,
-            String associationId,
+            DocumentReference authorId,
+            DocumentReference pointsTransactionId,
+            DocumentReference associationId,
             String title,
             String content,
             int score,
-            ArrayList<DocumentReference> categories,
-            HashMap<String, AssociationComment> comments,
-            HashMap<String, AssociationSupport> supports
+            ArrayList<DocumentReference> categories
     ) {
         super(id, createdAt, updatedAt, authorId, pointsTransactionId, associationId);
         this.title = title;

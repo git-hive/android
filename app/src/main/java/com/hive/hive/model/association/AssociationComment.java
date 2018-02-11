@@ -1,10 +1,8 @@
 package com.hive.hive.model.association;
 
-import java.util.ArrayList;
+import com.google.firebase.firestore.DocumentReference;
 
-/**
- * Created by naraujo on 1/28/18.
- */
+import java.util.ArrayList;
 
 public class AssociationComment extends AssociationAction {
 
@@ -17,22 +15,25 @@ public class AssociationComment extends AssociationAction {
     private String content;
     private int score;
 
-    private Request targetRequest;
+    private DocumentReference requestRef;
 
-    private ArrayList<String> supportIds;
-
-    //--- Constructor
+    //--- Constructors
 
     public AssociationComment(
-            String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId,
-            String associationId, String content, int score, Request targetRequest,
-            ArrayList<String> supportIds)
-    {
+            String id,
+            long createdAt,
+            long updatedAt,
+            DocumentReference authorId,
+            DocumentReference pointsTransactionId,
+            DocumentReference associationId,
+            String content,
+            int score,
+            DocumentReference requestRef
+    ) {
         super(id, createdAt, updatedAt, authorId, pointsTransactionId, associationId);
         this.content = content;
         this.score = score;
-        this.targetRequest = targetRequest;
-        this.supportIds = supportIds;
+        this.requestRef = requestRef;
     }
 
     //--- Getters
@@ -45,12 +46,8 @@ public class AssociationComment extends AssociationAction {
         return score;
     }
 
-    public Request getTargetRequest() {
-        return targetRequest;
-    }
-
-    public ArrayList<String> getSupportIds() {
-        return supportIds;
+    public DocumentReference getRequestRef() {
+        return requestRef;
     }
 
     //--- Setters
@@ -63,11 +60,8 @@ public class AssociationComment extends AssociationAction {
         this.score = score;
     }
 
-    public void setTargetRequest(Request targetRequest) {
-        this.targetRequest = targetRequest;
+    public void setRequestRef(DocumentReference requestRef) {
+        this.requestRef = requestRef;
     }
 
-    public void setSupportIds(ArrayList<String> supportIds) {
-        this.supportIds = supportIds;
-    }
 }

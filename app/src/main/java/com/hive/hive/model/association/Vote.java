@@ -1,5 +1,6 @@
 package com.hive.hive.model.association;
 
+import com.google.firebase.firestore.DocumentReference;
 import com.hive.hive.model.user.Role;
 
 import java.util.HashMap;
@@ -19,7 +20,7 @@ public class Vote extends AssociationAction {
 
     //--- Constructor
 
-    public Vote(String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId, String associationId, String sessionId, String agendaId, String votingOptionId, float weight, HashMap<String, Role> roles) {
+    public Vote(String id, long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId, DocumentReference associationId, String sessionId, String agendaId, String votingOptionId, float weight, HashMap<String, Role> roles) {
         super(id, createdAt, updatedAt, authorId, pointsTransactionId, associationId);
         this.sessionId = sessionId;
         this.agendaId = agendaId;

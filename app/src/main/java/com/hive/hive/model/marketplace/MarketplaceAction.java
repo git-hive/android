@@ -1,5 +1,6 @@
 package com.hive.hive.model.marketplace;
 
+import com.google.firebase.firestore.DocumentReference;
 import com.hive.hive.model.user.UserAction;
 
 /**
@@ -16,7 +17,7 @@ public class MarketplaceAction extends UserAction {
         this.saleId = saleId;
     }
 
-    public MarketplaceAction(String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId, String saleId) {
+    public MarketplaceAction(String id, long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId, String saleId) {
         super(id, createdAt, updatedAt, authorId, pointsTransactionId);
         this.saleId = saleId;
     }
