@@ -15,13 +15,16 @@ public class RequestViewHolder extends RecyclerView.ViewHolder {
 
     private TextView reqTitleTV;
     private TextView reqMessageTV;
+    private TextView commentsTV;
+    private TextView likesTV;
     private ImageView reqIV;
-
     public RequestViewHolder(View itemView) {
         super(itemView);
         //finding fields
         reqTitleTV = itemView.findViewById(R.id.reqTitleTV);
         reqMessageTV = itemView.findViewById(R.id.reqMessageTV);
+        commentsTV = itemView.findViewById(R.id.commentsTV);
+        likesTV = itemView.findViewById(R.id.likesTV);
         reqIV = itemView.findViewById(R.id.reqIV);
     }
 
@@ -35,5 +38,13 @@ public class RequestViewHolder extends RecyclerView.ViewHolder {
 
     public ImageView getReqIV() {
         return reqIV;
+    }
+
+    public TextView getCommentsTV() {
+        return commentsTV;
+    }
+
+    public TextView getLikesTV() {
+        return likesTV;
     }
 }

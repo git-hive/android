@@ -9,6 +9,7 @@ import com.hive.hive.R;
 import com.hive.hive.home.RequestViewHolder;
 import com.hive.hive.model.association.Request;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -16,9 +17,11 @@ import java.util.HashMap;
  */
 
 public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RequestViewHolder> {
-    private HashMap<String, Request> requests;
-    public RecyclerViewRequestAdapter(HashMap<String, Request> requests){
-        this.requests = requests;
+    private HashMap<String,  Request> mRequests;
+    private ArrayList<String> mIds;
+    public RecyclerViewRequestAdapter(HashMap<String, Request> requests, ArrayList<String> mIds){
+        this.mRequests = requests;
+        this.mIds = mIds;
     }
     @Override
     public RequestViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -28,11 +31,13 @@ public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RequestView
 
     @Override
     public void onBindViewHolder(RequestViewHolder holder, int position) {
-        holder.getReqTitleTV().setText(requests.get(""+position).getTitle());
-        holder.getReqMessageTV().setText(requests.get(""+position).getContent());
+        String id = mIds.get(position);
+        holder.getReqTitleTV().setText(mRequests.get(id).getTitle());
+        holder.getReqMessageTV().setText(mRequests.get(id).getContent());
+
     }
     @Override
     public int getItemCount() {
-        return requests.size();
+        return mRequests.size();
     }
 }

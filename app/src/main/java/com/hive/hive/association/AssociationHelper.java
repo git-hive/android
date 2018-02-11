@@ -1,15 +1,19 @@
-package com.hive.hive.model.association;
+package com.hive.hive.association;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
+import com.hive.hive.model.association.AssociationComment;
+import com.hive.hive.model.association.AssociationSupport;
+import com.hive.hive.model.association.Request;
 
 /**
  * Created by naraujo on 1/29/18.
@@ -23,12 +27,11 @@ public class AssociationHelper {
 
     //--- Request
 
-    public static Task<QuerySnapshot> getAllRequests(FirebaseFirestore db, String associationID) {
+    public static CollectionReference getAllRequests(FirebaseFirestore db, String associationID) {
         return db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
-                .collection(REQUESTS_COLLECTION)
-                .get();
+                .collection(REQUESTS_COLLECTION);
     }
 
     public static Task<DocumentSnapshot> getRequest(FirebaseFirestore db, String associationID, String requisitionID) {
