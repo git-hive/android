@@ -104,7 +104,7 @@ public class AssociationHelper {
      * @param db            Database reference
      * @param associationID Association document ID where to get the request from
      * @param requestID     Request ID where to get the supports from
-     * @return Task that resolved in all request support documents
+     * @return Task that resolves in all request support documents
      */
     public static Task<QuerySnapshot> getAllRequestSupports(
             FirebaseFirestore db,
@@ -127,7 +127,7 @@ public class AssociationHelper {
      * @param associationID Association document ID where to get the request from
      * @param requestID     Request ID where to get the support from
      * @param supportID     Support document ID to be fetched
-     * @return Task that resolved in the request document
+     * @return Task that resolves in the request document
      */
     public static Task<DocumentSnapshot> getRequestSupport(
             FirebaseFirestore db,
@@ -337,7 +337,7 @@ public class AssociationHelper {
      * @param associationID Association document ID where to get the request from
      * @param requestID     Request document ID where to get the comment from
      * @param commentID     Comment document ID to be fetched
-     * @return Task that resolved in the request comment document
+     * @return Task that resolves in the request comment document
      */
     public static Task<DocumentSnapshot> getRequestComment(
             FirebaseFirestore db,
@@ -530,4 +530,89 @@ public class AssociationHelper {
             }
         });
     }
+
+    //--- Session
+
+    /**
+     * Fetches all sessions
+     *
+     * @param db            Database reference
+     * @param associationID Association document ID where to get the sessions from
+     * @return Task that resolves in all session documents
+     */
+    public static Task<QuerySnapshot> getAllSessions(
+            FirebaseFirestore db,
+            String associationID
+    ) {
+        return db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(Association.SESSIONS_COLLECTION)
+                .get();
+    }
+
+    /**
+     * Gets a single session document
+     *
+     * @param db            Database reference
+     * @param associationID Association document ID where the get the session from
+     * @param sessionID     Session document ID to be fetched
+     * @return Tasks that resolves in the session document
+     */
+    public static Task<DocumentSnapshot> getSession(
+            FirebaseFirestore db,
+            String associationID,
+            String sessionID
+    ) {
+        return db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(Association.SESSIONS_COLLECTION)
+                .document(sessionID)
+                .get();
+    };
+
+    /**
+     * Sets a session
+     *
+     * @param db            Database reference
+     * @param associationID Association document ID where to set the session to
+     * @param sessionID     Session document ID to be set
+     * @param session       Document to be set under the provided ID
+     * @return Empty task that resolves successfully if the document was set
+     */
+    public static Task<Void> setSession(
+            FirebaseFirestore db,
+            String associationID,
+            String sessionID,
+            Session session
+    ) {
+        return db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(Association.SESSIONS_COLLECTION)
+                .document(sessionID)
+                .set(session);
+    };
+
+    /**
+     * Deletes a session
+     *
+     * @param db            Database reference
+     * @param associationID Association document ID where to delete the session from
+     * @param sessionID     Session document ID to be deleted
+     * @return Empty task that resolves successfully if the document was deleted
+     */
+    public static Task<Void> deleteSession(
+            FirebaseFirestore db,
+            String associationID,
+            String sessionID
+    ) {
+        return db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(Association.SESSIONS_COLLECTION)
+                .document(sessionID)
+                .delete();
+    };
 }
