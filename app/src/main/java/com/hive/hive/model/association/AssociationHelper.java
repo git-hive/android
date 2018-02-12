@@ -715,4 +715,119 @@ public class AssociationHelper {
                 .document(agendaID)
                 .delete();
     }
+
+    /**
+     * Fetches all the questions from the agenda
+     *
+     * @param db            Database reference
+     * @param associationID Association document ID where to get the session from
+     * @param sessionID     Session document ID where to get the agenda from
+     * @param agendaID      Agenda document ID where to get the questions from
+     * @return Task that resolves in all the question documents
+     */
+    public static Task<QuerySnapshot> getAllAgendaQuestions(
+            FirebaseFirestore db,
+            String associationID,
+            String sessionID,
+            String agendaID
+    ) {
+        return db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(Association.SESSIONS_COLLECTION)
+                .document(sessionID)
+                .collection(Session.AGENDAS_COLLECTION)
+                .document(agendaID)
+                .collection(Agenda.QUESTIONS_COLLECTION)
+                .get();
+    }
+
+    /**
+     * Fetches a single question document from the agenda
+     *
+     * @param db            Database reference
+     * @param associationID Association document ID where to get the session from
+     * @param sessionID     Session document ID where to get the agenda from
+     * @param agendaID      Agenda document ID where to get the question from
+     * @param questionID    Question document ID to be fetched
+     * @return Task that resolves in the question document
+     */
+    public static Task<DocumentSnapshot> getAgendaQuestion(
+            FirebaseFirestore db,
+            String associationID,
+            String sessionID,
+            String agendaID,
+            String questionID
+    ) {
+        return db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(Association.SESSIONS_COLLECTION)
+                .document(sessionID)
+                .collection(Session.AGENDAS_COLLECTION)
+                .document(agendaID)
+                .collection(Agenda.QUESTIONS_COLLECTION)
+                .document(questionID)
+                .get();
+    }
+
+    /**
+     * Sets a question to an agenda
+     *
+     * @param db            Database reference
+     * @param associationID Association document ID where to get the session from
+     * @param sessionID     Session document ID where to get the agenda from
+     * @param agendaID      Agenda document ID where to set de question to
+     * @param questionID    Question document ID to be set
+     * @param question      Question document to be set under the provided ID
+     * @return Empty task that resolves successfully if the document was set
+     */
+    public static Task<Void> setAgendaQuestion(
+            FirebaseFirestore db,
+            String associationID,
+            String sessionID,
+            String agendaID,
+            String questionID,
+            Question question
+    ) {
+        return db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(Association.SESSIONS_COLLECTION)
+                .document(sessionID)
+                .collection(Session.AGENDAS_COLLECTION)
+                .document(agendaID)
+                .collection(Agenda.QUESTIONS_COLLECTION)
+                .document(questionID)
+                .set(question);
+    }
+
+    /**
+     * Deletes a question from an agenda
+     *
+     * @param db            Database reference
+     * @param associationID Association document ID where to get que session from
+     * @param sessionID     Session document ID where to get the agenda from
+     * @param agendaID      Agenda document ID where to delete the question from
+     * @param questionID    Question document ID to be deleted
+     * @return Empty task that resolves successfully if the document was delete
+     */
+    public static Task<Void> deleteAgendaQuestion(
+            FirebaseFirestore db,
+            String associationID,
+            String sessionID,
+            String agendaID,
+            String questionID
+    ) {
+        return db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(Association.SESSIONS_COLLECTION)
+                .document(sessionID)
+                .collection(Session.AGENDAS_COLLECTION)
+                .document(agendaID)
+                .collection(Agenda.QUESTIONS_COLLECTION)
+                .document(questionID)
+                .delete();
+    }
 }
