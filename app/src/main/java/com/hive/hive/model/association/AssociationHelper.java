@@ -243,7 +243,6 @@ public class AssociationHelper {
      * @param points        Points to be added to the request score
      * @return Empty task that resolves successfully if the score was changed
      */
-
     public static Task<Void> addToRequestScore(
             FirebaseFirestore db,
             String associationID,
@@ -552,7 +551,7 @@ public class AssociationHelper {
     }
 
     /**
-     * Gets a single session document
+     * Fetches a single session document
      *
      * @param db            Database reference
      * @param associationID Association document ID where the get the session from
@@ -570,7 +569,7 @@ public class AssociationHelper {
                 .collection(Association.SESSIONS_COLLECTION)
                 .document(sessionID)
                 .get();
-    };
+    }
 
     /**
      * Sets a session
@@ -593,7 +592,7 @@ public class AssociationHelper {
                 .collection(Association.SESSIONS_COLLECTION)
                 .document(sessionID)
                 .set(session);
-    };
+    }
 
     /**
      * Deletes a session
@@ -614,5 +613,106 @@ public class AssociationHelper {
                 .collection(Association.SESSIONS_COLLECTION)
                 .document(sessionID)
                 .delete();
-    };
+    }
+
+    //--- Agenda
+
+    /**
+     * Fetches all agendas
+     *
+     * @param db            Database reference
+     * @param associationID Association document ID where to get the session from
+     * @param sessionID     Session document id where to get the agendas from
+     * @return Task that resolves in all agenda documents
+     */
+    public static Task<QuerySnapshot> getAllAgendas(
+            FirebaseFirestore db,
+            String associationID,
+            String sessionID
+    ) {
+        return db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(Association.SESSIONS_COLLECTION)
+                .document(sessionID)
+                .collection(Session.AGENDAS_COLLECTION)
+                .get();
+    }
+
+    /**
+     * Fetches a single agenda document
+     *
+     * @param db            Database reference
+     * @param associationID Association document ID where to get the session from
+     * @param sessionID     Session document ID where to get the agenda from
+     * @param agendaID      Agenda document ID to be fetched
+     * @return Task that resolves in the agenda document
+     */
+    public static Task<DocumentSnapshot> getAgenda(
+            FirebaseFirestore db,
+            String associationID,
+            String sessionID,
+            String agendaID
+    ) {
+        return db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(Association.SESSIONS_COLLECTION)
+                .document(sessionID)
+                .collection(Session.AGENDAS_COLLECTION)
+                .document(agendaID)
+                .get();
+    }
+
+    /**
+     * Sets an agenda document
+     *
+     * @param db            Database reference
+     * @param associationID Association document ID where to get the session from
+     * @param sessionID     Session document ID where to set the agenda to
+     * @param agendaID      Agenda document ID to be set
+     * @param agenda        Document to be set under the provided ID
+     * @return Empty task that resolves successfully if the document was set
+     */
+    public static Task<Void> setAgenda(
+            FirebaseFirestore db,
+            String associationID,
+            String sessionID,
+            String agendaID,
+            Agenda agenda
+    ) {
+        return db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(Association.SESSIONS_COLLECTION)
+                .document(sessionID)
+                .collection(Session.AGENDAS_COLLECTION)
+                .document(agendaID)
+                .set(agenda);
+    }
+
+    /**
+     * Deletes an agenda
+     *
+     * @param db            Database reference
+     * @param associationID Association document ID where to get the session from
+     * @param sessionID     Session document ID where to delete the agenda from
+     * @param agendaID      Agenda document ID to be deleted
+     * @return Empty task that resolves successfully if the document was deleted
+     */
+    public static Task<Void> deleteAgenda(
+            FirebaseFirestore db,
+            String associationID,
+            String sessionID,
+            String agendaID
+    ) {
+        return db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(Association.SESSIONS_COLLECTION)
+                .document(sessionID)
+                .collection(Session.AGENDAS_COLLECTION)
+                .document(agendaID)
+                .delete();
+    }
 }

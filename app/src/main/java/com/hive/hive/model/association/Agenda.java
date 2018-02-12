@@ -12,7 +12,7 @@ public class Agenda {
     private String content;
 
     private DocumentReference sessionRef;
-    private DocumentReference requisitionRef;
+    private DocumentReference requestRef;
     private DocumentReference forumPostRef;
     private AgendaStatus status;
 
@@ -23,7 +23,7 @@ public class Agenda {
             String title,
             String content,
             DocumentReference sessionRef,
-            DocumentReference requisitionRef,
+            DocumentReference requestRef,
             DocumentReference forumPostRef,
             AgendaStatus status
     ) {
@@ -31,7 +31,7 @@ public class Agenda {
         this.title = title;
         this.content = content;
         this.sessionRef = sessionRef;
-        this.requisitionRef = requisitionRef;
+        this.requestRef = requestRef;
         this.forumPostRef = forumPostRef;
         this.status = status;
     }
@@ -55,8 +55,8 @@ public class Agenda {
         return sessionRef;
     }
 
-    public DocumentReference getRequisitionRef() {
-        return requisitionRef;
+    public DocumentReference getRequestRef() {
+        return requestRef;
     }
 
     public DocumentReference getForumPostRef() {
@@ -85,8 +85,8 @@ public class Agenda {
         this.sessionRef = sessionRef;
     }
 
-    public void setRequisitionRef(DocumentReference requisitionRef) {
-        this.requisitionRef = requisitionRef;
+    public void setRequestRef(DocumentReference requestRef) {
+        this.requestRef = requestRef;
     }
 
     public void setForumPostRef(DocumentReference forumPostRef) {
