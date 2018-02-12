@@ -1,38 +1,39 @@
 package com.hive.hive.model.association;
 
-import java.util.HashMap;
-
-/**
- * Created by naraujo on 1/28/18.
- */
+import com.google.firebase.firestore.DocumentReference;
 
 public class Agenda {
+
+    //--- SubCollections
+    public static String QUESTIONS_COLLECTION = "questions";
 
     private String id;
     private String title;
     private String content;
 
-    private String sessionId;
-    private String requisitionId;   //May be null
-    private String forumPostId;     //May be null
+    private DocumentReference sessionRef;
+    private DocumentReference requisitionRef;
+    private DocumentReference forumPostRef;
     private AgendaStatus status;
-
-    private HashMap<String, Question> questions;
 
     //--- Constructors
 
     public Agenda(
-            String id, String title, String content, String sessionId, String requisitionId,
-            String forumPostId, AgendaStatus status, HashMap<String, Question> questions)
-    {
+            String id,
+            String title,
+            String content,
+            DocumentReference sessionRef,
+            DocumentReference requisitionRef,
+            DocumentReference forumPostRef,
+            AgendaStatus status
+    ) {
         this.id = id;
         this.title = title;
         this.content = content;
-        this.sessionId = sessionId;
-        this.requisitionId = requisitionId;
-        this.forumPostId = forumPostId;
+        this.sessionRef = sessionRef;
+        this.requisitionRef = requisitionRef;
+        this.forumPostRef = forumPostRef;
         this.status = status;
-        this.questions = questions;
     }
 
 
@@ -50,24 +51,20 @@ public class Agenda {
         return content;
     }
 
-    public String getSessionId() {
-        return sessionId;
+    public DocumentReference getSessionRef() {
+        return sessionRef;
     }
 
-    public String getRequisitionId() {
-        return requisitionId;
+    public DocumentReference getRequisitionRef() {
+        return requisitionRef;
     }
 
-    public String getForumPostId() {
-        return forumPostId;
+    public DocumentReference getForumPostRef() {
+        return forumPostRef;
     }
 
     public AgendaStatus getStatus() {
         return status;
-    }
-
-    public HashMap<String, Question> getQuestions() {
-        return questions;
     }
 
     //--- Setters
@@ -84,23 +81,20 @@ public class Agenda {
         this.content = content;
     }
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
+    public void setSessionRef(DocumentReference sessionRef) {
+        this.sessionRef = sessionRef;
     }
 
-    public void setRequisitionId(String requisitionId) {
-        this.requisitionId = requisitionId;
+    public void setRequisitionRef(DocumentReference requisitionRef) {
+        this.requisitionRef = requisitionRef;
     }
 
-    public void setForumPostId(String forumPostId) {
-        this.forumPostId = forumPostId;
+    public void setForumPostRef(DocumentReference forumPostRef) {
+        this.forumPostRef = forumPostRef;
     }
 
     public void setStatus(AgendaStatus status) {
         this.status = status;
     }
 
-    public void setQuestions(HashMap<String, Question> questions) {
-        this.questions = questions;
-    }
 }
