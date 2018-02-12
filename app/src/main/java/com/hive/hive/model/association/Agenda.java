@@ -6,6 +6,7 @@ public class Agenda {
 
     //--- SubCollections
     public static String QUESTIONS_COLLECTION = "questions";
+    public static String VOTES_COLLECTION = "votes";
 
     private String id;
     private String title;
