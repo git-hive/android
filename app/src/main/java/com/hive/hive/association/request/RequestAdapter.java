@@ -16,10 +16,13 @@ import java.util.HashMap;
  * Created by vplentz on 04/02/18.
  */
 
-public class RecyclerViewRequestAdapter extends RecyclerView.Adapter<RequestViewHolder> {
+public class RequestAdapter extends RecyclerView.Adapter<RequestViewHolder> {
+
+    //-- Data
     private HashMap<String,  Request> mRequests;
     private ArrayList<String> mIds;
-    public RecyclerViewRequestAdapter(HashMap<String, Request> requests, ArrayList<String> mIds){
+
+    public RequestAdapter(HashMap<String, Request> requests, ArrayList<String> mIds){
         this.mRequests = requests;
         this.mIds = mIds;
     }
