@@ -1,4 +1,9 @@
 <resources>
+
+    <!-- Activity Titles -->
+    <string name="title_activity_requests">Propostas</string>
+    <string name="new_request_activity_title">Nova Proposta</string>
+
     <!-- Snackbar Strings -->
     <string name="auth_failure">Falha na autenticação</string>
 
@@ -43,19 +48,19 @@
     <string name='hello'>Olá mundo</string>
 
     <!-- Association Strings -->
-    <string name="req">Requisições</string>
+    <string name="req">Propostas</string>
     <string name="vote">Votações</string>
     <string name="trans">Transparência</string>
     <string name="assembleia">Assembléias</string>
 
 
-    <!-- New requests settings -->
-    <string name="new_req">Nova Requisição</string>
-    <string name="title">Título</string>
-    <string name="loc">Localização</string>
-    <string name="descrip">Descrição</string>
-    <string name="send_req">Enviar Requisição</string>
-    <!-- Facebook settings -->
+    <!-- New requests strings -->
+    <string name="request_title_label">Título</string>
+    <string name="request_location_label">Localização</string>
+    <string name="request_description_label">Descrição</string>
+    <string name="save">Salvar</string>
+
+    <!-- Facebook strings -->
     <string name="facebook_app_id">165818667480912</string>
     <string name="fb_login_protocol_scheme">fb165818667480912</string>
     <string name="title_activity_request">RequestActivity</string>

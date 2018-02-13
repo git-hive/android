@@ -1,6 +1,7 @@
 package com.hive.hive.association.request;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -22,25 +23,46 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class NewRequestActivity extends AppCompatActivity {
+
+    //-- Static
+    public static String TAG = NewRequestActivity.class.getSimpleName();
+
+    //-- Data
     HashMap<String, RequestCategory> categories;
-    //BUTTONS
+
+    //-- Views
+
+    //-Buttons
     Button saveBT;
-    //EDITTEXTS
+
+    //-EditTexts
     EditText titleET;
     EditText locationET;
     EditText descriptionET;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_request);
+
+        //-- Toolbar
         Toolbar toolbar = findViewById(R.id.newRequestTB);
         setSupportActionBar(toolbar);
-        //FINDING VIEWS
+        ActionBar actionBar = this.getSupportActionBar();
+        if (actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            Log.d(TAG, "Home as Up setted");
+        }
+        else
+            Log.e(TAG, "Home as Up not setted. Action Bar not found.");
+
+        //Finding Views
         saveBT = findViewById(R.id.saveBT);
         titleET = findViewById(R.id.titleET);
         locationET = findViewById(R.id.locationET);
         descriptionET = findViewById(R.id.descriptionET);
-        //ONCLICKS
+
+        //OnClick Listeners
         saveBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,11 +76,16 @@ public class NewRequestActivity extends AppCompatActivity {
 
             }
         });
-        //OTHER STUFF
+
+        //Categories Dummy Data
         categories = new HashMap<>();
 
     }
-    //CALLED ON ONCLICK METHOD INSIDE CHECKBOXES LAYOUT
+
+    /**
+     * Checkboxes onClick - receives clicked view and processes the category choice
+     * @param view - clicked view
+     */
     public void onCheckboxClicked(View view) {
         // Is the view now checked?
         boolean checked = ((CheckBox) view).isChecked();
@@ -82,11 +109,19 @@ public class NewRequestActivity extends AppCompatActivity {
                 break;
         }
     }
+
+
+    /**
+     * Adds a category to the new Request
+     * @param view - View with the checkgbox category
+     * @param id - category id
+     * @param categoryName - category name
+     */
     private void insertCategory(View view, String id, String categoryName){
         if(((CheckBox) view).isChecked())
             categories.put(id, new RequestCategory(id, categoryName));
         else
             categories.remove(id);
-        Log.d("NEWREQUESTACTIVITY", categories.toString());
+        Log.d(TAG, categories.toString());
     }
 }

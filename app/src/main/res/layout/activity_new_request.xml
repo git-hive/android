@@ -6,43 +6,43 @@
     android:layout_height="match_parent"
     tools:context="com.hive.hive.association.request.NewRequestActivity">
 
-    <android.support.design.widget.AppBarLayout
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/newRequestTB"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="start"
+        app:theme="@style/CustomActionBar"
+        app:titleTextColor="@color/colorOrange"
+        >
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/newRequestTB"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_gravity="start"
-            android:background="@color/colorWhite"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:titleTextColor="@color/colorOrange">
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/textView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="0dp"
+                android:paddingEnd="45dp"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:text="@string/new_request_activity_title"
+                android:textColor="@color/colorBlack"
+                android:textSize="@dimen/toolbar_title_font_size" />
 
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="@string/new_req"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="20dp" />
+            <View
+                android:layout_width="130dp"
+                android:layout_height="2dp"
+                android:layout_marginStart="0dp"
+                android:layout_marginEnd="22.5dp"
+                android:background="@color/colorOrange" />
+        </LinearLayout>
 
-                <View
-                    android:layout_width="130dp"
-                    android:layout_height="2dp"
-                    android:background="@color/colorOrange" />
-            </LinearLayout>
-
-        </android.support.v7.widget.Toolbar>
-    </android.support.design.widget.AppBarLayout>
+    </android.support.v7.widget.Toolbar>
 
     <include layout="@layout/content_new_request" />
 

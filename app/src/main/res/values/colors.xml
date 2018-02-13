@@ -3,6 +3,8 @@
     <color name="colorOrange">#F7931E</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
+
+    <!-- Cards -->
     <color name="cardColor">#FBFCFA</color>
     <color name="cardShadow">#E6E6E6</color>
 

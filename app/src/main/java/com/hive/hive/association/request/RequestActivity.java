@@ -3,6 +3,7 @@ package com.hive.hive.association.request;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -47,6 +48,13 @@ public class RequestActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.requestTB);
         setSupportActionBar(toolbar);
+        ActionBar actionBar = this.getSupportActionBar();
+        if (actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            Log.d(TAG, "Home as Up setted");
+        }
+        else
+            Log.e(TAG, "Home as Up not setted. Action Bar not found.");
 
         FloatingActionButton fab =  findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

@@ -12,4 +12,12 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+
+    <style name="CustomActionBar" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:windowActionBarOverlay">true</item>
+        <!-- Support library compatibility -->
+        <item name="windowActionBarOverlay">true</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_back</item>
+    </style>
+
 </resources>
