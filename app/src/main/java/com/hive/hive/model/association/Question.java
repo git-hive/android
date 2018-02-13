@@ -1,29 +1,40 @@
 package com.hive.hive.model.association;
 
-import java.util.HashMap;
+import com.google.firebase.firestore.DocumentReference;
 
-/**
- * Created by naraujo on 1/28/18.
- */
+import java.util.HashMap;
 
 public class Question {
 
     private String id;
-    private String sessionId;
-    private String agendaId;
     private String question;
-
+    private String info;
     private HashMap<String, QuestionOptions> options;
+    private String winningOption;
+
+    private DocumentReference sessionRef;
+    private DocumentReference agendaRef;
 
     //--- Constructor
 
-    public Question(String id, String sessionId, String agendaId, String question, HashMap<String, QuestionOptions> options) {
+    public Question(
+            String id,
+            String question,
+            String info,
+            HashMap<String, QuestionOptions> options,
+            String winningOption,
+            DocumentReference sessionRef,
+            DocumentReference agendaRef
+    ) {
         this.id = id;
-        this.agendaId = agendaId;
-        this.sessionId = sessionId;
         this.question = question;
+        this.info = info;
         this.options = options;
+        this.winningOption = winningOption;
+        this.sessionRef = sessionRef;
+        this.agendaRef = agendaRef;
     }
+
 
     //--- Getters
 
@@ -31,42 +42,58 @@ public class Question {
         return id;
     }
 
-    public String getSessionId() {
-        return sessionId;
-    }
-
-    public String getAgendaId() {
-        return agendaId;
-    }
-
     public String getQuestion() {
         return question;
+    }
+
+    public String getInfo() {
+        return info;
     }
 
     public HashMap<String, QuestionOptions> getOptions() {
         return options;
     }
 
+    public String getWinningOption() {
+        return winningOption;
+    }
+
+    public DocumentReference getSessionRef() {
+        return sessionRef;
+    }
+
+    public DocumentReference getAgendaRef() {
+        return agendaRef;
+    }
+
 
     //--- Setters
-
+    
     public void setId(String id) {
         this.id = id;
-    }
-
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
-
-    public void setAgendaId(String agendaId) {
-        this.agendaId = agendaId;
     }
 
     public void setQuestion(String question) {
         this.question = question;
     }
 
+    public void setInfo(String info) {
+        this.info = info;
+    }
+
     public void setOptions(HashMap<String, QuestionOptions> options) {
         this.options = options;
+    }
+
+    public void setWinningOption(String winningOption) {
+        this.winningOption = winningOption;
+    }
+
+    public void setSessionRef(DocumentReference sessionRef) {
+        this.sessionRef = sessionRef;
+    }
+
+    public void setAgendaRef(DocumentReference agendaRef) {
+        this.agendaRef = agendaRef;
     }
 }

@@ -1,5 +1,7 @@
 package com.hive.hive.model.forum;
 
+import com.google.firebase.firestore.DocumentReference;
+
 import java.util.HashMap;
 
 /**
@@ -23,7 +25,7 @@ public class ForumPost extends ForumAction {
     }
 
     public ForumPost(
-            String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId,
+            String id, long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId,
             String forumId, String title, String content, int supportScore,
             HashMap<String, ForumCategory> categories, HashMap<String, ForumComment> comments,
             HashMap<String, ForumSupport> supports)

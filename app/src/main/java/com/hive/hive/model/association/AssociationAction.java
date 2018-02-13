@@ -1,35 +1,38 @@
 package com.hive.hive.model.association;
 
+import com.google.firebase.firestore.DocumentReference;
 import com.hive.hive.model.user.UserAction;
-
-/**
- * Created by naraujo on 1/28/18.
- */
 
 public class AssociationAction extends UserAction {
 
-    private String associationId;
+    private DocumentReference associationRef;
 
     //--- Constructors
 
 
-    public AssociationAction() {
-    }
+    public AssociationAction() {}
 
-    public AssociationAction(String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId, String associationId) {
-        super(id, createdAt, updatedAt, authorId, pointsTransactionId);
-        this.associationId = associationId;
+    public AssociationAction(
+            String id,
+            long createdAt,
+            long updatedAt,
+            DocumentReference authorRef,
+            DocumentReference pointsTransactionRef,
+            DocumentReference associationRef
+    ) {
+        super(id, createdAt, updatedAt, authorRef, pointsTransactionRef);
+        this.associationRef = associationRef;
     }
 
     //--- Getters
 
-    public String getAssociationId() {
-        return associationId;
+    public DocumentReference getAssociationRef() {
+        return associationRef;
     }
 
     //--- Setters
 
-    public void setAssociationId(String associationId) {
-        this.associationId = associationId;
+    public void setAssociationRef(DocumentReference associationRef) {
+        this.associationRef = associationRef;
     }
 }

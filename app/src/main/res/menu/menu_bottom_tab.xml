@@ -10,7 +10,7 @@
         />
     <item
         android:id="@+id/action_association"
-        android:title="@string/associationId"
+        android:title="@string/associationRef"
         />
     <item
         android:id="@+id/action_shop"

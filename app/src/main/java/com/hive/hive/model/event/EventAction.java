@@ -1,5 +1,6 @@
 package com.hive.hive.model.event;
 
+import com.google.firebase.firestore.DocumentReference;
 import com.hive.hive.model.user.UserAction;
 
 /**
@@ -12,7 +13,7 @@ public abstract class EventAction extends UserAction {
 
     //--- Cosntructor
 
-    public EventAction(String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId, Event event) {
+    public EventAction(String id, long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId, Event event) {
         super(id, createdAt, updatedAt, authorId, pointsTransactionId);
         this.event = event;
     }

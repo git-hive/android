@@ -10,12 +10,14 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
 import com.hive.hive.association.AssociationHelper;
 import com.hive.hive.model.association.Request;
 import com.hive.hive.model.association.RequestCategory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -44,9 +46,9 @@ public class NewRequestActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //TODO association shouldnt be setted this way
                 String requestUUID = UUID.randomUUID().toString();
-                Request request = new Request(requestUUID, 0, 0, FirebaseAuth.getInstance().getCurrentUser().getUid(),
-                        "0", "gVw7dUkuw3SSZSYRXe8s", titleET.getText().toString(),
-                        descriptionET.getText().toString(), 0, categories, null, null);
+                Request request = new Request(requestUUID, 0, 0, titleET.getText().toString(),
+                        descriptionET.getText().toString(), 0);
+
                 AssociationHelper.setRequest(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", requestUUID, request);
                 finish();
 

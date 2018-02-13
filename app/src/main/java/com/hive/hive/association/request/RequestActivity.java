@@ -77,13 +77,9 @@ public class RequestActivity extends AppCompatActivity {
                             Request request = new Request(dc.getDocument().get("id").toString(),
                                     dc.getDocument().getLong("createdAt"),
                                     dc.getDocument().getLong("updatedAt"),
-                                    dc.getDocument().get("authorId").toString(),
-                                    dc.getDocument().get("pointsTransactionId").toString(),
-                                    dc.getDocument().get("associationId").toString(),
                                     dc.getDocument().get("title").toString(),
                                     dc.getDocument().get("content").toString(),
-                                    Integer.parseInt(dc.getDocument().get("supportScore").toString()),
-                                    null, null, null);
+                                    Integer.parseInt(dc.getDocument().get("score").toString()));
 //                                        documentSnapshot.get("categories"),
 //                                        documentSnapshot.get("comments"),
 //                                        documentSnapshot.get("supports"));
@@ -97,7 +93,7 @@ public class RequestActivity extends AppCompatActivity {
                             mRequests.get(modifiedId).setTitle(dc.getDocument().get("title").toString());
                             // mRequests.get(dc.getDocument().getId()).setComments(dc.getDocument().get("comments").toString());
                            // mRequests.get(dc.getDocument().getId()).setSupports(dc.getDocument().get("supports").toString());
-                            mRequests.get(modifiedId).setSupportScore(Integer.parseInt(dc.getDocument().get("supportScore").toString()));
+                            mRequests.get(modifiedId).setScore(Integer.parseInt(dc.getDocument().get("supportScore").toString()));
                             mRecyclerAdapter.notifyDataSetChanged();
                             break;
                         case REMOVED:

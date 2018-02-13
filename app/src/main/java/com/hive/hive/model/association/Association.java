@@ -1,53 +1,40 @@
 package com.hive.hive.model.association;
 
-import com.hive.hive.model.event.Location;
-import com.hive.hive.model.forum.Forum;
-import com.hive.hive.model.user.Role;
+import com.google.firebase.firestore.DocumentReference;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
-/**
- * Created by naraujo on 1/28/18.
- */
 
 public class Association {
+
+    //--- Collections
+    public static String ROLES_COLLECTIONS = "roles";
+    public static String BUDGET_TRANSACTIONS_COLLECTION = "budgetTransactions";
+    public static String SESSIONS_COLLECTION = "sessions";
+    public static String REQUESTS_COLLECTION = "requests";
+    public static String LOCATIONS_COLLECTION = "locations";
 
     //--- Base attributes
     private String id;
     private String name;
 
-    //--- User Related
-    private HashMap<String, Role> roles;
-
     //--- Forum Related
-    private HashMap<String, Forum> forums;
+    private ArrayList<DocumentReference> forumsIDs;
 
     //--- Association related
     private int totalNumberOfAssociates;
-        //--- Question
-    private HashMap<String, Session> sessions;
-        //--- Transparency
-    private HashMap<String, BudgetTransaction> budgetTransactions;
-
-    //--- Event Related
-    private HashMap<String, Location> locations;
 
     //--- Constructor
 
     public Association(
-            String id, String name, HashMap<String, Role> roles, HashMap<String, Forum> forums,
-            int totalNumberOfAssociates, HashMap<String, Session> sessions, HashMap<String,
-            BudgetTransaction> budgetTransactions, HashMap<String, Location> locations)
-    {
+            String id,
+            String name,
+            int totalNumberOfAssociates,
+            ArrayList<DocumentReference> forumsIDs
+    ) {
         this.id = id;
         this.name = name;
-        this.roles = roles;
-        this.forums = forums;
         this.totalNumberOfAssociates = totalNumberOfAssociates;
-        this.sessions = sessions;
-        this.budgetTransactions = budgetTransactions;
-        this.locations = locations;
+        this.forumsIDs = forumsIDs;
     }
 
 
@@ -61,28 +48,12 @@ public class Association {
         return name;
     }
 
-    public HashMap<String, Role> getRoles() {
-        return roles;
-    }
-
-    public HashMap<String, Forum> getForums() {
-        return forums;
+    public ArrayList<DocumentReference> getForumsIDs() {
+        return forumsIDs;
     }
 
     public int getTotalNumberOfAssociates() {
         return totalNumberOfAssociates;
-    }
-
-    public HashMap<String, Session> getSessions() {
-        return sessions;
-    }
-
-    public HashMap<String, BudgetTransaction> getBudgetTransactions() {
-        return budgetTransactions;
-    }
-
-    public HashMap<String, Location> getLocations() {
-        return locations;
     }
 
 
@@ -97,27 +68,12 @@ public class Association {
         this.name = name;
     }
 
-    public void setRoles(HashMap<String, Role> roles) {
-        this.roles = roles;
-    }
-
-    public void setForums(HashMap<String, Forum> forums) {
-        this.forums = forums;
+    public void setForumsIDs(ArrayList<DocumentReference> forumsIDs) {
+        this.forumsIDs = forumsIDs;
     }
 
     public void setTotalNumberOfAssociates(int totalNumberOfAssociates) {
         this.totalNumberOfAssociates = totalNumberOfAssociates;
     }
 
-    public void setSessions(HashMap<String, Session> sessions) {
-        this.sessions = sessions;
-    }
-
-    public void setBudgetTransactions(HashMap<String, BudgetTransaction> budgetTransactions) {
-        this.budgetTransactions = budgetTransactions;
-    }
-
-    public void setLocations(HashMap<String, Location> locations) {
-        this.locations = locations;
-    }
 }
