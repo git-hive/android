@@ -65,5 +65,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
+    <!-- Image Description Strings -->
+    <string name="ic_budget_category_savings">Ícone de cofrinho</string>
+    <string name="ic_comment">Ícone de Comentário</string>
+    <string name="ic_support">Ícone de Coração</string>
+
 
 </resources>

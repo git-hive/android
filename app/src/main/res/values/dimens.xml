@@ -11,5 +11,12 @@
     <dimen name="categories_filter_item_margin">5dp</dimen>
     <dimen name="categories_filter_select_item_font_size">12sp</dimen>
 
+    <!-- Request Item -->
+    <dimen name="request_title_font_size">16sp</dimen>
+    <dimen name="request_author_name_font_size">14sp</dimen>
+    <dimen name="request_cost_font_size">12sp</dimen>
+    <dimen name="request_author_leaderboard_position_font_size">8sp</dimen>
+    <dimen name="request_content_font_size">14sp</dimen>
+
 
 </resources>
