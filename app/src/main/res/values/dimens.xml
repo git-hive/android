@@ -21,5 +21,8 @@
     <dimen name="request_author_leaderboard_position_font_size">8sp</dimen>
     <dimen name="request_content_font_size">14sp</dimen>
 
+    <!-- New Request -->
+    <dimen name="new_request_category_icon_size">80dp</dimen>
+
 
 </resources>

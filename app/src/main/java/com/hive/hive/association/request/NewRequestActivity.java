@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -87,25 +88,129 @@ public class NewRequestActivity extends AppCompatActivity {
      * @param view - clicked view
      */
     public void onCheckboxClicked(View view) {
-        // Is the view now checked?
-        boolean checked = ((CheckBox) view).isChecked();
+
+        CheckBox checkBox;
+        ImageView imageView;
 
         // Check which checkbox was clicked
         switch(view.getId()) {
-            case R.id.cat1CB:
-                insertCategory(view, "cat1", "cat1");
+            case R.id.cat1IV:
+
+                //Gets views
+                checkBox = findViewById(R.id.cat1CB);
+                imageView = findViewById(R.id.cat1IV);
+
+                //Insert category
+                insertCategory(checkBox, "cat1", "cat1");
+
+                //Changes image
+                if (checkBox.isSelected())
+                    imageView.setImageResource(R.drawable.ic_category_security_disabled);
+                else
+                    imageView.setImageResource(R.drawable.ic_category_security);
+
+                //Inverts selected
+                checkBox.setSelected(!checkBox.isSelected());
+
                 break;
-            case R.id.cat2CB:
-                insertCategory(view, "cat2", "cat2");
+            case R.id.cat2IV:
+
+                //Gets views
+                checkBox = findViewById(R.id.cat2CB);
+                imageView = findViewById(R.id.cat2IV);
+
+                //Insert category
+                insertCategory(checkBox, "cat2", "cat2");
+
+                //Changes image
+                if (checkBox.isSelected())
+                    imageView.setImageResource(R.drawable.ic_category_gardening_disabled);
+                else
+                    imageView.setImageResource(R.drawable.ic_category_gardening);
+
+                //Inverts selected
+                checkBox.setSelected(!checkBox.isSelected());
+
                 break;
-            case R.id.cat3CB:
-                insertCategory(view, "cat3", "cat3");
+            case R.id.cat3IV:
+
+                //Gets views
+                checkBox = findViewById(R.id.cat3CB);
+                imageView = findViewById(R.id.cat3IV);
+
+                //Insert category
+                insertCategory(checkBox, "cat3", "cat3");
+
+                //Changes image
+                if (checkBox.isSelected())
+                    imageView.setImageResource(R.drawable.ic_category_services_disabled);
+                else
+                    imageView.setImageResource(R.drawable.ic_category_services);
+
+                //Inverts selected
+                checkBox.setSelected(!checkBox.isSelected());
+
                 break;
-            case R.id.cat4CB:
-                insertCategory(view, "cat4", "cat4");
+            case R.id.cat4IV:
+
+                //Gets views
+                checkBox = findViewById(R.id.cat4CB);
+                imageView = findViewById(R.id.cat4IV);
+
+                //Insert category
+                insertCategory(checkBox, "cat4", "cat4");
+
+                //Changes image
+                if (checkBox.isSelected())
+                    imageView.setImageResource(R.drawable.ic_category_security_disabled);
+                else
+                    imageView.setImageResource(R.drawable.ic_category_security);
+
+                //Inverts selected
+                checkBox.setSelected(!checkBox.isSelected());
+
                 break;
-            case R.id.cat5CB:
-                insertCategory(view, "cat5", "cat5");
+            case R.id.cat5IV:
+
+                //Gets views
+                checkBox = findViewById(R.id.cat5CB);
+                imageView = findViewById(R.id.cat5IV);
+
+                //Insert category
+                insertCategory(checkBox, "cat5", "cat5");
+
+                //Changes image
+                if (checkBox.isSelected())
+                    imageView.setImageResource(R.drawable.ic_category_gardening_disabled);
+                else
+                    imageView.setImageResource(R.drawable.ic_category_gardening);
+
+                //Inverts selected
+                checkBox.setSelected(!checkBox.isSelected());
+
+                break;
+
+            case R.id.cat6IV:
+
+                //Gets views
+                checkBox = findViewById(R.id.cat6CB);
+                imageView = findViewById(R.id.cat6IV);
+
+                //Insert category
+                insertCategory(checkBox, "cat6", "cat6");
+
+                //Changes image
+                if (checkBox.isSelected())
+                    imageView.setImageResource(R.drawable.ic_category_services_disabled);
+                else
+                    imageView.setImageResource(R.drawable.ic_category_services);
+
+                //Inverts selected
+                checkBox.setSelected(!checkBox.isSelected());
+
+                break;
+
+            default:
                 break;
         }
     }

@@ -39,46 +39,10 @@
 
     </android.support.design.widget.TextInputLayout>
 
-    <CheckBox
-        android:id="@+id/cat1CB"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Categoria 1"
-        android:onClick="onCheckboxClicked"/>
-
-    <CheckBox
-        android:id="@+id/cat2CB"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Categoria 2"
-        android:onClick="onCheckboxClicked"/>
-
-    <CheckBox
-        android:id="@+id/cat3CB"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Categoria 3"
-        android:onClick="onCheckboxClicked"/>
-
-    <CheckBox
-        android:id="@+id/cat4CB"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Categoria 4"
-        android:onClick="onCheckboxClicked"/>
-
-    <CheckBox
-        android:id="@+id/cat5CB"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Categoria 5"
-        android:onClick="onCheckboxClicked"/>
-
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp">
+        android:layout_height="wrap_content">
 
         <EditText
             android:id="@+id/descriptionET"
@@ -87,6 +51,133 @@
             android:hint="@string/request_description_label"
             android:inputType="textPersonName" />
     </android.support.design.widget.TextInputLayout>
+
+
+
+    <!-- Categories -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_gravity="center"
+        android:gravity="center">
+
+        <!-- Categories Row 1 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_gravity="center">
+
+            <!-- Category 1 -->
+            <ImageView
+                android:id="@+id/cat1IV"
+                android:layout_width="@dimen/new_request_category_icon_size"
+                android:layout_height="@dimen/new_request_category_icon_size"
+                app:srcCompat="@drawable/ic_category_security_disabled"
+                android:layout_marginEnd="30dp"
+                android:onClick="onCheckboxClicked" />
+
+            <CheckBox
+                android:id="@+id/cat1CB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
+
+            <!-- Category 2 -->
+            <ImageView
+                android:id="@+id/cat2IV"
+                android:layout_width="@dimen/new_request_category_icon_size"
+                android:layout_height="@dimen/new_request_category_icon_size"
+                app:srcCompat="@drawable/ic_category_gardening_disabled"
+                android:layout_marginEnd="30dp"
+                android:onClick="onCheckboxClicked"/>
+
+            <CheckBox
+                android:id="@+id/cat2CB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
+
+            <!-- Category 3 -->
+            <ImageView
+                android:id="@+id/cat3IV"
+                android:layout_width="@dimen/new_request_category_icon_size"
+                android:layout_height="@dimen/new_request_category_icon_size"
+                app:srcCompat="@drawable/ic_category_services_disabled"
+                android:onClick="onCheckboxClicked" />
+
+            <CheckBox
+                android:id="@+id/cat3CB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+        <!-- Categories Row 2 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_gravity="center">
+
+            <!-- Category 4 -->
+            <ImageView
+                android:id="@+id/cat4IV"
+                android:layout_width="@dimen/new_request_category_icon_size"
+                android:layout_height="@dimen/new_request_category_icon_size"
+                app:srcCompat="@drawable/ic_category_security_disabled"
+                android:layout_marginEnd="30dp"
+                android:onClick="onCheckboxClicked"/>
+
+            <CheckBox
+                android:id="@+id/cat4CB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
+            <!-- Category 5 -->
+            <ImageView
+                android:id="@+id/cat5IV"
+                android:layout_width="@dimen/new_request_category_icon_size"
+                android:layout_height="@dimen/new_request_category_icon_size"
+                app:srcCompat="@drawable/ic_category_gardening_disabled"
+                android:layout_marginEnd="30dp"
+                android:onClick="onCheckboxClicked"/>
+
+            <CheckBox
+                android:id="@+id/cat5CB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
+            <!-- Category 6 -->
+
+            <ImageView
+                android:id="@+id/cat6IV"
+                android:layout_width="@dimen/new_request_category_icon_size"
+                android:layout_height="@dimen/new_request_category_icon_size"
+                app:srcCompat="@drawable/ic_category_services_disabled"
+                android:onClick="onCheckboxClicked" />
+            
+            <CheckBox
+                android:id="@+id/cat6CB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/saveBT"
