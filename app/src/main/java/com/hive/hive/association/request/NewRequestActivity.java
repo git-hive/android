@@ -5,19 +5,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Spinner;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
+import com.hive.hive.association.AssociationHelper;
 import com.hive.hive.model.association.Request;
 import com.hive.hive.model.association.RequestCategory;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class NewRequestActivity extends AppCompatActivity {
     HashMap<String, RequestCategory> categories;
@@ -42,11 +42,12 @@ public class NewRequestActivity extends AppCompatActivity {
         saveBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Request request = new Request("0", 0, 0, FirebaseAuth.getInstance().getCurrentUser().getUid(),
-                        "0", "0", titleET.getText().toString(),
+                //TODO association shouldnt be setted this way
+                String requestUUID = UUID.randomUUID().toString();
+                Request request = new Request(requestUUID, 0, 0, FirebaseAuth.getInstance().getCurrentUser().getUid(),
+                        "0", "gVw7dUkuw3SSZSYRXe8s", titleET.getText().toString(),
                         descriptionET.getText().toString(), 0, categories, null, null);
-                DUMMYREQUESTS.requests.put(""+DUMMYREQUESTS.requests.size(), request);
-                Log.d("NEWREQUESTACTIVITY", DUMMYREQUESTS.requests.toString());
+                AssociationHelper.setRequest(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", requestUUID, request);
                 finish();
 
             }
@@ -63,23 +64,23 @@ public class NewRequestActivity extends AppCompatActivity {
         // Check which checkbox was clicked
         switch(view.getId()) {
             case R.id.cat1CB:
-                insertDummyRequest(view, "cat1", "cat1");
+                insertCategory(view, "cat1", "cat1");
                 break;
             case R.id.cat2CB:
-                insertDummyRequest(view, "cat2", "cat2");
+                insertCategory(view, "cat2", "cat2");
                 break;
             case R.id.cat3CB:
-                insertDummyRequest(view, "cat3", "cat3");
+                insertCategory(view, "cat3", "cat3");
                 break;
             case R.id.cat4CB:
-                insertDummyRequest(view, "cat4", "cat4");
+                insertCategory(view, "cat4", "cat4");
                 break;
             case R.id.cat5CB:
-                insertDummyRequest(view, "cat5", "cat5");
+                insertCategory(view, "cat5", "cat5");
                 break;
         }
     }
-    private void insertDummyRequest(View view, String id, String categoryName){
+    private void insertCategory(View view, String id, String categoryName){
         if(((CheckBox) view).isChecked())
             categories.put(id, new RequestCategory(id, categoryName));
         else

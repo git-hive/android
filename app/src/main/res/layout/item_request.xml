@@ -39,18 +39,34 @@
                     android:id="@+id/reqTitleTV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Associação informa:"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:text="Associação informa:" />
 
                 <TextView
                     android:id="@+id/reqMessageTV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Mensagem"
-                    android:gravity="center"/>
-                <android.support.v4.widget.Space
+                    android:gravity="center"
+                    android:text="Mensagem" />
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="5dp" />
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="end">
+
+                    <TextView
+                        android:id="@+id/commentsTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"/>
+
+                    <TextView
+                        android:id="@+id/likesTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>
