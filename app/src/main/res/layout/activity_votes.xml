@@ -15,7 +15,7 @@
         <ImageView
             android:id="@+id/exitVotesIV"
             android:layout_gravity="left"
-            android:src="@drawable/ic_back_arrow"
+            android:src="@drawable/ic_back"
             android:layout_width="40dp"
             android:layout_height="40dp" />
         <TextView
