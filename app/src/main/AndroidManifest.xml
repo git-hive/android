@@ -14,9 +14,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".main.MainActivity"
             android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".login.LoginActivity"
             android:windowSoftInputMode="stateHidden">
@@ -26,6 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".login.SignupActivity" />
 
         <meta-data
@@ -36,6 +39,7 @@
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
+
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
@@ -48,12 +52,20 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".association.request.RequestActivity"
             android:label="@string/title_activity_request"
-            android:theme="@style/AppTheme" />
-        <activity android:name=".association.request.NewRequestActivity" />
-        <activity android:name=".association.votes.VotesActivity"></activity>
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".main.MainActivity"/>
+
+        <activity
+            android:name=".association.request.NewRequestActivity"
+            android:parentActivityName=".main.MainActivity"
+            />
+
+        <activity android:name=".association.votes.VotesActivity"/>
+
     </application>
 
 </manifest>

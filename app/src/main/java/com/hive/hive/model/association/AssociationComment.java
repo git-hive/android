@@ -1,32 +1,39 @@
 package com.hive.hive.model.association;
 
-import java.util.ArrayList;
+import com.google.firebase.firestore.DocumentReference;
 
-/**
- * Created by naraujo on 1/28/18.
- */
+import java.util.ArrayList;
 
 public class AssociationComment extends AssociationAction {
 
+    //--- SubCollections
+    public static String SUPPORTS_COLLECTION = "supports";
+
+    //--- Fields
+    public static String SCORE_FIELD = "score";
+
     private String content;
-    private int supportScore;
+    private int score;
 
-    private Request targetRequest;
+    private DocumentReference requestRef;
 
-    private ArrayList<String> supportIds;
-
-    //--- Constructor
+    //--- Constructors
 
     public AssociationComment(
-            String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId,
-            String associationId, String content, int supportScore, Request targetRequest,
-            ArrayList<String> supportIds)
-    {
+            String id,
+            long createdAt,
+            long updatedAt,
+            DocumentReference authorId,
+            DocumentReference pointsTransactionId,
+            DocumentReference associationId,
+            String content,
+            int score,
+            DocumentReference requestRef
+    ) {
         super(id, createdAt, updatedAt, authorId, pointsTransactionId, associationId);
         this.content = content;
-        this.supportScore = supportScore;
-        this.targetRequest = targetRequest;
-        this.supportIds = supportIds;
+        this.score = score;
+        this.requestRef = requestRef;
     }
 
     //--- Getters
@@ -35,16 +42,12 @@ public class AssociationComment extends AssociationAction {
         return content;
     }
 
-    public int getSupportScore() {
-        return supportScore;
+    public int getScore() {
+        return score;
     }
 
-    public Request getTargetRequest() {
-        return targetRequest;
-    }
-
-    public ArrayList<String> getSupportIds() {
-        return supportIds;
+    public DocumentReference getRequestRef() {
+        return requestRef;
     }
 
     //--- Setters
@@ -53,15 +56,12 @@ public class AssociationComment extends AssociationAction {
         this.content = content;
     }
 
-    public void setSupportScore(int supportScore) {
-        this.supportScore = supportScore;
+    public void setScore(int score) {
+        this.score = score;
     }
 
-    public void setTargetRequest(Request targetRequest) {
-        this.targetRequest = targetRequest;
+    public void setRequestRef(DocumentReference requestRef) {
+        this.requestRef = requestRef;
     }
 
-    public void setSupportIds(ArrayList<String> supportIds) {
-        this.supportIds = supportIds;
-    }
 }

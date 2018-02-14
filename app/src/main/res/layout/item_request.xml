@@ -6,68 +6,169 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginVertical="10dp"
-        app:cardBackgroundColor="@color/cardShadow"
-        app:cardElevation="12dp"
-        app:cardCornerRadius="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        app:cardBackgroundColor="@color/cardColor"
+        app:cardElevation="6dp"
+        app:cardCornerRadius="5dp"
         >
 
         <LinearLayout
+            android:id="@+id/card_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:gravity="top|center_horizontal">
 
-            <ImageView
-                android:id="@+id/reqIV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@android:drawable/sym_def_app_icon" />
-
+            <!-- Avatar Layout -->
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:id="@+id/request_avatar_ll"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:layout_marginEnd="5dp"
                 android:orientation="vertical"
-                android:layout_gravity="center"
-                >
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:gravity="center_horizontal|top">
+
+                <ImageView
+                    android:id="@+id/request_author_photo_iv"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    app:srcCompat="@drawable/ic_profile_photo"
+                    />
 
                 <TextView
-                    android:id="@+id/reqTitleTV"
-                    android:layout_width="match_parent"
+                    android:id="@+id/request_author_name_tv"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Associação informa:" />
+                    android:text="Vitor Planta"
+                    android:textSize="@dimen/request_author_name_font_size"/>
 
                 <TextView
-                    android:id="@+id/reqMessageTV"
+                    android:id="@+id/request_leaderboard_position_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2º lugar no ranking"
+                    android:textSize="@dimen/request_author_leaderboard_position_font_size"
+                    android:textColor="@color/colorOrange"/>
+
+            </LinearLayout>
+
+            <!-- Info Layout -->
+            <LinearLayout
+                android:id="@+id/request_info_ll"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
+                android:layout_marginStart="5dp"
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:gravity="start|top">
+
+                <TextView
+                    android:id="@+id/request_title_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Mensagem" />
+                    android:text="Plantio de flores na área verde"
+                    android:textSize="@dimen/request_title_font_size"
+                    android:textColor="@color/colorOrange"
+                    />
 
+                <!-- Cost Linear Layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="end">
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:gravity="center">
 
                     <TextView
-                        android:id="@+id/commentsTV"
+                        android:id="@+id/request_cost_tv"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.9"
+                        android:text="Custo estimado: R$ 000.000,000"
+                        android:textSize="@dimen/request_cost_font_size"
+                        android:textColor="@color/gray_text"
+                        android:textStyle="italic"
+                        />
+
+                    <ImageView
+                        android:id="@+id/request_budget_category_iv"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_marginEnd="5dp"
+                       app:srcCompat="@drawable/ic_budget_category_savings"
+                        android:contentDescription="@string/ic_budget_category_savings"/>
+
+                </LinearLayout>
+
+                <!-- Content Text View -->
+                <TextView
+                    android:id="@+id/request_content_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Lorem ipsum dolor sit amet, dipiscing elit, sed diam nullam eget laoreet..."
+                    android:textSize="@dimen/request_content_font_size" />
+
+                <!-- Comments and Supports Layout -->
+                <LinearLayout
+                    android:id="@+id/request_stats_ll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="end|bottom"
+                    android:gravity="end|bottom">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/ic_comment"
+                        android:contentDescription="@string/ic_comment"/>
+
+                    <TextView
+                        android:id="@+id/request_number_of_comments_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"/>
+                        android:text="110"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/request_author_leaderboard_position_font_size"
+                        android:paddingBottom="12dp"
+                        />
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/ic_support_borderline"
+                        android:contentDescription="@string/ic_support"/>
 
                     <TextView
-                        android:id="@+id/likesTV"
+                        android:id="@+id/request_number_of_supports_tv"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:text="110"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/request_author_leaderboard_position_font_size"
+                        android:paddingBottom="12dp"
+                        />
+
                 </LinearLayout>
 
             </LinearLayout>
+
+
+
 
         </LinearLayout>
     </android.support.v7.widget.CardView>
