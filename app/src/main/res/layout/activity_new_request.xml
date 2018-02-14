@@ -15,6 +15,7 @@
         android:layout_gravity="start"
         app:theme="@style/CustomActionBar"
         app:titleTextColor="@color/colorOrange"
+            android:layout_marginBottom="10dp"
         >
 
         <LinearLayout

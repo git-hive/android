@@ -10,5 +10,6 @@
 
     <!-- Text Colors -->
     <color name="gray_text">#4D4D4D</color>
-
+    <color name="green_text">#006837</color>
+    <color name="red_text">#ED1C24</color>
 </resources>

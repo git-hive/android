@@ -3,17 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp"
+    android:layout_marginEnd="20dp"
+    android:layout_marginStart="20dp"
+    android:layout_marginTop="60dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:gravity="center"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="20dp"
+        android:orientation="vertical"
         tools:context="com.hive.hive.association.request.NewRequestActivity">
 
         <!-- Título -->
@@ -30,52 +30,39 @@
                 android:inputType="textPersonName" />
         </android.support.design.widget.TextInputLayout>
 
-        <!-- Localização -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp">
 
-            <EditText
-                android:id="@+id/locationET"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/request_location_label"
-                android:inputType="textPersonName" />
-
-        </android.support.design.widget.TextInputLayout>
 
         <!-- Budget Categories -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:text="@string/new_request_budget_category_label_tv"/>
+            android:text="@string/new_request_budget_category_label_tv" />
 
         <LinearLayout
             android:id="@+id/new_request_budget_categories_ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_gravity="center"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <!-- Budget Category 1 -->
             <LinearLayout
                 android:id="@+id/new_request_budget_category_1_ll"
                 android:layout_width="0dp"
-                android:layout_weight="0.33"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_gravity="center"
-                android:gravity="center">
+                android:layout_weight="0.33"
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/new_request_budget_category_1_iv"
                     android:layout_width="@dimen/new_request_budget_category_icon_size"
                     android:layout_height="@dimen/new_request_budget_category_icon_size"
-                    app:srcCompat="@drawable/ic_budget_category_ordinary_disabled"
-                    android:onClick="onBudgetCategoryClicked" />
+                    android:onClick="onBudgetCategoryClicked"
+                    app:srcCompat="@drawable/ic_budget_category_ordinary_disabled" />
 
                 <TextView
                     android:id="@+id/new_request_budget_category_1_tv"
@@ -84,7 +71,7 @@
                     android:text="@string/budget_category_ordinary"
                     android:textAlignment="center"
                     android:textColor="@color/gray_text"
-                    android:textSize="@dimen/new_request_budget_category_font_size"/>
+                    android:textSize="@dimen/new_request_budget_category_font_size" />
 
             </LinearLayout>
 
@@ -92,18 +79,18 @@
             <LinearLayout
                 android:id="@+id/new_request_budget_category_2_ll"
                 android:layout_width="0dp"
-                android:layout_weight="0.33"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_gravity="center"
-                android:gravity="center">
+                android:layout_weight="0.33"
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/new_request_budget_category_2_iv"
                     android:layout_width="@dimen/new_request_budget_category_icon_size"
                     android:layout_height="@dimen/new_request_budget_category_icon_size"
-                    app:srcCompat="@drawable/ic_budget_category_savings_disabled"
-                    android:onClick="onBudgetCategoryClicked" />
+                    android:onClick="onBudgetCategoryClicked"
+                    app:srcCompat="@drawable/ic_budget_category_savings_disabled" />
 
                 <TextView
                     android:id="@+id/new_request_budget_category_2_tv"
@@ -120,18 +107,18 @@
             <LinearLayout
                 android:id="@+id/new_request_budget_category_3_ll"
                 android:layout_width="0dp"
-                android:layout_weight="0.33"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_gravity="center"
-                android:gravity="center">
+                android:layout_weight="0.33"
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/new_request_budget_category_3_iv"
                     android:layout_width="@dimen/new_request_budget_category_icon_size"
                     android:layout_height="@dimen/new_request_budget_category_icon_size"
-                    app:srcCompat="@drawable/ic_budget_category_extraordinary_disabled"
-                    android:onClick="onBudgetCategoryClicked" />
+                    android:onClick="onBudgetCategoryClicked"
+                    app:srcCompat="@drawable/ic_budget_category_extraordinary_disabled" />
 
                 <TextView
                     android:id="@+id/new_request_budget_category_3_tv"
@@ -146,45 +133,87 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/new_request_current_budget_value_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:text="Há R$ 000.000.000,000 disponíveis no Fundo de Reserva"
+            android:textColor="@color/green_text"
+            />
+
+
+        <!-- Localização -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/costET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/request_cost_label"
+                android:inputType="numberDecimal" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <!-- Localização -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/locationET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/new_request_location_label"
+                android:inputType="textPersonName" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
         <!-- Request Categories -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:text="@string/new_request_budget_category_label_tv"/>
+            android:text="@string/new_request_category_label_tv" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="30dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
             android:layout_gravity="center"
-            android:gravity="center">
+            android:layout_marginBottom="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <!-- Categories Row 1 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_gravity="center"
                 android:gravity="center"
-                android:layout_gravity="center">
+                android:orientation="horizontal">
 
                 <!-- Category 1 -->
                 <ImageView
                     android:id="@+id/cat1IV"
                     android:layout_width="@dimen/new_request_category_icon_size"
                     android:layout_height="@dimen/new_request_category_icon_size"
-                    app:srcCompat="@drawable/ic_category_security_disabled"
                     android:layout_marginEnd="30dp"
-                    android:onClick="onCategoryClicked" />
+                    android:onClick="onCategoryClicked"
+                    app:srcCompat="@drawable/ic_category_security_disabled" />
 
                 <CheckBox
                     android:id="@+id/cat1CB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
 
                 <!-- Category 2 -->
@@ -192,15 +221,15 @@
                     android:id="@+id/cat2IV"
                     android:layout_width="@dimen/new_request_category_icon_size"
                     android:layout_height="@dimen/new_request_category_icon_size"
-                    app:srcCompat="@drawable/ic_category_gardening_disabled"
                     android:layout_marginEnd="30dp"
-                    android:onClick="onCategoryClicked"/>
+                    android:onClick="onCategoryClicked"
+                    app:srcCompat="@drawable/ic_category_gardening_disabled" />
 
                 <CheckBox
                     android:id="@+id/cat2CB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
 
                 <!-- Category 3 -->
@@ -208,14 +237,14 @@
                     android:id="@+id/cat3IV"
                     android:layout_width="@dimen/new_request_category_icon_size"
                     android:layout_height="@dimen/new_request_category_icon_size"
-                    app:srcCompat="@drawable/ic_category_services_disabled"
-                    android:onClick="onCategoryClicked" />
+                    android:onClick="onCategoryClicked"
+                    app:srcCompat="@drawable/ic_category_services_disabled" />
 
                 <CheckBox
                     android:id="@+id/cat3CB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -223,39 +252,39 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_gravity="center"
                 android:gravity="center"
-                android:layout_gravity="center">
+                android:orientation="horizontal">
 
                 <!-- Category 4 -->
                 <ImageView
                     android:id="@+id/cat4IV"
                     android:layout_width="@dimen/new_request_category_icon_size"
                     android:layout_height="@dimen/new_request_category_icon_size"
-                    app:srcCompat="@drawable/ic_category_security_disabled"
                     android:layout_marginEnd="30dp"
-                    android:onClick="onCategoryClicked"/>
+                    android:onClick="onCategoryClicked"
+                    app:srcCompat="@drawable/ic_category_security_disabled" />
 
                 <CheckBox
                     android:id="@+id/cat4CB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <!-- Category 5 -->
                 <ImageView
                     android:id="@+id/cat5IV"
                     android:layout_width="@dimen/new_request_category_icon_size"
                     android:layout_height="@dimen/new_request_category_icon_size"
-                    app:srcCompat="@drawable/ic_category_gardening_disabled"
                     android:layout_marginEnd="30dp"
-                    android:onClick="onCategoryClicked"/>
+                    android:onClick="onCategoryClicked"
+                    app:srcCompat="@drawable/ic_category_gardening_disabled" />
 
                 <CheckBox
                     android:id="@+id/cat5CB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <!-- Category 6 -->
 
@@ -263,19 +292,18 @@
                     android:id="@+id/cat6IV"
                     android:layout_width="@dimen/new_request_category_icon_size"
                     android:layout_height="@dimen/new_request_category_icon_size"
-                    app:srcCompat="@drawable/ic_category_services_disabled"
-                    android:onClick="onCategoryClicked" />
+                    android:onClick="onCategoryClicked"
+                    app:srcCompat="@drawable/ic_category_services_disabled" />
 
                 <CheckBox
                     android:id="@+id/cat6CB"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
             </LinearLayout>
 
         </LinearLayout>
-
 
 
         <!-- Description -->
@@ -283,31 +311,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
-            android:divider="@color/colorWhite">
-
+            android:divider="@color/colorWhite"
+            android:background="@drawable/input_box"
+            android:padding="10dp">
             <EditText
                 android:id="@+id/descriptionET"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/request_description_label"
                 android:inputType="textMultiLine"
-                android:lines="5"
                 android:scrollHorizontally="false"
                 android:scrollbars="vertical"
-                />
+                android:background="@android:color/transparent"/>
         </android.support.design.widget.TextInputLayout>
 
         <!-- Save Button -->
         <Button
             android:id="@+id/saveBT"
-            android:background="@color/colorOrange"
-            android:textColor="@color/colorWhite"
-            android:padding="15dp"
-            android:layout_marginBottom="60dp"
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/save" />
+            android:layout_gravity="center"
+            android:layout_marginBottom="60dp"
+            android:background="@color/colorOrange"
+            android:padding="15dp"
+            android:text="@string/save"
+            android:textColor="@color/colorWhite" />
 
     </LinearLayout>
 

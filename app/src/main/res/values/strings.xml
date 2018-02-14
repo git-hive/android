@@ -56,10 +56,13 @@
 
     <!-- New requests strings -->
     <string name="request_title_label">Título</string>
-    <string name="request_location_label">Localização</string>
+    <string name="request_cost_label">Custo estimado</string>
     <string name="request_description_label">Descrição</string>
     <string name="save">Salvar</string>
     <string name="new_request_budget_category_label_tv">Tipo de Despesa:</string>
+    <string name="new_request_category_label_tv">Categorias da Proposta:</string>
+    <string name="new_request_location_label">Localização</string>
+
 
     <!-- Facebook strings -->
     <string name="facebook_app_id">165818667480912</string>
