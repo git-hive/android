@@ -29,17 +29,18 @@ public class NewRequestActivity extends AppCompatActivity {
     public static String TAG = NewRequestActivity.class.getSimpleName();
 
     //-- Data
-    HashMap<String, RequestCategory> categories;
+    private HashMap<String, RequestCategory> categories;
+    private int chosenBudgetCategory = 0;
 
     //-- Views
 
     //-Buttons
-    Button saveBT;
+    private Button saveBT;
 
     //-EditTexts
-    EditText titleET;
-    EditText locationET;
-    EditText descriptionET;
+    private EditText titleET;
+    private EditText locationET;
+    private EditText descriptionET;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +51,8 @@ public class NewRequestActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.newRequestTB);
         setSupportActionBar(toolbar);
         ActionBar actionBar = this.getSupportActionBar();
-        if (actionBar != null){
+        if (actionBar != null)
             actionBar.setDisplayHomeAsUpEnabled(true);
-            Log.d(TAG, "Home as Up setted");
-        }
-        else
-            Log.e(TAG, "Home as Up not setted. Action Bar not found.");
 
         //Finding Views
         saveBT = findViewById(R.id.saveBT);
@@ -87,7 +84,7 @@ public class NewRequestActivity extends AppCompatActivity {
      * Checkboxes onClick - receives clicked view and processes the category choice
      * @param view - clicked view
      */
-    public void onCheckboxClicked(View view) {
+    public void onCategoryClicked(View view) {
 
         CheckBox checkBox;
         ImageView imageView;
@@ -213,6 +210,121 @@ public class NewRequestActivity extends AppCompatActivity {
             default:
                 break;
         }
+    }
+
+
+    /**
+     * Checkboxes onClick - receives clicked view and processes the category choice
+     * @param view - clicked view
+     */
+    public void onBudgetCategoryClicked(View view) {
+
+        ImageView imageView1, imageView2, imageView3;
+
+        // Check which checkbox was clicked
+        switch(view.getId()) {
+            case R.id.new_request_budget_category_1_iv:
+
+                //Gets views
+                imageView1 = findViewById(R.id.new_request_budget_category_1_iv);
+                imageView2 = findViewById(R.id.new_request_budget_category_2_iv);
+                imageView3 = findViewById(R.id.new_request_budget_category_3_iv);
+
+                //Changes images
+                switch (this.chosenBudgetCategory){
+                    case 0:
+                        imageView1.setImageResource(R.drawable.ic_budget_category_ordinary);
+                        this.chosenBudgetCategory = 1;
+                        break;
+                    case 1:
+                        imageView1.setImageResource(R.drawable.ic_budget_category_ordinary_disabled);
+                        this.chosenBudgetCategory = 0;
+                        break;
+                    case 2:
+                        imageView1.setImageResource(R.drawable.ic_budget_category_ordinary);
+                        imageView2.setImageResource(R.drawable.ic_budget_category_savings_disabled);
+                        this.chosenBudgetCategory = 1;
+                        break;
+                    case 3:
+                        imageView1.setImageResource(R.drawable.ic_budget_category_ordinary);
+                        imageView3.setImageResource(R.drawable.ic_budget_category_extraordinary_disabled);
+                        this.chosenBudgetCategory = 1;
+                        break;
+                    default:
+                        break;
+                }
+
+                break;
+
+            case R.id.new_request_budget_category_2_iv:
+
+                //Gets views
+                imageView1 = findViewById(R.id.new_request_budget_category_1_iv);
+                imageView2 = findViewById(R.id.new_request_budget_category_2_iv);
+                imageView3 = findViewById(R.id.new_request_budget_category_3_iv);
+
+                //Changes images
+                switch (this.chosenBudgetCategory){
+                    case 0:
+                        imageView2.setImageResource(R.drawable.ic_budget_category_savings);
+                        this.chosenBudgetCategory = 2;
+                        break;
+                    case 1:
+                        imageView1.setImageResource(R.drawable.ic_budget_category_ordinary_disabled);
+                        imageView2.setImageResource(R.drawable.ic_budget_category_savings);
+                        this.chosenBudgetCategory = 2;
+                        break;
+                    case 2:
+                        imageView2.setImageResource(R.drawable.ic_budget_category_savings_disabled);
+                        this.chosenBudgetCategory = 0;
+                        break;
+                    case 3:
+                        imageView2.setImageResource(R.drawable.ic_budget_category_savings);
+                        imageView3.setImageResource(R.drawable.ic_budget_category_extraordinary_disabled);
+                        this.chosenBudgetCategory = 2;
+                        break;
+                    default:
+                        break;
+                }
+
+                break;
+
+            case R.id.new_request_budget_category_3_iv:
+
+                //Gets views
+                imageView1 = findViewById(R.id.new_request_budget_category_1_iv);
+                imageView2 = findViewById(R.id.new_request_budget_category_2_iv);
+                imageView3 = findViewById(R.id.new_request_budget_category_3_iv);
+
+                //Changes images
+                switch (this.chosenBudgetCategory){
+                    case 0:
+                        imageView3.setImageResource(R.drawable.ic_budget_category_extraordinary);
+                        this.chosenBudgetCategory = 3;
+                        break;
+                    case 1:
+                        imageView1.setImageResource(R.drawable.ic_budget_category_ordinary_disabled);
+                        imageView3.setImageResource(R.drawable.ic_budget_category_extraordinary);
+                        this.chosenBudgetCategory = 3;
+                        break;
+                    case 2:
+                        imageView2.setImageResource(R.drawable.ic_budget_category_savings_disabled);
+                        imageView3.setImageResource(R.drawable.ic_budget_category_extraordinary);
+                        this.chosenBudgetCategory = 3;
+                        break;
+                    case 3:
+                        imageView3.setImageResource(R.drawable.ic_budget_category_extraordinary_disabled);
+                        this.chosenBudgetCategory = 0;
+                        break;
+                    default:
+                        break;
+                }
+
+            default:
+                break;
+        }
+
+        Log.d(TAG, "Current budget category: " + this.chosenBudgetCategory);
     }
 
 
