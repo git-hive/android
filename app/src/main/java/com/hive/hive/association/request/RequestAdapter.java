@@ -1,5 +1,8 @@
 package com.hive.hive.association.request;
 
+import android.content.Context;
+import android.content.Intent;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,10 +26,11 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     //-- Data
     private HashMap<String,  Request> mRequests;
     private ArrayList<String> mIds;
-
-    public RequestAdapter(HashMap<String, Request> requests, ArrayList<String> mIds){
+    private Context context;
+    public RequestAdapter(HashMap<String, Request> requests, ArrayList<String> mIds, Context context){
         this.mRequests = requests;
         this.mIds = mIds;
+        this.context = context;
     }
     @Override
     public RequestViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -47,6 +51,12 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         holder.mRequestContent.setText(request.getContent());
         holder.mNumberOfSupports.setText(String.valueOf(request.getScore()));
 
+        holder.nCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                context.startActivity(new Intent(context, CommentaryActivity.class));
+            }
+        });
 
     }
     @Override
@@ -63,15 +73,17 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         final View mView;
 
         final ImageView mUserAvatar;
+        final ImageView mRequestCategory;
+
         final TextView mUserName;
         final TextView mUserLeaderboardPostion;
         final TextView mRequestTitle;
         final TextView mRequestCost;
-        final ImageView mRequestCategory;
         final TextView mRequestContent;
         final TextView mNumberOfComments;
         final TextView mNumberOfSupports;
 
+        final CardView nCard;
         Request mItem;
 
         RequestViewHolder(View view){
@@ -88,6 +100,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             mRequestContent = view.findViewById(R.id.request_content_tv);
             mNumberOfComments = view.findViewById(R.id.request_number_of_comments_tv);
             mNumberOfSupports = view.findViewById(R.id.request_number_of_supports_tv);
+
+            nCard = view.findViewById(R.id.requestCV);
 
         }
 

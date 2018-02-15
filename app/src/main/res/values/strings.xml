@@ -3,7 +3,7 @@
     <!-- Activity Titles -->
     <string name="title_activity_requests">Propostas</string>
     <string name="new_request_activity_title">Nova Proposta</string>
-
+    <string name="request_commentaty_title">Comentários</string>
     <!-- Snackbar Strings -->
     <string name="auth_failure">Falha na autenticação</string>
 

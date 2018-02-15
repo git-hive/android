@@ -114,7 +114,7 @@ public class RequestActivity extends AppCompatActivity {
         mRequestRV.setHasFixedSize(true);
 
         //Set Adapter
-        mRecyclerAdapter = new RequestAdapter(mRequests, mIds);
+        mRecyclerAdapter = new RequestAdapter(mRequests, mIds, this);
         mRequestRV.setAdapter(mRecyclerAdapter);
     }
 
