@@ -69,6 +69,8 @@
     <string name="new_request_current_budget_extraordinary_string">\u0020 para despesas extraordinárias. </string>
 
 
+    <!-- Request Comments strings -->
+    <string name="should_text">Qual é o seu comentário?</string>
     <!-- Facebook strings -->
     <string name="facebook_app_id">165818667480912</string>
     <string name="fb_login_protocol_scheme">fb165818667480912</string>

@@ -21,14 +21,14 @@
 
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/commentTV"
             android:layout_width="300dp"
             android:layout_height="50dp"
             android:ems="10"
             android:inputType="textPersonName" />
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/commentIV"
             android:background="@color/colorOrange"
             android:layout_width="50dp"
             android:layout_height="50dp"

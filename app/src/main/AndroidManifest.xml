@@ -57,7 +57,7 @@
             android:name=".association.request.NewRequestActivity"
             android:parentActivityName=".main.MainActivity" />
         <activity android:name=".association.votes.VotesActivity" />
-        <activity android:name=".association.request.CommentaryActivity"></activity>
+        <activity android:name=".association.request.CommentaryActivity" />
     </application>
 
 </manifest>
