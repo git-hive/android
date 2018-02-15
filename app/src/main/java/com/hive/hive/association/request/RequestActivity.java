@@ -78,19 +78,7 @@ public class RequestActivity extends AppCompatActivity {
                 for (DocumentChange dc : documentSnapshots.getDocumentChanges()) {
                     switch (dc.getType()) {
                         case ADDED:
-                            Log.d(TAG, dc.getDocument().get("title").toString());
-                            //TODO documentSnapshot.toObject is not working
-                            //TODO change nulls to real objects
-
-                            Request request = new Request(dc.getDocument().get("id").toString(),
-                                    dc.getDocument().getLong("createdAt"),
-                                    dc.getDocument().getLong("updatedAt"),
-                                    dc.getDocument().get("title").toString(),
-                                    dc.getDocument().get("content").toString(),
-                                    Integer.parseInt(dc.getDocument().get("score").toString()));
-//                                        documentSnapshot.get("categories"),
-//                                        documentSnapshot.get("comments"),
-//                                        documentSnapshot.get("supports"));
+                            Request request = dc.getDocument().toObject(Request.class);
                             mRequests.put(dc.getDocument().getId() ,request);
                             mIds.add(dc.getDocument().getId());
                             mRecyclerAdapter.notifyDataSetChanged();
@@ -98,10 +86,8 @@ public class RequestActivity extends AppCompatActivity {
                         case MODIFIED:
                             String modifiedId = dc.getDocument().getId();
                             mRequests.get(modifiedId).setUpdatedAt(dc.getDocument().getLong("updatedAt"));
-                            mRequests.get(modifiedId).setTitle(dc.getDocument().get("title").toString());
-                            // mRequests.get(dc.getDocument().getId()).setComments(dc.getDocument().get("comments").toString());
-                           // mRequests.get(dc.getDocument().getId()).setSupports(dc.getDocument().get("supports").toString());
-                            mRequests.get(modifiedId).setScore(Integer.parseInt(dc.getDocument().get("supportScore").toString()));
+                            mRequests.remove(modifiedId);
+                            mRequests.put(modifiedId, dc.getDocument().toObject(Request.class));
                             mRecyclerAdapter.notifyDataSetChanged();
                             break;
                         case REMOVED:
