@@ -62,6 +62,11 @@
     <string name="new_request_budget_category_label_tv">Tipo de Despesa:</string>
     <string name="new_request_category_label_tv">Categorias da Proposta:</string>
     <string name="new_request_location_label">Localização</string>
+    <string name="new_request_current_budget_string1">*Há R$ \u0020</string>
+    <string name="new_request_current_budget_string2">\u0020 disponíveis </string>
+    <string name="new_request_current_budget_ordinary_string">\u0020 para despesas ordinárias. </string>
+    <string name="new_request_current_budget_savings_string">\u0020 no fundo de reserva. </string>
+    <string name="new_request_current_budget_extraordinary_string">\u0020 para despesas extraordinárias. </string>
 
 
     <!-- Facebook strings -->

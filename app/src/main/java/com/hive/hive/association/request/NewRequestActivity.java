@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -18,6 +19,8 @@ import com.hive.hive.R;
 import com.hive.hive.association.AssociationHelper;
 import com.hive.hive.model.association.Request;
 import com.hive.hive.model.association.RequestCategory;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -220,6 +223,10 @@ public class NewRequestActivity extends AppCompatActivity {
     public void onBudgetCategoryClicked(View view) {
 
         ImageView imageView1, imageView2, imageView3;
+        TextView textView;
+        String budgetString;
+
+        textView = findViewById(R.id.new_request_current_budget_value_tv);
 
         // Check which checkbox was clicked
         switch(view.getId()) {
@@ -230,20 +237,29 @@ public class NewRequestActivity extends AppCompatActivity {
                 imageView2 = findViewById(R.id.new_request_budget_category_2_iv);
                 imageView3 = findViewById(R.id.new_request_budget_category_3_iv);
 
+
                 //Changes images
                 switch (this.chosenBudgetCategory){
                     case 0:
+
                         imageView1.setImageResource(R.drawable.ic_budget_category_ordinary);
                         this.chosenBudgetCategory = 1;
+                        textView.setVisibility(View.VISIBLE);
+
                         break;
                     case 1:
+
                         imageView1.setImageResource(R.drawable.ic_budget_category_ordinary_disabled);
                         this.chosenBudgetCategory = 0;
+                        textView.setVisibility(View.GONE);
+
                         break;
                     case 2:
+
                         imageView1.setImageResource(R.drawable.ic_budget_category_ordinary);
                         imageView2.setImageResource(R.drawable.ic_budget_category_savings_disabled);
                         this.chosenBudgetCategory = 1;
+
                         break;
                     case 3:
                         imageView1.setImageResource(R.drawable.ic_budget_category_ordinary);
@@ -253,6 +269,13 @@ public class NewRequestActivity extends AppCompatActivity {
                     default:
                         break;
                 }
+
+
+                budgetString = getResources().getString(R.string.new_request_current_budget_string1)
+                        + "000.000.000,00"
+                        + getResources().getString(R.string.new_request_current_budget_string2)
+                        + getResources().getString(R.string.new_request_current_budget_ordinary_string);
+                textView.setText(budgetString);
 
                 break;
 
@@ -268,6 +291,7 @@ public class NewRequestActivity extends AppCompatActivity {
                     case 0:
                         imageView2.setImageResource(R.drawable.ic_budget_category_savings);
                         this.chosenBudgetCategory = 2;
+                        textView.setVisibility(View.VISIBLE);
                         break;
                     case 1:
                         imageView1.setImageResource(R.drawable.ic_budget_category_ordinary_disabled);
@@ -277,6 +301,7 @@ public class NewRequestActivity extends AppCompatActivity {
                     case 2:
                         imageView2.setImageResource(R.drawable.ic_budget_category_savings_disabled);
                         this.chosenBudgetCategory = 0;
+                        textView.setVisibility(View.GONE);
                         break;
                     case 3:
                         imageView2.setImageResource(R.drawable.ic_budget_category_savings);
@@ -286,6 +311,12 @@ public class NewRequestActivity extends AppCompatActivity {
                     default:
                         break;
                 }
+
+                budgetString = getResources().getString(R.string.new_request_current_budget_string1)
+                        + "000.000.000,00"
+                        + getResources().getString(R.string.new_request_current_budget_string2)
+                        + getResources().getString(R.string.new_request_current_budget_savings_string);
+                textView.setText(budgetString);
 
                 break;
 
@@ -301,6 +332,7 @@ public class NewRequestActivity extends AppCompatActivity {
                     case 0:
                         imageView3.setImageResource(R.drawable.ic_budget_category_extraordinary);
                         this.chosenBudgetCategory = 3;
+                        textView.setVisibility(View.VISIBLE);
                         break;
                     case 1:
                         imageView1.setImageResource(R.drawable.ic_budget_category_ordinary_disabled);
@@ -315,10 +347,17 @@ public class NewRequestActivity extends AppCompatActivity {
                     case 3:
                         imageView3.setImageResource(R.drawable.ic_budget_category_extraordinary_disabled);
                         this.chosenBudgetCategory = 0;
+                        textView.setVisibility(View.GONE);
                         break;
                     default:
                         break;
                 }
+
+                budgetString = getResources().getString(R.string.new_request_current_budget_string1)
+                        + "000.000.000,00"
+                        + getResources().getString(R.string.new_request_current_budget_string2)
+                        + getResources().getString(R.string.new_request_current_budget_extraordinary_string);
+                textView.setText(budgetString);
 
             default:
                 break;
