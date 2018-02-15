@@ -19,6 +19,9 @@ public class Vote extends AssociationAction {
     private DocumentReference sessionRef;
 
     //--- Constructor
+    public  Vote(){
+        // EMPTY
+    }
 
     public Vote(
             String id,
