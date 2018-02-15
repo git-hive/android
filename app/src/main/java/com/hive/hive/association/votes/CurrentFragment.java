@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
@@ -42,7 +43,7 @@ public class CurrentFragment extends Fragment {
 //    private ArrayList<String> mIds;
 //    private HashMap<String, Vote> mCurrentVotes;
 
-    ArrayList<Object> DUMMYARRAY;
+    ArrayList<Vote> DUMMYARRAY;
 
     //--- Listeners
     EventListener<QuerySnapshot> mCurrentVotesEL;
@@ -63,7 +64,7 @@ public class CurrentFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_current, container, false);
 
-        DUMMYARRAY = new ArrayList<>();
+        DUMMYARRAY = new ArrayList<Vote>();
         DUMMYARRAY.add(new Vote());
         DUMMYARRAY.add(new Vote());
         DUMMYARRAY.add(new Vote());
@@ -72,6 +73,16 @@ public class CurrentFragment extends Fragment {
         DUMMYARRAY.add(new Vote());
         DUMMYARRAY.add(new Vote());
         DUMMYARRAY.add(new Vote());
+
+        // Adding Action Stuff
+        DUMMYARRAY.get(0).setRequestBtnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "CUSTOM HANDLER FOR FIRST BUTTON", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
 
         //Set currentTab Layout and data
         mCurrentVotesListRV = (RecyclerView) view.findViewById(R.id.current_votes_list_RV);
@@ -80,7 +91,17 @@ public class CurrentFragment extends Fragment {
         mCurrentVotesListRV.setHasFixedSize(true);
 
         mCurrentAdapter = new CurrentAdapter(DUMMYARRAY, NUM_LIST_ITEMS);
+        //Adding Click Listener To Card Buttons
+        mCurrentAdapter.setDefaultRequestBtnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "DEFAULT HANDLER FOR ALL BUTTONS", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         mCurrentVotesListRV.setAdapter(mCurrentAdapter);
+
+
 
         return view;
     }
