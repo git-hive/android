@@ -9,6 +9,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
 import com.hive.hive.model.association.AssociationComment;
@@ -174,7 +175,7 @@ public class AssociationHelper {
 
     //--- Request comment
 
-    public static Task<QuerySnapshot> getAllRequestComments(
+    public static CollectionReference getAllRequestComments(
             FirebaseFirestore db,
             String associationID,
             String requestID
@@ -184,8 +185,7 @@ public class AssociationHelper {
                 .document(associationID)
                 .collection(REQUESTS_COLLECTION)
                 .document(requestID)
-                .collection(COMMENTS_COLLECTION)
-                .get();
+                .collection(COMMENTS_COLLECTION);
     }
 
     public static Task<DocumentSnapshot> getRequestComment(

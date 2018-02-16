@@ -2,7 +2,6 @@ package com.hive.hive.association.request;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hive.hive.R;
-import com.hive.hive.home.RequestViewHolderOld;
+import com.hive.hive.association.request.comments.CommentaryActivity;
 import com.hive.hive.model.association.Request;
 
 import java.util.ArrayList;

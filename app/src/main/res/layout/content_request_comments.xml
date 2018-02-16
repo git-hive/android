@@ -5,13 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.hive.hive.association.request.RequestActivity"
+    tools:context="com.hive.hive.association.request.comments.CommentaryActivity"
     tools:showIn="@layout/activity_commentary"
     android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/commentsRV"
         android:layout_width="match_parent"
-        android:layout_height="450dp" />
+        android:layout_height="480dp"
+        app:layoutManager="LinearLayoutManager"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"

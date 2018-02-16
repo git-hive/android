@@ -19,6 +19,9 @@ public class AssociationComment extends AssociationAction {
 
     //--- Constructors
 
+    public AssociationComment() {
+    }
+
     public AssociationComment(
             String id,
             long createdAt,
