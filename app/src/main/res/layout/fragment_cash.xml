@@ -2,12 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.hive.hive.association.votes.tabs.FutureFragment">
+    android:layout_gravity="center"
+    tools:context="com.hive.hive.association.transparency.tabs.CashFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:gravity="center"
+        android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:text="@string/hard_coded_i_do_like_pdfs_3" />
 
 </FrameLayout>

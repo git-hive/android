@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 
 import com.hive.hive.R;
 import com.hive.hive.association.request.RequestActivity;
+import com.hive.hive.association.transparency.TransparencyActivity;
 import com.hive.hive.association.votes.VotesActivity;
 
 
@@ -20,6 +21,8 @@ public class AssociationFragment extends Fragment {
 
     ImageButton requestBT;
     ImageButton votesBT;
+    ImageButton transparencyBT;
+
     public AssociationFragment() {
         // Required empty public constructor
     }
@@ -43,6 +46,8 @@ public class AssociationFragment extends Fragment {
 
         requestBT = v.findViewById(R.id.requestsBT);
         votesBT = v.findViewById(R.id.voteBT);
+        transparencyBT = v.findViewById(R.id.trasnparencyBT);
+
 
         requestBT.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +62,15 @@ public class AssociationFragment extends Fragment {
                 startActivity(new Intent(v.getContext(), VotesActivity.class));
             }
         });
-        // Inflate the layout for this fragment
+
+        transparencyBT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(v.getContext(), TransparencyActivity.class));
+            }
+        });
+
+
         return v;
     }
 }
