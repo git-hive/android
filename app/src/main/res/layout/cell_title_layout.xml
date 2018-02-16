@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/bgContent"
@@ -9,46 +10,30 @@
     <!-- LEFT TITLE PART -->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="155dp"
+        android:layout_height="130dp"
         android:layout_weight="3"
-        android:background="@color/bgTitleLeft"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingBottom="20dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="20dp">
-
-
-
+        android:background="@color/colorWhite"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:orientation="vertical">
         <ImageView
+            android:foregroundGravity="center"
             android:text="@string/assembleia"
-            android:id="@+id/title_time_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
+            android:id="@+id/category_IV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:textColor="@android:color/white"
-            android:background="@drawable/coin"
+            android:background="@drawable/ic_category_gardening"
             android:textSize="14sp" />
-
-
-
     </RelativeLayout>
     <!-- RIGHT TITLE PART -->
     <LinearLayout
+        android:gravity="center"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@color/bgTitleRight"
-        android:paddingBottom="20dp"
-        android:paddingEnd="20dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="20dp"
-        android:paddingStart="15dp"
-        android:paddingTop="20dp">
+        android:background="@color/com_facebook_button_login_silver_background_color">
 
         <TextView
             android:text="@string/new_request_activity_title"
@@ -62,7 +47,6 @@
             android:text="@string/born"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-
 
 
     </LinearLayout>

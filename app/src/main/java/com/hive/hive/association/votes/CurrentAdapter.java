@@ -78,10 +78,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
 
         switch (viewHolder.getItemViewType()) {
-//            case REQUEST:
-//                RequestViewHolderOld requestViewHolderOld = (RequestViewHolderOld) viewHolder;
-//                configureViewHolder1(requestViewHolderOld, position);
-//                break;
+
             case ASSOCIATIONPOST:
                 AssociationViewHolder associationViewHolder = (AssociationViewHolder) viewHolder;
                 configureViewHolder2(associationViewHolder);
@@ -100,18 +97,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
                 if(votesViewHolder.fc.getTag() == null) {
-
-//                vote.setWeight((float) 666.0);
-//                vote.setVotingOption(satan);
-//                vote.setCreatedAt(666);
-//                vote.setUpdatedAt(666);
-//                vote.setId(satan);
-
                     votesViewHolder = (VotesViewHolder) viewHolder;
-                    //votesViewHolder.title.setText(vote.getVotingOption());
-                    //votesViewHolder.weight.setText(Float.toString(vote.getWeight()));
-                    //votesViewHolder.address.setText(vote.getId());
-                    //votesViewHolder.time.setText(Integer.toString((int) vote.getCreatedAt()));
 
                 }else{
 
@@ -141,13 +127,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemViewType(int position) {
-//        if(mCurrentVotes.get(position) instanceof Request)
-//            return REQUEST;
-//        else if(mCurrentVotes.get(position) instanceof ForumPost)
-//            return ASSOCIATIONPOST;
-//        else if(mCurrentVotes.get(position) instanceof Vote)
             return CURRENT_VOTE;
-        //return -1;
     }
 
     @Override
@@ -161,12 +141,9 @@ public class CurrentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public static class VotesViewHolder extends RecyclerView.ViewHolder {
         public static FoldingCell fc;
-        CardView cv;
 
-        TextView title;
-        TextView address;
-        TextView time;
-        TextView weight;
+        // Need to declare and link all the view in Foding Cells
+
         TextView contentRequestBtn;
 
         public VotesViewHolder(View itemView) {
@@ -175,12 +152,6 @@ public class CurrentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             fc = (FoldingCell)itemView.findViewById(R.id.currentVoteFC);
             fc.initialize(100, Color.DKGRAY, 2);
 
-
-
-            //title = (TextView) itemView.findViewById(R.id.title_price);
-            //address = (TextView) itemView.findViewById(R.id.title_date_label);
-            //time = (TextView) itemView.findViewById(R.id.title_time_label);
-            //weight = (TextView) itemView.findViewById(R.id.title_weight);
             contentRequestBtn = (TextView) itemView.findViewById(R.id.content_request_btn);
 
         }
@@ -188,22 +159,12 @@ public class CurrentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     }
 
-//    private void configureViewHolder1(RequestViewHolderOld associationViewHolder, int position) {
-//        Request request = (Request) mCurrentVotes.get(position);
-//        if (request != null) {
-//            //vh1.getLabel1().setText("Name: " + user.name);
-//            //vh1.getLabel2().setText("Hometown: " + user.hometown);
-//        }
-//    }
-
     private void configureViewHolder2(AssociationViewHolder associationViewHolder) {
 
     }
-    private void configureViewHolder3(VotesViewHolder votesViewHolder, int position) {
-        // get item for selected view
-        Vote item = mCurrentVotes.get(position);
-    }
 
+
+    //Need to check this registry Toggle stuff
     public void registerToggle(int position) {
         if (unfoldedIndexes.contains(position))
             registerFold(position);

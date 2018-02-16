@@ -33,7 +33,6 @@ public class CurrentFragment extends Fragment {
     public static final String ARG_PAGE = "Passadas";
     private static final String TAG = "#";
 
-    private int mPage;
     // Content of (past, current and future)
     RecyclerView mCurrentVotesListRV;
     CurrentAdapter mCurrentAdapter;

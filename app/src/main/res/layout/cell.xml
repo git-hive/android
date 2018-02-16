@@ -7,6 +7,7 @@ android:layout_width="match_parent"
     android:id="@+id/currentVoteFC"
     android:layout_height="wrap_content"
 folding-cell:additionalFlipsCount="4"
+    android:padding="15dp"
 folding-cell:animationDuration="1300"
 folding-cell:backSideColor="@color/bgBackSideColor"
 folding-cell:cameraHeight="30">
