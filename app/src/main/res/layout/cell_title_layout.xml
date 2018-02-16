@@ -19,16 +19,10 @@
         android:paddingRight="10dp"
         android:paddingTop="20dp">
 
-        <TextView
-            android:id="@+id/title_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textColor="@android:color/white"
-            android:textSize="26sp" />
 
-        <TextView
+
+        <ImageView
+            android:text="@string/assembleia"
             android:id="@+id/title_time_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,22 +30,15 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:textColor="@android:color/white"
+            android:background="@drawable/coin"
             android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/title_date_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/title_time_label"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textColor="@android:color/white"
-            android:textSize="12sp" />
 
 
     </RelativeLayout>
     <!-- RIGHT TITLE PART -->
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
@@ -63,108 +50,20 @@
         android:paddingStart="15dp"
         android:paddingTop="20dp">
 
-        <ImageView
-            android:id="@+id/title_from_to_dots"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/ic_back_arrow" />
-
         <TextView
-            android:id="@+id/title_from_address"
+            android:text="@string/new_request_activity_title"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/title_from_to_dots"
-            android:layout_marginTop="-5dp"
-            android:layout_toEndOf="@+id/title_from_to_dots"
-            android:layout_toRightOf="@+id/title_from_to_dots"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal"
-            android:singleLine="true"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
-
-        <ImageView
-            android:id="@+id/title_from_to_dots_divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/title_from_address"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_toEndOf="@+id/title_from_to_dots"
-            android:layout_toRightOf="@+id/title_from_to_dots"
-            android:src="@color/contentDividerLine" />
-
+            android:layout_height="wrap_content" />
         <TextView
-            android:id="@+id/title_to_address"
+            android:text="@string/vote"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/title_from_to_dots_divider"
-            android:layout_toEndOf="@id/title_from_to_dots"
-            android:layout_toRightOf="@id/title_from_to_dots"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal"
-            android:singleLine="true"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
-
-
+            android:layout_height="wrap_content" />
         <TextView
-            android:id="@+id/title_requests_count"
-            style="@style/TitleBadgeText"
+            android:text="@string/born"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_height="wrap_content" />
 
-        <TextView
-            style="@style/TitleBadgeTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/title_requests_count"
-            android:layout_alignLeft="@id/title_requests_count"
-            android:layout_alignStart="@id/title_requests_count"
-            android:text="@string/requests_count_badge" />
 
-        <TextView
-            android:id="@+id/title_weight"
-            style="@style/TitleBadgeText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:text="@string/weight_mock" />
 
-        <TextView
-            style="@style/TitleBadgeTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/title_weight"
-            android:layout_alignLeft="@id/title_weight"
-            android:layout_alignStart="@id/title_weight"
-            android:text="@string/weight_badge" />
-
-        <TextView
-            android:id="@+id/title_pledge"
-            style="@style/TitleBadgeText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" />
-
-        <TextView
-            style="@style/TitleBadgeTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/title_pledge"
-            android:layout_alignLeft="@id/title_pledge"
-            android:layout_alignStart="@id/title_pledge"
-            android:text="@string/pledge_badge" />
-
-    </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>

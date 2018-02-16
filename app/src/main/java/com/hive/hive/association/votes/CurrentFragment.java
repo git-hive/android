@@ -88,7 +88,7 @@ public class CurrentFragment extends Fragment {
         mCurrentVotesListRV = (RecyclerView) view.findViewById(R.id.current_votes_list_RV);
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
         mCurrentVotesListRV.setLayoutManager(layoutManager);
-        mCurrentVotesListRV.setHasFixedSize(true);
+        //mCurrentVotesListRV.setHasFixedSize(true);
 
         mCurrentAdapter = new CurrentAdapter(DUMMYARRAY, NUM_LIST_ITEMS);
         //Adding Click Listener To Card Buttons

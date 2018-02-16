@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,7 +75,8 @@ public class CurrentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
+
         switch (viewHolder.getItemViewType()) {
 //            case REQUEST:
 //                RequestViewHolderOld requestViewHolderOld = (RequestViewHolderOld) viewHolder;
@@ -85,23 +87,50 @@ public class CurrentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 configureViewHolder2(associationViewHolder);
                 break;
             case CURRENT_VOTE:
-                String satan = "666";
+                VotesViewHolder votesViewHolder = (VotesViewHolder) viewHolder;
                 Vote vote;
                 vote = mCurrentVotes.get(position);
+                votesViewHolder.fc.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        v = (FoldingCell) v;
+                        ((FoldingCell) v).toggle(true);
+                    }
+                });
+
+
+                if(votesViewHolder.fc.getTag() == null) {
+
 //                vote.setWeight((float) 666.0);
 //                vote.setVotingOption(satan);
 //                vote.setCreatedAt(666);
 //                vote.setUpdatedAt(666);
 //                vote.setId(satan);
 
-                VotesViewHolder votesViewHolder = (VotesViewHolder) viewHolder;
-                votesViewHolder.title.setText(vote.getVotingOption());
-                votesViewHolder.weight.setText(Float.toString(vote.getWeight()));
-                votesViewHolder.address.setText(vote.getId());
-                votesViewHolder.time.setText(Integer.toString((int) vote.getCreatedAt()));
-                VotesViewHolder.fc.fold(false);
+                    votesViewHolder = (VotesViewHolder) viewHolder;
+                    //votesViewHolder.title.setText(vote.getVotingOption());
+                    //votesViewHolder.weight.setText(Float.toString(vote.getWeight()));
+                    //votesViewHolder.address.setText(vote.getId());
+                    //votesViewHolder.time.setText(Integer.toString((int) vote.getCreatedAt()));
 
+                }else{
 
+                    if(unfoldedIndexes.contains(position)){
+                        VotesViewHolder.fc.unfold(true);
+                    }else{
+                        VotesViewHolder.fc.fold(true);
+                    }
+
+                    votesViewHolder = (VotesViewHolder) VotesViewHolder.fc.getTag();
+                }
+
+                // set custom btn handler for list item from that item
+                if (vote.getRequestBtnClickListener() != null) {
+                    votesViewHolder.contentRequestBtn.setOnClickListener(vote.getRequestBtnClickListener());
+                } else {
+                    // (optionally) add "default" handler if no handler found in item
+                    votesViewHolder.contentRequestBtn.setOnClickListener(defaultRequestBtnClickListener);
+                }
 
                 break;
         }
@@ -138,24 +167,22 @@ public class CurrentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         TextView address;
         TextView time;
         TextView weight;
+        TextView contentRequestBtn;
 
         public VotesViewHolder(View itemView) {
             super(itemView);
 
             fc = (FoldingCell)itemView.findViewById(R.id.currentVoteFC);
-            fc.initialize(1000, Color.DKGRAY, 2);
+            fc.initialize(100, Color.DKGRAY, 2);
 
-            fc.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    fc.toggle(false);
-                }
-            });
 
-            title = (TextView) itemView.findViewById(R.id.title_price);
-            address = (TextView) itemView.findViewById(R.id.title_date_label);
-            time = (TextView) itemView.findViewById(R.id.title_time_label);
-            weight = (TextView) itemView.findViewById(R.id.title_weight);
+
+            //title = (TextView) itemView.findViewById(R.id.title_price);
+            //address = (TextView) itemView.findViewById(R.id.title_date_label);
+            //time = (TextView) itemView.findViewById(R.id.title_time_label);
+            //weight = (TextView) itemView.findViewById(R.id.title_weight);
+            contentRequestBtn = (TextView) itemView.findViewById(R.id.content_request_btn);
+
         }
 
 
