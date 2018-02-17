@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.hive.hive.R;
+import com.hive.hive.association.votes.tabs.current.CurrentAdapter;
 import com.hive.hive.model.association.Vote;
 
 import java.util.ArrayList;

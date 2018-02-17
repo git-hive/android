@@ -9,7 +9,7 @@
         <!-- content header line -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="140dp"
             android:background="@color/bgContentTop"
             android:paddingBottom="7dp"
             android:paddingLeft="12dp"

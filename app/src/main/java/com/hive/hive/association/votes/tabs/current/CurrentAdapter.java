@@ -1,4 +1,4 @@
-package com.hive.hive.association.votes.tabs;
+package com.hive.hive.association.votes.tabs.current;
 
 import android.content.Context;
 import android.graphics.Color;

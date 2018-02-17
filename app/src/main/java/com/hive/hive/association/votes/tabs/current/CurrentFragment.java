@@ -1,4 +1,4 @@
-package com.hive.hive.association.votes.tabs;
+package com.hive.hive.association.votes.tabs.current;
 
 
 import android.os.Bundle;
