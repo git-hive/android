@@ -47,6 +47,11 @@ dependencies {
     implementation 'com.android.support:cardview-v7:27.0.2'
 
     compile 'com.android.support:appcompat-v7:27.0.2'
+
+    //Folding Cell Dependencies
+    compile 'com.ramotion.foldingcell:folding-cell:1.2.2'
+
+
 }
 
 apply plugin: 'com.google.gms.google-services'

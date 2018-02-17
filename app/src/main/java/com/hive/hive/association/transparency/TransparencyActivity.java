@@ -1,4 +1,4 @@
-package com.hive.hive.association.votes;
+package com.hive.hive.association.transparency;
 
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -14,8 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hive.hive.R;
+import com.hive.hive.association.transparency.TransparencyFragmentPagerAdapter;
 
-public class VotesActivity extends AppCompatActivity {
+public class TransparencyActivity extends AppCompatActivity {
     // Superior Tab items
     TextView mHeaderAssembleia;
     ImageView mExitVotesIV;
@@ -41,8 +42,8 @@ public class VotesActivity extends AppCompatActivity {
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(new VotesFragmentPagerAdapter(getSupportFragmentManager(),
-                VotesActivity.this));
+        viewPager.setAdapter(new TransparencyFragmentPagerAdapter(getSupportFragmentManager(),
+                TransparencyActivity.this));
 
         // Give the TabLayout the ViewPager
         tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
@@ -59,7 +60,7 @@ public class VotesActivity extends AppCompatActivity {
         mSearchVotesIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(VotesActivity.this, "Search not implemented yet.",
+                Toast.makeText(TransparencyActivity.this, "Search not implemented yet.",
                         Toast.LENGTH_SHORT).show();
             }
         });

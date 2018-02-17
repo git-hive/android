@@ -1,5 +1,7 @@
 package com.hive.hive.model.association;
 
+import android.view.View;
+
 import com.google.firebase.firestore.DocumentReference;
 
 import java.util.ArrayList;
@@ -18,7 +20,12 @@ public class Vote extends AssociationAction {
     private DocumentReference agendaRef;
     private DocumentReference sessionRef;
 
+    private View.OnClickListener requestBtnClickListener;
+
     //--- Constructor
+    public  Vote(){
+        // EMPTY
+    }
 
     public Vote(
             String id,
@@ -86,5 +93,13 @@ public class Vote extends AssociationAction {
 
     public void setSessionRef(DocumentReference sessionRef) {
         this.sessionRef = sessionRef;
+    }
+
+    public View.OnClickListener getRequestBtnClickListener() {
+        return requestBtnClickListener;
+    }
+
+    public void setRequestBtnClickListener(View.OnClickListener requestBtnClickListener) {
+        this.requestBtnClickListener = requestBtnClickListener;
     }
 }
