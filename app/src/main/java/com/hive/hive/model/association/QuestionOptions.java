@@ -1,81 +1,64 @@
 package com.hive.hive.model.association;
 
-import java.util.ArrayList;
+import com.google.firebase.firestore.DocumentReference;
 
-/**
- * Created by naraujo on 1/28/18.
- */
+import java.util.ArrayList;
 
 public class QuestionOptions {
 
-    private String id;
     private String title;
-    private String contet;
+    private String content;
     private int score;
 
-    private String questionId;
-    private ArrayList<String> votesIds;
+    private ArrayList<DocumentReference> votesRefs;
 
     //--- Constructor
 
-    public QuestionOptions(String id, String title, String contet, int score, String questionId, ArrayList<String> votesIds) {
-        this.id = id;
+    public QuestionOptions(
+            String title,
+            String content,
+            int score,
+            ArrayList<DocumentReference> votesRefs
+    ) {
         this.title = title;
-        this.contet = contet;
+        this.content = content;
         this.score = score;
-        this.questionId = questionId;
-        this.votesIds = votesIds;
+        this.votesRefs = votesRefs;
     }
 
     //--- Getters
-
-    public String getId() {
-        return id;
-    }
 
     public String getTitle() {
         return title;
     }
 
-    public String getContet() {
-        return contet;
+    public String getContent() {
+        return content;
     }
 
     public int getScore() {
         return score;
     }
 
-    public String getQuestionId() {
-        return questionId;
-    }
-
-    public ArrayList<String> getVotesIds() {
-        return votesIds;
+    public ArrayList<DocumentReference> getVotesRefs() {
+        return votesRefs;
     }
 
     //--- Setters
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public void setContet(String contet) {
-        this.contet = contet;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public void setScore(int score) {
         this.score = score;
     }
 
-    public void setQuestionId(String questionId) {
-        this.questionId = questionId;
-    }
-
-    public void setVotesIds(ArrayList<String> votesIds) {
-        this.votesIds = votesIds;
+    public void setVotesRefs(ArrayList<DocumentReference> votesRefs) {
+        this.votesRefs = votesRefs;
     }
 }

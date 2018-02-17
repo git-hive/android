@@ -51,9 +51,13 @@
         <activity
             android:name=".association.request.RequestActivity"
             android:label="@string/title_activity_request"
+            android:parentActivityName=".main.MainActivity"
             android:theme="@style/AppTheme" />
-        <activity android:name=".association.request.NewRequestActivity" />
-        <activity android:name=".association.votes.VotesActivity"></activity>
+        <activity
+            android:name=".association.request.NewRequestActivity"
+            android:parentActivityName=".main.MainActivity" />
+        <activity android:name=".association.votes.VotesActivity" />
+        <activity android:name=".association.transparency.TransparencyActivity"></activity>
     </application>
 
 </manifest>

@@ -1,5 +1,7 @@
 package com.hive.hive.model.user;
 
+import com.google.firebase.firestore.DocumentReference;
+
 /**
  * Created by naraujo on 1/28/18.
  */
@@ -9,23 +11,28 @@ public abstract class UserAction {
     private String id;
     private long createdAt;
     private long updatedAt;
-    private String authorId;
-    private String pointsTransactionId;
+    private DocumentReference authorRef;
+    private DocumentReference pointsTransactionRef;
 
 
 
     //--- Constructor
 
 
-    public UserAction() {
-    }
+    public UserAction() {}
 
-    public UserAction(String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId) {
+    public UserAction(
+            String id,
+            long createdAt,
+            long updatedAt,
+            DocumentReference authorRef,
+            DocumentReference pointsTransactionRef
+    ) {
         this.id = id;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.authorId = authorId;
-        this.pointsTransactionId = pointsTransactionId;
+        this.authorRef = authorRef;
+        this.pointsTransactionRef = pointsTransactionRef;
     }
 
 
@@ -43,12 +50,12 @@ public abstract class UserAction {
         return updatedAt;
     }
 
-    public String getAuthorId() {
-        return authorId;
+    public DocumentReference getAuthorRef() {
+        return authorRef;
     }
 
-    public String getPointsTransactionId() {
-        return pointsTransactionId;
+    public DocumentReference getPointsTransactionRef() {
+        return pointsTransactionRef;
     }
 
 
@@ -66,11 +73,11 @@ public abstract class UserAction {
         this.updatedAt = updatedAt;
     }
 
-    public void setAuthorId(String authorId) {
-        this.authorId = authorId;
+    public void setAuthorRef(DocumentReference authorRef) {
+        this.authorRef = authorRef;
     }
 
-    public void setPointsTransactionId(String pointsTransactionId) {
-        this.pointsTransactionId = pointsTransactionId;
+    public void setPointsTransactionRef(DocumentReference pointsTransactionRef) {
+        this.pointsTransactionRef = pointsTransactionRef;
     }
 }

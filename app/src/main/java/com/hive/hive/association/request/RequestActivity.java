@@ -2,10 +2,9 @@ package com.hive.hive.association.request;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -25,13 +24,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class RequestActivity extends AppCompatActivity {
-    private final String TAG = "RequestActivity";
+
+    //--- Static
+    private final String TAG = RequestActivity.class.getSimpleName();
+
+    //--- Views
     private RecyclerView mRequestRV;
-    private RecyclerViewRequestAdapter mRecyclerAdapter;
-    private HashMap<String, Request> mRequests;
+    private RequestAdapter mRecyclerAdapter;
+
+    //--- Data
     private ArrayList<String> mIds;
+    private HashMap<String, Request> mRequests;
+
+    //--- Listeners
     private EventListener<QuerySnapshot> mRequestsEL;
     private ListenerRegistration mRequestsLR;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +48,13 @@ public class RequestActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.requestTB);
         setSupportActionBar(toolbar);
+        ActionBar actionBar = this.getSupportActionBar();
+        if (actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            Log.d(TAG, "Home as Up setted");
+        }
+        else
+            Log.e(TAG, "Home as Up not setted. Action Bar not found.");
 
         FloatingActionButton fab =  findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -70,13 +85,9 @@ public class RequestActivity extends AppCompatActivity {
                             Request request = new Request(dc.getDocument().get("id").toString(),
                                     dc.getDocument().getLong("createdAt"),
                                     dc.getDocument().getLong("updatedAt"),
-                                    dc.getDocument().get("authorId").toString(),
-                                    dc.getDocument().get("pointsTransactionId").toString(),
-                                    dc.getDocument().get("associationId").toString(),
                                     dc.getDocument().get("title").toString(),
                                     dc.getDocument().get("content").toString(),
-                                    Integer.parseInt(dc.getDocument().get("supportScore").toString()),
-                                    null, null, null);
+                                    Integer.parseInt(dc.getDocument().get("score").toString()));
 //                                        documentSnapshot.get("categories"),
 //                                        documentSnapshot.get("comments"),
 //                                        documentSnapshot.get("supports"));
@@ -90,7 +101,7 @@ public class RequestActivity extends AppCompatActivity {
                             mRequests.get(modifiedId).setTitle(dc.getDocument().get("title").toString());
                             // mRequests.get(dc.getDocument().getId()).setComments(dc.getDocument().get("comments").toString());
                            // mRequests.get(dc.getDocument().getId()).setSupports(dc.getDocument().get("supports").toString());
-                            mRequests.get(modifiedId).setSupportScore(Integer.parseInt(dc.getDocument().get("supportScore").toString()));
+                            mRequests.get(modifiedId).setScore(Integer.parseInt(dc.getDocument().get("supportScore").toString()));
                             mRecyclerAdapter.notifyDataSetChanged();
                             break;
                         case REMOVED:
@@ -108,12 +119,16 @@ public class RequestActivity extends AppCompatActivity {
         //TODO change associationID
         mRequestsLR = AssociationHelper.getAllRequests(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s").addSnapshotListener(mRequestsEL);
 
-        //finding and setting recyclerView
+        //--- Recycle View Setup
+
+        //Find views
         mRequestRV = findViewById(R.id.requestRV);
+
+        //Set Size
         mRequestRV.setHasFixedSize(true);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mRequestRV.setLayoutManager(layoutManager);
-        mRecyclerAdapter = new RecyclerViewRequestAdapter(mRequests, mIds);
+
+        //Set Adapter
+        mRecyclerAdapter = new RequestAdapter(mRequests, mIds);
         mRequestRV.setAdapter(mRecyclerAdapter);
     }
 

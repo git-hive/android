@@ -4,7 +4,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.View;
@@ -13,15 +14,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hive.hive.R;
-import com.hive.hive.login.LoginActivity;
 
 public class VotesActivity extends AppCompatActivity {
-
+    // Superior Tab items
     TextView mHeaderAssembleia;
     ImageView mExitVotesIV;
     ImageView mSearchVotesIV;
+
+    // Tab components
     TabLayout tabLayout;
     ViewPager viewPager;
+
+
+
 
 
     @Override
@@ -58,7 +63,6 @@ public class VotesActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
             }
         });
-
         // Set Style and Make up things
         styleThings();
 

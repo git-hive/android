@@ -1,8 +1,10 @@
 package com.hive.hive.model.association;
 
-import com.hive.hive.model.user.Role;
+import android.view.View;
 
-import java.util.HashMap;
+import com.google.firebase.firestore.DocumentReference;
+
+import java.util.ArrayList;
 
 /**
  * Created by naraujo on 1/28/18.
@@ -10,67 +12,94 @@ import java.util.HashMap;
 
 public class Vote extends AssociationAction {
 
-    private String sessionId;
-    private String agendaId;
-    private String votingOptionId;
-
+    private String votingOption;
     private float weight;
-    private HashMap<String, Role> roles;
+
+    private ArrayList<DocumentReference> rolesRefs;
+
+    private DocumentReference agendaRef;
+    private DocumentReference sessionRef;
+
+    private View.OnClickListener requestBtnClickListener;
 
     //--- Constructor
+    public  Vote(){
+        // EMPTY
+    }
 
-    public Vote(String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId, String associationId, String sessionId, String agendaId, String votingOptionId, float weight, HashMap<String, Role> roles) {
-        super(id, createdAt, updatedAt, authorId, pointsTransactionId, associationId);
-        this.sessionId = sessionId;
-        this.agendaId = agendaId;
-        this.votingOptionId = votingOptionId;
+    public Vote(
+            String id,
+            long createdAt,
+            long updatedAt,
+            DocumentReference authorRef,
+            DocumentReference pointsTransactionRef,
+            DocumentReference associationRef,
+            String votingOption,
+            float weight,
+            ArrayList<DocumentReference> rolesRefs,
+            DocumentReference agendaRef,
+            DocumentReference sessionRef
+    ) {
+        super(id, createdAt, updatedAt, authorRef, pointsTransactionRef, associationRef);
+        this.votingOption = votingOption;
         this.weight = weight;
-        this.roles = roles;
+        this.rolesRefs = rolesRefs;
+        this.agendaRef = agendaRef;
+        this.sessionRef = sessionRef;
     }
 
 
     //--- Getters
 
-    public String getSessionId() {
-        return sessionId;
-    }
-
-    public String getAgendaId() {
-        return agendaId;
-    }
-
-    public String getVotingOptionId() {
-        return votingOptionId;
+    public String getVotingOption() {
+        return votingOption;
     }
 
     public float getWeight() {
         return weight;
     }
 
-    public HashMap<String, Role> getRoles() {
-        return roles;
+    public ArrayList<DocumentReference> getRolesRefs() {
+        return rolesRefs;
+    }
+
+    public DocumentReference getAgendaRef() {
+        return agendaRef;
+    }
+
+    public DocumentReference getSessionRef() {
+        return sessionRef;
     }
 
 
     //--- Setters
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
 
-    public void setAgendaId(String agendaId) {
-        this.agendaId = agendaId;
-    }
-
-    public void setVotingOptionId(String votingOptionId) {
-        this.votingOptionId = votingOptionId;
+    public void setVotingOption(String votingOption) {
+        this.votingOption = votingOption;
     }
 
     public void setWeight(float weight) {
         this.weight = weight;
     }
 
-    public void setRoles(HashMap<String, Role> roles) {
-        this.roles = roles;
+    public void setRolesRefs(ArrayList<DocumentReference> rolesRefs) {
+        this.rolesRefs = rolesRefs;
+    }
+
+    public void setAgendaRef(DocumentReference agendaRef) {
+        this.agendaRef = agendaRef;
+    }
+
+    public void setSessionRef(DocumentReference sessionRef) {
+        this.sessionRef = sessionRef;
+    }
+
+    public View.OnClickListener getRequestBtnClickListener() {
+        return requestBtnClickListener;
+    }
+
+    public void setRequestBtnClickListener(View.OnClickListener requestBtnClickListener) {
+        this.requestBtnClickListener = requestBtnClickListener;
     }
 }

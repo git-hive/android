@@ -1,8 +1,7 @@
 package com.hive.hive.model.event;
 
 import com.google.android.gms.maps.model.LatLng;
-
-import java.util.ArrayList;
+import com.google.firebase.firestore.DocumentReference;
 
 /**
  * Created by naraujo on 1/28/18.
@@ -15,7 +14,7 @@ public class Checkin extends EventAction {
     //--- Constructors
 
     public Checkin(
-            String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId,
+            String id, long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId,
             Event event, LatLng checkedPosition)
     {
         super(id, createdAt, updatedAt, authorId, pointsTransactionId, event);
