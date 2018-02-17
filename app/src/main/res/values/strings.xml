@@ -101,6 +101,11 @@
     <string name="content_to1_mock">46th Ave</string>
     <string name="content_to2_mock">Woodside, NY 11101</string>
     <string name="title_activity_main2">Main2Activity</string>
+
+    <!-- Transparency Stuff -->
     <string name="hard_coded_i_do_like_pdfs_3"><![CDATA[HARD CODED. I DO LIKE PDFs <3]]></string>
+    <string name="total_applied"><i>Total investido:</i></string>
+    <string name="initial_money">R$ 000,000,000</string>
+    <string name="details">Detalhes</string>
 
 </resources>

@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hive.hive.R;
@@ -32,7 +31,7 @@ public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.BillViewHold
 
     @Override
     public void onBindViewHolder(BillViewHolder holder, int position) {
-        holder.billName.setText(mBills.get(position).billName);
+        holder.budgetName.setText(mBills.get(position).billName);
     }
 
     @Override
@@ -47,12 +46,12 @@ public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.BillViewHold
 
     public static class BillViewHolder extends RecyclerView.ViewHolder {
         CardView cv;
-        TextView billName;
+        TextView budgetName;
 
         BillViewHolder(View itemView) {
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.billCV);
-            billName = (TextView)itemView.findViewById(R.id.billNameTV);
+            budgetName = (TextView)itemView.findViewById(R.id.billNameTV);
         }
     }
 
