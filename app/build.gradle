@@ -19,6 +19,9 @@ android {
         }
     }
 }
+repositories {
+    jcenter()
+}
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.0.2'
@@ -51,6 +54,9 @@ dependencies {
     //Folding Cell Dependencies
     compile 'com.ramotion.foldingcell:folding-cell:1.2.2'
 
+
+
+    compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.12'
 
 }
 
