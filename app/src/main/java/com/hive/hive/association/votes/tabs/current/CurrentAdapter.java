@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.hive.hive.R;
@@ -134,7 +136,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         // Need to declare and link all the view in Foding Cells
 
-        TextView contentRequestBtn;
+        ImageButton contentRequestBtn;
 
         public VotesViewHolder(View itemView) {
             super(itemView);
@@ -142,7 +144,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             fc = (FoldingCell)itemView.findViewById(R.id.currentVoteFC);
             fc.initialize(100, Color.DKGRAY, 2);
 
-            contentRequestBtn = (TextView) itemView.findViewById(R.id.content_request_btn);
+            contentRequestBtn = (ImageButton) itemView.findViewById(R.id.choseVoteBT);
 
         }
 
