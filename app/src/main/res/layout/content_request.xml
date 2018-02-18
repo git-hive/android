@@ -11,8 +11,13 @@
 
     <!-- Categories Filter -->
 
-    <include layout="@layout/categories_filter" />
-
+    <!--<include layout="@layout/categories_filter" />-->
+    <fragment
+        android:name="com.hive.hive.utils.circularFilter.scale.ScaleLayoutActivity"
+        android:id="@+id/fooFragment"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="100dp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/requestRV"

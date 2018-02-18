@@ -1,13 +1,17 @@
 package com.hive.hive.utils.circularFilter;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.hive.hive.R;
 import com.leochuan.ViewPagerLayoutManager;
@@ -21,7 +25,7 @@ import com.leochuan.ViewPagerLayoutManager;
 
 
 public abstract class BaseFragment<V extends ViewPagerLayoutManager, S extends SettingPopUpWindow>
-        extends AppCompatActivity {
+        extends Fragment {
     private RecyclerView recyclerView;
     private V viewPagerLayoutManager;
     private S settingPopUpWindow;
@@ -31,25 +35,36 @@ public abstract class BaseFragment<V extends ViewPagerLayoutManager, S extends S
     protected abstract S createSettingPopUpWindow();
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_base);
-        setTitle(getIntent().getCharSequenceExtra(MainFragment.INTENT_TITLE));
-        recyclerView = findViewById(R.id.recycler);
-        viewPagerLayoutManager = createLayoutManager();
-        recyclerView.setAdapter(new DataAdapter());
-        recyclerView.setLayoutManager(viewPagerLayoutManager);
     }
 
+
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.settings, menu);
-        MenuItem settings = menu.findItem(R.id.setting);
-        VectorDrawableCompat settingIcon =
-                VectorDrawableCompat.create(getResources(), R.drawable.ic_settings_white_48px, null);
-        settings.setIcon(settingIcon);
-        return super.onCreateOptionsMenu(menu);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_fragment, container, false);
+
+        //setTitle(getIntent().getCharSequenceExtra(MainFragment.INTENT_TITLE));
+        recyclerView = view.findViewById(R.id.recycler);
+        viewPagerLayoutManager = createLayoutManager();
+        //Set to scroll Infinitely
+        viewPagerLayoutManager.setSmoothScrollbarEnabled(true);
+        viewPagerLayoutManager.setInfinite(true);
+        recyclerView.setAdapter(new DataAdapter());
+        recyclerView.setLayoutManager(viewPagerLayoutManager);
+
+        return view;
     }
+
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.settings, menu);
+//        MenuItem settings = menu.findItem(R.id.setting);
+//        VectorDrawableCompat settingIcon =
+//                VectorDrawableCompat.create(getResources(), R.drawable.ic_settings_white_48px, null);
+//        settings.setIcon(settingIcon);
+//        return super.onCreateOptionsMenu(menu);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -58,7 +73,7 @@ public abstract class BaseFragment<V extends ViewPagerLayoutManager, S extends S
                 showDialog();
                 return true;
             case android.R.id.home:
-                onBackPressed();
+                //onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -85,7 +100,7 @@ public abstract class BaseFragment<V extends ViewPagerLayoutManager, S extends S
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         if (settingPopUpWindow != null && settingPopUpWindow.isShowing())
             settingPopUpWindow.dismiss();

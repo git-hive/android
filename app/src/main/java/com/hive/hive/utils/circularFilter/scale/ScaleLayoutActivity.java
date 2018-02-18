@@ -6,20 +6,23 @@ package com.hive.hive.utils.circularFilter.scale;
  */
 
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+
+import com.hive.hive.utils.circularFilter.BaseFragment;
 import com.hive.hive.utils.circularFilter.Util;
 import com.leochuan.ScaleLayoutManager;
 
-/**
- * Created by Dajavu on 27/10/2017.
- */
 
-public class ScaleLayoutActivity extends BaseActivity<ScaleLayoutManager, ScalePopUpWindow> {
+public class ScaleLayoutActivity extends BaseFragment<ScaleLayoutManager, ScalePopUpWindow> {
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected ScaleLayoutManager createLayoutManager() {
-        return new ScaleLayoutManager(this, Util.Dp2px(this, 10));
+        return new ScaleLayoutManager(this.getContext(), Util.Dp2px(this.getContext(), 30));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected ScalePopUpWindow createSettingPopUpWindow() {
         return new ScalePopUpWindow(this, getViewPagerLayoutManager(), getRecyclerView());

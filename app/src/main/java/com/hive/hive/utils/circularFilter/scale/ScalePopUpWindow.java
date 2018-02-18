@@ -1,6 +1,8 @@
 package com.hive.hive.utils.circularFilter.scale;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
@@ -44,11 +46,12 @@ public class ScalePopUpWindow extends SettingPopUpWindow
     private SwitchCompat reverse;
     private CenterSnapHelper centerSnapHelper;
 
-    ScalePopUpWindow(Context context, ScaleLayoutManager scaleLayoutManager, RecyclerView recyclerView) {
-        super(context);
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    ScalePopUpWindow(ScaleLayoutActivity context, ScaleLayoutManager scaleLayoutManager, RecyclerView recyclerView) {
+        super(context.getContext());
         this.scaleLayoutManager = scaleLayoutManager;
         this.recyclerView = recyclerView;
-        View view = LayoutInflater.from(context).inflate(R.layout.dialog_scale_setting, null);
+        View view = LayoutInflater.from(context.getContext()).inflate(R.layout.dialog_scale_setting, null);
         setContentView(view);
 
         centerSnapHelper = new CenterSnapHelper();
