@@ -40,6 +40,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     //-- Data
 
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         mViewGroup  = viewGroup;
@@ -68,7 +69,6 @@ public class CurrentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     // Fill View Recycler View Activities
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
-
         switch (viewHolder.getItemViewType()) {
 
             case ASSOCIATIONPOST:
@@ -79,13 +79,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 VotesViewHolder votesViewHolder = (VotesViewHolder) viewHolder;
                 Vote vote;
                 vote = mCurrentVotes.get(position);
-                votesViewHolder.fc.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        v = (FoldingCell) v;
-                        ((FoldingCell) v).toggle(true);
-                    }
-                });
+
 
 
                 if(votesViewHolder.fc.getTag() == null) {
@@ -94,13 +88,17 @@ public class CurrentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }else{
 
                     if(unfoldedIndexes.contains(position)){
-                        VotesViewHolder.fc.unfold(true);
+                        VotesViewHolder.fc.unfold(false);
+                        registerUnfold(position);
                     }else{
-                        VotesViewHolder.fc.fold(true);
+                        VotesViewHolder.fc.fold(false);
+                        registerFold(position);
                     }
 
                     votesViewHolder = (VotesViewHolder) VotesViewHolder.fc.getTag();
                 }
+                votesViewHolder.fc.fold(false);
+
 
                 // set custom btn handler for list item from that item
                 if (vote.getRequestBtnClickListener() != null) {
@@ -142,8 +140,16 @@ public class CurrentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             super(itemView);
 
             fc = (FoldingCell)itemView.findViewById(R.id.currentVoteFC);
-            fc.initialize(100, Color.DKGRAY, 2);
+            fc.initialize(1000, Color.DKGRAY, 4);
+            fc.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    VotesViewHolder.fc.toggle(false);
 
+
+
+                }
+            });
             contentRequestBtn = (ImageButton) itemView.findViewById(R.id.choseVoteBT);
 
         }
