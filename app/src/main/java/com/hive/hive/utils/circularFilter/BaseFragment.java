@@ -3,15 +3,14 @@ package com.hive.hive.utils.circularFilter;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.graphics.drawable.VectorDrawableCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.hive.hive.R;
 import com.leochuan.ViewPagerLayoutManager;
@@ -44,14 +43,17 @@ public abstract class BaseFragment<V extends ViewPagerLayoutManager, S extends S
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_fragment, container, false);
 
+
         //setTitle(getIntent().getCharSequenceExtra(MainFragment.INTENT_TITLE));
-        recyclerView = view.findViewById(R.id.recycler);
+        recyclerView = view.findViewById(R.id.recyclerMenu);
         viewPagerLayoutManager = createLayoutManager();
         //Set to scroll Infinitely
         viewPagerLayoutManager.setSmoothScrollbarEnabled(true);
         viewPagerLayoutManager.setInfinite(true);
         recyclerView.setAdapter(new DataAdapter());
         recyclerView.setLayoutManager(viewPagerLayoutManager);
+
+
 
         return view;
     }
@@ -65,6 +67,7 @@ public abstract class BaseFragment<V extends ViewPagerLayoutManager, S extends S
 //        settings.setIcon(settingIcon);
 //        return super.onCreateOptionsMenu(menu);
 //    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

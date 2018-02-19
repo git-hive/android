@@ -1,7 +1,9 @@
 package com.hive.hive.association.request;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
@@ -22,6 +25,9 @@ import com.hive.hive.model.association.Request;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+
+import static com.hive.hive.utils.Utils.getHashMapFilter;
 
 public class RequestActivity extends AppCompatActivity {
 
@@ -40,6 +46,19 @@ public class RequestActivity extends AppCompatActivity {
     private EventListener<QuerySnapshot> mRequestsEL;
     private ListenerRegistration mRequestsLR;
 
+
+    //--- Menu  Recycler View
+    private RecyclerView mMenuRV;
+    private TextView mFilterTV;
+
+    // Hard coded menu items
+
+
+    Map<String, String> mmap = getHashMapFilter();
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +82,10 @@ public class RequestActivity extends AppCompatActivity {
                 startActivity(new Intent(RequestActivity.this, NewRequestActivity.class));
             }
         });
+
+        // Getting menu Fragment Reference
+        mMenuRV = findViewById(R.id.recyclerMenu);
+        mFilterTV = findViewById(R.id.menuFilterTV);
 
 
         //GETTING ALL REQUESTS
@@ -109,6 +132,8 @@ public class RequestActivity extends AppCompatActivity {
 
         //Find views
         mRequestRV = findViewById(R.id.requestRV);
+        mFilterTV = findViewById(R.id.menuFilterTV);
+
 
         //Set Size
         mRequestRV.setHasFixedSize(true);
@@ -116,6 +141,36 @@ public class RequestActivity extends AppCompatActivity {
         //Set Adapter
         mRecyclerAdapter = new RequestAdapter(mRequests, mIds, this);
         mRequestRV.setAdapter(mRecyclerAdapter);
+
+        mMenuRV.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+
+                if(mMenuRV.getLayoutManager()!= null) {
+                    View nodeInRV = mMenuRV.getLayoutManager().getChildAt(2);
+                    if(nodeInRV != null) {
+                        TextView filterName = nodeInRV.findViewById(R.id.menuItemCategorieTV);
+                        if (filterName != null) {
+                            if(mFilterTV != null) {
+                                mFilterTV.setText(mmap.get(filterName.getText()));
+                                Log.d(TAG, mmap.get(filterName.getText()) + "**********************************************************"+ filterName.getText());
+
+                            } else
+                                Log.d(TAG, filterName.getText() + "**********************************************************");
+
+
+                            //Toast.makeText(v.getContext(), "clicked:" + filterName, Toast.LENGTH_SHORT).show();
+                        }else
+                            Log.d(TAG, filterName.getText() + "**********************************************************");
+
+
+                    }
+                }
+
+
+            }
+
+        });
     }
 
     @Override
@@ -131,4 +186,6 @@ public class RequestActivity extends AppCompatActivity {
         super.onDestroy();
         mRequestsLR.remove();
     }
+
+
 }
