@@ -103,7 +103,7 @@ public class CommentaryAdapter extends RecyclerView.Adapter<CommentaryAdapter.Co
                                     "gVw7dUkuw3SSZSYRXe8s", mRequestId, commentId, FirebaseAuth.getInstance().getUid());
                         }else {// else should add it
                             DocumentReference userRef = DocReferences.getUserRef();
-                            DocumentReference assocRef = DocReferences.getAssociationRef();
+                            DocumentReference assocRef = DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s");
                             String supportId = FirebaseAuth.getInstance().getUid();
                             //TODO review refs
 

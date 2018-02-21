@@ -8,11 +8,12 @@
     tools:context="com.hive.hive.association.request.comments.CommentaryActivity"
     tools:showIn="@layout/activity_commentary"
     android:orientation="vertical">
+    <include layout="@layout/item_request"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/commentsRV"
         android:layout_width="match_parent"
-        android:layout_height="480dp"
+        android:layout_height="320dp"
         app:layoutManager="LinearLayoutManager"
         />
 
@@ -24,7 +25,7 @@
 
 
         <EditText
-            android:id="@+id/commentTV"
+            android:id="@+id/commentET"
             android:layout_width="300dp"
             android:layout_height="50dp"
             android:ems="10"

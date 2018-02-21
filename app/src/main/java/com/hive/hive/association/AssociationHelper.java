@@ -35,13 +35,12 @@ public class AssociationHelper {
                 .collection(REQUESTS_COLLECTION);
     }
 
-    public static Task<DocumentSnapshot> getRequest(FirebaseFirestore db, String associationID, String requisitionID) {
+    public static DocumentReference getRequest(FirebaseFirestore db, String associationID, String requisitionID) {
         return db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
                 .collection(REQUESTS_COLLECTION)
-                .document(requisitionID)
-                .get();
+                .document(requisitionID);
     }
 
     public static Task<Void> deleteRequest(FirebaseFirestore db, String associationID, String requestID) {

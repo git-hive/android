@@ -31,23 +31,6 @@ public class Request extends AssociationAction {
             String id,
             long createdAt,
             long updatedAt,
-            String title,
-            String content,
-            int score
-    ){
-        this.setId(id);
-        this.setCreatedAt(System.currentTimeMillis());
-        this.setUpdatedAt(System.currentTimeMillis());
-        this.title = title;
-        this.content = content;
-        this.score = score;
-        this.categories = categories;
-    };
-
-    public Request(
-            String id,
-            long createdAt,
-            long updatedAt,
             DocumentReference authorId,
             DocumentReference pointsTransactionId,
             DocumentReference associationId,

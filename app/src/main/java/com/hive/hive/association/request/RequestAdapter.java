@@ -20,6 +20,7 @@ import com.hive.hive.association.AssociationHelper;
 import com.hive.hive.association.request.comments.CommentaryActivity;
 import com.hive.hive.model.association.AssociationSupport;
 import com.hive.hive.model.association.Request;
+import com.hive.hive.model.user.User;
 import com.hive.hive.utils.DocReferences;
 
 import java.util.ArrayList;
@@ -95,6 +96,18 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     public int getItemCount() {
         return mRequests.size();
     }
+    //TODO TO FINISH
+    private void fillUser(final RequestViewHolder holder, DocumentReference userRef){
+//        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//            @Override
+//            public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                if(documentSnapshot.exists()){
+//                    User user = documentSnapshot.toObject(User.class);
+//                    holder.mUserName.setText(user.get);
+//                }
+//            }
+//        });
+    }
     private void shouldFillSupport(final RequestViewHolder holder, String requestId){
         //if exists support, then should be IV filled
         AssociationHelper.getRequestSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", requestId, FirebaseAuth.getInstance().getUid())
@@ -119,7 +132,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                                     "gVw7dUkuw3SSZSYRXe8s", requestId, FirebaseAuth.getInstance().getUid());
                         }else {// else should add it
                             DocumentReference userRef = DocReferences.getUserRef();
-                            DocumentReference assocRef = DocReferences.getAssociationRef();
+                            DocumentReference assocRef = DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s");
                             String supportId = FirebaseAuth.getInstance().getUid();
                             //TODO review refs
 

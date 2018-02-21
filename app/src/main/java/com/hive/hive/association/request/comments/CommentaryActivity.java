@@ -7,11 +7,16 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -20,7 +25,11 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 import com.hive.hive.association.AssociationHelper;
+import com.hive.hive.association.request.RequestAdapter;
 import com.hive.hive.model.association.AssociationComment;
+import com.hive.hive.model.association.AssociationSupport;
+import com.hive.hive.model.association.Request;
+import com.hive.hive.utils.DocReferences;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,17 +45,27 @@ public class CommentaryActivity extends AppCompatActivity {
     private RecyclerView mCommentRV;
     private CommentaryAdapter mRecyclerAdapter;
 
-    private TextView mCommentTV;
+    private EditText mCommentET;
     private ImageView mCommentIV;
     private String mRequestId;
 
+    private TextView mRequestAuthorTV;
+    private TextView mRequestTitleTV;
+    private TextView mRequestCommentsCountTV;
+    private TextView mRequestSupportsCountTV;
+    private TextView mRequestContentTV;
+
+    private ImageView mRequestAuthorIV;
+    private ImageView mRequestSupportsIV;
     //--- Data
     private ArrayList<String> mIds;
     private HashMap<String, AssociationComment> mComments;
-
+    private Request mRequest;
     //--- Listeners
     private EventListener<QuerySnapshot> mCommentEL;
+    private EventListener<DocumentSnapshot> mRequestEL;
     private ListenerRegistration mCommentLR;
+    private ListenerRegistration mRequestLR;
 
 
     @Override
@@ -71,29 +90,74 @@ public class CommentaryActivity extends AppCompatActivity {
 
         //finding views
         mCommentIV = findViewById(R.id.commentIV);
-        mCommentTV = findViewById(R.id.commentTV);
+        mCommentET = findViewById(R.id.commentET);
 
+        mRequestAuthorTV = findViewById(R.id.request_author_name_tv);
+        mRequestTitleTV = findViewById(R.id.request_title_tv);
+        mRequestCommentsCountTV = findViewById(R.id.request_number_of_comments_tv);
+        mRequestSupportsCountTV = findViewById(R.id.supportsTV);
+        mRequestContentTV = findViewById(R.id.request_content_tv);
+
+        mRequestAuthorIV = findViewById(R.id.request_author_photo_iv);
+        mRequestSupportsIV = findViewById(R.id.supportsIV);
+
+        //onclick to save comment
         mCommentIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mCommentTV.getText().equals("")){
-                    mCommentTV.setError(getString(R.string.should_text));
-                    mCommentTV.requestFocus();
+                if(mCommentET.getText().equals("")){
+                    mCommentET.setError(getString(R.string.should_text));
+                    mCommentET.requestFocus();
                     return;
                 }
                 String commentID = UUID.randomUUID().toString();
-                String commentText = mCommentTV.getText().toString();
-                AssociationComment comment = new AssociationComment(commentID, Calendar.getInstance().getTimeInMillis(), 0,
-                        null, null, null , commentText, 0, null);
+                String commentText = mCommentET.getText().toString();
+                AssociationComment comment = new AssociationComment(commentID, Calendar.getInstance().getTimeInMillis(),
+                        Calendar.getInstance().getTimeInMillis(),
+                        DocReferences.getUserRef(), null, DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s"),
+                        commentText, 0, DocReferences.getRequestRef("gVw7dUkuw3SSZSYRXe8s", mRequestId));
                 //TODO static associationId
                 AssociationHelper.setRequestComment(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mRequestId,
                        commentID,  comment);
-                mCommentTV.setText(null);
-                mCommentTV.clearFocus();
+                mCommentET.setText(null);
+                mCommentET.clearFocus();
             }
         });
+        //onclick support request
+        mRequestSupportsCountTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                scoreClick();
+            }
+        });
+        mRequestSupportsIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                scoreClick();
+            }
+        });
+        //GETTING REQUEST
+        mRequestEL = new EventListener<DocumentSnapshot>() {
 
-        //GETTING ALL REQUESTS
+            @Override
+            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+                if(e != null){
+                    Log.e(TAG, e.getMessage());
+                    return;
+                }
+                if(documentSnapshot.exists()) {
+                    mRequest = documentSnapshot.toObject(Request.class);
+                    updateRequestUI();
+                    shouldFillSupport();
+                }else{
+                    finish();
+                }
+            }
+        };
+        mRequestLR = AssociationHelper.getRequest(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mRequestId)
+                .addSnapshotListener(mRequestEL);
+
+        //GETTING ALL Comments
         mComments = new HashMap<>();
         mIds = new ArrayList<>();
         mCommentEL = new EventListener<QuerySnapshot>() {
@@ -135,7 +199,8 @@ public class CommentaryActivity extends AppCompatActivity {
         //TODO change associationID and LIMIT
         //getting the 10 newest comments
         mCommentLR = AssociationHelper.getAllRequestComments(FirebaseFirestore.getInstance(),
-                "gVw7dUkuw3SSZSYRXe8s", mRequestId).orderBy("createdAt", Query.Direction.ASCENDING).limit(10).addSnapshotListener(mCommentEL);
+                "gVw7dUkuw3SSZSYRXe8s", mRequestId).orderBy("createdAt", Query.Direction.ASCENDING).limit(10)
+                .addSnapshotListener(mCommentEL);
 
         //--- Recycle View Setup
 
@@ -164,6 +229,56 @@ public class CommentaryActivity extends AppCompatActivity {
     @Override
     public void onDestroy(){
         super.onDestroy();
+        //removing db listeners
         mCommentLR.remove();
+        mRequestLR.remove();
+    }
+    private void updateRequestUI(){
+        //mRequestAuthorTV.setText(mRequest.get);
+        mRequestTitleTV.setText(mRequest.getTitle());
+        //mRequestCommentsCountTV.setText(mRequest.get);
+        mRequestSupportsCountTV.setText(mRequest.getScore()+"");
+        mRequestContentTV.setText(mRequest.getContent());
+
+        //private ImageView mRequestAuthorIV;
+        //private ImageView mRequestSupportsIV;
+    }
+    private void scoreClick(){
+        AssociationHelper.getRequestSupport(FirebaseFirestore.getInstance(),
+                "gVw7dUkuw3SSZSYRXe8s", mRequestId, FirebaseAuth.getInstance().getUid())
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        //if support already exists, should delete it
+                        if(documentSnapshot.exists()) {
+                            AssociationHelper.removeRequestSupport(FirebaseFirestore.getInstance(),
+                                    "gVw7dUkuw3SSZSYRXe8s", mRequestId, FirebaseAuth.getInstance().getUid());
+                        }else {// else should add it
+                            DocumentReference userRef = DocReferences.getUserRef();
+                            DocumentReference assocRef = DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s");
+                            String supportId = FirebaseAuth.getInstance().getUid();
+                            //TODO review refs
+
+                            AssociationSupport support = new AssociationSupport(supportId, Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
+                                    userRef, null, assocRef, null);
+                            AssociationHelper.setRequestSupport(FirebaseFirestore.getInstance(),
+                                    "gVw7dUkuw3SSZSYRXe8s", mRequestId, supportId, support);
+                        }
+                    }
+                });
+    }
+    private void shouldFillSupport(){
+        //if exists support, then should be IV filled
+        AssociationHelper.getRequestSupport(FirebaseFirestore.getInstance(),
+                "gVw7dUkuw3SSZSYRXe8s", mRequestId, FirebaseAuth.getInstance().getUid())
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if(documentSnapshot.exists())
+                            mRequestSupportsIV.setImageDrawable(CommentaryActivity.this.getResources().getDrawable(R.drawable.ic_support_filled));
+                        else
+                            mRequestSupportsIV.setImageDrawable(CommentaryActivity.this.getResources().getDrawable(R.drawable.ic_support_borderline));
+                    }
+                });
     }
 }

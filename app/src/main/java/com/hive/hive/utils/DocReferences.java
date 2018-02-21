@@ -12,6 +12,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class DocReferences {
     private static String USERS_COLLECTION = "users";
     private static String ASSOCIATION_COLLECTION = "associations";
+    private static String REQUESTS_COLLECTION = "requests";
 
     public static DocumentReference getUserRef(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -21,10 +22,18 @@ public class DocReferences {
                 .document(user.getUid());
         return null;
     }
-    public static DocumentReference getAssociationRef(){
+    public static DocumentReference getAssociationRef(String associationId){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         //TODO HARDCODED ASSOCIATION
         return  db.collection(ASSOCIATION_COLLECTION)
-                    .document("gVw7dUkuw3SSZSYRXe8s");
+                    .document(associationId);
+    }
+    public static DocumentReference getRequestRef(String associationId, String requestId){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        return db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationId)
+                .collection(REQUESTS_COLLECTION)
+                .document(requestId);
     }
 }
