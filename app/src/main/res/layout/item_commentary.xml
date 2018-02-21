@@ -99,6 +99,7 @@
 
 
                     <ImageView
+                        android:id="@+id/supportsIV"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         app:srcCompat="@drawable/ic_support_borderline"

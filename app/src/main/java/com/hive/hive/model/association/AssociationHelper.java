@@ -407,7 +407,34 @@ public class AssociationHelper {
     }
 
     //--- Support Request Comment
-
+    /**
+     * Gets a support from a request comment
+     *
+     * @param db            Database reference
+     * @param associationID Association document ID where to get the request from
+     * @param requestID     Request document ID where to get the comment from
+     * @param commentID     Comment document ID where to get the supports from
+     * @param supportID     Support document ID where to get the document
+     * @return Task that resolves in all support documents from a request comment
+     */
+    public static Task<DocumentSnapshot> getRequestCommentSupport(
+            FirebaseFirestore db,
+            String associationID,
+            String requestID,
+            String commentID,
+            String supportID
+    ) {
+        return db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(Association.REQUESTS_COLLECTION)
+                .document(requestID)
+                .collection(Request.COMMENTS_COLLECTION)
+                .document(commentID)
+                .collection(AssociationComment.SUPPORTS_COLLECTION)
+                .document(supportID)
+                .get();
+    }
     /**
      * Gets all supports from a request comment
      *

@@ -146,7 +146,7 @@ public class CommentaryActivity extends AppCompatActivity {
         mCommentRV.setHasFixedSize(true);
 
         //Set Adapter
-        mRecyclerAdapter = new CommentaryAdapter(mComments, mIds);
+        mRecyclerAdapter = new CommentaryAdapter(this, mComments, mIds, mRequestId);
         mCommentRV.setAdapter(mRecyclerAdapter);
 
     }
