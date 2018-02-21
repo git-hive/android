@@ -10,11 +10,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
+import com.hive.hive.association.AssociationHelper;
 import com.hive.hive.association.request.comments.CommentaryActivity;
+import com.hive.hive.model.association.AssociationSupport;
 import com.hive.hive.model.association.Request;
+import com.hive.hive.utils.DocReferences;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 /**
@@ -27,6 +36,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     private HashMap<String,  Request> mRequests;
     private ArrayList<String> mIds;
     private Context context;
+
     public RequestAdapter(HashMap<String, Request> requests, ArrayList<String> mIds, Context context){
         this.mRequests = requests;
         this.mIds = mIds;
@@ -39,7 +49,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     }
 
     @Override
-    public void onBindViewHolder(RequestViewHolder holder, int position) {
+    public void onBindViewHolder(final RequestViewHolder holder, final int position) {
 
         final Request request = mRequests.get(mIds.get(position));
 
@@ -49,21 +59,78 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         holder.mUserName.setText("Vitor Plantas");
         holder.mRequestTitle.setText(request.getTitle());
         holder.mRequestContent.setText(request.getContent());
-        holder.mNumberOfSupports.setText(String.valueOf(request.getScore()));
+        holder.mNumberOfSupportsTV.setText(String.valueOf(request.getScore()));
 
-        holder.nCard.setOnClickListener(new View.OnClickListener() {
+        //fill support if necessary
+        shouldFillSupport(holder, mIds.get(position));
+
+        holder.mCommentsIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 context.startActivity(new Intent(context, CommentaryActivity.class).putExtra(CommentaryActivity.REQUEST_ID ,request.getId()));
             }
         });
+        holder.mNumberOfCommentsTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                context.startActivity(new Intent(context, CommentaryActivity.class).putExtra(CommentaryActivity.REQUEST_ID ,request.getId()));
+            }
+        });
+        holder.mSupportsIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                scoreClick(holder, mIds.get(position));
+            }
+        });
+        holder.mNumberOfSupportsTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                scoreClick(holder, mIds.get(position));
+            }
+        });
+
 
     }
     @Override
     public int getItemCount() {
         return mRequests.size();
     }
+    private void shouldFillSupport(final RequestViewHolder holder, String requestId){
+        //if exists support, then should be IV filled
+        AssociationHelper.getRequestSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", requestId, FirebaseAuth.getInstance().getUid())
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if(documentSnapshot.exists())
+                            holder.mSupportsIV.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_support_filled));
+                        else
+                            holder.mSupportsIV.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_support_borderline));
+                    }
+                });
+    }
+    private void scoreClick(final RequestViewHolder holder, final String requestId){
+        AssociationHelper.getRequestSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", requestId, FirebaseAuth.getInstance().getUid())
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        //if support already exists, should delete it
+                        if(documentSnapshot.exists()) {
+                            AssociationHelper.removeRequestSupport(FirebaseFirestore.getInstance(),
+                                    "gVw7dUkuw3SSZSYRXe8s", requestId, FirebaseAuth.getInstance().getUid());
+                        }else {// else should add it
+                            DocumentReference userRef = DocReferences.getUserRef();
+                            DocumentReference assocRef = DocReferences.getAssociationRef();
+                            String supportId = FirebaseAuth.getInstance().getUid();
+                            //TODO review refs
 
+                            AssociationSupport support = new AssociationSupport(supportId, Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
+                                    userRef, null, assocRef, null);
+                            AssociationHelper.setRequestSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", requestId, supportId, support);
+                        }
+                        RequestAdapter.this.notifyDataSetChanged();
+                    }
+                });
+    }
 
     /**
      * Class to serve as ViewHolder for a Request model in this adapter
@@ -74,14 +141,16 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
         final ImageView mUserAvatar;
         final ImageView mRequestCategory;
+        final ImageView mSupportsIV;
+        final ImageView mCommentsIV;
 
         final TextView mUserName;
         final TextView mUserLeaderboardPostion;
         final TextView mRequestTitle;
         final TextView mRequestCost;
         final TextView mRequestContent;
-        final TextView mNumberOfComments;
-        final TextView mNumberOfSupports;
+        final TextView mNumberOfCommentsTV;
+        final TextView mNumberOfSupportsTV;
 
         final CardView nCard;
         Request mItem;
@@ -90,16 +159,19 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             super(view);
 
             mView = view;
-
+            //ImageViews
             mUserAvatar = view.findViewById(R.id.request_author_photo_iv);
+            mCommentsIV = view.findViewById(R.id.commentsIV);
+            mSupportsIV = view.findViewById(R.id.supportsIV);
+            mRequestCategory = view.findViewById(R.id.request_budget_category_iv);
+
             mUserName = view.findViewById(R.id.request_author_name_tv);
             mUserLeaderboardPostion = view.findViewById(R.id.request_leaderboard_position_tv);
             mRequestTitle = view.findViewById(R.id.request_title_tv);
             mRequestCost = view.findViewById(R.id.request_cost_tv);
-            mRequestCategory = view.findViewById(R.id.request_budget_category_iv);
             mRequestContent = view.findViewById(R.id.request_content_tv);
-            mNumberOfComments = view.findViewById(R.id.request_number_of_comments_tv);
-            mNumberOfSupports = view.findViewById(R.id.request_number_of_supports_tv);
+            mNumberOfCommentsTV = view.findViewById(R.id.request_number_of_comments_tv);
+            mNumberOfSupportsTV = view.findViewById(R.id.supportsTV);
 
             nCard = view.findViewById(R.id.requestCV);
 

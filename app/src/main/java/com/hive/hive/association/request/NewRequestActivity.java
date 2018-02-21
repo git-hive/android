@@ -23,6 +23,7 @@ import com.hive.hive.model.association.RequestCategory;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -69,7 +70,8 @@ public class NewRequestActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //TODO association shouldnt be setted this way
                 String requestUUID = UUID.randomUUID().toString();
-                Request request = new Request(requestUUID, 0, 0, titleET.getText().toString(),
+                Request request = new Request(requestUUID, Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis()
+                        , titleET.getText().toString(),
                         descriptionET.getText().toString(), 0);
 
                 AssociationHelper.setRequest(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", requestUUID, request);
