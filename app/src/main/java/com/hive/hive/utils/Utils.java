@@ -3,8 +3,6 @@ package com.hive.hive.utils;
 import android.support.design.widget.TextInputEditText;
 import android.widget.TextView;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -60,15 +58,5 @@ public abstract class Utils {
             }
         }
         return false;
-    }
-
-    public static Map<String, String> getHashMapFilter(){
-        Map<String, String> mmap = new HashMap<>();
-        mmap.put("res/drawable/ic_category_services.xml", "Services");
-        mmap.put("res/drawable/ic_category_gardening.xml", "Gardening");
-        mmap.put("res/drawable/ic_category_cleaning.xml", "Cleaning");
-        mmap.put("res/drawable/ic_category_all.xml", "All");
-        mmap.put("res/drawable/ic_category_security.xml", "Security");
-        return mmap;
     }
 }

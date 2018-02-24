@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    tools:context="com.hive.hive.association.transparency.tabs.cash.CashFragment">
+    tools:context="com.hive.hive.association.transparency.tabs.CashFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

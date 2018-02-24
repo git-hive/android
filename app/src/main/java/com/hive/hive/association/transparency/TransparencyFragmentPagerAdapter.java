@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.hive.hive.association.transparency.tabs.bills.BillsFragment;
 import com.hive.hive.association.transparency.tabs.budget.BudgetFragment;
-import com.hive.hive.association.transparency.tabs.cash.CashFragment;
+import com.hive.hive.association.transparency.tabs.CashFragment;
 import com.hive.hive.association.transparency.tabs.staff.StaffFragment;
 
 /**
