@@ -11,8 +11,19 @@
 
     <!-- Categories Filter -->
 
-    <include layout="@layout/categories_filter" />
-
+    <!--<include layout="@layout/categories_filter" />-->
+    <fragment
+        android:name="com.hive.hive.utils.circularFilter.scale.ScaleLayoutActivity"
+        android:id="@+id/menuFragment"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="100dp" />
+    <TextView
+        android:id="@+id/menuFilterTV"
+        android:text="@string/app_name"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/requestRV"
