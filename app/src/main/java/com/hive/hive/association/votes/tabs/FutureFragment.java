@@ -69,24 +69,24 @@ public class FutureFragment extends Fragment {
 
 
 
-        //Set currentTab Layout and data
-        mCurrentVotesListRV = (RecyclerView) view.findViewById(R.id.current_votes_list_RV);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
-        mCurrentVotesListRV.setLayoutManager(layoutManager);
-        //mCurrentVotesListRV.setHasFixedSize(true);
-
-        mCurrentAdapter = new CurrentAdapter(DUMMYARRAY, NUM_LIST_ITEMS);
-        //Adding Click Listener To Card Buttons
-        mCurrentAdapter.setDefaultRequestBtnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "DEFAULT HANDLER FOR ALL BUTTONS", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        mCurrentVotesListRV.setAdapter(mCurrentAdapter);
-
-
+//        //Set currentTab Layout and data
+//        mCurrentVotesListRV = (RecyclerView) view.findViewById(R.id.current_votes_list_RV);
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
+//        mCurrentVotesListRV.setLayoutManager(layoutManager);
+//        //mCurrentVotesListRV.setHasFixedSize(true);
+//
+//        mCurrentAdapter = new CurrentAdapter(DUMMYARRAY, NUM_LIST_ITEMS);
+//        //Adding Click Listener To Card Buttons
+//        mCurrentAdapter.setDefaultRequestBtnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getContext(), "DEFAULT HANDLER FOR ALL BUTTONS", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//        mCurrentVotesListRV.setAdapter(mCurrentAdapter);
+//
+//
 
         return view;
     }
