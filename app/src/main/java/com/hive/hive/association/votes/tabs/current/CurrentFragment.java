@@ -8,8 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.alexvasilkov.foldablelayout.UnfoldableView;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -24,21 +27,11 @@ public class CurrentFragment extends Fragment {
     public static final String ARG_PAGE = "Passadas";
     private static final String TAG = "#";
 
-    // Content of (past, current and future)
-    RecyclerView mCurrentVotesListRV;
-    CurrentAdapter mCurrentAdapter;
-
-
-    // Data and Stuff TODO
-//    private ArrayList<String> mIds;
-//    private HashMap<String, Vote> mCurrentVotes;
-
     ArrayList<Vote> DUMMYARRAY;
-
-    //--- Listeners
-    EventListener<QuerySnapshot> mCurrentVotesEL;
-    ListenerRegistration mCurrentVotesLR;
-
+    RecyclerView mRV;
+    View mListTouchInterceptor;
+    FrameLayout mDetailsLayout;
+    UnfoldableView mUnfoldableView;
     public static CurrentFragment newInstance(int page) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
@@ -74,25 +67,50 @@ public class CurrentFragment extends Fragment {
 
 
 
-        //Set currentTab Layout and data
-        mCurrentVotesListRV = (RecyclerView) view.findViewById(R.id.current_votes_list_RV);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext());
-        mCurrentVotesListRV.setLayoutManager(layoutManager);
-        //mCurrentVotesListRV.setHasFixedSize(true);
+        mListTouchInterceptor = view.findViewById(R.id.touch_interceptor_view);
+        mListTouchInterceptor.setClickable(false);
 
-        mCurrentAdapter = new CurrentAdapter(DUMMYARRAY, NUM_LIST_ITEMS);
-        //Adding Click Listener To Card Buttons
-        mCurrentAdapter.setDefaultRequestBtnClickListener(new View.OnClickListener() {
+        mDetailsLayout = view.findViewById(R.id.details_layout);
+        mDetailsLayout.setVisibility(View.INVISIBLE);
+
+        mUnfoldableView = (UnfoldableView) view.findViewById(R.id.unfoldable_view);
+
+        mUnfoldableView.setOnFoldingListener(new UnfoldableView.SimpleFoldingListener() {
             @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "DEFAULT HANDLER FOR ALL BUTTONS", Toast.LENGTH_SHORT).show();
+            public void onUnfolding(UnfoldableView unfoldableView) {
+                mListTouchInterceptor.setClickable(true);
+                mDetailsLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onUnfolded(UnfoldableView unfoldableView) {
+                mListTouchInterceptor.setClickable(false);
+            }
+
+            @Override
+            public void onFoldingBack(UnfoldableView unfoldableView) {
+                mListTouchInterceptor.setClickable(true);
+            }
+
+            @Override
+            public void onFoldedBack(UnfoldableView unfoldableView) {
+                mListTouchInterceptor.setClickable(false);
+                mDetailsLayout.setVisibility(View.INVISIBLE);
             }
         });
+        mRV = view.findViewById(R.id.cellRV);
 
-        mCurrentVotesListRV.setAdapter(mCurrentAdapter);
-
-
+        mRV.setAdapter(new CurrentAdapter(DUMMYARRAY, mUnfoldableView, mDetailsLayout));
 
         return view;
     }
+//    @Override
+//    public void onBackPressed() {
+//        if (mUnfoldableView != null && (mUnfoldableView.isUnfolded() || mUnfoldableView.isUnfolding())) {
+//            mUnfoldableView.foldBack();
+//        } else {
+//            super.onBackPressed();
+//        }
+//    }
+
 }
