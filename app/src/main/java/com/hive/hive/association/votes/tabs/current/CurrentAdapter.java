@@ -15,9 +15,7 @@ import com.hive.hive.model.association.Vote;
 
 import java.util.ArrayList;
 
-/**
- * Created by vplentz on 04/02/18.
- */
+
 
 public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestViewHolder> {
 
@@ -32,7 +30,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
     }
     @Override
     public RequestViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.cell, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.vote_cell, parent, false);
         return new RequestViewHolder(itemView);
     }
 

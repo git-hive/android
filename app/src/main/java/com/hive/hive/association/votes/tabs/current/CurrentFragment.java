@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -32,6 +33,10 @@ public class CurrentFragment extends Fragment {
     View mListTouchInterceptor;
     FrameLayout mDetailsLayout;
     UnfoldableView mUnfoldableView;
+
+    // Temporary solution to unfold card, TODO: Check with the @guys
+    ImageView mTopClickableCardIV;
+
     public static CurrentFragment newInstance(int page) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
@@ -65,7 +70,17 @@ public class CurrentFragment extends Fragment {
             }
         });
 
+        // Temporary solution to unfold card, TODO: Check with the @guys
+        mTopClickableCardIV = view.findViewById(R.id.topCardIV);
+        mTopClickableCardIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mUnfoldableView != null && (mUnfoldableView.isUnfolded() || mUnfoldableView.isUnfolding())) {
+                    mUnfoldableView.foldBack();
+                }
 
+            }
+        });
 
         mListTouchInterceptor = view.findViewById(R.id.touch_interceptor_view);
         mListTouchInterceptor.setClickable(false);
@@ -85,6 +100,9 @@ public class CurrentFragment extends Fragment {
             @Override
             public void onUnfolded(UnfoldableView unfoldableView) {
                 mListTouchInterceptor.setClickable(false);
+
+                // Check this out to unfold when grab down TODO: @MarcoBirck
+                unfoldableView.setGesturesEnabled(false);
             }
 
             @Override
