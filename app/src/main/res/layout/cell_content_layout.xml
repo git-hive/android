@@ -113,7 +113,7 @@
                 <!-- avatar and name part -->
                 <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content">
 
                         <TextView
                             android:paddingTop="15dp"
@@ -149,12 +149,12 @@
                 </RelativeLayout>
 
                 <!-- divider line -->
-                <!--<ImageView-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="1dp"-->
-                    <!--android:layout_marginBottom="6dp"-->
-                    <!--android:layout_marginTop="9dp"-->
-                    <!--android:src="@color/contentDividerLine" />-->
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginTop="9dp"
+                    android:src="@color/contentDividerLine" />
 
 
                 <!-- divider line -->
@@ -181,8 +181,21 @@
                     android:textSize="16sp"
                     android:textStyle="italic" />
 
+            <!-- Question Options -->
 
-                <!-- request button -->
+
+            <ExpandableListView
+                android:id="@+id/questionExpandableLV"
+                android:gravity="left"
+                android:layoutDirection="rtl"
+                android:layout_height="300dp"
+                android:layout_width="match_parent"/>
+
+
+
+
+
+            <!-- Vote button -->
 
             <ImageButton
                 android:layout_gravity="center_horizontal|bottom"
@@ -190,11 +203,12 @@
                 android:background="@drawable/ic_like"
                 android:layout_width="110dp"
                 android:layout_height="100dp"
-                android:text="@string/vote" />
+                 />
             <TextView
+                android:layout_gravity="center_horizontal"
                 android:textSize="16sp"
                 android:textColor="@color/colorBlack"
-                android:text="@string/suggested"
+                android:text="@string/vote"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 

@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -18,9 +19,13 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
+import com.hive.hive.association.votes.tabs.questions.ExpandableListAdapter;
+import com.hive.hive.main.MainActivity;
 import com.hive.hive.model.association.Vote;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 // In this case, the fragment displays simple text based on the page
 public class CurrentFragment extends Fragment {
@@ -36,6 +41,11 @@ public class CurrentFragment extends Fragment {
 
     // Temporary solution to unfold card, TODO: Check with the @guys
     ImageView mTopClickableCardIV;
+
+    // Expandable List View
+    private static ExpandableListView expandableListView;
+    private static ExpandableListAdapter adapter;
+
 
     public static CurrentFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -120,15 +130,61 @@ public class CurrentFragment extends Fragment {
 
         mRV.setAdapter(new CurrentAdapter(DUMMYARRAY, mUnfoldableView, mDetailsLayout));
 
+        // TODO: Check this expandable element Height, since it has some workarounds, either than set it fixed;
+        expandableListView = (ExpandableListView) view.findViewById(R.id.questionExpandableLV);
+        // Setting group indicator null for custom indicator
+        expandableListView.setGroupIndicator(null);
+
+        setItems();
+
         return view;
     }
-//    @Override
-//    public void onBackPressed() {
-//        if (mUnfoldableView != null && (mUnfoldableView.isUnfolded() || mUnfoldableView.isUnfolding())) {
-//            mUnfoldableView.foldBack();
-//        } else {
-//            super.onBackPressed();
-//        }
-//    }
 
+    // Setting headers and childs to expandable listview
+    void setItems(){
+
+        // Array list for header
+        ArrayList<String> header = new ArrayList<String>();
+
+        // Array list for child items
+        List<String> child1 = new ArrayList<String>();
+        List<String> child2 = new ArrayList<String>();
+        List<String> child3 = new ArrayList<String>();
+        List<String> child4 = new ArrayList<String>();
+
+        // Hash map for both header and child
+        HashMap<String, List<String>> hashMap = new HashMap<String, List<String>>();
+
+        // Adding headers to list
+        for (int i = 1; i < 5; i++) {
+            header.add("Group " + i);
+        }
+        // Adding child data
+        for (int i = 1; i < 5; i++) {
+            child1.add("Group 1  " + " : Child" + i);
+        }
+        // Adding child data
+        for (int i = 1; i < 5; i++) {
+            child2.add("Group 2  " + " : Child" + i);
+        }
+        // Adding child data
+        for (int i = 1; i < 6; i++) {
+            child3.add("Group 3  " + " : Child" + i);
+        }
+        // Adding child data
+        for (int i = 1; i < 7; i++) {
+            child4.add("Group 4  " + " : Child" + i);
+        }
+
+        // Adding header and childs to hash map
+        hashMap.put(header.get(0), child1);
+        hashMap.put(header.get(1), child2);
+        hashMap.put(header.get(2), child3);
+        hashMap.put(header.get(3), child4);
+
+        adapter = new ExpandableListAdapter(getContext(), header, hashMap);
+        // Setting adpater over expandablelistview
+        expandableListView.setAdapter(adapter);
+
+    }
 }

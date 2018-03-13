@@ -38,7 +38,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
     public void onBindViewHolder(RequestViewHolder holder, int position) {
 
         Vote request = mVotes.get(position);
-        holder.mTitle.setText("marco gay");
+        holder.mTitle.setText("Titulo da Pauta");
         holder.mVote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
