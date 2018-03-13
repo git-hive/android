@@ -5,8 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.hive.hive.association.votes.tabs.current.CurrentFragment;
-import com.hive.hive.association.votes.tabs.FutureFragment;
-import com.hive.hive.association.votes.tabs.OldFragment;
+import com.hive.hive.association.votes.tabs.future.FutureFragment;
+import com.hive.hive.association.votes.tabs.old.OldFragment;
 
 /**
  * Created by birck on 04/02/18.
