@@ -9,9 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hive.hive.R;
+import com.hive.hive.association.transparency.tabs.staff.CustomGridView;
+import com.hive.hive.association.transparency.tabs.staff.GridAdapter;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
@@ -19,6 +23,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 	private List<String> header; // header titles
 	// Child data in format of header title, child title
 	private HashMap<String, List<String>> child;
+
+	static final String[] MOBILE_OS = new String[] { "Android", "iOS",
+			"Windows", "Blackberry" };
 
 	public ExpandableListAdapter(Context context, List<String> listDataHeader, HashMap<String, List<String>> listChildData) {
 		this._context = context;
@@ -104,8 +111,26 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 		// Inflating child layout and setting textview
 		if (convertView == null) {
 			LayoutInflater infalInflater = (LayoutInflater) this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = infalInflater.inflate(R.layout.question_child, parent, false);
+			//convertView = infalInflater.inflate(R.layout.question_child, parent, false);
+			convertView = infalInflater.inflate(R.layout.question_grid_view, null);
 		}
+		CustomGridView gridView = (CustomGridView) convertView
+				.findViewById(R.id.questionGV);
+
+		gridView.setNumColumns(2);// gridView.setGravity(Gravity.CENTER);//
+		gridView.setHorizontalSpacing(10);// SimpleAdapter adapter =
+		GridAdapter adapter = new GridAdapter(this._context, MOBILE_OS);
+		gridView.setAdapter(adapter);// Adapter
+
+		int totalHeight = 0;
+		for (int size = 0; size < adapter.getCount(); size++) {
+			RelativeLayout relativeLayout = (RelativeLayout) adapter.getView(
+					size, null, gridView);
+			ImageView imageView = (ImageView) relativeLayout.getChildAt(0);
+			imageView.measure(0, 0);
+			totalHeight += imageView.getMeasuredHeight();
+		}
+		gridView.SetHeight(totalHeight);
 
 		TextView child_text = (TextView) convertView.findViewById(R.id.child);
 

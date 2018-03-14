@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,7 +22,7 @@ import com.hive.hive.R;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
-    private Context mContex;
+    private Context mContext;
     private List<String> mListDataHeader; // header titles
     // child data in format of header title, child title
     private HashMap<String, List<String>> mListDataChild;
@@ -34,7 +33,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     public ExpandableListAdapter(Context context, List<String> listDataHeader,
                                  HashMap<String, List<String>> listChildData) {
-        mContex = context;
+        mContext = context;
         mListDataHeader = listDataHeader;
         mListDataChild = listChildData;
         mInflater = LayoutInflater.from(context);
@@ -96,14 +95,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     public View getChildView(int groupPosition, int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.view, null);
+            convertView = mInflater.inflate(R.layout.staff_grid_view, null);
         }
         CustomGridView gridView = (CustomGridView) convertView
                 .findViewById(R.id.GridView_toolbar);
 
         gridView.setNumColumns(3);// gridView.setGravity(Gravity.CENTER);//
         gridView.setHorizontalSpacing(10);// SimpleAdapter adapter =
-        GridAdapter adapter = new GridAdapter(mContex, MOBILE_OS);
+        GridAdapter adapter = new GridAdapter(mContext, MOBILE_OS);
         gridView.setAdapter(adapter);// Adapter
 
         int totalHeight = 0;

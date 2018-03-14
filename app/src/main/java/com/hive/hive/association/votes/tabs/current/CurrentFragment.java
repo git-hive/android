@@ -157,23 +157,23 @@ public class CurrentFragment extends Fragment {
 
         // Adding headers to list
         for (int i = 1; i < 5; i++) {
-            header.add("Group " + i);
+            header.add("Question " + i);
         }
         // Adding child data
-        for (int i = 1; i < 5; i++) {
-            child1.add("Group 1  " + " : Child" + i);
+        for (int i = 1; i < 2; i++) {
+            child1.add("Question 1  " + " : Child" + i);
         }
         // Adding child data
-        for (int i = 1; i < 5; i++) {
-            child2.add("Group 2  " + " : Child" + i);
+        for (int i = 1; i < 2; i++) {
+            child2.add("Question 2  " + " : Child" + i);
         }
         // Adding child data
-        for (int i = 1; i < 6; i++) {
-            child3.add("Group 3  " + " : Child" + i);
+        for (int i = 1; i < 2; i++) {
+            child3.add("Question 3  " + " : Child" + i);
         }
         // Adding child data
-        for (int i = 1; i < 7; i++) {
-            child4.add("Group 4  " + " : Child" + i);
+        for (int i = 1; i < 2; i++) {
+            child4.add("Question 4  " + " : Child" + i);
         }
 
         // Adding header and childs to hash map
