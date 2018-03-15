@@ -28,8 +28,8 @@ public class RecyclerViewHomeAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         switch (viewHolder.getItemViewType()) {
             case REQUEST:
-                RequestViewHolder requestViewHolder = (RequestViewHolder) viewHolder;
-                configureViewHolder1(requestViewHolder, position);
+                RequestViewHolderOld requestViewHolderOld = (RequestViewHolderOld) viewHolder;
+                configureViewHolder1(requestViewHolderOld, position);
                 break;
             case ASSOCIATIONPOST:
                 AssociationViewHolder associationViewHolder = (AssociationViewHolder) viewHolder;
@@ -58,18 +58,18 @@ public class RecyclerViewHomeAdapter extends RecyclerView.Adapter<RecyclerView.V
         viewHolder =  null;
         switch (viewType) {
             case REQUEST:
-                View viewRequisition = inflater.inflate(R.layout.card_req, viewGroup, false);
-                viewHolder = new RequestViewHolder(viewRequisition);
+                View viewRequisition = inflater.inflate(R.layout.item_request, viewGroup, false);
+                viewHolder = new RequestViewHolderOld(viewRequisition);
                 break;
             case ASSOCIATIONPOST:
-                View viewAPost = inflater.inflate(R.layout.card_assoc, viewGroup, false);
+                View viewAPost = inflater.inflate(R.layout.item_association, viewGroup, false);
                 viewHolder = new AssociationViewHolder(viewAPost);
                 break;
         }
         return viewHolder;
     }
 
-    private void configureViewHolder1(RequestViewHolder associationViewHolder, int position) {
+    private void configureViewHolder1(RequestViewHolderOld associationViewHolder, int position) {
         Request request = (Request) items.get(position);
         if (request != null) {
             //vh1.getLabel1().setText("Name: " + user.name);

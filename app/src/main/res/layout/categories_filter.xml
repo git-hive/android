@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/colorWhite">
+
+    <LinearLayout
+        android:id="@+id/category_filter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:gravity="center_vertical|center_horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/categories_filter_arrow_size"
+            android:layout_height="@dimen/categories_filter_arrow_size"
+            android:layout_marginStart="@dimen/categories_filter_item_margin"
+            android:layout_marginEnd="@dimen/categories_filter_item_margin"
+            app:srcCompat="@drawable/ic_left_arrow"
+            />
+        <ImageView
+            android:layout_width="@dimen/categories_filter_item_size"
+            android:layout_height="@dimen/categories_filter_item_size"
+            android:layout_marginStart="@dimen/categories_filter_item_margin"
+            android:layout_marginEnd="@dimen/categories_filter_item_margin"
+            app:srcCompat="@drawable/ic_category_gardening"
+            />
+
+        <ImageView
+            android:layout_width="@dimen/categories_filter_item_size"
+            android:layout_height="@dimen/categories_filter_item_size"
+            android:layout_marginStart="@dimen/categories_filter_item_margin"
+            android:layout_marginEnd="@dimen/categories_filter_item_margin"
+            app:srcCompat="@drawable/ic_category_security"
+            />
+        <ImageView
+            android:layout_width="@dimen/categories_filter_selected_item_size"
+            android:layout_height="@dimen/categories_filter_selected_item_size"
+            android:layout_marginStart="@dimen/categories_filter_item_margin"
+            android:layout_marginEnd="@dimen/categories_filter_item_margin"
+            app:srcCompat="@drawable/ic_category_all"
+            />
+        <ImageView
+            android:layout_width="@dimen/categories_filter_item_size"
+            android:layout_height="@dimen/categories_filter_item_size"
+            android:layout_marginStart="@dimen/categories_filter_item_margin"
+            android:layout_marginEnd="@dimen/categories_filter_item_margin"
+            app:srcCompat="@drawable/ic_category_services"
+            />
+        <ImageView
+            android:layout_width="@dimen/categories_filter_item_size"
+            android:layout_height="@dimen/categories_filter_item_size"
+            android:layout_marginStart="@dimen/categories_filter_item_margin"
+            android:layout_marginEnd="@dimen/categories_filter_item_margin"
+            app:srcCompat="@drawable/ic_category_cleaning"
+            />
+        <ImageView
+            android:layout_width="@dimen/categories_filter_arrow_size"
+            android:layout_height="@dimen/categories_filter_arrow_size"
+            android:layout_marginStart="@dimen/categories_filter_item_margin"
+            android:layout_marginEnd="@dimen/categories_filter_item_margin"
+            app:srcCompat="@drawable/ic_right_arrow"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_marginBottom="10dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/categories_filter_select_item_font_size"
+            android:textStyle="italic"
+            android:text="Todos"
+            android:textAlignment="center"/>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.hive.hive.association.request.RequestActivity"
+    tools:showIn="@layout/activity_request"
+    android:orientation="vertical">
+
+    <!-- Categories Filter -->
+
+    <include layout="@layout/categories_filter" />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/requestRV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="LinearLayoutManager"
+        android:background="@color/colorWhite"
+        />
+
+</LinearLayout>

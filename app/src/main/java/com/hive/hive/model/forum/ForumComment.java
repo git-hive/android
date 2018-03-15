@@ -1,5 +1,7 @@
 package com.hive.hive.model.forum;
 
+import com.google.firebase.firestore.DocumentReference;
+
 import java.util.HashMap;
 
 /**
@@ -18,7 +20,7 @@ public class ForumComment extends ForumAction {
     //--- Constructor
 
     public ForumComment(
-            String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId,
+            String id, long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId,
             String forumId, String content, int supportScore, String postId, HashMap<String, ForumSupport> supports)
     {
         super(id, createdAt, updatedAt, authorId, pointsTransactionId, forumId);

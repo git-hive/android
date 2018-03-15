@@ -1,0 +1,36 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="LinearLayoutManager"
+        android:id="@+id/cellRV"/>
+
+
+<View
+    android:id="@+id/touch_interceptor_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+
+<FrameLayout
+    android:background="@color/colorWhite"
+    android:id="@+id/details_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:visibility="invisible">
+
+        <include layout="@layout/cell_content_layout"/>
+
+
+
+</FrameLayout>
+
+<com.alexvasilkov.foldablelayout.UnfoldableView
+    android:id="@+id/unfoldable_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+</FrameLayout>
