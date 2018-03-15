@@ -1,26 +1,23 @@
 package com.hive.hive.association.votes.tabs.current;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.alexvasilkov.foldablelayout.UnfoldableView;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
+import com.hive.hive.association.votes.tabs.questions.QuestionForm;
 import com.hive.hive.association.votes.tabs.questions.ExpandableListAdapter;
-import com.hive.hive.main.MainActivity;
 import com.hive.hive.model.association.Vote;
 
 import java.util.ArrayList;
@@ -46,6 +43,9 @@ public class CurrentFragment extends Fragment {
     private static ExpandableListView expandableListView;
     private static ExpandableListAdapter adapter;
 
+    // Views references
+    ImageButton choseVoteBT;
+
 
     public static CurrentFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -60,7 +60,7 @@ public class CurrentFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_current, container, false);
+        final View view = inflater.inflate(R.layout.fragment_current, container, false);
 
         DUMMYARRAY = new ArrayList<Vote>();
         DUMMYARRAY.add(new Vote());
@@ -79,6 +79,8 @@ public class CurrentFragment extends Fragment {
                 Toast.makeText(getContext(), "CUSTOM HANDLER FOR FIRST BUTTON", Toast.LENGTH_SHORT).show();
             }
         });
+
+        choseVoteBT = view.findViewById(R.id.choseVoteBT);
 
         // Temporary solution to unfold card, TODO: Check with the @guys
         mTopClickableCardIV = view.findViewById(R.id.topCardIV);
@@ -137,6 +139,15 @@ public class CurrentFragment extends Fragment {
 
         setItems();
 
+        // Start Questions activity stuff
+        choseVoteBT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(view.getContext(), QuestionForm.class));
+
+            }
+        });
+
         return view;
     }
 
@@ -183,6 +194,7 @@ public class CurrentFragment extends Fragment {
         hashMap.put(header.get(3), child4);
 
         adapter = new ExpandableListAdapter(getContext(), header, hashMap);
+
         // Setting adpater over expandablelistview
         expandableListView.setAdapter(adapter);
 

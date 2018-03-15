@@ -53,7 +53,7 @@ dependencies {
     compile 'com.alexvasilkov:foldable-layout:1.2.1'
     compile 'com.alexvasilkov:android-commons:2.0.2'
 
-    
+
     compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.12'
 
 }
