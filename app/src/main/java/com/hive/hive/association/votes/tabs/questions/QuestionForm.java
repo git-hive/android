@@ -20,27 +20,30 @@ public class QuestionForm extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_form);
         context = getApplicationContext();
+        loadListView();
+        onClickEvent();
+
     }
 
-    private void loadListView(View view) {
-        ListView listView = (ListView) view.findViewById(R.id.list_view);
+    private void loadListView() {
+        ListView listView = (ListView) findViewById(R.id.list_view);
         arrayList = new ArrayList<>();
-        for (int i = 1; i <= 50; i++)
+        for (int i = 1; i <= 4; i++)
             arrayList.add("ListView Items " + i);
 
         adapter = new GridListAdapter(context, arrayList, true);
         listView.setAdapter(adapter);
     }
 
-    private void onClickEvent(View view) {
-        view.findViewById(R.id.questionBackBT).setOnClickListener(new View.OnClickListener() {
+    private void onClickEvent() {
+        findViewById(R.id.questionBackBT).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Get the selected position
                 adapter.getSelectedItem();
             }
         });
-        view.findViewById(R.id.questionNextBT).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.questionNextBT).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Delete the selected position
