@@ -13,21 +13,25 @@ import android.widget.Toast;
 import com.hive.hive.R;
 
 import java.util.ArrayList;
- 
+import java.util.HashMap;
+
 /**
  * Created by Birck on 15/03/18.
  */
  
 public class GridListAdapter extends BaseAdapter {
     private Context context;
+    private HashMap<Integer, ArrayList<String> > mFormQuestions;
     private ArrayList<String> arrayList;
     private LayoutInflater inflater;
     private boolean isListView;
     private int selectedPosition = -1;
+    private Integer currentFormIndex = 0;
  
-    public GridListAdapter(Context context, ArrayList<String> arrayList, boolean isListView) {
+    public GridListAdapter(Context context, HashMap<Integer, ArrayList<String> > formQuestions, boolean isListView) {
         this.context = context;
-        this.arrayList = arrayList;
+        mFormQuestions = formQuestions;
+        this.arrayList = mFormQuestions.get(currentFormIndex);
         this.isListView = isListView;
         inflater = LayoutInflater.from(context);
     }
@@ -110,11 +114,21 @@ public class GridListAdapter extends BaseAdapter {
         }
         return "";
     }
- 
+
     //Delete the selected position from the arrayList
-    public void deleteSelectedPosition() {
-        if (selectedPosition != -1) {
-            arrayList.remove(selectedPosition);
+    public void previousQuestion() {
+        if (currentFormIndex != 0) {
+            arrayList = mFormQuestions.get(currentFormIndex-1);
+            currentFormIndex -=1;
+            selectedPosition = -1;//after removing selectedPosition set it back to -1
+            notifyDataSetChanged();
+        }
+    }
+    //Delete the selected position from the arrayList
+    public void nextQuestion() {
+        if (mFormQuestions != null && currentFormIndex != mFormQuestions.size()-1) {
+            arrayList = mFormQuestions.get(currentFormIndex+1);
+            currentFormIndex +=1;
             selectedPosition = -1;//after removing selectedPosition set it back to -1
             notifyDataSetChanged();
         }
