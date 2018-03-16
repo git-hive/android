@@ -56,8 +56,10 @@ dependencies {
     compile 'com.alexvasilkov:foldable-layout:1.2.1'
     compile 'com.alexvasilkov:android-commons:2.0.2'
 
+    // Timeline in questions
+    compile 'com.github.vipulasri:timelineview:1.0.6'
 
-
+    // Layout viewPager
     compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.12'
 
 }
