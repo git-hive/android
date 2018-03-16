@@ -9,8 +9,11 @@ import android.widget.ListView;
 import com.hive.hive.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class QuestionForm extends AppCompatActivity {
+
+    private HashMap<Integer, ArrayList<String> > formQuestions;
     private ArrayList<String> arrayList;
     private GridListAdapter adapter;
     private Context context;
@@ -25,29 +28,37 @@ public class QuestionForm extends AppCompatActivity {
 
     }
 
+    // Populate Form locally for now
     private void loadListView() {
         ListView listView = (ListView) findViewById(R.id.list_view);
-        arrayList = new ArrayList<>();
-        for (int i = 1; i <= 4; i++)
-            arrayList.add("ListView Items " + i);
+        formQuestions = new HashMap<Integer, ArrayList<String>>();
+        for (Integer i = 0; i <= 4; i++){
+            arrayList = new ArrayList<>();
+            for (int j = 0; j <= 4; j++)
+                arrayList.add("ListView Items " + j + " from "+ i);
 
-        adapter = new GridListAdapter(context, arrayList, true);
+            formQuestions.put(i,  arrayList);
+
+        }
+
+        adapter = new GridListAdapter(context, formQuestions, true);
         listView.setAdapter(adapter);
     }
 
+    // Get actions in form
     private void onClickEvent() {
         findViewById(R.id.questionBackBT).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Get the selected position
-                adapter.getSelectedItem();
+                //Next Question
+                adapter.previousQuestion();
             }
         });
         findViewById(R.id.questionNextBT).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Delete the selected position
-                adapter.deleteSelectedPosition();
+                //Next Question
+                adapter.nextQuestion();
             }
         });
 
