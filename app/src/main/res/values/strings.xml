@@ -116,12 +116,20 @@
     <string name="content_to1_mock">46th Ave</string>
     <string name="content_to2_mock">Woodside, NY 11101</string>
     <string name="title_activity_main2">Main2Activity</string>
+    <string name="pattern_title">Título da Pauta</string>
+    <string name="zeroin3">000</string>
+    <string name="fake_time">00d, 00hrs, 00 min</string>
+    <string name="suggested">Sugerida por:</string>
+    <string name="lore_ipsun">Risus in hendrerit gravida rutrum quisque non. Porttitor leo a diam sollicitudin. Sem viverra aliquet eget sit. Purus in massa tempor nec feugiat. Id venenatis a condimentum vitae. Gravida rutrum quisque non tellus orci ac auctor augue mauris. Risus commodo viverra maecenas accumsan lacus vel. Arcu vitae elementum curabitur vitae nunc sed. Et netus et malesuada fames. Feugiat nisl pretium fusce id velit ut.  </string>
+    <string name="partial_results">Resultados parciais:</string>
+
 
     <!-- Transparency Stuff -->
     <string name="hard_coded_i_do_like_pdfs_3"><![CDATA[HARD CODED. I DO LIKE PDFs <3]]></string>
     <string name="total_applied"><i>Total investido:</i></string>
     <string name="initial_money">R$ 000,000,000</string>
     <string name="details">Detalhes</string>
+
 
     <!-- Circular Menu-->
     <string name="setting">Setting</string>
@@ -159,4 +167,7 @@
     <string name="left_on_top">Left On Top</string>
     <string name="right_on_top">Right On Top</string>
     <string name="center_on_top">Center On Top</string>
+
+
+
 </resources>

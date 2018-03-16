@@ -62,8 +62,12 @@
             android:name=".association.request.NewRequestActivity"
             android:parentActivityName=".main.MainActivity" />
         <activity android:name=".association.votes.VotesActivity" />
+
         <activity android:name=".association.transparency.TransparencyActivity"/>
         <activity android:name=".association.request.comments.CommentaryActivity" />
+
+        <activity android:name=".association.votes.tabs.questions.QuestionForm"></activity>
+
     </application>
 
 </manifest>

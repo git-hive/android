@@ -6,7 +6,7 @@
     android:background="#f4f4f4" >
 
     <ExpandableListView
-        android:id="@+id/lvExp"
+        android:id="@+id/staffExpandableLV"
         android:gravity="left"
         android:layoutDirection="rtl"
         android:layout_height="match_parent"

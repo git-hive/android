@@ -22,7 +22,7 @@ public class StaffFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     public static final String ARG_PAGE = "Funcionários";
     ExpandableListAdapter listAdapter;
-    ExpandableListView expListView;
+    ExpandableListView staffExpLV;
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
 
@@ -52,7 +52,7 @@ public class StaffFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_staff, container, false);
 
         // get the listview
-        expListView = (ExpandableListView) view.findViewById(R.id.lvExp);
+        staffExpLV = (ExpandableListView) view.findViewById(R.id.staffExpandableLV);
 
         // preparing list data
         prepareListData();
@@ -60,10 +60,10 @@ public class StaffFragment extends Fragment {
         listAdapter = new ExpandableListAdapter(getContext(), listDataHeader, listDataChild);
 
         // setting list adapter
-        expListView.setAdapter(listAdapter);
+        staffExpLV.setAdapter(listAdapter);
 
         // Listview Group click listener
-        expListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+        staffExpLV.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
 
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v,
@@ -76,7 +76,7 @@ public class StaffFragment extends Fragment {
         });
 
         // Listview Group expanded listener
-        expListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+        staffExpLV.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
 
             @Override
             public void onGroupExpand(int groupPosition) {
@@ -87,7 +87,7 @@ public class StaffFragment extends Fragment {
         });
 
         // Listview Group collasped listener
-        expListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
+        staffExpLV.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
 
             @Override
             public void onGroupCollapse(int groupPosition) {
@@ -99,7 +99,7 @@ public class StaffFragment extends Fragment {
         });
 
         // Listview on child click listener
-        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+        staffExpLV.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
             @Override
             public boolean onChildClick(ExpandableListView parent, View v,
