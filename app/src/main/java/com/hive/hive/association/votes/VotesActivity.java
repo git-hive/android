@@ -26,7 +26,8 @@ public class VotesActivity extends AppCompatActivity {
     ViewPager viewPager;
 
 
-
+//    public final static String EXTRA_ORIENTATION = "EXTRA_ORIENTATION";
+//    public final static String EXTRA_WITH_LINE_PADDING = "EXTRA_WITH_LINE_PADDING";
 
 
     @Override
