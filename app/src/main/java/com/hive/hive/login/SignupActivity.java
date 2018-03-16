@@ -28,6 +28,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
 import com.hive.hive.main.MainActivity;
+import com.hive.hive.model.user.User;
 import com.hive.hive.utils.Mask;
 import com.hive.hive.utils.Utils;
 
@@ -66,7 +67,7 @@ public class SignupActivity extends AppCompatActivity {
     private TextView mTermAgrementsTV;
 
     // Sign up form inputs
-    private Map<String, String> inputValues;
+    private User newUser;
     private TextWatcher cpfMask;
     private DatePickerDialog.OnDateSetListener mOnDateSetListener;
 
@@ -78,7 +79,7 @@ public class SignupActivity extends AppCompatActivity {
 
 
         db = FirebaseFirestore.getInstance();
-
+        newUser = new User();
         //Refence which enable messy Gone in outside shape of editText
         mFullNameTVUpperName = findViewById(R.id.textViewSignUpFullNameUpperName);
         mCPFUpperName = findViewById(R.id.textViewSignUpCPFUpperName);
@@ -96,7 +97,6 @@ public class SignupActivity extends AppCompatActivity {
         mHelloTV = findViewById(R.id.helloTV);
         mTermAgrementsTV = findViewById(R.id.termsAgreementTV);
 
-        inputValues = new HashMap<>();
 
         if (Build.VERSION.SDK_INT < 16) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -238,8 +238,7 @@ public class SignupActivity extends AppCompatActivity {
             mFullNameTV.requestFocus();
             return false;
         }
-        inputValues.put("name", name);
-
+        newUser.setName(name);
         // Check birthday
         String birthday = getText(mBirthdayTV);
         if (TextUtils.isEmpty(birthday)) {
@@ -247,7 +246,7 @@ public class SignupActivity extends AppCompatActivity {
             mBirthdayTV.requestFocus();
             return false;
         }
-        inputValues.put("birthday", birthday);
+        newUser.setBirthday(birthday);
 
         // TODO: proper CPF validation
         String cpf = getText(mCPF);
@@ -256,39 +255,18 @@ public class SignupActivity extends AppCompatActivity {
             mCPF.requestFocus();
             return false;
         }
-        inputValues.put("cpf", cpf);
 
-        // Check user email
-        String email = getText(mEmailTV);
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            mEmailTV.setError("Invalid email address");
-            mEmailTV.requestFocus();
-
-            return false;
-        }
-        inputValues.put("email", email);
-
-        // TODO: proper password validation
-        String password = getText(mPassword);
-        if (TextUtils.isEmpty(password)) {
-            mPassword.setError("Password is required");
-            mPassword.requestFocus();
-
-            return false;
-        }
-
-        String passwordAgain = getText(mPasswordAgain);
-        //Double checking Password
-        System.out.println(password.length()+"<______________________________>"+passwordAgain.length());
-        if (!password.equals(passwordAgain)) {
-            mPasswordAgain.setError("Password must match");
-            mPasswordAgain.requestFocus();
-
-            return false;
-        }
-
-        inputValues.put("password", password);
-
+        newUser.setCpf(cpf);
+// TODO verify if email is really a needed field
+//        // Check user email
+//        String email = getText(mEmailTV);
+//        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+//            mEmailTV.setError("Invalid email address");
+//            mEmailTV.requestFocus();
+//
+//            return false;
+//        }
+        newUser.setEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail());
 
         // Check if user agreed with the terms
         if (!mTermsAgreementRB.isChecked()) {
@@ -308,7 +286,7 @@ public class SignupActivity extends AppCompatActivity {
         db
                 .collection("users")
                 .document(mAuth.getUid())
-                .set(inputValues)
+                .set(newUser)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

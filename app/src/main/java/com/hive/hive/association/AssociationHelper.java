@@ -172,6 +172,27 @@ public class AssociationHelper {
         });
     }
 
+    public static Task<Void> incrementRequestNumComments(
+            FirebaseFirestore db,
+            String associationID,
+            String requestID
+    ) {
+        final DocumentReference requestRef = db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(REQUESTS_COLLECTION)
+                .document(requestID);
+        return db.runTransaction(new Transaction.Function<Void>() {
+            @Nullable
+            @Override
+            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                DocumentSnapshot snap = transaction.get(requestRef);
+                Double newNumComments = snap.getDouble("numComments") + 1;
+                transaction.update(requestRef, "numComments", newNumComments);
+                return null;
+            }
+        });
+    }
     //--- Request comment
 
     public static CollectionReference getAllRequestComments(
@@ -210,6 +231,7 @@ public class AssociationHelper {
             String commentID,
             AssociationComment comment
     ) {
+        incrementRequestNumComments(db, associationID, requestID);
         return db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)

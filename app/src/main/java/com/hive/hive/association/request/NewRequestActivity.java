@@ -74,7 +74,7 @@ public class NewRequestActivity extends AppCompatActivity {
                 Request request = new Request(requestUUID, Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
                         DocReferences.getUserRef(), null, DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s")
                         , titleET.getText().toString(),
-                        descriptionET.getText().toString(), 0, null);
+                        descriptionET.getText().toString(), 0, 0, null);
 
                 AssociationHelper.setRequest(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", requestUUID, request);
                 finish();

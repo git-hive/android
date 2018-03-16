@@ -19,10 +19,11 @@ public class Request extends AssociationAction {
     private String title;
     private String content;
     private int score;
+    private int numComments;
 
     private ArrayList<DocumentReference> categories;
 
-    //--- Constructors
+//--- Constructors
 
     public Request() {}
 
@@ -37,12 +38,14 @@ public class Request extends AssociationAction {
             String title,
             String content,
             int score,
+            int numComments,
             ArrayList<DocumentReference> categories
     ) {
         super(id, createdAt, updatedAt, authorId, pointsTransactionId, associationId);
         this.title = title;
         this.content = content;
         this.score = score;
+        this.numComments = numComments;
         this.categories = categories;
     }
 
@@ -59,6 +62,8 @@ public class Request extends AssociationAction {
     public int getScore() {
         return score;
     }
+
+    public int getNumComments() { return numComments;}
 
     public ArrayList<DocumentReference> getCategories() {
         return categories;
@@ -77,6 +82,8 @@ public class Request extends AssociationAction {
     public void setScore(int score) {
         this.score = score;
     }
+
+    public void setNumComments(int numComments) { this.numComments = numComments; }
 
     public void setCategories(ArrayList<DocumentReference> categories) {
         this.categories = categories;

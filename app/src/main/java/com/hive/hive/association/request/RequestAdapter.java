@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     private HashMap<String,  Request> mRequests;
     private ArrayList<String> mIds;
     private Context context;
-
     public RequestAdapter(HashMap<String, Request> requests, ArrayList<String> mIds, Context context){
         this.mRequests = requests;
         this.mIds = mIds;
@@ -56,22 +56,20 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
         holder.mItem = request;
 
+        //fill user
+        fillUser(holder, request.getAuthorRef());
         holder.mUserAvatar.setImageResource(R.drawable.ic_profile_photo);
         holder.mUserName.setText("Vitor Plantas");
+
+        //fill request
         holder.mRequestTitle.setText(request.getTitle());
         holder.mRequestContent.setText(request.getContent());
         holder.mNumberOfSupportsTV.setText(String.valueOf(request.getScore()));
-
+        holder.mNumberOfCommentsTV.setText(String.valueOf(request.getNumComments()));
         //fill support if necessary
         shouldFillSupport(holder, mIds.get(position));
 
-        holder.mCommentsIV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                context.startActivity(new Intent(context, CommentaryActivity.class).putExtra(CommentaryActivity.REQUEST_ID ,request.getId()));
-            }
-        });
-        holder.mNumberOfCommentsTV.setOnClickListener(new View.OnClickListener() {
+        holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 context.startActivity(new Intent(context, CommentaryActivity.class).putExtra(CommentaryActivity.REQUEST_ID ,request.getId()));
@@ -98,15 +96,16 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     }
     //TODO TO FINISH
     private void fillUser(final RequestViewHolder holder, DocumentReference userRef){
-//        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//            @Override
-//            public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                if(documentSnapshot.exists()){
-//                    User user = documentSnapshot.toObject(User.class);
-//                    holder.mUserName.setText(user.get);
-//                }
-//            }
-//        });
+        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
+                    Log.d(RequestAdapter.class.getSimpleName(), documentSnapshot.get("name").toString());
+                    User user = documentSnapshot.toObject(User.class);
+                    holder.mUserName.setText(user.getName());
+                }
+            }
+        });
     }
     private void shouldFillSupport(final RequestViewHolder holder, String requestId){
         //if exists support, then should be IV filled
@@ -122,27 +121,31 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                 });
     }
     private void scoreClick(final RequestViewHolder holder, final String requestId){
-        AssociationHelper.getRequestSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", requestId, FirebaseAuth.getInstance().getUid())
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        //if support already exists, should delete it
-                        if(documentSnapshot.exists()) {
-                            AssociationHelper.removeRequestSupport(FirebaseFirestore.getInstance(),
-                                    "gVw7dUkuw3SSZSYRXe8s", requestId, FirebaseAuth.getInstance().getUid());
-                        }else {// else should add it
-                            DocumentReference userRef = DocReferences.getUserRef();
-                            DocumentReference assocRef = DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s");
-                            String supportId = FirebaseAuth.getInstance().getUid();
-                            //TODO review refs
 
-                            AssociationSupport support = new AssociationSupport(supportId, Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
-                                    userRef, null, assocRef, null);
-                            AssociationHelper.setRequestSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", requestId, supportId, support);
+            holder.mNumberOfSupportsTV.setEnabled(false);
+            AssociationHelper.getRequestSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", requestId, FirebaseAuth.getInstance().getUid())
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            //if support already exists, should delete it
+                            if (documentSnapshot.exists()) {
+                                AssociationHelper.removeRequestSupport(FirebaseFirestore.getInstance(),
+                                        "gVw7dUkuw3SSZSYRXe8s", requestId, FirebaseAuth.getInstance().getUid());
+                            } else {// else should add it
+                                DocumentReference userRef = DocReferences.getUserRef();
+                                DocumentReference assocRef = DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s");
+                                String supportId = FirebaseAuth.getInstance().getUid();
+                                //TODO review refs
+
+                                AssociationSupport support = new AssociationSupport(supportId, Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
+                                        userRef, null, assocRef, null);
+                                AssociationHelper.setRequestSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", requestId, supportId, support);
+                            }
+                            RequestAdapter.this.notifyDataSetChanged();
                         }
-                        RequestAdapter.this.notifyDataSetChanged();
-                    }
-                });
+                    });
+            holder.mSupportsIV.setEnabled(true);
+            holder.mNumberOfSupportsTV.setEnabled(true);
     }
 
     /**
