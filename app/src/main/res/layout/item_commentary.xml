@@ -42,25 +42,10 @@
 
                 <ImageView
                     android:id="@+id/commentAvatarIV"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     app:srcCompat="@drawable/ic_profile_photo"
                     />
-
-                <TextView
-                    android:id="@+id/request_author_name_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Vitor Planta"
-                    android:textSize="@dimen/request_author_name_font_size"/>
-
-                <TextView
-                    android:id="@+id/request_leaderboard_position_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="2º lugar no ranking"
-                    android:textSize="@dimen/request_author_leaderboard_position_font_size"
-                    android:textColor="@color/colorOrange"/>
             </LinearLayout>
             <!-- Info Layout -->
             <LinearLayout
@@ -77,7 +62,6 @@
                     android:id="@+id/commentAuthorTV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Marco Polo"
                     android:textSize="@dimen/request_title_font_size"
                     android:textColor="@color/colorOrange"
                     />
@@ -85,7 +69,6 @@
                     android:id="@+id/commentContentTV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Lorem ipsum dolor sit amet, dipiscing elit, sed diam nullam eget laoreet..."
                     android:textSize="@dimen/request_content_font_size" />
 
                 <!-- Supports Layout -->
@@ -109,7 +92,6 @@
                         android:id="@+id/commentsSupportsTV"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="110"
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/request_author_leaderboard_position_font_size"
                         android:paddingBottom="12dp"

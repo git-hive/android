@@ -2,6 +2,7 @@ package com.hive.hive.association.request;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,10 +24,14 @@ import com.hive.hive.model.association.AssociationSupport;
 import com.hive.hive.model.association.Request;
 import com.hive.hive.model.user.User;
 import com.hive.hive.utils.DocReferences;
+import com.hive.hive.utils.SupportMutex;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
 
 /**
  * Created by vplentz on 04/02/18.
@@ -37,11 +42,15 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     //-- Data
     private HashMap<String,  Request> mRequests;
     private ArrayList<String> mIds;
+    private ArrayList<SupportMutex> mLocks;
     private Context context;
     public RequestAdapter(HashMap<String, Request> requests, ArrayList<String> mIds, Context context){
         this.mRequests = requests;
         this.mIds = mIds;
         this.context = context;
+        mLocks = new ArrayList<>();
+        for(int i = 0; i < mIds.size(); i++)
+            mLocks.add(null);
     }
     @Override
     public RequestViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -52,6 +61,11 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     @Override
     public void onBindViewHolder(final RequestViewHolder holder, final int position) {
 
+        try{
+            if(mLocks.get(position) == null) mLocks.add(new SupportMutex(holder));
+        }catch(java.lang.IndexOutOfBoundsException e){
+            mLocks.add(new SupportMutex(holder));
+        }
         final Request request = mRequests.get(mIds.get(position));
 
         holder.mItem = request;
@@ -59,8 +73,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         //fill user
         fillUser(holder, request.getAuthorRef());
         holder.mUserAvatar.setImageResource(R.drawable.ic_profile_photo);
-        holder.mUserName.setText("Vitor Plantas");
-
         //fill request
         holder.mRequestTitle.setText(request.getTitle());
         holder.mRequestContent.setText(request.getContent());
@@ -78,13 +90,13 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         holder.mSupportsIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                scoreClick(holder, mIds.get(position));
+                scoreClick(holder, mIds.get(position), mLocks.get(position));
             }
         });
         holder.mNumberOfSupportsTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                scoreClick(holder, mIds.get(position));
+                scoreClick(holder, mIds.get(position), mLocks.get(position));
             }
         });
 
@@ -120,9 +132,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                     }
                 });
     }
-    private void scoreClick(final RequestViewHolder holder, final String requestId){
-
-            holder.mNumberOfSupportsTV.setEnabled(false);
+    private void scoreClick(final RequestViewHolder holder, final String requestId, final SupportMutex mutex){
+        mutex.lock();
             AssociationHelper.getRequestSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", requestId, FirebaseAuth.getInstance().getUid())
                     .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
@@ -130,7 +141,13 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                             //if support already exists, should delete it
                             if (documentSnapshot.exists()) {
                                 AssociationHelper.removeRequestSupport(FirebaseFirestore.getInstance(),
-                                        "gVw7dUkuw3SSZSYRXe8s", requestId, FirebaseAuth.getInstance().getUid());
+                                        "gVw7dUkuw3SSZSYRXe8s", requestId, FirebaseAuth.getInstance().getUid())
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        mutex.unlock();
+                                    }
+                                });
                             } else {// else should add it
                                 DocumentReference userRef = DocReferences.getUserRef();
                                 DocumentReference assocRef = DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s");
@@ -139,19 +156,25 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
                                 AssociationSupport support = new AssociationSupport(supportId, Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
                                         userRef, null, assocRef, null);
-                                AssociationHelper.setRequestSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", requestId, supportId, support);
+                                AssociationHelper.setRequestSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s"
+                                        , requestId, supportId, support)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        mutex.unlock();
+                                    }
+                                });
                             }
                             RequestAdapter.this.notifyDataSetChanged();
+
                         }
                     });
-            holder.mSupportsIV.setEnabled(true);
-            holder.mNumberOfSupportsTV.setEnabled(true);
     }
 
     /**
      * Class to serve as ViewHolder for a Request model in this adapter
      */
-    class RequestViewHolder extends RecyclerView.ViewHolder{
+    public class RequestViewHolder extends RecyclerView.ViewHolder{
 
         final View mView;
 
@@ -191,6 +214,14 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
             nCard = view.findViewById(R.id.requestCV);
 
+        }
+
+        public ImageView getmSupportsIV() {
+            return mSupportsIV;
+        }
+
+        public TextView getmNumberOfSupportsTV() {
+            return mNumberOfSupportsTV;
         }
 
         @Override

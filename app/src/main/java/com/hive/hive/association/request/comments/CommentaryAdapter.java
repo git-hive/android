@@ -2,6 +2,7 @@ package com.hive.hive.association.request.comments;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.hive.hive.association.request.RequestAdapter;
 import com.hive.hive.model.association.AssociationComment;
 import com.hive.hive.model.association.AssociationHelper;
 import com.hive.hive.model.association.AssociationSupport;
+import com.hive.hive.model.user.User;
 import com.hive.hive.utils.DocReferences;
 
 import java.util.ArrayList;
@@ -52,8 +54,7 @@ public class CommentaryAdapter extends RecyclerView.Adapter<CommentaryAdapter.Co
         shouldFillSupport(holder, mRequestId, mIds.get(position));
         //TODO should be replaced by real user image
         holder.avatarIV.setImageResource(R.drawable.ic_profile_photo);
-        //TODO should be replaced by real author name
-        holder.authorTV.setText("AUTHOR");
+        fillUser(holder, comment.getAuthorRef());
         holder.contentTV.setText(comment.getContent());
         holder.supportTV.setText(comment.getScore()+"");
 
@@ -76,7 +77,18 @@ public class CommentaryAdapter extends RecyclerView.Adapter<CommentaryAdapter.Co
     public int getItemCount() {
         return mComments.size();
     }
-
+    private void fillUser(final CommentaryAdapter.CommentaryViewHolder holder, DocumentReference userRef){
+        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
+                    Log.d(RequestAdapter.class.getSimpleName(), documentSnapshot.get("name").toString());
+                    User user = documentSnapshot.toObject(User.class);
+                    holder.authorTV.setText(user.getName());
+                }
+            }
+        });
+    }
     private void shouldFillSupport(final CommentaryViewHolder holder, String requestId, String commentId){
         //if exists support, then should be IV filled
         AssociationHelper.getRequestCommentSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s",
@@ -131,6 +143,7 @@ public class CommentaryAdapter extends RecyclerView.Adapter<CommentaryAdapter.Co
             supportIV = itemView.findViewById(R.id.supportsIV);
             //TextViews
             authorTV = itemView.findViewById(R.id.commentAuthorTV);
+
             contentTV = itemView.findViewById(R.id.commentContentTV);
             supportTV = itemView.findViewById(R.id.commentsSupportsTV);
 

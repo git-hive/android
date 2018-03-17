@@ -29,6 +29,7 @@ import com.hive.hive.association.request.RequestAdapter;
 import com.hive.hive.model.association.AssociationComment;
 import com.hive.hive.model.association.AssociationSupport;
 import com.hive.hive.model.association.Request;
+import com.hive.hive.model.user.User;
 import com.hive.hive.utils.DocReferences;
 
 import java.util.ArrayList;
@@ -149,6 +150,7 @@ public class CommentaryActivity extends AppCompatActivity {
                     mRequest = documentSnapshot.toObject(Request.class);
                     updateRequestUI();
                     shouldFillSupport();
+                    fillUser(mRequest.getAuthorRef());
                 }else{
                     finish();
                 }
@@ -280,5 +282,17 @@ public class CommentaryActivity extends AppCompatActivity {
                             mRequestSupportsIV.setImageDrawable(CommentaryActivity.this.getResources().getDrawable(R.drawable.ic_support_borderline));
                     }
                 });
+    }
+    private void fillUser(DocumentReference userRef){
+        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
+                    Log.d(RequestAdapter.class.getSimpleName(), documentSnapshot.get("name").toString());
+                    User user = documentSnapshot.toObject(User.class);
+                    mRequestAuthorTV.setText(user.getName());
+                }
+            }
+        });
     }
 }
