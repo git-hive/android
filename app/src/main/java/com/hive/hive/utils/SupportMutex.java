@@ -2,8 +2,11 @@ package com.hive.hive.utils;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.hive.hive.association.request.RequestAdapter;
+import com.hive.hive.association.request.comments.CommentaryAdapter;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
@@ -15,16 +18,17 @@ import java.util.concurrent.locks.Lock;
 
 public class SupportMutex implements Lock{
 
-    RequestAdapter.RequestViewHolder  holder;
+    TextView nroSupportsTV;
+    ImageView supportsIV;
 
-    public SupportMutex(RequestAdapter.RequestViewHolder holder){
-        this.holder = holder;
+    public SupportMutex(TextView nroSupportsTV, ImageView supportsIV){
+        this.nroSupportsTV = nroSupportsTV;
+        this.supportsIV = supportsIV;
     }
-
     @Override
     public void lock() {
-        holder.getmNumberOfSupportsTV().setEnabled(false);
-        holder.getmSupportsIV().setEnabled(false);
+        nroSupportsTV.setEnabled(false);
+        supportsIV.setEnabled(false);
     }
 
     @Override
@@ -44,8 +48,8 @@ public class SupportMutex implements Lock{
 
     @Override
     public void unlock() {
-        holder.getmNumberOfSupportsTV().setEnabled(true);
-        holder.getmSupportsIV().setEnabled(true);
+        nroSupportsTV.setEnabled(true);
+        supportsIV.setEnabled(true);
     }
 
     @NonNull

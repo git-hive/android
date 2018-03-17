@@ -49,8 +49,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         this.mIds = mIds;
         this.context = context;
         mLocks = new ArrayList<>();
-        for(int i = 0; i < mIds.size(); i++)
-            mLocks.add(null);
     }
     @Override
     public RequestViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -62,9 +60,9 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     public void onBindViewHolder(final RequestViewHolder holder, final int position) {
 
         try{
-            if(mLocks.get(position) == null) mLocks.add(new SupportMutex(holder));
+            if(mLocks.get(position) == null) mLocks.add(new SupportMutex(holder.mNumberOfSupportsTV, holder.mSupportsIV));
         }catch(java.lang.IndexOutOfBoundsException e){
-            mLocks.add(new SupportMutex(holder));
+            mLocks.add(new SupportMutex(holder.mNumberOfSupportsTV, holder.mSupportsIV));
         }
         final Request request = mRequests.get(mIds.get(position));
 

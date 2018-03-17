@@ -31,6 +31,7 @@ import com.hive.hive.model.association.AssociationSupport;
 import com.hive.hive.model.association.Request;
 import com.hive.hive.model.user.User;
 import com.hive.hive.utils.DocReferences;
+import com.hive.hive.utils.SupportMutex;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -62,6 +63,7 @@ public class CommentaryActivity extends AppCompatActivity {
     private ArrayList<String> mIds;
     private HashMap<String, AssociationComment> mComments;
     private Request mRequest;
+    private SupportMutex mSupportMutex;
     //--- Listeners
     private EventListener<QuerySnapshot> mCommentEL;
     private EventListener<DocumentSnapshot> mRequestEL;
@@ -101,7 +103,8 @@ public class CommentaryActivity extends AppCompatActivity {
 
         mRequestAuthorIV = findViewById(R.id.request_author_photo_iv);
         mRequestSupportsIV = findViewById(R.id.supportsIV);
-
+        //creating support mutex
+        mSupportMutex = new SupportMutex(mRequestSupportsCountTV, mRequestSupportsIV);
         //onclick to save comment
         mCommentIV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -246,6 +249,7 @@ public class CommentaryActivity extends AppCompatActivity {
         //private ImageView mRequestSupportsIV;
     }
     private void scoreClick(){
+        mSupportMutex.lock();
         AssociationHelper.getRequestSupport(FirebaseFirestore.getInstance(),
                 "gVw7dUkuw3SSZSYRXe8s", mRequestId, FirebaseAuth.getInstance().getUid())
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -254,7 +258,13 @@ public class CommentaryActivity extends AppCompatActivity {
                         //if support already exists, should delete it
                         if(documentSnapshot.exists()) {
                             AssociationHelper.removeRequestSupport(FirebaseFirestore.getInstance(),
-                                    "gVw7dUkuw3SSZSYRXe8s", mRequestId, FirebaseAuth.getInstance().getUid());
+                                    "gVw7dUkuw3SSZSYRXe8s", mRequestId, FirebaseAuth.getInstance().getUid())
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    mSupportMutex.unlock();
+                                }
+                            });
                         }else {// else should add it
                             DocumentReference userRef = DocReferences.getUserRef();
                             DocumentReference assocRef = DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s");
@@ -264,7 +274,12 @@ public class CommentaryActivity extends AppCompatActivity {
                             AssociationSupport support = new AssociationSupport(supportId, Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
                                     userRef, null, assocRef, null);
                             AssociationHelper.setRequestSupport(FirebaseFirestore.getInstance(),
-                                    "gVw7dUkuw3SSZSYRXe8s", mRequestId, supportId, support);
+                                    "gVw7dUkuw3SSZSYRXe8s", mRequestId, supportId, support).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    mSupportMutex.unlock();
+                                }
+                            });
                         }
                     }
                 });

@@ -21,6 +21,7 @@ import com.hive.hive.model.association.AssociationHelper;
 import com.hive.hive.model.association.AssociationSupport;
 import com.hive.hive.model.user.User;
 import com.hive.hive.utils.DocReferences;
+import com.hive.hive.utils.SupportMutex;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,11 +36,13 @@ public class CommentaryAdapter extends RecyclerView.Adapter<CommentaryAdapter.Co
     private ArrayList<String> mIds;
     private Context mContext;
     private String mRequestId;
+    private ArrayList<SupportMutex> mLocks;
     public CommentaryAdapter(Context context, HashMap<String, AssociationComment> comments, ArrayList<String> ids, String requestId){
         this.mContext = context;
         this.mComments = comments;
         this.mIds = ids;
         this.mRequestId = requestId;
+        this.mLocks = new ArrayList<>();
     }
     @Override
     public CommentaryAdapter.CommentaryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -50,6 +53,13 @@ public class CommentaryAdapter extends RecyclerView.Adapter<CommentaryAdapter.Co
 
     @Override
     public void onBindViewHolder(final CommentaryAdapter.CommentaryViewHolder holder, final int position) {
+        //SUPPORT LOCK
+        try{
+            if(mLocks.get(position) == null) mLocks.add(new SupportMutex(holder.supportTV, holder.supportIV));
+        }catch(java.lang.IndexOutOfBoundsException e){
+            mLocks.add(new SupportMutex(holder.supportTV, holder.supportIV));
+        }
+
         final AssociationComment comment = mComments.get(mIds.get(position));
         shouldFillSupport(holder, mRequestId, mIds.get(position));
         //TODO should be replaced by real user image
@@ -61,14 +71,14 @@ public class CommentaryAdapter extends RecyclerView.Adapter<CommentaryAdapter.Co
         holder.supportIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                scoreClick(holder, mIds.get(position));
+                scoreClick(holder, mIds.get(position), mLocks.get(position));
             }
         });
 
         holder.supportTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                scoreClick(holder, mIds.get(position));
+                scoreClick(holder, mIds.get(position), mLocks.get(position));
             }
         });
     }
@@ -103,7 +113,8 @@ public class CommentaryAdapter extends RecyclerView.Adapter<CommentaryAdapter.Co
                     }
                 });
     }
-    private void scoreClick(final CommentaryViewHolder holder, final String commentId){
+    private void scoreClick(final CommentaryViewHolder holder, final String commentId, final SupportMutex mutex){
+        mutex.lock();
         AssociationHelper.getRequestCommentSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s",
                 mRequestId, commentId, FirebaseAuth.getInstance().getUid())
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -112,7 +123,13 @@ public class CommentaryAdapter extends RecyclerView.Adapter<CommentaryAdapter.Co
                         //if support already exists, should delete it
                         if(documentSnapshot.exists()) {
                             AssociationHelper.deleteRequestCommentSupport(FirebaseFirestore.getInstance(),
-                                    "gVw7dUkuw3SSZSYRXe8s", mRequestId, commentId, FirebaseAuth.getInstance().getUid());
+                                    "gVw7dUkuw3SSZSYRXe8s", mRequestId, commentId, FirebaseAuth.getInstance().getUid())
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    mutex.unlock();
+                                }
+                            });
                         }else {// else should add it
                             DocumentReference userRef = DocReferences.getUserRef();
                             DocumentReference assocRef = DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s");
@@ -122,13 +139,18 @@ public class CommentaryAdapter extends RecyclerView.Adapter<CommentaryAdapter.Co
                             AssociationSupport support = new AssociationSupport(supportId, Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
                                     userRef, null, assocRef, null);
                            AssociationHelper.setRequestCommentSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s",
-                                   mRequestId, commentId, supportId, support);
+                                   mRequestId, commentId, supportId, support).addOnSuccessListener(new OnSuccessListener<Void>() {
+                               @Override
+                               public void onSuccess(Void aVoid) {
+                                   mutex.unlock();
+                               }
+                           });
                         }
                         CommentaryAdapter.this.notifyDataSetChanged();
                     }
                 });
     }
-    class CommentaryViewHolder extends RecyclerView.ViewHolder{
+    public class CommentaryViewHolder extends RecyclerView.ViewHolder{
         //ImageViews
         final ImageView avatarIV;
         final ImageView supportIV;
@@ -147,6 +169,14 @@ public class CommentaryAdapter extends RecyclerView.Adapter<CommentaryAdapter.Co
             contentTV = itemView.findViewById(R.id.commentContentTV);
             supportTV = itemView.findViewById(R.id.commentsSupportsTV);
 
+        }
+
+        public ImageView getSupportIV() {
+            return supportIV;
+        }
+
+        public TextView getSupportTV() {
+            return supportTV;
         }
     }
 }
