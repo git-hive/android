@@ -21,6 +21,7 @@ import com.hive.hive.model.association.AssociationHelper;
 import com.hive.hive.model.association.AssociationSupport;
 import com.hive.hive.model.user.User;
 import com.hive.hive.utils.DocReferences;
+import com.hive.hive.utils.ProfilePhotoHelper;
 import com.hive.hive.utils.SupportMutex;
 
 import java.util.ArrayList;
@@ -62,8 +63,6 @@ public class CommentaryAdapter extends RecyclerView.Adapter<CommentaryAdapter.Co
 
         final AssociationComment comment = mComments.get(mIds.get(position));
         shouldFillSupport(holder, mRequestId, mIds.get(position));
-        //TODO should be replaced by real user image
-        holder.avatarIV.setImageResource(R.drawable.ic_profile_photo);
         fillUser(holder, comment.getAuthorRef());
         holder.contentTV.setText(comment.getContent());
         holder.supportTV.setText(comment.getScore()+"");
@@ -95,6 +94,7 @@ public class CommentaryAdapter extends RecyclerView.Adapter<CommentaryAdapter.Co
                     Log.d(RequestAdapter.class.getSimpleName(), documentSnapshot.get("name").toString());
                     User user = documentSnapshot.toObject(User.class);
                     holder.authorTV.setText(user.getName());
+                    ProfilePhotoHelper.loadImage(mContext, holder.avatarIV, user.getPhotoUrl());
                 }
             }
         });

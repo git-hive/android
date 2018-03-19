@@ -35,8 +35,6 @@ import com.hive.hive.utils.Utils;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import android.text.TextWatcher;
 import android.widget.EditText;
@@ -50,16 +48,12 @@ public class SignupActivity extends AppCompatActivity {
     private TextInputLayout mBirthdayTVUpperName;
     private TextInputLayout mCPFUpperName;
     private TextInputLayout mEmailTVUpperName;
-    private TextInputLayout mPasswordUpperName;
-    private TextInputLayout mPasswordAgainUpperName;
 
     // Editable Text
     private TextInputEditText mFullNameTV;
     private TextInputEditText mBirthdayTV;
     private TextInputEditText mCPF;
     private TextInputEditText mEmailTV;
-    private TextInputEditText mPassword;
-    private TextInputEditText mPasswordAgain;
     private ProgressBar mSignupPB;
     private RadioButton mTermsAgreementRB;
     private Button mSignUpComplete;
@@ -84,14 +78,10 @@ public class SignupActivity extends AppCompatActivity {
         mFullNameTVUpperName = findViewById(R.id.textViewSignUpFullNameUpperName);
         mCPFUpperName = findViewById(R.id.textViewSignUpCPFUpperName);
         mEmailTVUpperName = findViewById(R.id.textViewSignUpEmailUpperName);
-        mPasswordUpperName = findViewById(R.id.textViewSignUpPasswordUpperName);
-        mPasswordAgainUpperName = findViewById(R.id.textViewSignUpPasswordAgainUpperName);
         // Others
         mFullNameTV = findViewById(R.id.textViewSignUpFullName);
         mCPF = findViewById(R.id.textViewSignUpCPF);
         mEmailTV = findViewById(R.id.textViewSignUpEmail);
-        mPassword = findViewById(R.id.textViewSignUpPassword);
-        mPasswordAgain = findViewById(R.id.textViewSignUpPasswordAgain);
         mTermsAgreementRB = findViewById(R.id.radioButtonSignUpTermsAgreement);
         mSignupPB = findViewById(R.id.progress_bar_signup);
         mHelloTV = findViewById(R.id.helloTV);
@@ -283,6 +273,7 @@ public class SignupActivity extends AppCompatActivity {
      * Stores field data into firestore
      */
     private void updateUser() {
+        newUser.setPhotoUrl(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString());
         db
                 .collection("users")
                 .document(mAuth.getUid())
@@ -325,16 +316,12 @@ public class SignupActivity extends AppCompatActivity {
         mBirthdayTVUpperName.setVisibility(View.GONE);
         mCPFUpperName.setVisibility(View.GONE);
         mEmailTVUpperName.setVisibility(View.GONE);
-        mPasswordAgainUpperName.setVisibility(View.GONE);
-        mPasswordUpperName.setVisibility(View.GONE);
         // Truly messy, hate java stuff!!!
 
         mFullNameTV.setVisibility(View.GONE);
         mBirthdayTV.setVisibility(View.GONE);
         mCPF.setVisibility(View.GONE);
         mEmailTV.setVisibility(View.GONE);
-        mPasswordAgain.setVisibility(View.GONE);
-        mPassword.setVisibility(View.GONE);
         mTermsAgreementRB.setVisibility(View.GONE);
         mSignUpComplete.setVisibility(View.GONE);
         //mHelloTV.setVisibility(View.GONE);
@@ -350,8 +337,6 @@ public class SignupActivity extends AppCompatActivity {
         mBirthdayTV.setVisibility(View.VISIBLE);
         mCPF.setVisibility(View.VISIBLE);
         mEmailTV.setVisibility(View.VISIBLE);
-        mPasswordAgain.setVisibility(View.VISIBLE);
-        mPassword.setVisibility(View.VISIBLE);
         mTermsAgreementRB.setVisibility(View.VISIBLE);
         mSignUpComplete.setVisibility(View.VISIBLE);
     }

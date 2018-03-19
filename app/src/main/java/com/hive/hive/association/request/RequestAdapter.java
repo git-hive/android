@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -24,6 +25,7 @@ import com.hive.hive.model.association.AssociationSupport;
 import com.hive.hive.model.association.Request;
 import com.hive.hive.model.user.User;
 import com.hive.hive.utils.DocReferences;
+import com.hive.hive.utils.ProfilePhotoHelper;
 import com.hive.hive.utils.SupportMutex;
 
 import java.util.ArrayList;
@@ -70,7 +72,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
         //fill user
         fillUser(holder, request.getAuthorRef());
-        holder.mUserAvatar.setImageResource(R.drawable.ic_profile_photo);
+        //        holder.mUserAvatar.setImageResource(R.drawable.ic_profile_photo);
         //fill request
         holder.mRequestTitle.setText(request.getTitle());
         holder.mRequestContent.setText(request.getContent());
@@ -113,6 +115,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                     Log.d(RequestAdapter.class.getSimpleName(), documentSnapshot.get("name").toString());
                     User user = documentSnapshot.toObject(User.class);
                     holder.mUserName.setText(user.getName());
+                    ProfilePhotoHelper.loadImage(context, holder.mUserAvatar, user.getPhotoUrl());
+                    //Log.d(RequestAdapter.class.getSimpleName(), user.getPhotoUrl());
                 }
             }
         });
@@ -131,6 +135,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                 });
     }
     private void scoreClick(final RequestViewHolder holder, final String requestId, final SupportMutex mutex){
+
         mutex.lock();
             AssociationHelper.getRequestSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", requestId, FirebaseAuth.getInstance().getUid())
                     .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -212,14 +217,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
             nCard = view.findViewById(R.id.requestCV);
 
-        }
-
-        public ImageView getmSupportsIV() {
-            return mSupportsIV;
-        }
-
-        public TextView getmNumberOfSupportsTV() {
-            return mNumberOfSupportsTV;
         }
 
         @Override
