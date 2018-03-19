@@ -37,8 +37,6 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthEmailException;
-import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
@@ -47,6 +45,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
 import com.hive.hive.main.MainActivity;
+import com.hive.hive.utils.ProfilePhotoHelper;
 import com.hive.hive.utils.Utils;
 
 public class LoginActivity extends AppCompatActivity {
@@ -63,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // Firebase Authenticator
     private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
     // Firestore database
     private FirebaseFirestore db;
 
@@ -85,6 +85,12 @@ public class LoginActivity extends AppCompatActivity {
 
         // firebase authenticator
         mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                checkUserAndSwitchActivity();
+            }
+        };
         // on android Jellybean or lower, use this call to hide the status bar.
         if (Build.VERSION.SDK_INT < 16) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -267,7 +273,6 @@ public class LoginActivity extends AppCompatActivity {
                 progressUser();
             }
         });
-
         // get facebook login button
         mFacebookSignInBtn = findViewById(R.id.text_facebook_sign_in_button);
 
@@ -278,12 +283,11 @@ public class LoginActivity extends AppCompatActivity {
         mCallbackManager = CallbackManager.Factory.create();
 
         // register fb login button callback
+
         mFacebookSignInBtn.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 handleFacebookAccessToken(loginResult.getAccessToken());
-
-                checkUserAndSwitchActivity();
             }
 
             @Override
@@ -294,17 +298,23 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onError(FacebookException error) {
                 Toast.makeText(LoginActivity.this, "Facebook login failed", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, error.getMessage());
             }
         });
         checkUserAndSwitchActivity();
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+        checkUserAndSwitchActivity();
     }
-
+    @Override
+    protected  void onDestroy(){
+        super.onDestroy();
+        mAuth.removeAuthStateListener(mAuthListener);
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -331,7 +341,7 @@ public class LoginActivity extends AppCompatActivity {
      * @param account - google account to authenticate
      */
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
-        Log.d(TAG, "firebaseAuthWithGoogle: " + account.getId());
+            Log.d(TAG, "firebaseAuthWithGoogle: " + account.getId());
 
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         mAuth.signInWithCredential(credential)
@@ -358,32 +368,15 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
-                            checkUserAndSwitchActivity();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(
-                                    LoginActivity.this,
-                                    "Authentication failed.",
-                                    Toast.LENGTH_SHORT
-                            ).show();
-                        }
-                    }
-                });
+        mAuth.signInWithCredential(credential);
     }
 
     private void checkUserAndSwitchActivity() {
-        FirebaseUser user = mAuth.getCurrentUser();
+        final FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
             //used to show user progress
             progressUser();
+            ProfilePhotoHelper.updateProfileUrl();
             // Try to retrieve firestore data
             db
                 .collection("users")

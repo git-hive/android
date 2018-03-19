@@ -37,6 +37,7 @@ dependencies {
     compile "com.google.firebase:firebase-core:11.8.0"
     compile "com.google.firebase:firebase-auth:11.8.0"
     compile "com.google.firebase:firebase-firestore:11.8.0"
+    compile 'com.google.firebase:firebase-storage:11.8.0'
 
     // Google Sign In SDK (only required for Google Sign In)
     compile "com.google.android.gms:play-services-auth:11.8.0"
@@ -61,6 +62,10 @@ dependencies {
 
     // Layout viewPager
     compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.12'
+
+    // Glide
+    implementation 'com.github.bumptech.glide:glide:4.6.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
 
 }
 

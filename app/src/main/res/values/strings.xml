@@ -72,7 +72,7 @@
     <!-- Request Comments strings -->
     <string name="should_text">Qual é o seu comentário?</string>
     <!-- Facebook strings -->
-    <string name="facebook_app_id">165818667480912</string>
+    <string name="facebook_app_id">177801062854821</string>
     <string name="fb_login_protocol_scheme">fb165818667480912</string>
     <string name="title_activity_request">RequestActivity</string>
     <string name="title_activity_nrequest">NRequestActivity</string>

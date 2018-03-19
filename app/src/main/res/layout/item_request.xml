@@ -53,7 +53,6 @@
                     android:id="@+id/request_author_name_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Vitor Planta"
                     android:textSize="@dimen/request_author_name_font_size"/>
 
                 <TextView
@@ -81,7 +80,6 @@
                     android:id="@+id/request_title_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Plantio de flores na área verde"
                     android:textSize="@dimen/request_title_font_size"
                     android:textColor="@color/colorOrange"
                     />
@@ -120,7 +118,6 @@
                     android:id="@+id/request_content_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Lorem ipsum dolor sit amet, dipiscing elit, sed diam nullam eget laoreet..."
                     android:textSize="@dimen/request_content_font_size" />
 
                 <!-- Comments and Supports Layout -->
@@ -143,7 +140,6 @@
                         android:id="@+id/request_number_of_comments_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="110"
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/request_author_leaderboard_position_font_size"
                         android:paddingBottom="12dp"
@@ -160,7 +156,6 @@
                         android:id="@+id/supportsTV"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="110"
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/request_author_leaderboard_position_font_size"
                         android:paddingBottom="12dp"

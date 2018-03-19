@@ -11,20 +11,21 @@ import java.util.HashSet;
  */
 
 public class User {
-    private String birthday, cpf, email, name;
+    private String birthday, cpf, email, name, photoUrl;
     private HashSet<DocumentReference> roles;
     private ArrayList<CollectionReference> actions;
 
 
 // --- Constructors
 
-    public User(String birthday, String cpf, String email, String name, HashSet roles, ArrayList actions) {
+    public User(String birthday, String cpf, String email, String name, HashSet roles, ArrayList actions, String photoUrl) {
         this.birthday = birthday;
         this.cpf = cpf;
         this.email = email;
         this.name = name;
         this.roles = roles;
         this.actions = actions;
+        this.photoUrl = photoUrl;
     }
 
     public User() {
@@ -47,6 +48,7 @@ public class User {
 
     public String getName() { return name; }
 
+    public String getPhotoUrl(){ return photoUrl; }
     //--- Setters
 
     public void setActions(ArrayList<CollectionReference> actions) {
@@ -62,4 +64,6 @@ public class User {
     public void setCpf(String cpf) { this.cpf = cpf; }
 
     public void setBirthday(String birthday) { this.birthday = birthday; }
+
+    public void setPhotoUrl(String photoUrl) { this.photoUrl = photoUrl; }
 }
