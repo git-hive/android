@@ -32,6 +32,7 @@ public class QuestionForm extends AppCompatActivity {
     // Data stuff
     private HashMap<Integer, ArrayList<String> > formQuestions;
     private ArrayList<String> arrayList;
+    private ArrayList<Boolean> mQuestionStatus;
     private GridListAdapter adapter;
     private Context context;
 
@@ -64,8 +65,8 @@ public class QuestionForm extends AppCompatActivity {
     }
 
     private void initView() {
-        setDataListItems();
-        mTimeLineAdapter = new TimeLineAdapter(mDataList, mOrientation, mWithLinePadding);
+        //setDataListItems();
+        mTimeLineAdapter = new TimeLineAdapter(formQuestions, mQuestionStatus, mOrientation, mWithLinePadding);
         mRecyclerView.setAdapter(mTimeLineAdapter);
     }
 
@@ -84,14 +85,17 @@ public class QuestionForm extends AppCompatActivity {
     // Populate Form locally for now
     private void loadListView() {
         ListView listView = (ListView) findViewById(R.id.list_view);
+
         formQuestions = new HashMap<Integer, ArrayList<String>>();
+        mQuestionStatus = new ArrayList<Boolean>();
+
         for (Integer i = 0; i <= 4; i++){
             arrayList = new ArrayList<>();
             for (int j = 0; j <= 4; j++)
                 arrayList.add("ListView Items " + j + " from "+ i);
 
             formQuestions.put(i,  arrayList);
-
+            mQuestionStatus.add(i, Boolean.FALSE);
         }
 
         adapter = new GridListAdapter(context, formQuestions, true);
@@ -147,5 +151,20 @@ public class QuestionForm extends AppCompatActivity {
         }
         super.onRestoreInstanceState(savedInstanceState);
     }
+
+
+    public class LocalQuestions{
+        ArrayList<String> localQuestionsList;
+        ArrayList<Boolean> localQuestionsStatus;
+
+        LocalQuestions(ArrayList<String> questionsList,ArrayList<Boolean> questionsStatus){
+            localQuestionsList = questionsList;
+            localQuestionsStatus = questionsStatus;
+        }
+
+        Boolean getStatus(int position){
+            return localQuestionsStatus.get(position);
+        }
+    };
 
 }
