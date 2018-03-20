@@ -42,8 +42,6 @@ public class QuestionForm extends AppCompatActivity {
         context = getApplicationContext();
         loadListView();
         onClickEvent();
-//        mOrientation = (Orientation) getIntent().getSerializableExtra(VotesActivity.EXTRA_ORIENTATION);
-//        mWithLinePadding = getIntent().getBooleanExtra(VotesActivity.EXTRA_WITH_LINE_PADDING, false);
         mOrientation = Orientation.HORIZONTAL;
         mWithLinePadding = false;
 

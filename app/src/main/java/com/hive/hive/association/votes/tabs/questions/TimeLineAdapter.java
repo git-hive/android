@@ -47,7 +47,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
         View view = null;
 
         if(mOrientation == Orientation.HORIZONTAL) {
-            view = mLayoutInflater.inflate(mWithLinePadding ? R.layout.item_timeline_horizontal_line_padding : R.layout.item_timeline_horizontal, parent, false);
+            view = mLayoutInflater.inflate(R.layout.item_timeline_horizontal, parent, false);
         }
 
         return new TimeLineViewHolder(view, viewType);
@@ -60,26 +60,25 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
         if(holder.mTimelineView == null){
             holder.mTimelineView = null;
-        }
-        else if(timeLineModel.getStatus() == OrderStatus.INACTIVE) {
-            holder.mTimelineView.setMarker(VectorDrawableUtils.getDrawable(mContext, R.drawable.ic_marker_inactive, android.R.color.darker_gray));
+//        else if(timeLineModel.getStatus() == OrderStatus.INACTIVE) {
+//            holder.mTimelineView.setMarker(VectorDrawableUtils.getDrawable(mContext, R.drawable.ic_marker_inactive, android.R.color.darker_gray));
         } else if(timeLineModel.getStatus() == OrderStatus.ACTIVE) {
             holder.mTimelineView.setMarker(VectorDrawableUtils.getDrawable(mContext, R.drawable.ic_marker_active, R.color.colorPrimary));
         } else {
             holder.mTimelineView.setMarker(ContextCompat.getDrawable(mContext, R.drawable.ic_marker), ContextCompat.getColor(mContext, R.color.colorPrimary));
         }
 
-        if(holder.mDate ==null) {
-            holder.mDate = null;
-        }else if(!timeLineModel.getDate().isEmpty()) {
-            holder.mDate.setVisibility(View.VISIBLE);
-            //holder.mDate.setText(DateTimeUtils.parseDateTime(timeLineModel.getDate(), "yyyy-MM-dd HH:mm", "hh:mm a, dd-MMM-yyyy"));
-        }
-        else
-            holder.mDate.setVisibility(View.GONE);
-
-        if(holder.mMessage != null)
-            holder.mMessage.setText(timeLineModel.getMessage());
+//        if(holder.mDate ==null) {
+//            holder.mDate = null;
+//        }else if(!timeLineModel.getDate().isEmpty()) {
+//            holder.mDate.setVisibility(View.VISIBLE);
+//            //holder.mDate.setText(DateTimeUtils.parseDateTime(timeLineModel.getDate(), "yyyy-MM-dd HH:mm", "hh:mm a, dd-MMM-yyyy"));
+//        }
+//        else
+//            holder.mDate.setVisibility(View.GONE);
+//
+//        if(holder.mMessage != null)
+//            holder.mMessage.setText(timeLineModel.getMessage());
     }
 
     @Override
