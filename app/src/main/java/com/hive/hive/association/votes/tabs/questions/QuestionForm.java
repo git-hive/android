@@ -32,7 +32,7 @@ public class QuestionForm extends AppCompatActivity {
     // Data stuff
     private HashMap<Integer, ArrayList<String> > formQuestions;
     private ArrayList<String> arrayList;
-    private ArrayList<Boolean> mQuestionStatus;
+    private ArrayList<OrderStatus> mQuestionStatus;
     private GridListAdapter adapter;
     private Context context;
 
@@ -42,17 +42,19 @@ public class QuestionForm extends AppCompatActivity {
         setContentView(R.layout.activity_question_form);
         context = getApplicationContext();
         loadListView();
+
         onClickEvent();
+
         mOrientation = Orientation.HORIZONTAL;
         mWithLinePadding = false;
-
-        setTitle(mOrientation == Orientation.HORIZONTAL ? getResources().getString(R.string.horizontal_timeline) : getResources().getString(R.string.vertical_timeline));
-
         mRecyclerView = (RecyclerView) findViewById(R.id.question_timeline_RV);
         mRecyclerView.setLayoutManager(getLinearLayoutManager());
         mRecyclerView.setHasFixedSize(true);
-
         initView();
+
+
+        // Pass Storyline adapter as reference
+        adapter.setStorylineAdapter(mTimeLineAdapter);
 
     }
 
@@ -87,7 +89,7 @@ public class QuestionForm extends AppCompatActivity {
         ListView listView = (ListView) findViewById(R.id.list_view);
 
         formQuestions = new HashMap<Integer, ArrayList<String>>();
-        mQuestionStatus = new ArrayList<Boolean>();
+        mQuestionStatus = new ArrayList<OrderStatus>();
 
         for (Integer i = 0; i <= 4; i++){
             arrayList = new ArrayList<>();
@@ -95,8 +97,11 @@ public class QuestionForm extends AppCompatActivity {
                 arrayList.add("ListView Items " + j + " from "+ i);
 
             formQuestions.put(i,  arrayList);
-            mQuestionStatus.add(i, Boolean.FALSE);
+            mQuestionStatus.add(i, OrderStatus.INACTIVE);
         }
+
+        //Set First manually
+        mQuestionStatus.set(0, OrderStatus.ACTIVE);
 
         adapter = new GridListAdapter(context, formQuestions, true);
         listView.setAdapter(adapter);

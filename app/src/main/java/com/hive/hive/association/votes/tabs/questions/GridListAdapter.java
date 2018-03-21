@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.hive.hive.R;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -27,6 +28,7 @@ public class GridListAdapter extends BaseAdapter {
     private boolean isListView;
     private int selectedPosition = -1;
     private Integer currentFormIndex = 0;
+    private TimeLineAdapter refStorylineAdapter;
  
     public GridListAdapter(Context context, HashMap<Integer, ArrayList<String> > formQuestions, boolean isListView) {
         this.context = context;
@@ -117,20 +119,71 @@ public class GridListAdapter extends BaseAdapter {
 
     //Delete the selected position from the arrayList
     public void previousQuestion() {
-        if (currentFormIndex != 0) {
+
+        // Nothing has been selected
+        if(selectedPosition == -1){
+            // Change Storyline marker
+            refStorylineAdapter.activePoint(currentFormIndex-1);
+            refStorylineAdapter.inactivePoint(currentFormIndex);
+
+            refStorylineAdapter.notifyDataSetChanged();
+
             arrayList = mFormQuestions.get(currentFormIndex-1);
             currentFormIndex -=1;
             selectedPosition = -1;//after removing selectedPosition set it back to -1
+
+            notifyDataSetChanged();
+
+            //Toast.makeText(context, "You should choose an option", Toast.LENGTH_SHORT).show();
+        }else if (currentFormIndex != 0) {
+            // Change Storyline marker
+            refStorylineAdapter.activePoint(currentFormIndex-1);
+            refStorylineAdapter.completePoint(currentFormIndex);
+
+            refStorylineAdapter.notifyDataSetChanged();
+
+            arrayList = mFormQuestions.get(currentFormIndex-1);
+            currentFormIndex -=1;
+            selectedPosition = -1;//after removing selectedPosition set it back to -1
+
             notifyDataSetChanged();
         }
     }
     //Delete the selected position from the arrayList
     public void nextQuestion() {
-        if (mFormQuestions != null && currentFormIndex != mFormQuestions.size()-1) {
+        // Nothing has been selected
+        if(currentFormIndex == mFormQuestions.size()-1){
+            if(refStorylineAdapter.checkAnswers()){
+
+            }
+        }if(selectedPosition == -1){
+
+            refStorylineAdapter.activePoint(currentFormIndex+1);
+            refStorylineAdapter.inactivePoint(currentFormIndex);
+            refStorylineAdapter.notifyDataSetChanged();
+
+            arrayList = mFormQuestions.get(currentFormIndex+1);
+            currentFormIndex +=1;
+            selectedPosition = -1;//after removing selectedPosition set it back to -1
+            notifyDataSetChanged();
+            //Toast.makeText(context, "You should choose an option", Toast.LENGTH_SHORT).show();
+
+            // Option Selected
+        }else if (currentFormIndex != mFormQuestions.size()-1) {
+            // Change Storyline marker
+            refStorylineAdapter.activePoint(currentFormIndex+1);
+            refStorylineAdapter.completePoint(currentFormIndex);
+
+            refStorylineAdapter.notifyDataSetChanged();
+
             arrayList = mFormQuestions.get(currentFormIndex+1);
             currentFormIndex +=1;
             selectedPosition = -1;//after removing selectedPosition set it back to -1
             notifyDataSetChanged();
         }
+    }
+
+    public void setStorylineAdapter(TimeLineAdapter storylineAdapter){
+        refStorylineAdapter = storylineAdapter;
     }
 }

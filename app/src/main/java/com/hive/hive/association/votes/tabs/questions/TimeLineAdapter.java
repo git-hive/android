@@ -26,13 +26,13 @@ import java.util.List;
 public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
     private HashMap<Integer, ArrayList<String>> mFeedList;
-    private ArrayList<Boolean> mStatusList;
+    private ArrayList<OrderStatus> mStatusList;
     private Context mContext;
     private Orientation mOrientation;
     private boolean mWithLinePadding;
     private LayoutInflater mLayoutInflater;
 
-    public TimeLineAdapter(HashMap<Integer, ArrayList<String> > feedList, ArrayList<Boolean> statusList, Orientation orientation, boolean withLinePadding) {
+    public TimeLineAdapter(HashMap<Integer, ArrayList<String> > feedList, ArrayList<OrderStatus> statusList, Orientation orientation, boolean withLinePadding) {
         mFeedList = feedList;
         mStatusList = statusList;
         mOrientation = Orientation.HORIZONTAL;
@@ -60,30 +60,37 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
     @Override
     public void onBindViewHolder(TimeLineViewHolder holder, int position) {
 
-        Boolean currentStatus = mStatusList.get(position);
+        OrderStatus currentStatus = mStatusList.get(position);
 
-        if(currentStatus == Boolean.TRUE) {
+        if(currentStatus == OrderStatus.ACTIVE) {
             holder.mTimelineView.setMarker(VectorDrawableUtils.getDrawable(mContext, R.drawable.ic_marker_active, R.color.colorPrimary));
-        } else {
+        } else if(currentStatus == OrderStatus.INACTIVE) {
+            holder.mTimelineView.setMarker(ContextCompat.getDrawable(mContext, R.drawable.ic_marker_inactive), ContextCompat.getColor(mContext, R.color.colorPrimary));
+        }else{
             holder.mTimelineView.setMarker(ContextCompat.getDrawable(mContext, R.drawable.ic_marker), ContextCompat.getColor(mContext, R.color.colorPrimary));
         }
 
-//        if(holder.mDate ==null) {
-//            holder.mDate = null;
-//        }else if(!timeLineModel.getDate().isEmpty()) {
-//            holder.mDate.setVisibility(View.VISIBLE);
-//            //holder.mDate.setText(DateTimeUtils.parseDateTime(timeLineModel.getDate(), "yyyy-MM-dd HH:mm", "hh:mm a, dd-MMM-yyyy"));
-//        }
-//        else
-//            holder.mDate.setVisibility(View.GONE);
-//
-//        if(holder.mMessage != null)
-//            holder.mMessage.setText(timeLineModel.getMessage());
     }
 
     @Override
     public int getItemCount() {
         return (mFeedList!=null? mFeedList.size():0);
+    }
+
+    public void completePoint(int position){
+        mStatusList.set(position, OrderStatus.COMPLETED);
+    }
+
+    public void activePoint(int position){
+        mStatusList.set(position, OrderStatus.ACTIVE);
+    }
+
+    public void inactivePoint(int position){
+        mStatusList.set(position, OrderStatus.INACTIVE);
+    }
+
+    public boolean checkAnswers(){
+        return true;
     }
 
 }
