@@ -1,16 +1,27 @@
 package com.hive.hive.association;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.hive.hive.R;
+import com.hive.hive.association.request.RequestActivity;
+import com.hive.hive.association.transparency.TransparencyActivity;
+import com.hive.hive.association.votes.VotesActivity;
+
 
 
 public class AssociationFragment extends Fragment {
+
+    ImageButton requestBT;
+    ImageButton votesBT;
+    ImageButton transparencyBT;
 
     public AssociationFragment() {
         // Required empty public constructor
@@ -31,7 +42,35 @@ public class AssociationFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_association, container, false);
+        final View v = inflater.inflate(R.layout.fragment_association, container, false);
+
+        requestBT = v.findViewById(R.id.requestsBT);
+        votesBT = v.findViewById(R.id.voteBT);
+        transparencyBT = v.findViewById(R.id.trasnparencyBT);
+
+
+        requestBT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(v.getContext(), RequestActivity.class));
+            }
+        });
+
+        votesBT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(v.getContext(), VotesActivity.class));
+            }
+        });
+
+        transparencyBT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(v.getContext(), TransparencyActivity.class));
+            }
+        });
+
+
+        return v;
     }
 }

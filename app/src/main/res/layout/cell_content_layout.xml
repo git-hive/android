@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+        <!-- content header line -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+
+
+
+                <ImageView
+                    android:id="@+id/topCardIV"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:background="@drawable/city_login" />
+
+                <TextView
+                    android:paddingTop="120dp"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="20sp"
+                    android:text="@string/pattern_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/budgetNameTV"/>
+
+                <LinearLayout
+                        android:paddingRight="20dp"
+                        android:layout_gravity="bottom|center_horizontal"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:paddingRight="30dp"
+                            android:layout_gravity="bottom"
+                            android:gravity="bottom"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                                <ImageView
+                                    android:layout_gravity="left|bottom"
+                                    app:srcCompat="@drawable/ic_support_borderline"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp" />
+
+                                <TextView
+                                    android:layout_gravity="right|center"
+                                    android:textColor="@color/colorBlack"
+                                    android:textSize="14sp"
+                                    android:text="@string/zeroin3"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/budgetTotalAppliedTV"/>
+
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:paddingBottom="12dp"
+                            android:gravity="bottom"
+                            android:layout_gravity="bottom"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                                <ImageView
+                                    app:srcCompat="@drawable/ic_clock"
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp" />
+
+                                <TextView
+                                    android:layout_marginLeft="10dp"
+                                    android:textColor="@color/colorBlack"
+                                    android:textSize="14sp"
+                                    android:layout_gravity="right|center"
+                                    android:text="@string/fake_time"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content" />
+
+
+                        </LinearLayout>
+
+                </LinearLayout>
+
+        </FrameLayout>
+
+
+
+        <!-- content body layout -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bgContent"
+            android:orientation="vertical"
+            android:paddingBottom="6dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="9dp">
+
+                <!-- avatar and name part -->
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                        <TextView
+                            android:paddingTop="15dp"
+                            android:gravity="center_vertical"
+                            android:id="@+id/content_avatar_title"
+                            style="@style/ContentMainBadgeTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/suggested" />
+
+                        <ImageView
+                            android:layout_marginLeft="50dp"
+                            android:id="@+id/content_avatar"
+                            android:layout_width="50dp"
+                            android:layout_toRightOf="@id/content_avatar_title"
+                            android:layout_height="50dp"
+                            app:srcCompat="@drawable/ic_profile_photo" />
+
+                        <TextView
+                            android:paddingTop="10dp"
+                            android:layout_centerVertical="true"
+                            android:id="@+id/content_name_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignTop="@id/content_avatar"
+                            android:layout_toEndOf="@id/content_avatar"
+                            android:layout_toRightOf="@id/content_avatar"
+                            android:text="@string/client_name_mock"
+                            android:textColor="@color/mainTextColor"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                </RelativeLayout>
+
+                <!-- divider line -->
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginTop="9dp"
+                    android:src="@color/contentDividerLine" />
+
+
+                <!-- divider line -->
+                <TextView
+                    android:paddingTop="10dp"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/content_name_full_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/content_avatar"
+                    android:text="@string/lore_ipsun"
+                    android:textColor="@color/mainTextColor"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:paddingTop="10dp"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/partialResultsTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/content_avatar"
+                    android:text="@string/partial_results"
+                    android:textSize="16sp"
+                    android:textStyle="italic" />
+
+            <!-- Question Options -->
+
+
+            <ExpandableListView
+                android:id="@+id/questionExpandableLV"
+                android:gravity="left"
+                android:layoutDirection="rtl"
+                android:layout_height="300dp"
+                android:layout_width="match_parent"/>
+
+            <!-- Vote button -->
+
+            <ImageButton
+                android:layout_gravity="center_horizontal|bottom"
+                android:id="@+id/choseVoteBT"
+                android:background="@drawable/ic_like"
+                android:layout_width="110dp"
+                android:layout_height="100dp"
+                 />
+            <TextView
+                android:layout_gravity="center_horizontal"
+                android:textSize="16sp"
+                android:textColor="@color/colorBlack"
+                android:text="@string/vote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+</LinearLayout>
+</ScrollView>

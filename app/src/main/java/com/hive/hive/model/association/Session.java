@@ -1,30 +1,34 @@
 package com.hive.hive.model.association;
 
-import java.util.HashMap;
-
-/**
- * Created by naraujo on 1/28/18.
- */
+import com.google.firebase.firestore.DocumentReference;
 
 public class Session {
+
+    //--- Collections
+    public static String AGENDAS_COLLECTION = "agendas";
 
     private String id;
     private long startsAt;
     private long endsAt;
-    private boolean isOrdinary; //Ordinaria/Estrordinaria
-    private String isGeneral;    //Geral/Setorial
+    private boolean isOrdinary;  // Ordinaria/Estrordinaria
+    private boolean isGeneral;   // Geral/Setorial
 
-    private String associationId;
-    private HashMap<String, Session> agendas;
+    private DocumentReference associationRef;
 
-    public Session(String id, long startsAt, long endsAt, boolean isOrdinary, String isGeneral, String associationId, HashMap<String, Session> agendas) {
+    public Session(
+            String id,
+            long startsAt,
+            long endsAt,
+            boolean isOrdinary,
+            boolean isGeneral,
+            DocumentReference associationRef
+    ) {
         this.id = id;
         this.startsAt = startsAt;
         this.endsAt = endsAt;
         this.isOrdinary = isOrdinary;
         this.isGeneral = isGeneral;
-        this.associationId = associationId;
-        this.agendas = agendas;
+        this.associationRef = associationRef;
     }
 
     //--- Getters
@@ -45,15 +49,12 @@ public class Session {
         return isOrdinary;
     }
 
-    public String getIsGeneral() {
+    public boolean isGeneral() {
         return isGeneral;
     }
 
-    public String getAssociationId() {
-        return associationId;
+    public DocumentReference getAssociationRef() {
+        return associationRef;
     }
 
-    public HashMap<String, Session> getAgendas() {
-        return agendas;
-    }
 }

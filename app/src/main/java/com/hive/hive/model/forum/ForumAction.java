@@ -1,6 +1,6 @@
 package com.hive.hive.model.forum;
 
-import com.hive.hive.model.marketplace.PointsTransaction;
+import com.google.firebase.firestore.DocumentReference;
 import com.hive.hive.model.user.UserAction;
 
 /**
@@ -17,7 +17,7 @@ public abstract class ForumAction extends UserAction {
     public ForumAction() {
     }
 
-    public ForumAction(String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId, String forumId) {
+    public ForumAction(String id, long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId, String forumId) {
         super(id, createdAt, updatedAt, authorId, pointsTransactionId);
         this.forumId = forumId;
     }

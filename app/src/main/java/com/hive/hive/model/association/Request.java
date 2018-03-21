@@ -1,41 +1,52 @@
 package com.hive.hive.model.association;
 
-import java.util.HashMap;
+import com.google.firebase.firestore.DocumentReference;
 
-/**
- * Created by naraujo on 1/28/18.
- */
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Request extends AssociationAction {
 
+    //--- SubCollections
+    public static String COMMENTS_COLLECTION = "comments";
+    public static String SUPPORTS_COLLECTION = "supports";
+
+    //--- Fields
+    public static String SCORE_FIELD = "score";
+
+    public static int SUPPORT_ACTION_VALUE = 1;
+
     private String title;
     private String content;
-    private int supportScore;
+    private int score;
+    private int numComments;
 
-    private HashMap<String, RequestCategory> categories;
-    private HashMap<String, AssociationComment> comments;
-    private HashMap<String, AssociationSupport> supports;
+    private ArrayList<DocumentReference> categories;
 
+//--- Constructors
 
-    //--- Constructor
+    public Request() {}
 
-
-    public Request() {
-    }
 
     public Request(
-            String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId,
-            String associationId, String title, String content, int supportScore,
-            HashMap<String, RequestCategory> categories, HashMap<String, AssociationComment> comments,
-            HashMap<String, AssociationSupport> supports)
-    {
+            String id,
+            long createdAt,
+            long updatedAt,
+            DocumentReference authorId,
+            DocumentReference pointsTransactionId,
+            DocumentReference associationId,
+            String title,
+            String content,
+            int score,
+            int numComments,
+            ArrayList<DocumentReference> categories
+    ) {
         super(id, createdAt, updatedAt, authorId, pointsTransactionId, associationId);
         this.title = title;
         this.content = content;
-        this.supportScore = supportScore;
+        this.score = score;
+        this.numComments = numComments;
         this.categories = categories;
-        this.comments = comments;
-        this.supports = supports;
     }
 
     //--- Getters
@@ -48,24 +59,17 @@ public class Request extends AssociationAction {
         return content;
     }
 
-    public int getSupportScore() {
-        return supportScore;
+    public int getScore() {
+        return score;
     }
 
-    public HashMap<String, RequestCategory> getCategories() {
+    public int getNumComments() { return numComments;}
+
+    public ArrayList<DocumentReference> getCategories() {
         return categories;
     }
 
-    public HashMap<String, AssociationComment> getComments() {
-        return comments;
-    }
-
-    public HashMap<String, AssociationSupport> getSupports() {
-        return supports;
-    }
-
     //--- Setters
-
 
     public void setTitle(String title) {
         this.title = title;
@@ -75,19 +79,14 @@ public class Request extends AssociationAction {
         this.content = content;
     }
 
-    public void setSupportScore(int supportScore) {
-        this.supportScore = supportScore;
+    public void setScore(int score) {
+        this.score = score;
     }
 
-    public void setCategories(HashMap<String, RequestCategory> categories) {
+    public void setNumComments(int numComments) { this.numComments = numComments; }
+
+    public void setCategories(ArrayList<DocumentReference> categories) {
         this.categories = categories;
     }
 
-    public void setComments(HashMap<String, AssociationComment> comments) {
-        this.comments = comments;
-    }
-
-    public void setSupports(HashMap<String, AssociationSupport> supports) {
-        this.supports = supports;
-    }
 }

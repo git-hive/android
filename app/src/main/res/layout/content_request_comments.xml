@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.hive.hive.association.request.comments.CommentaryActivity"
+    tools:showIn="@layout/activity_commentary"
+    android:orientation="vertical">
+    <include layout="@layout/item_request"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/commentsRV"
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        app:layoutManager="LinearLayoutManager"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center|bottom">
+
+
+        <EditText
+            android:id="@+id/commentET"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+        <ImageView
+            android:id="@+id/commentIV"
+            android:background="@color/colorOrange"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:srcCompat="@drawable/ic_aviaoenviar" />
+
+    </LinearLayout>
+
+</LinearLayout>

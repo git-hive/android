@@ -1,31 +1,36 @@
 package com.hive.hive.model.association;
 
-/**
- * Created by naraujo on 1/28/18.
- */
+import com.google.firebase.firestore.DocumentReference;
 
 public class AssociationSupport extends AssociationAction {
 
-    private AssociationAction targetActionId;
+    public static int SUPPORT_ACTION_VALUE = 1;
+
+    private DocumentReference targetActionRef;
 
     //--- Constructor
     public AssociationSupport(
-            String id, long createdAt, long updatedAt, String authorId, String pointsTransactionId,
-            String associationId, AssociationAction targetActionId)
-    {
-        super(id, createdAt, updatedAt, authorId, pointsTransactionId, associationId);
-        this.targetActionId = targetActionId;
+            String id, long
+            createdAt, long
+            updatedAt,
+            DocumentReference authorRef,
+            DocumentReference pointsTransactionRef,
+            DocumentReference associationRef,
+            DocumentReference targetActionRef
+    ) {
+        super(id, createdAt, updatedAt, authorRef, pointsTransactionRef, associationRef);
+        this.targetActionRef = targetActionRef;
     }
 
     //--- Getters
 
-    public AssociationAction getTargetActionId() {
-        return targetActionId;
+    public DocumentReference getTargetActionRef() {
+        return targetActionRef;
     }
 
     //--- Setters
 
-    public void setTargetActionId(AssociationAction targetActionId) {
-        this.targetActionId = targetActionId;
+    public void setTargetActionRef(DocumentReference targetActionRef) {
+        this.targetActionRef = targetActionRef;
     }
 }

@@ -28,14 +28,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
 import com.hive.hive.main.MainActivity;
+import com.hive.hive.model.user.User;
 import com.hive.hive.utils.Mask;
 import com.hive.hive.utils.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import android.text.TextWatcher;
 import android.widget.EditText;
@@ -49,16 +48,12 @@ public class SignupActivity extends AppCompatActivity {
     private TextInputLayout mBirthdayTVUpperName;
     private TextInputLayout mCPFUpperName;
     private TextInputLayout mEmailTVUpperName;
-    private TextInputLayout mPasswordUpperName;
-    private TextInputLayout mPasswordAgainUpperName;
 
     // Editable Text
     private TextInputEditText mFullNameTV;
     private TextInputEditText mBirthdayTV;
     private TextInputEditText mCPF;
     private TextInputEditText mEmailTV;
-    private TextInputEditText mPassword;
-    private TextInputEditText mPasswordAgain;
     private ProgressBar mSignupPB;
     private RadioButton mTermsAgreementRB;
     private Button mSignUpComplete;
@@ -66,7 +61,7 @@ public class SignupActivity extends AppCompatActivity {
     private TextView mTermAgrementsTV;
 
     // Sign up form inputs
-    private Map<String, String> inputValues;
+    private User newUser;
     private TextWatcher cpfMask;
     private DatePickerDialog.OnDateSetListener mOnDateSetListener;
 
@@ -78,25 +73,20 @@ public class SignupActivity extends AppCompatActivity {
 
 
         db = FirebaseFirestore.getInstance();
-
+        newUser = new User();
         //Refence which enable messy Gone in outside shape of editText
         mFullNameTVUpperName = findViewById(R.id.textViewSignUpFullNameUpperName);
         mCPFUpperName = findViewById(R.id.textViewSignUpCPFUpperName);
         mEmailTVUpperName = findViewById(R.id.textViewSignUpEmailUpperName);
-        mPasswordUpperName = findViewById(R.id.textViewSignUpPasswordUpperName);
-        mPasswordAgainUpperName = findViewById(R.id.textViewSignUpPasswordAgainUpperName);
         // Others
         mFullNameTV = findViewById(R.id.textViewSignUpFullName);
         mCPF = findViewById(R.id.textViewSignUpCPF);
         mEmailTV = findViewById(R.id.textViewSignUpEmail);
-        mPassword = findViewById(R.id.textViewSignUpPassword);
-        mPasswordAgain = findViewById(R.id.textViewSignUpPasswordAgain);
         mTermsAgreementRB = findViewById(R.id.radioButtonSignUpTermsAgreement);
         mSignupPB = findViewById(R.id.progress_bar_signup);
         mHelloTV = findViewById(R.id.helloTV);
         mTermAgrementsTV = findViewById(R.id.termsAgreementTV);
 
-        inputValues = new HashMap<>();
 
         if (Build.VERSION.SDK_INT < 16) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -238,8 +228,7 @@ public class SignupActivity extends AppCompatActivity {
             mFullNameTV.requestFocus();
             return false;
         }
-        inputValues.put("name", name);
-
+        newUser.setName(name);
         // Check birthday
         String birthday = getText(mBirthdayTV);
         if (TextUtils.isEmpty(birthday)) {
@@ -247,7 +236,7 @@ public class SignupActivity extends AppCompatActivity {
             mBirthdayTV.requestFocus();
             return false;
         }
-        inputValues.put("birthday", birthday);
+        newUser.setBirthday(birthday);
 
         // TODO: proper CPF validation
         String cpf = getText(mCPF);
@@ -256,39 +245,18 @@ public class SignupActivity extends AppCompatActivity {
             mCPF.requestFocus();
             return false;
         }
-        inputValues.put("cpf", cpf);
 
-        // Check user email
-        String email = getText(mEmailTV);
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            mEmailTV.setError("Invalid email address");
-            mEmailTV.requestFocus();
-
-            return false;
-        }
-        inputValues.put("email", email);
-
-        // TODO: proper password validation
-        String password = getText(mPassword);
-        if (TextUtils.isEmpty(password)) {
-            mPassword.setError("Password is required");
-            mPassword.requestFocus();
-
-            return false;
-        }
-
-        String passwordAgain = getText(mPasswordAgain);
-        //Double checking Password
-        System.out.println(password.length()+"<______________________________>"+passwordAgain.length());
-        if (!password.equals(passwordAgain)) {
-            mPasswordAgain.setError("Password must match");
-            mPasswordAgain.requestFocus();
-
-            return false;
-        }
-
-        inputValues.put("password", password);
-
+        newUser.setCpf(cpf);
+// TODO verify if email is really a needed field
+//        // Check user email
+//        String email = getText(mEmailTV);
+//        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+//            mEmailTV.setError("Invalid email address");
+//            mEmailTV.requestFocus();
+//
+//            return false;
+//        }
+        newUser.setEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail());
 
         // Check if user agreed with the terms
         if (!mTermsAgreementRB.isChecked()) {
@@ -305,10 +273,11 @@ public class SignupActivity extends AppCompatActivity {
      * Stores field data into firestore
      */
     private void updateUser() {
+        newUser.setPhotoUrl(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString());
         db
                 .collection("users")
                 .document(mAuth.getUid())
-                .set(inputValues)
+                .set(newUser)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -347,16 +316,12 @@ public class SignupActivity extends AppCompatActivity {
         mBirthdayTVUpperName.setVisibility(View.GONE);
         mCPFUpperName.setVisibility(View.GONE);
         mEmailTVUpperName.setVisibility(View.GONE);
-        mPasswordAgainUpperName.setVisibility(View.GONE);
-        mPasswordUpperName.setVisibility(View.GONE);
         // Truly messy, hate java stuff!!!
 
         mFullNameTV.setVisibility(View.GONE);
         mBirthdayTV.setVisibility(View.GONE);
         mCPF.setVisibility(View.GONE);
         mEmailTV.setVisibility(View.GONE);
-        mPasswordAgain.setVisibility(View.GONE);
-        mPassword.setVisibility(View.GONE);
         mTermsAgreementRB.setVisibility(View.GONE);
         mSignUpComplete.setVisibility(View.GONE);
         //mHelloTV.setVisibility(View.GONE);
@@ -372,8 +337,6 @@ public class SignupActivity extends AppCompatActivity {
         mBirthdayTV.setVisibility(View.VISIBLE);
         mCPF.setVisibility(View.VISIBLE);
         mEmailTV.setVisibility(View.VISIBLE);
-        mPasswordAgain.setVisibility(View.VISIBLE);
-        mPassword.setVisibility(View.VISIBLE);
         mTermsAgreementRB.setVisibility(View.VISIBLE);
         mSignUpComplete.setVisibility(View.VISIBLE);
     }

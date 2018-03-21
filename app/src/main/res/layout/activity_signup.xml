@@ -79,7 +79,7 @@
                     android:id="@+id/textViewSignUpCPF"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textFilter"
+                    android:inputType="numberDecimal"
                     android:imeOptions="actionNext"
                     android:hint="@string/h_cpf"/>
 
@@ -101,35 +101,6 @@
 
             </android.support.design.widget.TextInputLayout>
 
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/textViewSignUpPasswordUpperName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/textViewSignUpPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    android:hint="@string/h_password_conf"/>
-
-            </android.support.design.widget.TextInputLayout>
-
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/textViewSignUpPasswordAgainUpperName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/textViewSignUpPasswordAgain"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    android:hint="@string/h_password_conf_again"/>
-
-            </android.support.design.widget.TextInputLayout>
 
             <LinearLayout
                 android:paddingTop="40dp"

@@ -1,11 +1,16 @@
 <resources>
+
+    <!-- Activity Titles -->
+    <string name="title_activity_requests">Propostas</string>
+    <string name="new_request_activity_title">Nova Proposta</string>
+    <string name="request_commentaty_title">Comentários</string>
     <!-- Snackbar Strings -->
     <string name="auth_failure">Falha na autenticação</string>
 
     <!-- Working Directory Strings-->
     <string name="app_name">Hive</string>
     <string name="feed">Feed</string>
-    <string name="associationId">Associação</string>
+    <string name="associationRef">Associação</string>
     <string name="shop">Loja</string>
     <string name="map">Mapa</string>
     <string name="home">Home</string>
@@ -42,7 +47,135 @@
     <string name="today">O que você deseja fazer hoje?</string>
     <string name='hello'>Olá mundo</string>
 
-    <!-- Facebook settings -->
-    <string name="facebook_app_id">165818667480912</string>
+    <!-- Association Strings -->
+    <string name="req">Propostas</string>
+    <string name="vote">Votações</string>
+    <string name="trans">Transparência</string>
+    <string name="assembleia">Assembléias</string>
+
+
+    <!-- New requests strings -->
+    <string name="request_title_label">Título</string>
+    <string name="request_cost_label">Custo estimado</string>
+    <string name="request_description_label">Descrição</string>
+    <string name="save">Salvar</string>
+    <string name="new_request_budget_category_label_tv">Tipo de Despesa:</string>
+    <string name="new_request_category_label_tv">Categorias da Proposta:</string>
+    <string name="new_request_location_label">Localização</string>
+    <string name="new_request_current_budget_string1">*Há R$ \u0020</string>
+    <string name="new_request_current_budget_string2">\u0020 disponíveis </string>
+    <string name="new_request_current_budget_ordinary_string">\u0020 para despesas ordinárias. </string>
+    <string name="new_request_current_budget_savings_string">\u0020 no fundo de reserva. </string>
+    <string name="new_request_current_budget_extraordinary_string">\u0020 para despesas extraordinárias. </string>
+
+
+    <!-- Request Comments strings -->
+    <string name="should_text">Qual é o seu comentário?</string>
+    <!-- Facebook strings -->
+    <string name="facebook_app_id">177801062854821</string>
     <string name="fb_login_protocol_scheme">fb165818667480912</string>
+    <string name="title_activity_request">RequestActivity</string>
+    <string name="title_activity_nrequest">NRequestActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Budget Category Strings -->
+    <string name="budget_category_ordinary">Orinária</string>
+    <string name="budget_category_savings">Fundo de Reserva</string>
+    <string name="budget_category_extraordinary">Extraordinária</string>
+
+    <!-- Image Description Strings -->
+    <string name="ic_budget_category_savings">Ícone de cofrinho</string>
+    <string name="ic_comment">Ícone de Comentário</string>
+    <string name="ic_support">Ícone de Coração</string>
+
+    <!-- Folding Cell Stuff -->
+    <string name="order_id_mock" translatable="false"># 1234–5678</string>
+    <string name="price_mock" translatable="false">$25</string>
+    <string name="requests_count_mock" translatable="false">5</string>
+    <string name="requests_count_badge" translatable="false">REQUESTS</string>
+    <string name="weight_mock" translatable="false">50 oz</string>
+    <string name="weight_badge" translatable="false">WEIGHT</string>
+    <string name="pledge_mock" translatable="false">$150</string>
+    <string name="pledge_badge" translatable="false">PLEDGE</string>
+    <string name="sender_badge" translatable="false">SENDER</string>
+    <string name="client_name_mock" translatable="false">Edward Norton</string>
+    <string name="rating_mock" translatable="false">(26)</string>
+    <string name="from_badge" translatable="false">FROM</string>
+    <string name="to_badge" translatable="false">TO</string>
+    <string name="delivery_date_badge" translatable="false">DELIVERY DATE</string>
+    <string name="delivery_time_mock" translatable="false">6:30 pm</string>
+    <string name="delivery_date_mock" translatable="false">May 16, 2016</string>
+    <string name="deadline_badge" translatable="false">REQUEST DEADLINE</string>
+    <string name="deadline_time_mock" translatable="false">24 minutes</string>
+    <string name="request_btn_text" translatable="false">REQUEST</string>
+    <string name="btn_annotation_mock" translatable="false">5 people have sent a request</string>
+    <string name="content_from1_mock">W 90th St</string>
+    <string name="content_from2_mock">New York, NY 10025</string>
+    <string name="content_to1_mock">46th Ave</string>
+    <string name="content_to2_mock">Woodside, NY 11101</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="pattern_title">Título da Pauta</string>
+    <string name="zeroin3">000</string>
+    <string name="fake_time">00d, 00hrs, 00 min</string>
+    <string name="suggested">Sugerida por:</string>
+    <string name="lore_ipsun">Risus in hendrerit gravida rutrum quisque non. Porttitor leo a diam sollicitudin. Sem viverra aliquet eget sit. Purus in massa tempor nec feugiat. Id venenatis a condimentum vitae. Gravida rutrum quisque non tellus orci ac auctor augue mauris. Risus commodo viverra maecenas accumsan lacus vel. Arcu vitae elementum curabitur vitae nunc sed. Et netus et malesuada fames. Feugiat nisl pretium fusce id velit ut.  </string>
+    <string name="partial_results">Resultados parciais:</string>
+
+
+    <!-- Transparency Stuff -->
+    <string name="hard_coded_i_do_like_pdfs_3"><![CDATA[HARD CODED. I DO LIKE PDFs <3]]></string>
+    <string name="total_applied"><i>Total investido:</i></string>
+    <string name="initial_money">R$ 000,000,000</string>
+    <string name="details">Detalhes</string>
+
+
+    <!-- Circular Menu-->
+    <string name="setting">Setting</string>
+    <string name="circle_layout_manger">Circle LayoutManager</string>
+    <string name="circle_scale_layout_manager">Circle Scale LayoutManager</string>
+    <string name="carousel_layout_manager">Carousel LayoutManager</string>
+    <string name="gallery_layout_manager">Gallery LayoutManager</string>
+    <string name="rotate_layout_manager">Rotate LayoutManager</string>
+    <string name="scale_layout_manager">Scale LayoutManager</string>
+
+    <string name="radius">Radius</string>
+    <string name="item_space">Item Space</string>
+    <string name="move_speed">Move Speed</string>
+    <string name="distance_to_bottom">Distance To Bottom</string>
+    <string name="angle_interval">Interval Angle</string>
+    <string name="center_scale">Center Scale</string>
+    <string name="rotate_angle">Rotate Angle</string>
+    <string name="min_scale">Min Scale</string>
+    <string name="max_alpha">Max Alpha</string>
+    <string name="min_alpha">Min Alpha</string>
+    <string name="toggle_infinite">Toggle Infinite</string>
+    <string name="toggle_bring_center_in_front">Toggle Bring Center In Front</string>
+    <string name="toggle_reverse_rotate">Toggle Reverse Rotate</string>
+    <string name="toggle_auto_center">Toggle Auto Center</string>
+    <string name="toggle_reverse">Toggle Reverse</string>
+    <string name="flip_rotate">Flip Rotate</string>
+    <string name="rotate_from_edge">Rotate From Edge</string>
+    <string name="change_orientation">Change Orientation</string>
+    <string name="gravity">Gravity</string>
+    <string name="left">Left</string>
+    <string name="right">Right</string>
+    <string name="top">Top</string>
+    <string name="bottom">Bottom</string>
+    <string name="z_alignment">Z-Alignment</string>
+    <string name="left_on_top">Left On Top</string>
+    <string name="right_on_top">Right On Top</string>
+    <string name="center_on_top">Center On Top</string>
+
+    <!-- Question Timeline -->
+    <string name="action_settings">Settings</string>
+
+    <string name="horizontal_timeline">Horizontal Timeline</string>
+    <string name="vertical_timeline">Vertical Timeline</string>
+    <string name="horizontal_timeline_w_padding">Horizontal Timeline With Line Padding</string>
+    <string name="vertical_timeline_w_padding">Vertical Timeline With Line Padding</string>
+
+
+
 </resources>
