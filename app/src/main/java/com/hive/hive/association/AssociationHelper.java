@@ -9,7 +9,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
 import com.hive.hive.model.association.AssociationComment;
@@ -24,7 +23,7 @@ public class AssociationHelper {
     public static String ASSOCIATION_COLLECTION = "associations";
     public static String REQUESTS_COLLECTION = "requests";
     public static String COMMENTS_COLLECTION = "comments";
-    public static String SUPPORTS_COLLECITON = "supports";
+    public static String SUPPORTS_COLLECTION = "supports";
 
     //--- Request
 
@@ -79,7 +78,7 @@ public class AssociationHelper {
                 .document(associationID)
                 .collection(REQUESTS_COLLECTION)
                 .document(requestID)
-                .collection(SUPPORTS_COLLECITON)
+                .collection(SUPPORTS_COLLECTION)
                 .document(supportID)
                 .get();
     }
@@ -98,7 +97,7 @@ public class AssociationHelper {
                 .document(requestID);
 
         final DocumentReference supportRef = requestRef
-                .collection(SUPPORTS_COLLECITON)
+                .collection(SUPPORTS_COLLECTION)
                 .document(supportID);
 
         return db.runTransaction(new Transaction.Function<Void>() {
@@ -130,7 +129,7 @@ public class AssociationHelper {
                 .collection(REQUESTS_COLLECTION)
                 .document(requestID);
         final DocumentReference supportRef = requestRef
-                .collection(SUPPORTS_COLLECITON)
+                .collection(SUPPORTS_COLLECTION)
                 .document(supportID);
 
         return db.runTransaction(new Transaction.Function<Void>() {
@@ -290,7 +289,7 @@ public class AssociationHelper {
                 .collection(COMMENTS_COLLECTION)
                 .document(commentID);
         final DocumentReference supportRef = commentRef
-                .collection(SUPPORTS_COLLECITON)
+                .collection(SUPPORTS_COLLECTION)
                 .document(supportID);
 
         return db.runTransaction(new Transaction.Function<Void>() {
@@ -325,7 +324,7 @@ public class AssociationHelper {
                 .collection(COMMENTS_COLLECTION)
                 .document(commentID);
         final DocumentReference supportRef = commentRef
-                .collection(SUPPORTS_COLLECITON)
+                .collection(SUPPORTS_COLLECTION)
                 .document(supportID);
 
         return db.runTransaction(new Transaction.Function<Void>() {
