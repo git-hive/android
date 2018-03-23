@@ -2,19 +2,16 @@ package com.hive.hive.association.votes.tabs.questions;
 
 import android.content.Context;
 import android.os.Bundle;
-
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-
 import com.hive.hive.R;
 import com.hive.hive.association.votes.tabs.questions.model.OrderStatus;
 import com.hive.hive.association.votes.tabs.questions.model.Orientation;
 import com.hive.hive.association.votes.tabs.questions.model.TimeLineModel;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
