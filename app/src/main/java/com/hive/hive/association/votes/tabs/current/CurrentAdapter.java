@@ -82,7 +82,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
                     ImageView suggestedByIV = mView.findViewById(R.id.suggestedByIV);
                     User user = documentSnapshot.toObject(User.class);
                     suggestedByTV.setText(user.getName());
-                    ProfilePhotoHelper.loadImage(mView.getContext(), suggestedByIV, user.getPhotoUrl());
+                    ProfilePhotoHelper.loadImage(mView.getContext().getApplicationContext(), suggestedByIV, user.getPhotoUrl());
                     //Log.d(RequestAdapter.class.getSimpleName(), user.getPhotoUrl());
                 }
             }

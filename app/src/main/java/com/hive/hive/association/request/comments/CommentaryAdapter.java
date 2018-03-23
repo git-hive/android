@@ -94,7 +94,7 @@ public class CommentaryAdapter extends RecyclerView.Adapter<CommentaryAdapter.Co
                     Log.d(RequestAdapter.class.getSimpleName(), documentSnapshot.get("name").toString());
                     User user = documentSnapshot.toObject(User.class);
                     holder.authorTV.setText(user.getName());
-                    ProfilePhotoHelper.loadImage(mContext, holder.avatarIV, user.getPhotoUrl());
+                    ProfilePhotoHelper.loadImage(mContext.getApplicationContext(), holder.avatarIV, user.getPhotoUrl());
                 }
             }
         });

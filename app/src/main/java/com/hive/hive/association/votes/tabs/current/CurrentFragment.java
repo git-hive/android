@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alexvasilkov.foldablelayout.UnfoldableView;
+import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -223,6 +224,16 @@ public class CurrentFragment extends Fragment {
         });
 
         return view;
+    }
+    @Override
+    public void onResume(){
+        super.onResume();
+        Glide.with(getContext().getApplicationContext()).resumeRequestsRecursive();
+    }
+    @Override
+    public void onStop(){
+        super.onStop();
+        Glide.with(getContext().getApplicationContext()).pauseRequestsRecursive();
     }
     @Override
     public void onDestroy(){
