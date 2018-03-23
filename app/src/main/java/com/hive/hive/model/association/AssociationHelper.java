@@ -4,12 +4,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
+
+import java.util.ArrayList;
 
 public class AssociationHelper {
     public static String ASSOCIATION_COLLECTION = "associations";
@@ -94,6 +97,54 @@ public class AssociationHelper {
                 .collection(Association.REQUESTS_COLLECTION)
                 .document(requestID)
                 .set(request);
+    }
+
+    //--- Request Categories
+
+    /**
+     * Fetches all categories referenced by the request
+     *
+     * @param db            Database reference
+     * @param associationID Association document ID where to get the request from
+     * @param requestID     Request document ID where to get the categories from
+     * @return Task that resolves in an ArrayList of RequestCategory associated with the
+     *         request under the provided requestID
+     */
+    public static Task<ArrayList<RequestCategory>> getRequestCategory(
+            FirebaseFirestore db,
+            String associationID,
+            String requestID
+    ) {
+        final DocumentReference associationRef = db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID);
+
+        final DocumentReference requestRef = associationRef
+                .collection(Association.REQUESTS_COLLECTION)
+                .document(requestID);
+
+        final CollectionReference requestCategoriesRef = associationRef
+                .collection(Association.REQUEST_CATEGORIES_COLLECTION);
+
+        // Gets all categories referenced by the request
+        return db.runTransaction(new Transaction.Function<ArrayList<RequestCategory>>() {
+            @Nullable
+            @Override
+            public ArrayList<RequestCategory> apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                // Get request
+                DocumentSnapshot requestDoc = transaction.get(requestRef);
+                Request request = requestDoc.toObject(Request.class);
+
+                // Get all categories referenced by the request
+                ArrayList<RequestCategory> requestCategoriesDocs = new ArrayList<>();
+                for (DocumentReference categoryRef : request.getCategories()) {
+                    DocumentSnapshot categoryDoc = transaction.get(categoryRef);
+                    requestCategoriesDocs.add(categoryDoc.toObject(RequestCategory.class));
+                }
+
+                return requestCategoriesDocs;
+            }
+        });
     }
 
     //--- Request Support
@@ -407,6 +458,7 @@ public class AssociationHelper {
     }
 
     //--- Support Request Comment
+
     /**
      * Gets a support from a request comment
      *
@@ -435,6 +487,7 @@ public class AssociationHelper {
                 .document(supportID)
                 .get();
     }
+
     /**
      * Gets all supports from a request comment
      *
