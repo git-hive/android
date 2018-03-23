@@ -2,6 +2,7 @@ package com.hive.hive.association.votes.tabs.questions;
 
 import android.content.Context;
 import android.os.Bundle;
+
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,11 +11,9 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.hive.hive.R;
-import com.hive.hive.association.votes.VotesActivity;
 import com.hive.hive.association.votes.tabs.questions.model.OrderStatus;
 import com.hive.hive.association.votes.tabs.questions.model.Orientation;
 import com.hive.hive.association.votes.tabs.questions.model.TimeLineModel;
-import com.hive.hive.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +32,7 @@ public class QuestionForm extends AppCompatActivity {
     private HashMap<Integer, ArrayList<String> > formQuestions;
     private ArrayList<String> arrayList;
     private ArrayList<OrderStatus> mQuestionStatus;
+    private ArrayList<Integer> mQuestionStatusValue;
     private GridListAdapter adapter;
     private Context context;
 
@@ -40,7 +40,7 @@ public class QuestionForm extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_form);
-        context = getApplicationContext();
+        context = this;
         loadListView();
 
         onClickEvent();
@@ -68,20 +68,8 @@ public class QuestionForm extends AppCompatActivity {
 
     private void initView() {
         //setDataListItems();
-        mTimeLineAdapter = new TimeLineAdapter(formQuestions, mQuestionStatus, mOrientation, mWithLinePadding);
+        mTimeLineAdapter = new TimeLineAdapter(formQuestions, mQuestionStatus, mQuestionStatusValue, mOrientation, mWithLinePadding);
         mRecyclerView.setAdapter(mTimeLineAdapter);
-    }
-
-    private void setDataListItems(){
-        mDataList.add(new TimeLineModel("Item successfully delivered", "", OrderStatus.INACTIVE));
-        mDataList.add(new TimeLineModel("Courier is out to delivery your order", "2017-02-12 08:00", OrderStatus.ACTIVE));
-        mDataList.add(new TimeLineModel("Item has reached courier facility at New Delhi", "2017-02-11 21:00", OrderStatus.COMPLETED));
-        mDataList.add(new TimeLineModel("Item has been given to the courier", "2017-02-11 18:00", OrderStatus.COMPLETED));
-        mDataList.add(new TimeLineModel("Item is packed and will dispatch soon", "2017-02-11 09:30", OrderStatus.COMPLETED));
-        mDataList.add(new TimeLineModel("Order is being readied for dispatch", "2017-02-11 08:00", OrderStatus.COMPLETED));
-        mDataList.add(new TimeLineModel("Order processing initiated", "2017-02-10 15:00", OrderStatus.COMPLETED));
-        mDataList.add(new TimeLineModel("Order confirmed by seller", "2017-02-10 14:30", OrderStatus.COMPLETED));
-        mDataList.add(new TimeLineModel("Order placed successfully", "2017-02-10 14:00", OrderStatus.COMPLETED));
     }
 
     // Populate Form locally for now
@@ -90,6 +78,7 @@ public class QuestionForm extends AppCompatActivity {
 
         formQuestions = new HashMap<Integer, ArrayList<String>>();
         mQuestionStatus = new ArrayList<OrderStatus>();
+        mQuestionStatusValue = new ArrayList<Integer>();
 
         for (Integer i = 0; i <= 4; i++){
             arrayList = new ArrayList<>();
@@ -98,6 +87,7 @@ public class QuestionForm extends AppCompatActivity {
 
             formQuestions.put(i,  arrayList);
             mQuestionStatus.add(i, OrderStatus.INACTIVE);
+            mQuestionStatusValue.add(i, -1);
         }
 
         //Set First manually
@@ -156,20 +146,5 @@ public class QuestionForm extends AppCompatActivity {
         }
         super.onRestoreInstanceState(savedInstanceState);
     }
-
-
-    public class LocalQuestions{
-        ArrayList<String> localQuestionsList;
-        ArrayList<Boolean> localQuestionsStatus;
-
-        LocalQuestions(ArrayList<String> questionsList,ArrayList<Boolean> questionsStatus){
-            localQuestionsList = questionsList;
-            localQuestionsStatus = questionsStatus;
-        }
-
-        Boolean getStatus(int position){
-            return localQuestionsStatus.get(position);
-        }
-    };
 
 }

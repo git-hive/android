@@ -27,14 +27,17 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
     private HashMap<Integer, ArrayList<String>> mFeedList;
     private ArrayList<OrderStatus> mStatusList;
+    public ArrayList<Integer> mStatusListValue;
     private Context mContext;
     private Orientation mOrientation;
     private boolean mWithLinePadding;
     private LayoutInflater mLayoutInflater;
 
-    public TimeLineAdapter(HashMap<Integer, ArrayList<String> > feedList, ArrayList<OrderStatus> statusList, Orientation orientation, boolean withLinePadding) {
+
+    public TimeLineAdapter(HashMap<Integer, ArrayList<String> > feedList, ArrayList<OrderStatus> statusList, ArrayList<Integer> statusListValue, Orientation orientation, boolean withLinePadding) {
         mFeedList = feedList;
         mStatusList = statusList;
+        mStatusListValue = statusListValue;
         mOrientation = Orientation.HORIZONTAL;
         mWithLinePadding = withLinePadding;
     }
@@ -90,6 +93,11 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
     }
 
     public boolean checkAnswers(){
+        for (Integer value:
+             mStatusListValue) {
+            if(value == -1)
+                return false;
+        }
         return true;
     }
 
