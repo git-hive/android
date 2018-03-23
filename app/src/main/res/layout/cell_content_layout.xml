@@ -33,7 +33,7 @@
                     android:text="@string/pattern_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/budgetNameTV"/>
+                    android:id="@+id/titleTV"/>
 
                 <LinearLayout
                         android:paddingRight="20dp"
@@ -126,7 +126,7 @@
 
                         <ImageView
                             android:layout_marginLeft="50dp"
-                            android:id="@+id/content_avatar"
+                            android:id="@+id/suggestedByIV"
                             android:layout_width="50dp"
                             android:layout_toRightOf="@id/content_avatar_title"
                             android:layout_height="50dp"
@@ -135,12 +135,12 @@
                         <TextView
                             android:paddingTop="10dp"
                             android:layout_centerVertical="true"
-                            android:id="@+id/content_name_view"
+                            android:id="@+id/suggestedByTV"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignTop="@id/content_avatar"
-                            android:layout_toEndOf="@id/content_avatar"
-                            android:layout_toRightOf="@id/content_avatar"
+                            android:layout_alignTop="@id/suggestedByIV"
+                            android:layout_toEndOf="@id/suggestedByIV"
+                            android:layout_toRightOf="@id/suggestedByIV"
                             android:text="@string/client_name_mock"
                             android:textColor="@color/mainTextColor"
                             android:textSize="16sp"
@@ -161,10 +161,10 @@
                 <TextView
                     android:paddingTop="10dp"
                     android:layout_centerVertical="true"
-                    android:id="@+id/content_name_full_text"
+                    android:id="@+id/contentTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/content_avatar"
+                    android:layout_toEndOf="@id/suggestedByIV"
                     android:text="@string/lore_ipsun"
                     android:textColor="@color/mainTextColor"
                     android:textSize="16sp"
@@ -176,7 +176,7 @@
                     android:id="@+id/partialResultsTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/content_avatar"
+                    android:layout_toEndOf="@id/suggestedByIV"
                     android:text="@string/partial_results"
                     android:textSize="16sp"
                     android:textStyle="italic" />

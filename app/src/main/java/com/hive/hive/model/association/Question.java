@@ -6,7 +6,6 @@ import java.util.HashMap;
 
 public class Question {
 
-    private String id;
     private String question;
     private String info;
     private HashMap<String, QuestionOptions> options;
@@ -18,7 +17,6 @@ public class Question {
     //--- Constructor
 
     public Question(
-            String id,
             String question,
             String info,
             HashMap<String, QuestionOptions> options,
@@ -26,7 +24,6 @@ public class Question {
             DocumentReference sessionRef,
             DocumentReference agendaRef
     ) {
-        this.id = id;
         this.question = question;
         this.info = info;
         this.options = options;
@@ -38,9 +35,6 @@ public class Question {
 
     //--- Getters
 
-    public String getId() {
-        return id;
-    }
 
     public String getQuestion() {
         return question;
@@ -69,9 +63,6 @@ public class Question {
 
     //--- Setters
     
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public void setQuestion(String question) {
         this.question = question;

@@ -7,35 +7,38 @@ public class Session {
     //--- Collections
     public static String AGENDAS_COLLECTION = "agendas";
 
-    private String id;
+    //--- SubCollections
+    public static String QUESTIONS_COLLECTION = "question";
+
+
     private long startsAt;
     private long endsAt;
     private boolean isOrdinary;  // Ordinaria/Estrordinaria
     private boolean isGeneral;   // Geral/Setorial
-
+    private int agendasNum;
     private DocumentReference associationRef;
 
     public Session(
-            String id,
             long startsAt,
             long endsAt,
             boolean isOrdinary,
             boolean isGeneral,
+            int agendasNum,
             DocumentReference associationRef
     ) {
-        this.id = id;
         this.startsAt = startsAt;
         this.endsAt = endsAt;
         this.isOrdinary = isOrdinary;
         this.isGeneral = isGeneral;
+        this.agendasNum = agendasNum;
         this.associationRef = associationRef;
+    }
+
+    public Session() {
     }
 
     //--- Getters
 
-    public String getId() {
-        return id;
-    }
 
     public long getStartsAt() {
         return startsAt;
@@ -57,4 +60,31 @@ public class Session {
         return associationRef;
     }
 
+    public int getAgendasNum() { return  agendasNum;}
+
+    //--- Setters
+
+    public void setStartsAt(long startsAt) {
+        this.startsAt = startsAt;
+    }
+
+    public void setEndsAt(long endsAt) {
+        this.endsAt = endsAt;
+    }
+
+    public void setOrdinary(boolean ordinary) {
+        isOrdinary = ordinary;
+    }
+
+    public void setGeneral(boolean general) {
+        isGeneral = general;
+    }
+
+    public void setAgendasNum(int agendasNum) {
+        this.agendasNum = agendasNum;
+    }
+
+    public void setAssociationRef(DocumentReference associationRef) {
+        this.associationRef = associationRef;
+    }
 }

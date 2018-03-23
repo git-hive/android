@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,15 +13,25 @@ import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alexvasilkov.foldablelayout.UnfoldableView;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
+import com.hive.hive.association.votes.VotesHelper;
 import com.hive.hive.association.votes.tabs.questions.QuestionForm;
 import com.hive.hive.association.votes.tabs.questions.ExpandableListAdapter;
+import com.hive.hive.model.association.Agenda;
+import com.hive.hive.model.association.Session;
 import com.hive.hive.model.association.Vote;
 
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
 
@@ -28,10 +39,22 @@ import java.util.List;
 public class CurrentFragment extends Fragment {
     private static final int NUM_LIST_ITEMS= 6;
     public static final String ARG_PAGE = "Passadas";
-    private static final String TAG = "#";
+    private static final String TAG = CurrentFragment.class.getSimpleName();
+    //Session
+    private Session mCurrentSession;
+    private com.google.firebase.firestore.EventListener<QuerySnapshot> mSessionEL;
+    private ListenerRegistration mSessionLR;
 
-    ArrayList<Vote> DUMMYARRAY;
+    //Agendas
+    private HashMap<String, Agenda> mAgendas;
+    private ArrayList<String> mAgendasIds;
+    private com.google.firebase.firestore.EventListener<QuerySnapshot> mAgendasEL;
+    private ListenerRegistration mAgendasLR;
+
+    //Recycler Things
     RecyclerView mRV;
+    CurrentAdapter mRVAdapter;
+    //Views
     View mListTouchInterceptor;
     FrameLayout mDetailsLayout;
     UnfoldableView mUnfoldableView;
@@ -61,24 +84,6 @@ public class CurrentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_current, container, false);
-
-        DUMMYARRAY = new ArrayList<Vote>();
-        DUMMYARRAY.add(new Vote());
-        DUMMYARRAY.add(new Vote());
-        DUMMYARRAY.add(new Vote());
-        DUMMYARRAY.add(new Vote());
-        DUMMYARRAY.add(new Vote());
-        DUMMYARRAY.add(new Vote());
-        DUMMYARRAY.add(new Vote());
-        DUMMYARRAY.add(new Vote());
-
-        // Adding Action Stuff
-        DUMMYARRAY.get(0).setRequestBtnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "CUSTOM HANDLER FOR FIRST BUTTON", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         choseVoteBT = view.findViewById(R.id.choseVoteBT);
 
@@ -128,15 +133,84 @@ public class CurrentFragment extends Fragment {
                 mDetailsLayout.setVisibility(View.INVISIBLE);
             }
         });
-        mRV = view.findViewById(R.id.cellRV);
+        //GET CURRENT SESSION
+        //TODO REMOVE STATIC ASSOCIATION REFERENCE
+        mSessionEL = new com.google.firebase.firestore.EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                if(e != null){
+                    Log.e(TAG, e.getMessage());
+                    return;
+                }
+                for (DocumentChange dc : documentSnapshots.getDocumentChanges()) {
+                    switch (dc.getType()) {
+                        case REMOVED:
+                            Log.e(TAG, "No current Session");
+                            mAgendasLR.remove();
+                            //TODO MAY show message... there is no Session
+                        default:
+                            mCurrentSession = dc.getDocument().toObject(Session.class);
+                            Log.d(TAG, mCurrentSession.toString());
+                            if(mAgendasLR == null)
+                                mAgendasLR =
+                                        VotesHelper.getAgendas(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", dc.getDocument().getId())
+                                            .addSnapshotListener(mAgendasEL);
+                    }
+                }
 
-        mRV.setAdapter(new CurrentAdapter(DUMMYARRAY, mUnfoldableView, mDetailsLayout));
+            }
+        };
+        mSessionLR = VotesHelper.getCurrentSession(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s").addSnapshotListener(mSessionEL);
+        //GET AGENDAS
+        mAgendas = new HashMap<>();
+        mAgendasIds = new ArrayList<>();
+
+        mAgendasEL = new com.google.firebase.firestore.EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                if(e != null){
+                    Log.e(TAG, e.getMessage());
+                    return;
+                }
+                for (DocumentChange dc : documentSnapshots.getDocumentChanges()) {
+                    switch (dc.getType()) {
+                        case ADDED:
+                            Agenda agenda = dc.getDocument().toObject(Agenda.class);
+                            mAgendas.put(dc.getDocument().getId(), agenda);
+                            mAgendasIds.add(dc.getDocument().getId());
+                            Log.d(TAG, mAgendas.toString());
+                            mRVAdapter.notifyDataSetChanged();
+                            break;
+                        case MODIFIED:
+                            String modifiedId = dc.getDocument().getId();
+                            mAgendas.remove(modifiedId);
+                            mAgendas.put(modifiedId, dc.getDocument().toObject(Agenda.class));
+                            Log.d(TAG, mAgendas.toString());
+                            mRVAdapter.notifyDataSetChanged();
+                            break;
+                        case REMOVED:
+                            String removedId = dc.getDocument().getId();
+                            mAgendas.remove(removedId);
+                            mAgendasIds.remove(removedId);
+                            Log.d(TAG, mAgendas.toString());
+                            mRVAdapter.notifyDataSetChanged();
+                            break;
+                    }
+                }
+
+            }
+        };
+
+        mRVAdapter = new CurrentAdapter(mAgendas, mAgendasIds, mUnfoldableView, mDetailsLayout, view);
+        mRV = view.findViewById(R.id.cellRV);
+        mRV.setAdapter(mRVAdapter);
 
         // TODO: Check this expandable element Height, since it has some workarounds, either than set it fixed;
-        expandableListView = (ExpandableListView) view.findViewById(R.id.questionExpandableLV);
+//        TextView tv = view.findViewById(R.id.contentTV);
+//        tv.setText("cuuuuuuuuuuu");
+        expandableListView = view.findViewById(R.id.questionExpandableLV);
         // Setting group indicator null for custom indicator
         expandableListView.setGroupIndicator(null);
-
         setItems();
 
         // Start Questions activity stuff
@@ -150,7 +224,12 @@ public class CurrentFragment extends Fragment {
 
         return view;
     }
-
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        mSessionLR.remove();
+        mAgendasLR.remove();
+    }
     // Setting headers and childs to expandable listview
     void setItems(){
 
@@ -199,4 +278,5 @@ public class CurrentFragment extends Fragment {
         expandableListView.setAdapter(adapter);
 
     }
+
 }

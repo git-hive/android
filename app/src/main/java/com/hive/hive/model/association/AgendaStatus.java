@@ -18,6 +18,8 @@ public class AgendaStatus {
         this.description = description;
     }
 
+    public AgendaStatus() {}
+
     //--- Getters
 
     public String getId() {
