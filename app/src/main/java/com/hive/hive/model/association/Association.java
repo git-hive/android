@@ -24,6 +24,10 @@ public class Association {
     //--- Association related
     private int totalNumberOfAssociates;
 
+    //--- Requests related
+    private ArrayList<DocumentReference> requests;
+    private ArrayList<DocumentReference> requestCategories;
+
     //--- Constructor
 
     public Association(
@@ -77,4 +81,19 @@ public class Association {
         this.totalNumberOfAssociates = totalNumberOfAssociates;
     }
 
+    public ArrayList<DocumentReference> getRequests() {
+        return requests;
+    }
+
+    public void setRequests(ArrayList<DocumentReference> requests) {
+        this.requests = requests;
+    }
+
+    public ArrayList<DocumentReference> getRequestCategories() {
+        return requestCategories;
+    }
+
+    public void setRequestCategories(ArrayList<DocumentReference> requestCategories) {
+        this.requestCategories = requestCategories;
+    }
 }
