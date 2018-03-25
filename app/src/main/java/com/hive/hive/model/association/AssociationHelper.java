@@ -9,6 +9,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
 
@@ -102,6 +103,24 @@ public class AssociationHelper {
     //--- Request Categories
 
     /**
+     * Fetches all request categories from an association
+     *
+     * @param db Database reference
+     * @param associationID Association document ID where to set the categories from
+     * @return Task that resolves in all request categories documents
+     */
+    public static Task<QuerySnapshot> getAssociationRequestCategories(
+            FirebaseFirestore db,
+            String associationID
+    ) {
+        return db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(Association.REQUEST_CATEGORIES_COLLECTION)
+                .get();
+    }
+
+    /**
      * Fetches all categories referenced by the request
      *
      * @param db            Database reference
@@ -110,7 +129,7 @@ public class AssociationHelper {
      * @return Task that resolves in an ArrayList of RequestCategory associated with the
      *         request under the provided requestID
      */
-    public static Task<ArrayList<RequestCategory>> getRequestCategory(
+    public static Task<ArrayList<RequestCategory>> getRequestCategories(
             FirebaseFirestore db,
             String associationID,
             String requestID
@@ -143,6 +162,54 @@ public class AssociationHelper {
                 }
 
                 return requestCategoriesDocs;
+            }
+        });
+    }
+
+    public static Task<ArrayList<Request>> getRequestsByCategory(
+            FirebaseFirestore db,
+            String associationID,
+            final String categoryName
+    ) {
+        final DocumentReference associationRef = db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID);
+
+        // Gets request by categories.
+        return db.runTransaction(new Transaction.Function<ArrayList<Request>>() {
+            @Nullable
+            @Override
+            public ArrayList<Request> apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                // Get association in order to get it's request categories
+                Association association = transaction.get(associationRef).toObject(Association.class);
+
+                // Find request category by name
+                DocumentReference selectedCategoryRef = null;
+                for (DocumentReference categoryRef : association.getRequestCategories()) {
+                    RequestCategory category = transaction.get(categoryRef).toObject(RequestCategory.class);
+                    if (category.getName().equals(categoryName)) {
+                        selectedCategoryRef = categoryRef;
+                        break;
+                    }
+                }
+
+                // Check if the selected category was found
+                if (selectedCategoryRef.equals(null)) {
+                    return null;
+                }
+
+                // Get requests that belongs to the selected request category
+                ArrayList<Request> selectedRequests = new ArrayList<>();
+                for (DocumentReference requestRef : association.getRequests()) {
+                    Request request = transaction.get(requestRef).toObject(Request.class);
+
+                    if (request.getCategories().contains(selectedCategoryRef)) {
+                        selectedRequests.add(request);
+                    }
+                }
+
+
+                return selectedRequests;
             }
         });
     }
