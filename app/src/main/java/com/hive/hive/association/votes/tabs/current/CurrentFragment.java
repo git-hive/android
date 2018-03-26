@@ -13,9 +13,6 @@ import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.alexvasilkov.foldablelayout.UnfoldableView;
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.DocumentChange;
@@ -29,10 +26,7 @@ import com.hive.hive.association.votes.tabs.questions.QuestionForm;
 import com.hive.hive.association.votes.tabs.questions.ExpandableListAdapter;
 import com.hive.hive.model.association.Agenda;
 import com.hive.hive.model.association.Session;
-import com.hive.hive.model.association.Vote;
-
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.HashMap;
 import java.util.List;
 
