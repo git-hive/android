@@ -1,4 +1,4 @@
-package com.hive.hive.association.transparency.tabs.bills;
+package com.hive.hive.association.transparency.tabs.document;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,21 +13,21 @@ import com.hive.hive.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BillsFragment extends Fragment {
+public class DocumentFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     public static final String ARG_PAGE = "Boletos";
     private List<Bill> bills;
 
-    public BillsFragment() {
+    public DocumentFragment() {
         // Required empty public constructor
     }
 
     // TODO: Rename and change types and number of parameters
-    public static BillsFragment newInstance(int page) {
+    public static DocumentFragment newInstance(int page) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
-        BillsFragment fragment = new BillsFragment();
+        DocumentFragment fragment = new DocumentFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -41,14 +41,14 @@ public class BillsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View view = inflater.inflate(R.layout.fragment_bills, container, false);
+        View view = inflater.inflate(R.layout.fragment_document, container, false);
         RecyclerView rv = (RecyclerView)view.findViewById(R.id.bills_RV);
         rv.setHasFixedSize(true);
 
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         rv.setLayoutManager(llm);
         initializeData();
-        BillsAdapter mAdapter = new BillsAdapter(bills);
+        DocumentAdapter mAdapter = new DocumentAdapter(bills);
         rv.setAdapter(mAdapter);
 
         return  view;

@@ -1,4 +1,4 @@
-package com.hive.hive.association.transparency.tabs.bills;
+package com.hive.hive.association.transparency.tabs.document;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -15,11 +15,11 @@ import java.util.List;
  * Created by birck on 16/02/18.
  */
 
-public class BillsAdapter extends RecyclerView.Adapter<BillsAdapter.BillViewHolder>{
+public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.BillViewHolder>{
 
-    List<BillsFragment.Bill> mBills;
+    List<DocumentFragment.Bill> mBills;
 
-    BillsAdapter(List<BillsFragment.Bill> bills){
+    DocumentAdapter(List<DocumentFragment.Bill> bills){
         mBills = bills;
     }
     @Override
