@@ -10,8 +10,12 @@ import android.view.ViewGroup;
 
 import com.hive.hive.R;
 import com.hive.hive.association.transparency.tabs.bills.BillsFragment;
+import com.hive.hive.model.association.BudgetTransaction;
+import com.hive.hive.model.association.BudgetTransactionCategories;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 
