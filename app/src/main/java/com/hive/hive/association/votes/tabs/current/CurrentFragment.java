@@ -148,14 +148,22 @@ public class CurrentFragment extends Fragment {
                         case REMOVED:
                             Log.e(TAG, "No current Session");
                             mAgendasLR.remove();
+                            mAgendas.clear();
+                            mAgendasIds.clear();
+                            mRVAdapter.notifyDataSetChanged();
+                            mCurrentSession = null;
+                            break;
                             //TODO MAY show message... there is no Session
-                        default:
+                        case ADDED:
                             mCurrentSession = dc.getDocument().toObject(Session.class);
-                            Log.d(TAG, mCurrentSession.toString());
-                            if(mAgendasLR == null)
-                                mAgendasLR =
-                                        VotesHelper.getAgendas(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", dc.getDocument().getId())
+                            Log.d(TAG, "ADDED current sesh " + dc.getDocument().toObject(Session.class).getStatus());
+                            mAgendasLR =
+                                    VotesHelper.getAgendas(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", dc.getDocument().getId())
                                             .addSnapshotListener(mAgendasEL);
+                            break;
+                        case MODIFIED:
+                            mCurrentSession = dc.getDocument().toObject(Session.class);
+                            //TODO SHOULD UPDATE SOMETHING ELSE???
                     }
                 }
 

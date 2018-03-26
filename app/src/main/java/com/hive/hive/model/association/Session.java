@@ -17,6 +17,7 @@ public class Session {
     private boolean isGeneral;   // Geral/Setorial
     private int agendasNum;
     private DocumentReference associationRef;
+    private String status; // Past/ Current/ Future;
 
     public Session(
             long startsAt,
@@ -24,7 +25,8 @@ public class Session {
             boolean isOrdinary,
             boolean isGeneral,
             int agendasNum,
-            DocumentReference associationRef
+            DocumentReference associationRef,
+            String status
     ) {
         this.startsAt = startsAt;
         this.endsAt = endsAt;
@@ -32,6 +34,7 @@ public class Session {
         this.isGeneral = isGeneral;
         this.agendasNum = agendasNum;
         this.associationRef = associationRef;
+        this.status = status;
     }
 
     public Session() {
@@ -62,7 +65,9 @@ public class Session {
 
     public int getAgendasNum() { return  agendasNum;}
 
-    //--- Setters
+    public String getStatus() { return status; }
+
+//--- Setters
 
     public void setStartsAt(long startsAt) {
         this.startsAt = startsAt;
@@ -84,7 +89,7 @@ public class Session {
         this.agendasNum = agendasNum;
     }
 
-    public void setAssociationRef(DocumentReference associationRef) {
-        this.associationRef = associationRef;
-    }
+    public void setAssociationRef(DocumentReference associationRef) { this.associationRef = associationRef; }
+
+    public void setStatus(String status) { this.status = status; }
 }
