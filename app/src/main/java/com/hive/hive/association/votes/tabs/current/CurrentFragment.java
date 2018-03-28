@@ -1,6 +1,7 @@
 package com.hive.hive.association.votes.tabs.current;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,7 +26,10 @@ import com.hive.hive.association.votes.VotesHelper;
 import com.hive.hive.association.votes.tabs.questions.QuestionForm;
 import com.hive.hive.association.votes.tabs.questions.ExpandableListAdapter;
 import com.hive.hive.model.association.Agenda;
+import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.Session;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -206,7 +210,7 @@ public class CurrentFragment extends Fragment {
             }
         };
 
-        mRVAdapter = new CurrentAdapter(mAgendas, mAgendasIds , mUnfoldableView, mDetailsLayout, view);
+        mRVAdapter = new CurrentAdapter(this.getContext(), mAgendas, mAgendasIds , mUnfoldableView, mDetailsLayout, view);
         mRV = view.findViewById(R.id.cellRV);
         mRV.setAdapter(mRVAdapter);
 
@@ -215,7 +219,6 @@ public class CurrentFragment extends Fragment {
         expandableListView = view.findViewById(R.id.questionExpandableLV);
         // Setting group indicator null for custom indicator
         expandableListView.setGroupIndicator(null);
-        setItems();
 
         // Start Questions activity stuff
         choseVoteBT.setOnClickListener(new View.OnClickListener() {
@@ -245,7 +248,7 @@ public class CurrentFragment extends Fragment {
         mAgendasLR.remove();
     }
     // Setting headers and childs to expandable listview
-    void setItems(){
+    public static void setItems(Context context, HashMap<String, Question> questions, ArrayList<String> questionsIds){
 
         // Array list for header
         ArrayList<String> header = new ArrayList<String>();
@@ -286,7 +289,7 @@ public class CurrentFragment extends Fragment {
         hashMap.put(header.get(2), child3);
         hashMap.put(header.get(3), child4);
 
-        adapter = new ExpandableListAdapter(getContext(), header, hashMap);
+        adapter = new ExpandableListAdapter(context, questions, questionsIds, hashMap);
 
         // Setting adpater over expandablelistview
         expandableListView.setAdapter(adapter);

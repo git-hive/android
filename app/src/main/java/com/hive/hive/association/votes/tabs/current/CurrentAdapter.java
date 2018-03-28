@@ -1,6 +1,7 @@
 package com.hive.hive.association.votes.tabs.current;
 
 
+import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -46,18 +47,25 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
     private ListenerRegistration mQuestionsLR;
     private HashMap<String, Question> mQuestions; //FROM CURRENT AGENDA
     private ArrayList<String> mQuestionsIds; // FROM CURRENT AGENDA
+    private Context mContext;
 
-    public CurrentAdapter(HashMap<String, Agenda> agendas, ArrayList<String> agendasIds,
+    public CurrentAdapter(Context context, HashMap<String, Agenda> agendas, ArrayList<String> agendasIds,
                           UnfoldableView unfoldableView, FrameLayout detailsLayout, View view){
+        this.mContext = context;
         this.mAgendas = agendas;
         this.mAgendaIds = agendasIds;
         this.mUnfoldableView = unfoldableView;
         this.mDetailsLayout = detailsLayout;
         this.mView = view;
     }
+
     @Override
     public RequestViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.vote_cell, parent, false);
+
+        mQuestionsIds = new ArrayList<>();
+
+        mQuestions = new HashMap<>();
 
         mQuestionsEL = new EventListener<QuerySnapshot>() {
             @Override
@@ -72,10 +80,23 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
                 for(DocumentChange dc : documentSnapshots.getDocumentChanges()){
                     switch (dc.getType()){
                         case ADDED:
+                            String questionId = dc.getDocument().getId();
+                            Question question = dc.getDocument().toObject(Question.class);
+                            mQuestions.put(questionId, question);
+                            mQuestionsIds.add(questionId);
+                            CurrentFragment.setItems(mContext, mQuestions, mQuestionsIds);
                             break;
                         case MODIFIED:
+                            String modifiedId = dc.getDocument().getId();
+                            mQuestions.remove(modifiedId);
+                            mQuestions.put(modifiedId, dc.getDocument().toObject(Question.class));
+                            CurrentFragment.setItems(mContext, mQuestions, mQuestionsIds);
                             break;
                         case REMOVED:
+                            String removedId = dc.getDocument().getId();
+                            mQuestions.remove(removedId);
+                            mQuestionsIds.remove(removedId);
+                            CurrentFragment.setItems(mContext, mQuestions, mQuestionsIds);
                             break;
                     }
                 }

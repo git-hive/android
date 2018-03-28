@@ -32,6 +32,8 @@ public class Question {
         this.agendaRef = agendaRef;
     }
 
+    public Question() {
+    }
 
     //--- Getters
 
