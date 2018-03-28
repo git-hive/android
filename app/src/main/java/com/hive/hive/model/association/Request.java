@@ -32,16 +32,16 @@ public class Request extends AssociationAction {
             String id,
             long createdAt,
             long updatedAt,
-            DocumentReference authorId,
-            DocumentReference pointsTransactionId,
-            DocumentReference associationId,
+            DocumentReference authorRef,
+            DocumentReference pointsTransactionRef,
+            DocumentReference associationRef,
             String title,
             String content,
             int score,
             int numComments,
             ArrayList<DocumentReference> categories
     ) {
-        super(id, createdAt, updatedAt, authorId, pointsTransactionId, associationId);
+        super(id, createdAt, updatedAt, authorRef, pointsTransactionRef, associationRef);
         this.title = title;
         this.content = content;
         this.score = score;
