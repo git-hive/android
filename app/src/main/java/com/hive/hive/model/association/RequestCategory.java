@@ -16,6 +16,9 @@ public class RequestCategory {
         this.name = name;
     }
 
+    public RequestCategory() {
+    }
+
     //--- Getters
 
     public String getId() {
