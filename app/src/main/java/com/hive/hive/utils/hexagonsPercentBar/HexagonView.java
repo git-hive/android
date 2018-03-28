@@ -20,7 +20,7 @@ public class HexagonView extends View{
     // Defining bar fixed size
     float DEN = getResources().getDisplayMetrics().density;
     float FINAL_WIDTH = 300;
-    float FINAL_HEIGHT = 40;
+    float FINAL_HEIGHT = 30;
 
     //          Closely Related      //
     float FINAL_SPACE = 8;
@@ -66,56 +66,64 @@ public class HexagonView extends View{
 
         int index = 0;
 
-        float fillAll = FINAL_WIDTH * FINAL_HEXAGON_RATIO;
+        float fillAll = 10;
         float currentFilled = 0;
 
         for (Float value:
                 mPercentage) {
             System.out.println(" I ENTER _________________________________________");
 
-            for(int i =0 ;i<FINAL_BAR_LENGTH; i++){
+            while(true){
 
-                if(value > 0 && value<10){
+//                if(value > 0 && value<10){
 
-                    // If value is smaller than an hexagon and no fills it
+                // If value is smaller than an hexagon and no fills it
                     if(fillAll - currentFilled > value) {
+                        System.out.println(" I first _________________________________________ "+(fillAll - currentFilled)+" "+value+" "+start_x+ " "+index+" "+value/10);
+
                         paint.setColor(mBarColors.get(index));
+                        canvas.drawRect(start_x, start_y, start_x + ((value/10) * FINAL_HEXAGON_RATIO * FINAL_WIDTH * DEN), end_y, paint);
 
-                        start_x += value * DEN;
-                        end_x += (value * DEN);
+                        start_x += (value/10 * FINAL_HEXAGON_RATIO * FINAL_WIDTH * DEN);
 
-                        canvas.drawRect(start_x, start_y, end_x, end_y, paint);
+                        currentFilled += value;
 
+                        // When put the space or not between hexagons
 
-                        currentFilled += value * DEN;
+//                            start_x += FINAL_SPACE_UNITY;
+//                            currentFilled = 0;
+
                         index += 1;
                         break;
 
-                    }else if(fillAll - currentFilled < value){
+                    }else if(fillAll - currentFilled <= value){
+                        System.out.println(" I Second _________________________________________ "+(fillAll - currentFilled)+" "+value+" "+start_x+ " "+index+" "+value/10);
+
                         paint.setColor(mBarColors.get(index));
 
-                        start_x += (fillAll - currentFilled) * DEN;
-                        end_x += (fillAll -currentFilled) * DEN;
+                        canvas.drawRect(start_x, start_y, start_x + ((fillAll - currentFilled)/10 * FINAL_HEXAGON_RATIO * FINAL_WIDTH * DEN), end_y, paint);
 
-                        canvas.drawRect(start_x, start_y, end_x, end_y, paint);
+                        start_x += (fillAll - currentFilled)/10 * FINAL_HEXAGON_RATIO * FINAL_WIDTH * DEN;
 
-                        currentFilled =0;
-                        index += 1;
-                        break;
+                        value -= (fillAll-currentFilled);
+
+                        start_x += FINAL_SPACE_UNITY;
+
+                        currentFilled = 0;
                     }
 
 
-                }else if(value >= 10){
-                    paint.setColor(mBarColors.get(index));
-                    canvas.drawRect(start_x, start_y, end_x, end_y, paint);
-
-                    start_x += end_x + FINAL_SPACE_UNITY;
-                    end_x += (FIXED_FULL_STEP);
-
-                    // Decrease one hexagon
-                    value -= 10;
-                    currentFilled = 0;
-                }
+//                }else if(value >= 10){
+//                    paint.setColor(mBarColors.get(index));
+//                    start_x += end_x + FINAL_SPACE_UNITY;
+//                    end_x += (FIXED_FULL_STEP);
+//
+//                    canvas.drawRect(start_x, start_y, end_x, end_y, paint);
+//
+//                    // Decrease one hexagon
+//                    value -= 10;
+//                    currentFilled = 0;
+//                }
 
             }
 
