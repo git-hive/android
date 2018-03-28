@@ -28,6 +28,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
         this.mUnfoldableView = unfoldableView;
         this.mDetailsLayout = detailsLayout;
     }
+
     @Override
     public RequestViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.vote_cell, parent, false);
@@ -45,6 +46,8 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
                 mUnfoldableView.unfold(view, mDetailsLayout);
             }
         });
+
+
     }
     @Override
     public int getItemCount() {
