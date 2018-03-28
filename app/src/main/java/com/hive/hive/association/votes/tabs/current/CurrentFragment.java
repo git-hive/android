@@ -210,7 +210,7 @@ public class CurrentFragment extends Fragment {
             }
         };
 
-        mRVAdapter = new CurrentAdapter(this.getContext(), mAgendas, mAgendasIds , mUnfoldableView, mDetailsLayout, view);
+        mRVAdapter = new CurrentAdapter(this.getContext(),  mAgendas, mAgendasIds , mUnfoldableView, mDetailsLayout, view);
         mRV = view.findViewById(R.id.cellRV);
         mRV.setAdapter(mRVAdapter);
 

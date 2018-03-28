@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.hive.hive.R;
 import com.hive.hive.association.transparency.tabs.staff.CustomGridView;
 import com.hive.hive.association.transparency.tabs.staff.GridAdapter;
+import com.hive.hive.association.votes.QuestionGridAdapter;
 import com.hive.hive.model.association.Question;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter{
@@ -47,8 +48,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
 	@Override
 	public int getChildrenCount(int groupPosition) {
-		// return children count
-		return 0;
+        return 1;
 		//this.child.get(this.header.get(groupPosition)).size();
 	}
 
@@ -125,27 +125,29 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 			//convertView = infalInflater.inflate(R.layout.question_child, parent, false);
 			convertView = infalInflater.inflate(R.layout.question_grid_view, null);
 		}
-//		CustomGridView gridView = (CustomGridView) convertView
-//				.findViewById(R.id.questionGV);
-//
-//		gridView.setNumColumns(2);// gridView.setGravity(Gravity.CENTER);//
-//		gridView.setHorizontalSpacing(10);// SimpleAdapter adapter =
-//		GridAdapter adapter = new GridAdapter(this._context, MOBILE_OS);
-//		gridView.setAdapter(adapter);// Adapter
-//
-//		int totalHeight = 0;
-//		for (int size = 0; size < adapter.getCount(); size++) {
-//			RelativeLayout relativeLayout = (RelativeLayout) adapter.getView(
-//					size, null, gridView);
-//			ImageView imageView = (ImageView) relativeLayout.getChildAt(0);
-//			imageView.measure(0, 0);
-//			totalHeight += imageView.getMeasuredHeight();
-//		}
-//		gridView.SetHeight(totalHeight);
-//
-//		TextView child_text = (TextView) convertView.findViewById(R.id.child);
-//
-//		child_text.setText(childText);
+		CustomGridView gridView = (CustomGridView) convertView
+				.findViewById(R.id.questionGV);
+
+		gridView.setNumColumns(2);// gridView.setGravity(Gravity.CENTER);//
+		gridView.setHorizontalSpacing(10);// SimpleAdapter adapter =
+
+        String questionId = mQuestionsIds.get(groupPosition);
+        Question question = mQuestions.get(questionId);
+        ArrayList<String> optionsIds = new ArrayList<>();
+        for(String option : question.getOptions().keySet())
+            optionsIds.add(option);
+		QuestionGridAdapter adapter = new QuestionGridAdapter(this._context, MOBILE_OS, question.getOptions(), optionsIds);
+		gridView.setAdapter(adapter);// Adapter
+
+		int totalHeight = 0;
+		for (int size = 0; size < adapter.getCount(); size++) {
+			RelativeLayout relativeLayout = (RelativeLayout) adapter.getView(
+					size, null, gridView);
+			TextView questionTV = (TextView) relativeLayout.getChildAt(0);
+			questionTV.measure(0, 0);
+			totalHeight += questionTV.getMeasuredHeight();
+		}
+		gridView.SetHeight(totalHeight);
 		return convertView;
 	}
 
