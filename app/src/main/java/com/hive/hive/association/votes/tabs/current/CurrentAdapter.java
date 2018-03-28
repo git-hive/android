@@ -13,10 +13,18 @@ import android.widget.TextView;
 
 import com.alexvasilkov.foldablelayout.UnfoldableView;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
+import com.hive.hive.association.votes.VotesHelper;
 import com.hive.hive.model.association.Agenda;
+import com.hive.hive.model.association.Question;
 import com.hive.hive.model.user.User;
 import com.hive.hive.utils.ProfilePhotoHelper;
 
@@ -29,11 +37,18 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
     //-- Data
     private HashMap<String, Agenda> mAgendas;
     private ArrayList<String> mAgendaIds;
+    //-- Views
     private  UnfoldableView mUnfoldableView;
     private  FrameLayout mDetailsLayout;
     private View mView;
+    //-- Current Agenda Questions
+    private com.google.firebase.firestore.EventListener<QuerySnapshot> mQuestionsEL;
+    private ListenerRegistration mQuestionsLR;
+    private HashMap<String, Question> mQuestions; //FROM CURRENT AGENDA
+    private ArrayList<String> mQuestionsIds; // FROM CURRENT AGENDA
 
-    public CurrentAdapter(HashMap<String, Agenda> agendas, ArrayList<String> agendasIds, UnfoldableView unfoldableView, FrameLayout detailsLayout, View view){
+    public CurrentAdapter(HashMap<String, Agenda> agendas, ArrayList<String> agendasIds,
+                          UnfoldableView unfoldableView, FrameLayout detailsLayout, View view){
         this.mAgendas = agendas;
         this.mAgendaIds = agendasIds;
         this.mUnfoldableView = unfoldableView;
@@ -43,18 +58,41 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
     @Override
     public RequestViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.vote_cell, parent, false);
+
+        mQuestionsEL = new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                if(e != null){
+                    Log.e(TAG, e.getMessage());
+                    return;
+                }
+                //TODO SET ACTIONS
+                //TODO MAY SET ITEMS
+                Log.d(TAG, "THERE ARE QUESTIONS TO SHOW");
+                for(DocumentChange dc : documentSnapshots.getDocumentChanges()){
+                    switch (dc.getType()){
+                        case ADDED:
+                            break;
+                        case MODIFIED:
+                            break;
+                        case REMOVED:
+                            break;
+                    }
+                }
+            }
+        };
         return new RequestViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(RequestViewHolder holder, int position) {
-        String agendaId = mAgendaIds.get(position);
+        final String agendaId = mAgendaIds.get(position);
         final Agenda agenda = mAgendas.get(agendaId);
         holder.mTitle.setText(agenda.getTitle());
         holder.mVote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeUnfoldableContent(agenda);
+                changeUnfoldableContent(agenda, agendaId);
                 mUnfoldableView.unfold(view, mDetailsLayout);
 
             }
@@ -65,13 +103,21 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
         return mAgendaIds.size();
     }
 
-    private void changeUnfoldableContent(Agenda agenda){
+    private void changeUnfoldableContent(Agenda agenda, String agendaId){
         TextView titleTV = mView.findViewById(R.id.titleTV);
         TextView descriptionTV = mView.findViewById(R.id.contentTV);
         Log.d(TAG, "title "+agenda.getTitle());
         titleTV.setText(agenda.getTitle());
         descriptionTV.setText(agenda.getContent());
         fillUser(agenda.getSuggestedByRef());
+        //TODO CHECK LAST ITEM CLICKED BEFORE RELOADING DATA
+        //IF CLICK IS DIFF
+        if(mQuestionsLR != null) //catches the first run
+            mQuestionsLR.remove();
+        //TODO REMOVE STATIC ASSOCIATION REFERENCE
+        if(CurrentFragment.mCurrentSessionId != null)// should'nt happen, but just to be sure
+            mQuestionsLR = VotesHelper.getQuestions(FirebaseFirestore.getInstance(),"gVw7dUkuw3SSZSYRXe8s",
+                    CurrentFragment.mCurrentSessionId, agendaId).addSnapshotListener(mQuestionsEL);
     }
     private void fillUser(DocumentReference userRef){
         userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {

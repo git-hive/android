@@ -38,4 +38,16 @@ public class VotesHelper {
                 .document(sessionID)
                 .collection(AGENDAS_COLLECTION);
     }
+
+    //--- Questions
+    public static CollectionReference getQuestions(FirebaseFirestore db, String associationID, String sessionID, String agendaID){
+        return db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(SESSIONS_COLLECTION)
+                .document(sessionID)
+                .collection(AGENDAS_COLLECTION)
+                .document(agendaID)
+                .collection((QUESTIONS_COLLECTION));
+    }
 }

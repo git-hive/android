@@ -37,9 +37,9 @@ public class CurrentFragment extends Fragment {
     private static final String TAG = CurrentFragment.class.getSimpleName();
     //Session
     private Session mCurrentSession;
+    public static String mCurrentSessionId;
     private com.google.firebase.firestore.EventListener<QuerySnapshot> mSessionEL;
     private ListenerRegistration mSessionLR;
-
     //Agendas
     private HashMap<String, Agenda> mAgendas;
     private ArrayList<String> mAgendasIds;
@@ -141,6 +141,7 @@ public class CurrentFragment extends Fragment {
                     switch (dc.getType()) {
                         case REMOVED:
                             Log.e(TAG, "No current Session");
+                            mCurrentSessionId = null;
                             mAgendasLR.remove();
                             mAgendas.clear();
                             mAgendasIds.clear();
@@ -150,9 +151,10 @@ public class CurrentFragment extends Fragment {
                             //TODO MAY show message... there is no Session
                         case ADDED:
                             mCurrentSession = dc.getDocument().toObject(Session.class);
+                            mCurrentSessionId = dc.getDocument().getId();
                             Log.d(TAG, "ADDED current sesh " + dc.getDocument().toObject(Session.class).getStatus());
                             mAgendasLR =
-                                    VotesHelper.getAgendas(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", dc.getDocument().getId())
+                                    VotesHelper.getAgendas(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mCurrentSessionId)
                                             .addSnapshotListener(mAgendasEL);
                             break;
                         case MODIFIED:
@@ -204,13 +206,12 @@ public class CurrentFragment extends Fragment {
             }
         };
 
-        mRVAdapter = new CurrentAdapter(mAgendas, mAgendasIds, mUnfoldableView, mDetailsLayout, view);
+        mRVAdapter = new CurrentAdapter(mAgendas, mAgendasIds , mUnfoldableView, mDetailsLayout, view);
         mRV = view.findViewById(R.id.cellRV);
         mRV.setAdapter(mRVAdapter);
 
         // TODO: Check this expandable element Height, since it has some workarounds, either than set it fixed;
-//        TextView tv = view.findViewById(R.id.contentTV);
-//        tv.setText("cuuuuuuuuuuu");
+
         expandableListView = view.findViewById(R.id.questionExpandableLV);
         // Setting group indicator null for custom indicator
         expandableListView.setGroupIndicator(null);
