@@ -24,14 +24,13 @@ public class QuestionGridAdapter extends BaseAdapter {
 
     private Context mContext;
     private final String[] mMobileValues;
-    private HashMap<String, QuestionOptions> mOptions;
-    private ArrayList<String> mOptionsIds;
+    private ArrayList<QuestionOptions> mOptions;
 
-    public QuestionGridAdapter(Context mContext, String[] mMobileValues, HashMap<String, QuestionOptions> mOptions, ArrayList<String> mOptionsIds) {
+
+    public QuestionGridAdapter(Context mContext, String[] mMobileValues, ArrayList<QuestionOptions> mOptions) {
         this.mContext = mContext;
         this.mMobileValues = mMobileValues;
         this.mOptions = mOptions;
-        this.mOptionsIds = mOptionsIds;
     }
 
     @Override
@@ -61,8 +60,7 @@ public class QuestionGridAdapter extends BaseAdapter {
             holder = new ViewHolder();
 
             holder.optionTV =  convertView.findViewById(R.id.optionTV);
-            String optionId = mOptionsIds.get(position);
-            holder.optionTV.setText(mOptions.get(optionId).getTitle());
+            holder.optionTV.setText(mOptions.get(position).getTitle());
 
             convertView.setTag(holder);
         } else {

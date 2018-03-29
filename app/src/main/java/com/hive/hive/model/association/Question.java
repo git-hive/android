@@ -2,13 +2,13 @@ package com.hive.hive.model.association;
 
 import com.google.firebase.firestore.DocumentReference;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 public class Question {
 
     private String question;
     private String info;
-    private HashMap<String, QuestionOptions> options;
+    private ArrayList<QuestionOptions> options;
     private String winningOption;
 
     private DocumentReference sessionRef;
@@ -19,7 +19,7 @@ public class Question {
     public Question(
             String question,
             String info,
-            HashMap<String, QuestionOptions> options,
+            ArrayList<QuestionOptions> options,
             String winningOption,
             DocumentReference sessionRef,
             DocumentReference agendaRef
@@ -46,7 +46,7 @@ public class Question {
         return info;
     }
 
-    public HashMap<String, QuestionOptions> getOptions() {
+    public ArrayList<QuestionOptions> getOptions() {
         return options;
     }
 
@@ -74,7 +74,7 @@ public class Question {
         this.info = info;
     }
 
-    public void setOptions(HashMap<String, QuestionOptions> options) {
+    public void setOptions(ArrayList<QuestionOptions> options) {
         this.options = options;
     }
 

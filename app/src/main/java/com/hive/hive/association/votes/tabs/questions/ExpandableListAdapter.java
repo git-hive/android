@@ -19,6 +19,7 @@ import com.hive.hive.association.transparency.tabs.staff.CustomGridView;
 import com.hive.hive.association.transparency.tabs.staff.GridAdapter;
 import com.hive.hive.association.votes.QuestionGridAdapter;
 import com.hive.hive.model.association.Question;
+import com.hive.hive.model.association.QuestionOptions;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
@@ -133,10 +134,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
         String questionId = mQuestionsIds.get(groupPosition);
         Question question = mQuestions.get(questionId);
-        ArrayList<String> optionsIds = new ArrayList<>();
-        for(String option : question.getOptions().keySet())
-            optionsIds.add(option);
-		QuestionGridAdapter adapter = new QuestionGridAdapter(this._context, MOBILE_OS, question.getOptions(), optionsIds);
+		QuestionGridAdapter adapter = new QuestionGridAdapter(this._context, MOBILE_OS, question.getOptions());
 		gridView.setAdapter(adapter);// Adapter
 
 		int totalHeight = 0;

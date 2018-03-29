@@ -22,15 +22,20 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.VotesHelper;
 import com.hive.hive.model.association.Agenda;
 import com.hive.hive.model.association.Question;
+import com.hive.hive.model.association.QuestionOptions;
 import com.hive.hive.model.user.User;
 import com.hive.hive.utils.ProfilePhotoHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.UUID;
 
 
 public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestViewHolder> {
@@ -66,6 +71,18 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
         mQuestionsIds = new ArrayList<>();
 
         mQuestions = new HashMap<>();
+//        ArrayList<QuestionOptions> ques = new ArrayList<>();
+//        ques.add( new QuestionOptions("option A", "OPTION A", 0, null ));
+//        ques.add( new QuestionOptions("option B", "OPTION B", 0, null ));
+//        ques.add( new QuestionOptions("option C", "OPTION C", 0, null ));
+//        ques.add( new QuestionOptions("option D", "OPTION D", 0, null ));
+//
+//        Question question = new Question("Question 1", "info 1", ques, "option A"
+//                , null, null);
+//        //question.setOptions(ques);
+//        VotesHelper.getQuestions(FirebaseFirestore.getInstance(),"gVw7dUkuw3SSZSYRXe8s",
+//                CurrentFragment.mCurrentSessionId, "9c283f6a-d7a0-45c2-8762-6394efd68a51").
+//                document(UUID.randomUUID().toString()).set(question);
 
         mQuestionsEL = new EventListener<QuerySnapshot>() {
             @Override
