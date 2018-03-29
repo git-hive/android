@@ -3,9 +3,13 @@ package com.hive.hive.utils.hexagonsPercentBar;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 
 
+import android.graphics.Path;
+import android.graphics.Point;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -18,13 +22,16 @@ import java.util.ArrayList;
 
 public class HexagonView extends View{
     // Defining bar fixed size
+
+    public Paint trianglePaint = new Paint();
+
     float DEN = getResources().getDisplayMetrics().density;
     float FINAL_WIDTH = 300;
-    float FINAL_HEIGHT = 30;
+    float FINAL_HEIGHT = 35;
 
     //          Closely Related      //
     float FINAL_SPACE = 8;
-    float FINAL_SPACE_UNITY = 1 * DEN;
+    float FINAL_SPACE_UNITY = 2 * DEN;
     //////////////////////////////////
 
     float FINAL_HEXAGON_RATIO = (float) 0.1;
@@ -35,6 +42,10 @@ public class HexagonView extends View{
     int mNumOfOptions = 0;
     ArrayList<Float> mPercentage;
     ArrayList<Integer> mBarColors;
+
+    //Hexagon stuff
+    float ratioRadius = (float) 0.17;
+    int numberOfPoint = 32; //default
 
 
     private Paint paint = new Paint();
@@ -56,11 +67,8 @@ public class HexagonView extends View{
     @Override protected void onDraw(Canvas canvas) {
         // General Rect
         super.onDraw(canvas);
-        paint.setColor(Color.BLACK);
+        trianglePaint.setColor(Color.WHITE);
         paint.setStrokeWidth(0);
-        //canvas.drawRect(0 * DEN, 0 *DEN, (FINAL_WIDTH + FINAL_SPACE) * DEN , (FINAL_HEIGHT + FINAL_SPACE) * DEN, paint);
-
-
 
         float start_x = 0 * DEN, start_y = 0 * DEN, end_x =  FIXED_FULL_STEP, end_y= FINAL_HEIGHT * DEN;
 
@@ -75,10 +83,11 @@ public class HexagonView extends View{
 
             while(true){
 
-//                if(value > 0 && value<10){
-
-                // If value is smaller than an hexagon and no fills it
                     if(fillAll - currentFilled > value) {
+
+                        // Hexagon
+
+                        Paint paint = new Paint();
                         System.out.println(" I first _________________________________________ "+(fillAll - currentFilled)+" "+value+" "+start_x+ " "+index+" "+value/10);
 
                         paint.setColor(mBarColors.get(index));
@@ -88,10 +97,7 @@ public class HexagonView extends View{
 
                         currentFilled += value;
 
-                        // When put the space or not between hexagons
 
-//                            start_x += FINAL_SPACE_UNITY;
-//                            currentFilled = 0;
 
                         index += 1;
                         break;
@@ -112,32 +118,22 @@ public class HexagonView extends View{
                         currentFilled = 0;
                     }
 
-
-//                }else if(value >= 10){
-//                    paint.setColor(mBarColors.get(index));
-//                    start_x += end_x + FINAL_SPACE_UNITY;
-//                    end_x += (FIXED_FULL_STEP);
-//
-//                    canvas.drawRect(start_x, start_y, end_x, end_y, paint);
-//
-//                    // Decrease one hexagon
-//                    value -= 10;
-//                    currentFilled = 0;
-//                }
-
             }
 
         }
-//        // Up Rect
-//        paint.setColor(Color.YELLOW);
-//        canvas.drawRect(0, 0, 40, 80, paint);
-//
-//        // Down Rect
-//        paint.setStrokeWidth(0);
-//        paint.setColor(Color.CYAN);
-//        canvas.drawRect(40, 0, 80, 80, paint);
+
+        //drawTriangles(canvas, 0 , 30);
+        //drawTriangles(canvas, 0*DEN , 0, 10*DEN);
+        start_x = 0;
+        for(int i=0;i<numberOfPoint;i++){
+            drawTriangles(canvas, start_x + (i * FINAL_HEXAGON_RATIO * FINAL_WIDTH * DEN), 0, 10 * DEN);
+            start_x += FINAL_SPACE_UNITY;
+        }
+
 
     }
+
+
 
     public void setConfig(ArrayList<Float> percentage){
         mPercentage = percentage;
@@ -147,18 +143,89 @@ public class HexagonView extends View{
     public void autoInit(int numOfOptions){
         mPercentage = new ArrayList<>();
         mNumOfOptions = numOfOptions;
-        for(int i=0;i<mNumOfOptions;i++){
-            mPercentage.add(i, (float)100/mNumOfOptions);
-            System.out.println(mPercentage.get(i) +"   HEEEEEEY");
-        }
+//        for(int i=0;i<mNumOfOptions;i++){
+//            mPercentage.add(i, (float)100/mNumOfOptions);
+//            System.out.println(mPercentage.get(i) +"   HEEEEEEY");
+//        }
+        mPercentage.add(0, (float) 37.0);
+        mPercentage.add(1, (float) 13.0);
+        mPercentage.add(2, (float) 14.0);
+        mPercentage.add(3, (float) 36.0);
 
         mBarColors = new ArrayList<>();
         mBarColors.add(0, Color.RED);
         mBarColors.add(1, Color.BLUE);
         mBarColors.add(2, Color.YELLOW);
         mBarColors.add(3, Color.MAGENTA);
+
     }
 
+    public void drawTriangles(Canvas canvas, float start_x, float start_y, float size){
+
+        float new_start_x;
+
+        Path path1 = new Path();
+        path1.moveTo(start_x, start_y);
+
+        path1.lineTo(start_x + size, 0);
+        path1.lineTo(start_x, start_y + size);
+        path1.lineTo(start_x, 0);
+
+        canvas.drawPath(path1, trianglePaint);
+
+        new_start_x = start_x + ((FINAL_WIDTH * FINAL_HEXAGON_RATIO) * DEN);
+
+        Path path2 = new Path();
+        path2.moveTo(new_start_x - size, start_y);
+
+        path2.lineTo(new_start_x, 0);
+        path2.lineTo(new_start_x - size, start_y + size);
+        path2.lineTo(new_start_x - size, 0);
+
+        Matrix mMatrix = new Matrix();
+        RectF bounds = new RectF();
+        path2.computeBounds(bounds, true);
+        mMatrix.postRotate(90, bounds.centerX(), bounds.centerY());
+        path2.transform(mMatrix);
+
+        canvas.drawPath(path2, trianglePaint);
+
+        start_y = 25 * DEN;
+        Path path3 = new Path();
+        path3.moveTo(start_x, start_y);
+
+        path3.lineTo(start_x + size, 25 * DEN);
+        path3.lineTo(start_x, start_y + size);
+        path3.lineTo(start_x, 25 *DEN);
+        Matrix mMatrix3 = new Matrix();
+        RectF bounds3 = new RectF();
+
+        path3.computeBounds(bounds3, true);
+        mMatrix3.postRotate(-90, bounds3.centerX(), bounds3.centerY());
+        path3.transform(mMatrix3);
+
+        canvas.drawPath(path3, trianglePaint);
+
+
+        start_y = (25) * DEN;
+        Path path4 = new Path();
+        path4.moveTo(start_x+ (20*DEN), start_y);
+
+        path4.lineTo(start_x + size + (20*DEN), 25 * DEN);
+        path4.lineTo(start_x+(20*DEN), start_y + size);
+        path4.lineTo(start_x+(20*DEN), 25 *DEN);
+        Matrix mMatrix4 = new Matrix();
+        RectF bounds4 = new RectF();
+
+        path4.computeBounds(bounds4, true);
+        mMatrix4.postRotate(180, bounds4.centerX(), bounds4.centerY());
+        path4.transform(mMatrix4);
+
+        canvas.drawPath(path4, trianglePaint);
+
+
+
+    }
 
 
 }
