@@ -10,24 +10,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hive.hive.R;
 import com.hive.hive.association.transparency.tabs.staff.CustomGridView;
-import com.hive.hive.association.transparency.tabs.staff.GridAdapter;
 import com.hive.hive.association.votes.QuestionGridAdapter;
 import com.hive.hive.model.association.Question;
-import com.hive.hive.model.association.QuestionOptions;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
 	private Context _context;
 	private HashMap<String, Question> mQuestions;
 	private ArrayList<String> mQuestionsIds;
-	private List<String> header; // header titles
-	// Child data in format of header title, child title
 	private HashMap<String, List<String>> child;
 
 	static final String[] MOBILE_OS = new String[] { "Android", "iOS",
