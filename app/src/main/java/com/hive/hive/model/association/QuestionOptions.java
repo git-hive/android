@@ -26,7 +26,10 @@ public class QuestionOptions {
         this.votesRefs = votesRefs;
     }
 
-    //--- Getters
+    public QuestionOptions() {
+    }
+
+//--- Getters
 
     public String getTitle() {
         return title;

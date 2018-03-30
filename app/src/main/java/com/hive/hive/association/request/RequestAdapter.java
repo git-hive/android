@@ -115,7 +115,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                     Log.d(RequestAdapter.class.getSimpleName(), documentSnapshot.get("name").toString());
                     User user = documentSnapshot.toObject(User.class);
                     holder.mUserName.setText(user.getName());
-                    ProfilePhotoHelper.loadImage(context, holder.mUserAvatar, user.getPhotoUrl());
+                    ProfilePhotoHelper.loadImage(context.getApplicationContext(), holder.mUserAvatar, user.getPhotoUrl());
                     //Log.d(RequestAdapter.class.getSimpleName(), user.getPhotoUrl());
                 }
             }

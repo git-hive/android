@@ -1,5 +1,6 @@
 package com.hive.hive.association.votes.tabs.questions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,52 +10,58 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hive.hive.R;
 import com.hive.hive.association.transparency.tabs.staff.CustomGridView;
-import com.hive.hive.association.transparency.tabs.staff.GridAdapter;
+import com.hive.hive.association.votes.QuestionGridAdapter;
+import com.hive.hive.model.association.Question;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
 	private Context _context;
-	private List<String> header; // header titles
-	// Child data in format of header title, child title
+	private HashMap<String, Question> mQuestions;
+	private ArrayList<String> mQuestionsIds;
 	private HashMap<String, List<String>> child;
 
 	static final String[] MOBILE_OS = new String[] { "Android", "iOS",
 			"Windows", "Blackberry" };
 
-	public ExpandableListAdapter(Context context, List<String> listDataHeader, HashMap<String, List<String>> listChildData) {
+	public ExpandableListAdapter(Context context, HashMap<String, Question> questions, ArrayList<String> mQuestionsIds,
+                                 HashMap<String, List<String>> listChildData) {
 		this._context = context;
-		this.header = listDataHeader;
+		this.mQuestions = questions;
+		this.mQuestionsIds = mQuestionsIds;
 		this.child = listChildData;
 	}
 
 	@Override
 	public int getGroupCount() {
 		// Get header size
-		return this.header.size();
+		return this.mQuestions.size();
 	}
 
 	@Override
 	public int getChildrenCount(int groupPosition) {
-		// return children count
-		return this.child.get(this.header.get(groupPosition)).size();
+        return 1;
+		//this.child.get(this.header.get(groupPosition)).size();
 	}
 
 	@Override
 	public Object getGroup(int groupPosition) {
 		// Get header position
-		return this.header.get(groupPosition);
+        String questionId = mQuestionsIds.get(groupPosition);
+
+        return this.mQuestions.get(questionId);
 	}
 
 	@Override
 	public Object getChild(int groupPosition, int childPosition) {
 		// This will return the child
-		return this.child.get(this.header.get(groupPosition)).get(childPosition);
+        String questionId = mQuestionsIds.get(groupPosition);
+
+		return mQuestions.get(questionId).getOptions().get(childPosition);
 	}
 
 	@Override
@@ -77,7 +84,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 	public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
 
 		// Getting header title
-		String headerTitle = (String) getGroup(groupPosition);
+		Question question = (Question) getGroup(groupPosition);
 
 		// Inflating header layout and setting text
 		if (convertView == null) {
@@ -86,7 +93,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 		}
 
 		TextView header_text = (TextView) convertView.findViewById(R.id.header);
-		header_text.setText(headerTitle);
+		header_text.setText(question.getQuestion());
 
 		// If group is expanded then change the text into bold and change the
 		// icon
@@ -107,7 +114,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 	@Override
 	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 		// Getting child text
-		final String childText = (String) getChild(groupPosition, childPosition);
+//		final String childText = (String) getChild(groupPosition, childPosition);
 		// Inflating child layout and setting textview
 		if (convertView == null) {
 			LayoutInflater infalInflater = (LayoutInflater) this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -119,22 +126,21 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
 		gridView.setNumColumns(2);// gridView.setGravity(Gravity.CENTER);//
 		gridView.setHorizontalSpacing(10);// SimpleAdapter adapter =
-		GridAdapter adapter = new GridAdapter(this._context, MOBILE_OS);
+
+        String questionId = mQuestionsIds.get(groupPosition);
+        Question question = mQuestions.get(questionId);
+		QuestionGridAdapter adapter = new QuestionGridAdapter(this._context, MOBILE_OS, question.getOptions());
 		gridView.setAdapter(adapter);// Adapter
 
 		int totalHeight = 0;
 		for (int size = 0; size < adapter.getCount(); size++) {
 			RelativeLayout relativeLayout = (RelativeLayout) adapter.getView(
 					size, null, gridView);
-			ImageView imageView = (ImageView) relativeLayout.getChildAt(0);
-			imageView.measure(0, 0);
-			totalHeight += imageView.getMeasuredHeight();
+			TextView questionTV = (TextView) relativeLayout.getChildAt(0);
+			questionTV.measure(0, 0);
+			totalHeight += questionTV.getMeasuredHeight();
 		}
 		gridView.SetHeight(totalHeight);
-
-		TextView child_text = (TextView) convertView.findViewById(R.id.child);
-
-		child_text.setText(childText);
 		return convertView;
 	}
 

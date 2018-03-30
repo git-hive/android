@@ -31,6 +31,7 @@ import com.hive.hive.model.association.AssociationSupport;
 import com.hive.hive.model.association.Request;
 import com.hive.hive.model.user.User;
 import com.hive.hive.utils.DocReferences;
+import com.hive.hive.utils.GlideApp;
 import com.hive.hive.utils.ProfilePhotoHelper;
 import com.hive.hive.utils.SupportMutex;
 
@@ -225,11 +226,13 @@ public class CommentaryActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
+        GlideApp.with(getApplicationContext()).resumeRequestsRecursive();
     }
 
     @Override
     public void onStop(){
         super.onStop();
+        GlideApp.with(getApplication()).pauseRequestsRecursive();
     }
 
     @Override
@@ -307,7 +310,7 @@ public class CommentaryActivity extends AppCompatActivity {
                     Log.d(RequestAdapter.class.getSimpleName(), documentSnapshot.get("name").toString());
                     User user = documentSnapshot.toObject(User.class);
                     mRequestAuthorTV.setText(user.getName());
-                    ProfilePhotoHelper.loadImage(CommentaryActivity.this, mRequestAuthorIV, user.getPhotoUrl());
+                    ProfilePhotoHelper.loadImage(getApplicationContext(), mRequestAuthorIV, user.getPhotoUrl());
                 }
             }
         });

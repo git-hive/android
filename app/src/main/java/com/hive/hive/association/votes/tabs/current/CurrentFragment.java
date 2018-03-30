@@ -1,10 +1,12 @@
 package com.hive.hive.association.votes.tabs.current;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +14,20 @@ import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
-
 import com.alexvasilkov.foldablelayout.UnfoldableView;
+import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
+import com.hive.hive.association.votes.VotesHelper;
 import com.hive.hive.association.votes.tabs.questions.QuestionForm;
 import com.hive.hive.association.votes.tabs.questions.ExpandableListAdapter;
-import com.hive.hive.model.association.Vote;
+import com.hive.hive.model.association.Agenda;
+import com.hive.hive.model.association.Question;
+import com.hive.hive.model.association.Session;
 import com.hive.hive.utils.hexagonsPercentBar.HexagonView;
 
 import java.util.ArrayList;
@@ -29,10 +38,22 @@ import java.util.List;
 public class CurrentFragment extends Fragment {
     private static final int NUM_LIST_ITEMS= 6;
     public static final String ARG_PAGE = "Passadas";
-    private static final String TAG = "#";
+    private static final String TAG = CurrentFragment.class.getSimpleName();
+    //Session
+    private Session mCurrentSession;
+    public static String mCurrentSessionId;
+    private com.google.firebase.firestore.EventListener<QuerySnapshot> mSessionEL;
+    private ListenerRegistration mSessionLR;
+    //Agendas
+    private HashMap<String, Agenda> mAgendas;
+    private ArrayList<String> mAgendasIds;
+    private com.google.firebase.firestore.EventListener<QuerySnapshot> mAgendasEL;
+    private ListenerRegistration mAgendasLR;
 
-    ArrayList<Vote> DUMMYARRAY;
+    //Recycler Things
     RecyclerView mRV;
+    CurrentAdapter mRVAdapter;
+    //Views
     View mListTouchInterceptor;
     FrameLayout mDetailsLayout;
     UnfoldableView mUnfoldableView;
@@ -63,24 +84,6 @@ public class CurrentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_current, container, false);
-
-        DUMMYARRAY = new ArrayList<Vote>();
-        DUMMYARRAY.add(new Vote());
-        DUMMYARRAY.add(new Vote());
-        DUMMYARRAY.add(new Vote());
-        DUMMYARRAY.add(new Vote());
-        DUMMYARRAY.add(new Vote());
-        DUMMYARRAY.add(new Vote());
-        DUMMYARRAY.add(new Vote());
-        DUMMYARRAY.add(new Vote());
-
-        // Adding Action Stuff
-        DUMMYARRAY.get(0).setRequestBtnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "CUSTOM HANDLER FOR FIRST BUTTON", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         choseVoteBT = view.findViewById(R.id.choseVoteBT);
 
@@ -137,16 +140,93 @@ public class CurrentFragment extends Fragment {
                 mDetailsLayout.setVisibility(View.INVISIBLE);
             }
         });
-        mRV = view.findViewById(R.id.cellRV);
+        //GET CURRENT SESSION
+        //TODO REMOVE STATIC ASSOCIATION REFERENCE
+        mSessionEL = new com.google.firebase.firestore.EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                if(e != null){
+                    Log.e(TAG, e.getMessage());
+                    return;
+                }
+                for (DocumentChange dc : documentSnapshots.getDocumentChanges()) {
+                    switch (dc.getType()) {
+                        case REMOVED:
+                            Log.e(TAG, "No current Session");
+                            mCurrentSessionId = null;
+                            mAgendasLR.remove();
+                            mAgendas.clear();
+                            mAgendasIds.clear();
+                            mRVAdapter.notifyDataSetChanged();
+                            mCurrentSession = null;
+                            break;
+                            //TODO MAY show message... there is no Session
+                        case ADDED:
+                            mCurrentSession = dc.getDocument().toObject(Session.class);
+                            mCurrentSessionId = dc.getDocument().getId();
+                            Log.d(TAG, "ADDED current sesh " + dc.getDocument().toObject(Session.class).getStatus());
+                            mAgendasLR =
+                                    VotesHelper.getAgendas(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mCurrentSessionId)
+                                            .addSnapshotListener(mAgendasEL);
+                            break;
+                        case MODIFIED:
+                            mCurrentSession = dc.getDocument().toObject(Session.class);
+                            //TODO SHOULD UPDATE SOMETHING ELSE???
+                    }
+                }
 
-        mRV.setAdapter(new CurrentAdapter(DUMMYARRAY, mUnfoldableView, mDetailsLayout));
+            }
+        };
+        mSessionLR = VotesHelper.getCurrentSession(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s").addSnapshotListener(mSessionEL);
+        //GET AGENDAS
+        mAgendas = new HashMap<>();
+        mAgendasIds = new ArrayList<>();
+
+        mAgendasEL = new com.google.firebase.firestore.EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                if(e != null){
+                    Log.e(TAG, e.getMessage());
+                    return;
+                }
+                for (DocumentChange dc : documentSnapshots.getDocumentChanges()) {
+                    switch (dc.getType()) {
+                        case ADDED:
+                            Agenda agenda = dc.getDocument().toObject(Agenda.class);
+                            mAgendas.put(dc.getDocument().getId(), agenda);
+                            mAgendasIds.add(dc.getDocument().getId());
+                            Log.d(TAG, mAgendas.toString());
+                            mRVAdapter.notifyDataSetChanged();
+                            break;
+                        case MODIFIED:
+                            String modifiedId = dc.getDocument().getId();
+                            mAgendas.remove(modifiedId);
+                            mAgendas.put(modifiedId, dc.getDocument().toObject(Agenda.class));
+                            Log.d(TAG, mAgendas.toString());
+                            mRVAdapter.notifyDataSetChanged();
+                            break;
+                        case REMOVED:
+                            String removedId = dc.getDocument().getId();
+                            mAgendas.remove(removedId);
+                            mAgendasIds.remove(removedId);
+                            Log.d(TAG, mAgendas.toString());
+                            mRVAdapter.notifyDataSetChanged();
+                            break;
+                    }
+                }
+
+            }
+        };
+
+        mRVAdapter = new CurrentAdapter(this.getContext(),  mAgendas, mAgendasIds , mUnfoldableView, mDetailsLayout, view);
+        mRV = view.findViewById(R.id.cellRV);
+        mRV.setAdapter(mRVAdapter);
 
         // TODO: Check this expandable element Height, since it has some workarounds, either than set it fixed;
-        expandableListView = (ExpandableListView) view.findViewById(R.id.questionExpandableLV);
+
+        expandableListView = view.findViewById(R.id.questionExpandableLV);
         // Setting group indicator null for custom indicator
         expandableListView.setGroupIndicator(null);
-
-        setItems();
 
         // Start Questions activity stuff
         choseVoteBT.setOnClickListener(new View.OnClickListener() {
@@ -159,9 +239,24 @@ public class CurrentFragment extends Fragment {
 
         return view;
     }
-
+    @Override
+    public void onResume(){
+        super.onResume();
+        Glide.with(getContext().getApplicationContext()).resumeRequestsRecursive();
+    }
+    @Override
+    public void onStop(){
+        super.onStop();
+        Glide.with(getContext().getApplicationContext()).pauseRequestsRecursive();
+    }
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        mSessionLR.remove();
+        mAgendasLR.remove();
+    }
     // Setting headers and childs to expandable listview
-    void setItems(){
+    public static void setItems(Context context, HashMap<String, Question> questions, ArrayList<String> questionsIds){
 
         // Array list for header
         ArrayList<String> header = new ArrayList<String>();
@@ -202,10 +297,11 @@ public class CurrentFragment extends Fragment {
         hashMap.put(header.get(2), child3);
         hashMap.put(header.get(3), child4);
 
-        adapter = new ExpandableListAdapter(getContext(), header, hashMap);
+        adapter = new ExpandableListAdapter(context, questions, questionsIds, hashMap);
 
         // Setting adpater over expandablelistview
         expandableListView.setAdapter(adapter);
 
     }
+
 }

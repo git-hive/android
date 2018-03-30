@@ -2,47 +2,49 @@ package com.hive.hive.model.association;
 
 import com.google.firebase.firestore.DocumentReference;
 
+import org.w3c.dom.Document;
+
 public class Agenda {
 
     //--- SubCollections
     public static String QUESTIONS_COLLECTION = "questions";
     public static String VOTES_COLLECTION = "votes";
 
-    private String id;
     private String title;
     private String content;
-
+    private int questionsNum;
     private DocumentReference sessionRef;
     private DocumentReference requestRef;
     private DocumentReference forumPostRef;
+    private DocumentReference suggestedByRef;
     private AgendaStatus status;
 
     //--- Constructors
 
     public Agenda(
-            String id,
             String title,
             String content,
+            int questionsNum,
             DocumentReference sessionRef,
             DocumentReference requestRef,
             DocumentReference forumPostRef,
+            DocumentReference suggestedByRef,
             AgendaStatus status
     ) {
-        this.id = id;
         this.title = title;
         this.content = content;
+        this.questionsNum = questionsNum;
         this.sessionRef = sessionRef;
         this.requestRef = requestRef;
         this.forumPostRef = forumPostRef;
+        this.suggestedByRef = suggestedByRef;
         this.status = status;
     }
 
+    public Agenda() {}
 
     //--- Getters
 
-    public String getId() {
-        return id;
-    }
 
     public String getTitle() {
         return title;
@@ -64,15 +66,16 @@ public class Agenda {
         return forumPostRef;
     }
 
+    public DocumentReference getSuggestedByRef() { return suggestedByRef; }
+
     public AgendaStatus getStatus() {
         return status;
     }
 
+    public int getQuestionsNum() { return questionsNum; }
+
     //--- Setters
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public void setTitle(String title) {
         this.title = title;
@@ -90,12 +93,13 @@ public class Agenda {
         this.requestRef = requestRef;
     }
 
-    public void setForumPostRef(DocumentReference forumPostRef) {
-        this.forumPostRef = forumPostRef;
-    }
+    public void setForumPostRef(DocumentReference forumPostRef) { this.forumPostRef = forumPostRef; }
+
+    public void setSuggestedByRef(DocumentReference suggestedByRef) { this.suggestedByRef = suggestedByRef; }
 
     public void setStatus(AgendaStatus status) {
         this.status = status;
     }
 
+    public void setQuestionsNum(int questionsNum) { this.questionsNum = questionsNum; }
 }
