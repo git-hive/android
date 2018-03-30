@@ -105,9 +105,7 @@ public class CurrentFragment extends Fragment {
         mDetailsLayout = view.findViewById(R.id.details_layout);
         mDetailsLayout.setVisibility(View.INVISIBLE);
 
-        // TODO: Take care you should call autoInit always
-        mPercentageBar =  view.findViewById(R.id.percentageBar);
-        mPercentageBar.autoInit(4);
+
 
         // Call set config to set percentage
         // mPercentageBar.setConfig();

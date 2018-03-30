@@ -181,22 +181,22 @@
                     android:textSize="16sp"
                     android:textStyle="italic" />
 
-             <LinearLayout
-                 android:layout_gravity="center_horizontal"
-                 android:gravity="center"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content">
-                     <!-- hexagonal graph-->
-                     <com.hive.hive.utils.hexagonsPercentBar.HexagonView
-                         android:layout_marginLeft="30dp"
-                         android:layout_gravity="center_horizontal"
-                         android:id="@+id/percentageBar"
-                         android:layout_width="wrap_content"
-                         android:layout_height="100dp"
+             <!--<LinearLayout-->
+                 <!--android:layout_gravity="center_horizontal"-->
+                 <!--android:gravity="center"-->
+                 <!--android:layout_width="wrap_content"-->
+                 <!--android:layout_height="wrap_content">-->
+                     <!--&lt;!&ndash; hexagonal graph&ndash;&gt;-->
+                     <!--<com.hive.hive.utils.hexagonsPercentBar.HexagonView-->
+                         <!--android:layout_marginLeft="30dp"-->
+                         <!--android:layout_gravity="center_horizontal"-->
+                         <!--android:id="@+id/percentageBar"-->
+                         <!--android:layout_width="wrap_content"-->
+                         <!--android:layout_height="100dp"-->
 
-                         />
+                         <!--/>-->
 
-             </LinearLayout>
+             <!--</LinearLayout>-->
 
 
             <!-- Question Options -->

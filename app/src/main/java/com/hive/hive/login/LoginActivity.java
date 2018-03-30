@@ -91,6 +91,7 @@ public class LoginActivity extends AppCompatActivity {
                 checkUserAndSwitchActivity();
             }
         };
+        mAuth.signOut();
         // on android Jellybean or lower, use this call to hide the status bar.
         if (Build.VERSION.SDK_INT < 16) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,

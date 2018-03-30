@@ -17,6 +17,7 @@ import com.hive.hive.R;
 import com.hive.hive.association.transparency.tabs.staff.CustomGridView;
 import com.hive.hive.association.votes.QuestionGridAdapter;
 import com.hive.hive.model.association.Question;
+import com.hive.hive.utils.hexagonsPercentBar.HexagonView;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
@@ -24,8 +25,10 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 	private HashMap<String, Question> mQuestions;
 	private ArrayList<String> mQuestionsIds;
 
-	static final String[] MOBILE_OS = new String[] { "Android", "iOS",
-			"Windows", "Blackberry" };
+	// Percentage bar
+	HexagonView mPercentageBar;
+
+
 
 	public ExpandableListAdapter(Context context, HashMap<String, Question> questions, ArrayList<String> mQuestionsIds) {
 		this._context = context;
@@ -113,11 +116,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 		// Getting child text
 //		final String childText = (String) getChild(groupPosition, childPosition);
 		// Inflating child layout and setting textview
+
 		if (convertView == null) {
 			LayoutInflater infalInflater = (LayoutInflater) this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			//convertView = infalInflater.inflate(R.layout.question_child, parent, false);
 			convertView = infalInflater.inflate(R.layout.question_grid_view, null);
 		}
+
 		CustomGridView gridView = (CustomGridView) convertView
 				.findViewById(R.id.questionGV);
 
@@ -126,7 +130,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
         String questionId = mQuestionsIds.get(groupPosition);
         Question question = mQuestions.get(questionId);
-		QuestionGridAdapter adapter = new QuestionGridAdapter(this._context, MOBILE_OS, question.getOptions());
+		QuestionGridAdapter adapter = new QuestionGridAdapter(this._context, question.getOptions());
 		gridView.setAdapter(adapter);// Adapter
 
 		int totalHeight = 0;
@@ -138,6 +142,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 			totalHeight += questionTV.getMeasuredHeight();
 		}
 		gridView.SetHeight(totalHeight);
+
+		// TODO: Take care you should call autoInit always
+		mPercentageBar =  convertView.findViewById(R.id.percentageBar);
+		mPercentageBar.autoInit(4);
+
 		return convertView;
 	}
 

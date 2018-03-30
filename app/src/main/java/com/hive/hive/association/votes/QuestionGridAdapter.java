@@ -23,24 +23,22 @@ import java.util.HashMap;
 public class QuestionGridAdapter extends BaseAdapter {
 
     private Context mContext;
-    private final String[] mMobileValues;
     private ArrayList<QuestionOptions> mOptions;
 
 
-    public QuestionGridAdapter(Context mContext, String[] mMobileValues, ArrayList<QuestionOptions> mOptions) {
+    public QuestionGridAdapter(Context mContext, ArrayList<QuestionOptions> mOptions) {
         this.mContext = mContext;
-        this.mMobileValues = mMobileValues;
         this.mOptions = mOptions;
     }
 
     @Override
     public int getCount() {
-        return mMobileValues.length;
+        return mOptions.size();
     }
 
     @Override
-    public String getItem(int position) {
-        return mMobileValues[position];
+    public QuestionOptions getItem(int position) {
+        return mOptions.get(position);
     }
 
     @Override
