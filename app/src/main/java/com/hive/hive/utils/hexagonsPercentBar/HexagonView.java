@@ -26,12 +26,12 @@ public class HexagonView extends View{
     public Paint trianglePaint = new Paint();
 
     float DEN = getResources().getDisplayMetrics().density;
-    float FINAL_WIDTH = 300;
-    float FINAL_HEIGHT = 35;
+    float FINAL_WIDTH = 200;
+    float FINAL_HEIGHT = 24;
 
     //          Closely Related      //
     float FINAL_SPACE = 8;
-    float FINAL_SPACE_UNITY = 2 * DEN;
+    float FINAL_SPACE_UNITY = 7 * DEN;
     //////////////////////////////////
 
     float FINAL_HEXAGON_RATIO = (float) 0.1;
@@ -68,6 +68,7 @@ public class HexagonView extends View{
         // General Rect
         super.onDraw(canvas);
         trianglePaint.setColor(Color.WHITE);
+        trianglePaint.setAntiAlias(true);
         paint.setStrokeWidth(0);
 
         float start_x = 0 * DEN, start_y = 0 * DEN, end_x =  FIXED_FULL_STEP, end_y= FINAL_HEIGHT * DEN;
@@ -125,8 +126,9 @@ public class HexagonView extends View{
         //drawTriangles(canvas, 0 , 30);
         //drawTriangles(canvas, 0*DEN , 0, 10*DEN);
         start_x = 0;
+        start_y = 0;
         for(int i=0;i<numberOfPoint;i++){
-            drawTriangles(canvas, start_x + (i * FINAL_HEXAGON_RATIO * FINAL_WIDTH * DEN), 0, 10 * DEN);
+            drawTriangles(canvas, start_x + (i * FINAL_HEXAGON_RATIO * FINAL_WIDTH * DEN), start_y * DEN, 10 * DEN);
             start_x += FINAL_SPACE_UNITY;
         }
 
@@ -153,75 +155,105 @@ public class HexagonView extends View{
         mPercentage.add(3, (float) 36.0);
 
         mBarColors = new ArrayList<>();
-        mBarColors.add(0, Color.RED);
-        mBarColors.add(1, Color.BLUE);
-        mBarColors.add(2, Color.YELLOW);
-        mBarColors.add(3, Color.MAGENTA);
+        mBarColors.add(0, Color.parseColor("#ff6347"));
+        mBarColors.add(1, Color.parseColor("#82b3b3"));
+        mBarColors.add(2, Color.parseColor("#fbfb33"));
+        mBarColors.add(3, Color.parseColor("#90ee90"));
 
     }
 
     public void drawTriangles(Canvas canvas, float start_x, float start_y, float size){
-
         float new_start_x;
+        float factor = 4 * DEN;
+        float height_size = FINAL_HEIGHT * DEN;
 
+        // -- First Hexagon -- //
         Path path1 = new Path();
         path1.moveTo(start_x, start_y);
 
-        path1.lineTo(start_x + size, 0);
-        path1.lineTo(start_x, start_y + size);
-        path1.lineTo(start_x, 0);
+        path1.lineTo(start_x  + size, 0 * DEN);
+        path1.lineTo(start_x, start_y + size - factor);
+        path1.lineTo(start_x, 0 * DEN);
 
         canvas.drawPath(path1, trianglePaint);
+        // --------------------------------//
 
-        new_start_x = start_x + ((FINAL_WIDTH * FINAL_HEXAGON_RATIO) * DEN);
 
+        // -- Second Hexgon -- //
+        new_start_x = start_x + size;
         Path path2 = new Path();
-        path2.moveTo(new_start_x - size, start_y);
+        path2.moveTo(new_start_x, start_y);
 
-        path2.lineTo(new_start_x, 0);
-        path2.lineTo(new_start_x - size, start_y + size);
-        path2.lineTo(new_start_x - size, 0);
-
-        Matrix mMatrix = new Matrix();
-        RectF bounds = new RectF();
-        path2.computeBounds(bounds, true);
-        mMatrix.postRotate(90, bounds.centerX(), bounds.centerY());
-        path2.transform(mMatrix);
+        path2.lineTo(new_start_x + size, 0);
+        path2.lineTo(new_start_x +size, start_y + size - factor);
+        path2.lineTo(new_start_x , start_y);
 
         canvas.drawPath(path2, trianglePaint);
+        // ----------------------------- //
 
-        start_y = 25 * DEN;
+        // -- third Hexagon -- //
         Path path3 = new Path();
-        path3.moveTo(start_x, start_y);
+        path3.moveTo(start_x, start_y + height_size - size + factor);
 
-        path3.lineTo(start_x + size, 25 * DEN);
-        path3.lineTo(start_x, start_y + size);
-        path3.lineTo(start_x, 25 *DEN);
-        Matrix mMatrix3 = new Matrix();
-        RectF bounds3 = new RectF();
-
-        path3.computeBounds(bounds3, true);
-        mMatrix3.postRotate(-90, bounds3.centerX(), bounds3.centerY());
-        path3.transform(mMatrix3);
+        path3.lineTo(start_x, start_y+height_size);
+        path3.lineTo(start_x+size, start_y+height_size);
+        path3.lineTo(start_x, start_y + height_size - size + factor);
 
         canvas.drawPath(path3, trianglePaint);
+        // --------------------------------//
 
 
-        start_y = (25) * DEN;
+        // -- Fourth Hexagon -- //
+        new_start_x = start_x + FINAL_WIDTH * FINAL_HEXAGON_RATIO * DEN;
         Path path4 = new Path();
-        path4.moveTo(start_x+ (20*DEN), start_y);
+        path4.moveTo(new_start_x, start_y + height_size - size + factor);
 
-        path4.lineTo(start_x + size + (20*DEN), 25 * DEN);
-        path4.lineTo(start_x+(20*DEN), start_y + size);
-        path4.lineTo(start_x+(20*DEN), 25 *DEN);
-        Matrix mMatrix4 = new Matrix();
-        RectF bounds4 = new RectF();
-
-        path4.computeBounds(bounds4, true);
-        mMatrix4.postRotate(180, bounds4.centerX(), bounds4.centerY());
-        path4.transform(mMatrix4);
+        path4.lineTo(new_start_x, start_y + height_size);
+        path4.lineTo(new_start_x - size, start_y + height_size);
+        path4.lineTo(new_start_x, start_y + height_size - size + factor);
 
         canvas.drawPath(path4, trianglePaint);
+        // --------------------------------//
+
+
+
+
+
+//        start_y = (FINAL_HEIGHT) * DEN;
+//        Path path3 = new Path();
+//        path3.moveTo(start_x, start_y);
+//
+//        path3.lineTo(start_x + size, (FINAL_HEIGHT) * DEN);
+//        path3.lineTo(start_x, start_y + size);
+//        path3.lineTo(start_x, start_y);
+//        Matrix mMatrix3 = new Matrix();
+//        RectF bounds3 = new RectF();
+//
+//        path3.computeBounds(bounds3, true);
+//        mMatrix3.postRotate(-90, bounds3.centerX(), bounds3.centerY());
+//        path3.transform(mMatrix3);
+//
+//        canvas.drawPath(path3, trianglePaint);
+
+//        new_start_x = start_x + ((FINAL_WIDTH * FINAL_HEXAGON_RATIO) * DEN);
+//        start_y = FINAL_HEIGHT * DEN;
+//
+//
+//        Path path4 = new Path();
+//        path4.moveTo(new_start_x, start_y - size);
+//
+//        path4.lineTo(new_start_x - size, start_y);
+//        path4.lineTo(new_start_x, start_y);
+//        path4.lineTo(new_start_x, start_y-size);
+//
+//        //        Matrix mMatrix4 = new Matrix();
+//        RectF bounds4 = new RectF();
+
+//        path4.computeBounds(bounds4, true);
+//        mMatrix4.postRotate(180, bounds4.centerX(), bounds4.centerY());
+//        path4.transform(mMatrix4);
+
+//        canvas.drawPath(path4, trianglePaint);
 
 
 
