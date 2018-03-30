@@ -1,5 +1,6 @@
 package com.hive.hive.utils;
 
+import android.content.res.Resources;
 import android.support.design.widget.TextInputEditText;
 import android.widget.TextView;
 
@@ -71,4 +72,6 @@ public abstract class Utils {
         mmap.put("res/drawable/ic_category_security.xml", "Security");
         return mmap;
     }
+
+
 }

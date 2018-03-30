@@ -45,13 +45,7 @@
 
     </LinearLayout>
 
-    <View
-        android:layout_margin="30dp"
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorBlack"/>
-
-
+  
     <TextView
         android:padding="10dp"
         android:text="@string/lore_ipsun"

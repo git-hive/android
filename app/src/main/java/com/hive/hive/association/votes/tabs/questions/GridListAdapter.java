@@ -1,6 +1,10 @@
 package com.hive.hive.association.votes.tabs.questions;
  
+import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +23,9 @@ import java.util.HashMap;
 /**
  * Created by Birck on 15/03/18.
  */
- 
+
 public class GridListAdapter extends BaseAdapter {
-    private Context context;
+    private Context mContext;
     private HashMap<Integer, ArrayList<String> > mFormQuestions;
     private ArrayList<String> arrayList;
     private LayoutInflater inflater;
@@ -31,12 +35,13 @@ public class GridListAdapter extends BaseAdapter {
     private TimeLineAdapter refStorylineAdapter;
  
     public GridListAdapter(Context context, HashMap<Integer, ArrayList<String> > formQuestions, boolean isListView) {
-        this.context = context;
+        mContext = context;
         mFormQuestions = formQuestions;
         this.arrayList = mFormQuestions.get(currentFormIndex);
         this.isListView = isListView;
-        inflater = LayoutInflater.from(context);
+        inflater = LayoutInflater.from(mContext);
     }
+
  
     @Override
     public int getCount() {
@@ -55,6 +60,8 @@ public class GridListAdapter extends BaseAdapter {
  
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
+        System.out.println(i + "OWOOEOEOWEOWOEWO "+ refStorylineAdapter.mStatusListValue.get(currentFormIndex));
+        selectedPosition = refStorylineAdapter.mStatusListValue.get(currentFormIndex);
         ViewHolder viewHolder;
         if (view == null) {
             viewHolder = new ViewHolder();
@@ -83,6 +90,8 @@ public class GridListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 itemCheckChanged(v);
+                refStorylineAdapter.mStatusListValue.set(currentFormIndex, selectedPosition);
+                System.out.println(i + " " + selectedPosition);
             }
         });
  
@@ -90,14 +99,14 @@ public class GridListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 itemCheckChanged(v);
+                //refStorylineAdapter.mStatusListValue.set(i, selectedPosition);
             }
- 
- 
         });
+
         return view;
     }
  
-    //On selecting any view set the current position to selectedPositon and notify adapter
+    //On selecting any view set the current position to selected Positon and notify adapter
     private void itemCheckChanged(View v) {
         selectedPosition = (Integer) v.getTag();
         notifyDataSetChanged();
@@ -111,7 +120,7 @@ public class GridListAdapter extends BaseAdapter {
     //Return the selectedPosition item
     public String getSelectedItem() {
         if (selectedPosition != -1) {
-            Toast.makeText(context, "Selected Item : " + arrayList.get(selectedPosition), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "Selected Item : " + arrayList.get(selectedPosition), Toast.LENGTH_SHORT).show();
             return arrayList.get(selectedPosition);
         }
         return "";
@@ -120,8 +129,13 @@ public class GridListAdapter extends BaseAdapter {
     //Delete the selected position from the arrayList
     public void previousQuestion() {
 
-        // Nothing has been selected
-        if(selectedPosition == -1){
+        selectedPosition = refStorylineAdapter.mStatusListValue.get(currentFormIndex);
+        notifyDataSetChanged();
+
+        if(currentFormIndex == 0){
+            //not sure what to do
+        }// Nothing has been selected
+        else if(selectedPosition == -1){
             // Change Storyline marker
             refStorylineAdapter.activePoint(currentFormIndex-1);
             refStorylineAdapter.inactivePoint(currentFormIndex);
@@ -151,12 +165,24 @@ public class GridListAdapter extends BaseAdapter {
     }
     //Delete the selected position from the arrayList
     public void nextQuestion() {
-        // Nothing has been selected
+
+        selectedPosition = refStorylineAdapter.mStatusListValue.get(currentFormIndex);
+        notifyDataSetChanged();
+
+        // Check if all is selected and send answers
         if(currentFormIndex == mFormQuestions.size()-1){
+
+            // Everything is answered and send options
             if(refStorylineAdapter.checkAnswers()){
+                Toast.makeText(mContext, "All done, questions sent!", Toast.LENGTH_LONG).show();
+                ((Activity)mContext).finish();
+
+            // When there is still questions to be answered
+            }else{
+                Toast.makeText(mContext, "You should answer all questions!", Toast.LENGTH_LONG).show();
 
             }
-        }if(selectedPosition == -1){
+        }else if(selectedPosition == -1){
 
             refStorylineAdapter.activePoint(currentFormIndex+1);
             refStorylineAdapter.inactivePoint(currentFormIndex);

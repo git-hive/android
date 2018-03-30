@@ -28,6 +28,7 @@ import com.hive.hive.association.votes.tabs.questions.ExpandableListAdapter;
 import com.hive.hive.model.association.Agenda;
 import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.Session;
+import com.hive.hive.utils.hexagonsPercentBar.HexagonView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,6 +57,7 @@ public class CurrentFragment extends Fragment {
     View mListTouchInterceptor;
     FrameLayout mDetailsLayout;
     UnfoldableView mUnfoldableView;
+    HexagonView mPercentageBar;
 
     // Temporary solution to unfold card, TODO: Check with the @guys
     ImageView mTopClickableCardIV;
@@ -102,6 +104,13 @@ public class CurrentFragment extends Fragment {
 
         mDetailsLayout = view.findViewById(R.id.details_layout);
         mDetailsLayout.setVisibility(View.INVISIBLE);
+
+        // TODO: Take care you should call autoInit always
+        mPercentageBar =  view.findViewById(R.id.percentageBar);
+        mPercentageBar.autoInit(4);
+
+        // Call set config to set percentage
+        // mPercentageBar.setConfig();
 
         mUnfoldableView = (UnfoldableView) view.findViewById(R.id.unfoldable_view);
 
