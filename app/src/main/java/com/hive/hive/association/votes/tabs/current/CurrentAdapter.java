@@ -74,9 +74,6 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
                     Log.e(TAG, e.getMessage());
                     return;
                 }
-                //TODO SET ACTIONS
-                //TODO MAY SET ITEMS
-                Log.d(TAG, "THERE ARE QUESTIONS TO SHOW");
                 for(DocumentChange dc : documentSnapshots.getDocumentChanges()){
                     switch (dc.getType()){
                         case ADDED:
