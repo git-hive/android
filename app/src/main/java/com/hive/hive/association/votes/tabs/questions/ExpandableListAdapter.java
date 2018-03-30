@@ -23,17 +23,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 	private Context _context;
 	private HashMap<String, Question> mQuestions;
 	private ArrayList<String> mQuestionsIds;
-	private HashMap<String, List<String>> child;
 
 	static final String[] MOBILE_OS = new String[] { "Android", "iOS",
 			"Windows", "Blackberry" };
 
-	public ExpandableListAdapter(Context context, HashMap<String, Question> questions, ArrayList<String> mQuestionsIds,
-                                 HashMap<String, List<String>> listChildData) {
+	public ExpandableListAdapter(Context context, HashMap<String, Question> questions, ArrayList<String> mQuestionsIds) {
 		this._context = context;
 		this.mQuestions = questions;
 		this.mQuestionsIds = mQuestionsIds;
-		this.child = listChildData;
 	}
 
 	@Override

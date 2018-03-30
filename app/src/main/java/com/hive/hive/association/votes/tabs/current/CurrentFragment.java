@@ -258,46 +258,7 @@ public class CurrentFragment extends Fragment {
     // Setting headers and childs to expandable listview
     public static void setItems(Context context, HashMap<String, Question> questions, ArrayList<String> questionsIds){
 
-        // Array list for header
-        ArrayList<String> header = new ArrayList<String>();
-
-        // Array list for child items
-        List<String> child1 = new ArrayList<String>();
-        List<String> child2 = new ArrayList<String>();
-        List<String> child3 = new ArrayList<String>();
-        List<String> child4 = new ArrayList<String>();
-
-        // Hash map for both header and child
-        HashMap<String, List<String>> hashMap = new HashMap<String, List<String>>();
-
-        // Adding headers to list
-        for (int i = 1; i < 5; i++) {
-            header.add("Question " + i);
-        }
-        // Adding child data
-        for (int i = 1; i < 2; i++) {
-            child1.add("Question 1  " + " : Child" + i);
-        }
-        // Adding child data
-        for (int i = 1; i < 2; i++) {
-            child2.add("Question 2  " + " : Child" + i);
-        }
-        // Adding child data
-        for (int i = 1; i < 2; i++) {
-            child3.add("Question 3  " + " : Child" + i);
-        }
-        // Adding child data
-        for (int i = 1; i < 2; i++) {
-            child4.add("Question 4  " + " : Child" + i);
-        }
-
-        // Adding header and childs to hash map
-        hashMap.put(header.get(0), child1);
-        hashMap.put(header.get(1), child2);
-        hashMap.put(header.get(2), child3);
-        hashMap.put(header.get(3), child4);
-
-        adapter = new ExpandableListAdapter(context, questions, questionsIds, hashMap);
+        adapter = new ExpandableListAdapter(context, questions, questionsIds);
 
         // Setting adpater over expandablelistview
         expandableListView.setAdapter(adapter);
