@@ -77,7 +77,7 @@ public class QuestionForm extends AppCompatActivity {
 
     private void initView() {
         //setDataListItems();
-        mTimeLineAdapter = new TimeLineAdapter(formQuestions, mQuestionStatus, mQuestionStatusValue, mOrientation, mWithLinePadding);
+        mTimeLineAdapter = new TimeLineAdapter(mQuestions, mQuestionStatus, mQuestionStatusValue, mOrientation, mWithLinePadding);
         mRecyclerView.setAdapter(mTimeLineAdapter);
     }
 
@@ -85,18 +85,14 @@ public class QuestionForm extends AppCompatActivity {
     private void loadListView() {
         ListView listView = findViewById(R.id.list_view);
 
-        formQuestions = new HashMap<Integer, ArrayList<String>>();
         mQuestionStatus = new ArrayList<OrderStatus>();
         mQuestionStatusValue = new ArrayList<Integer>();
 
-        for (Integer i = 0; i <= 4; i++){
-            arrayList = new ArrayList<>();
-            for (int j = 0; j <= 4; j++)
-                arrayList.add("ListView Items " + j + " from "+ i);
+        for (Integer i = 0; i <= mQuestions.size(); i++){
 
-            formQuestions.put(i,  arrayList);
             mQuestionStatus.add(i, OrderStatus.INACTIVE);
             mQuestionStatusValue.add(i, -1);
+
         }
 
         //Set First manually
