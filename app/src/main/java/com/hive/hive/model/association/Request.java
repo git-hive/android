@@ -83,6 +83,14 @@ public class Request extends AssociationAction {
         this.score = score;
     }
 
+    public void incrementScore() {
+        this.setScore(this.score + 1);
+    }
+
+    public void decrementScore() {
+        this.setScore(this.score - 1);
+    }
+
     public void setNumComments(int numComments) { this.numComments = numComments; }
 
     public void setCategories(ArrayList<DocumentReference> categories) {
