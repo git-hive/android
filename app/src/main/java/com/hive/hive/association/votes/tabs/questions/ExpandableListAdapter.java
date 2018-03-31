@@ -2,16 +2,16 @@ package com.hive.hive.association.votes.tabs.questions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -30,7 +30,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
 	// Percentage bar
 	HexagonView mPercentageBar;
-    ListView mPercentageLV;
+    RecyclerView mPercentageRV;
     HexagonalBarAdapter mHexBarAdapter;
 
 
@@ -148,11 +148,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 		mPercentageBar =  convertView.findViewById(R.id.percentageBar);
 		mPercentageBar.autoInit(4);
 
-		mPercentageLV = convertView.findViewById(R.id.percentageLV);
-
+        // Setting percentage view stuff
+		mPercentageRV = convertView.findViewById(R.id.percentageRV);
 		mHexBarAdapter = new HexagonalBarAdapter(((Activity)mContext), question.getOptions());
 
-        mPercentageLV.setAdapter(mHexBarAdapter);
+        LinearLayoutManager layoutManager
+                = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+
+        layoutManager.setAutoMeasureEnabled(true);
+        mPercentageRV.setLayoutManager(layoutManager);
+        mPercentageRV.setAdapter(mHexBarAdapter);
 
 		return convertView;
 	}

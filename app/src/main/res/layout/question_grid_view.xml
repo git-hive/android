@@ -1,36 +1,51 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical" >
 
     <LinearLayout
         android:layout_gravity="center_horizontal"
-        android:gravity="center"
-        android:layout_width="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <ListView
+        <android.support.v7.widget.RecyclerView
+            android:layout_marginTop="10dp"
             android:orientation="horizontal"
-            android:id="@+id/percentageLV"
-            android:layout_width="match_parent"
+            android:id="@+id/percentageRV"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-
-        </ListView>
+        </android.support.v7.widget.RecyclerView>
 
         <!-- hexagonal graph-->
-        <com.hive.hive.utils.hexagonsPercentBar.HexagonView
-            android:layout_marginLeft="30dp"
+        <LinearLayout
+            android:layout_marginLeft="18dp"
+            android:gravity="center_horizontal"
             android:layout_gravity="center_horizontal"
-            android:id="@+id/percentageBar"
             android:layout_width="wrap_content"
-            android:layout_height="100dp" />
+            android:layout_height="wrap_content">
+            <com.hive.hive.utils.hexagonsPercentBar.HexagonView
+                android:layout_marginTop="10dp"
+                android:id="@+id/percentageBar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
+
+        </LinearLayout>
+
 
     </LinearLayout>
 
-    <com.hive.hive.association.transparency.tabs.staff.CustomGridView
-        android:id="@+id/questionGV"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <com.hive.hive.association.transparency.tabs.staff.CustomGridView
+            android:gravity="center_horizontal"
+            android:id="@+id/questionGV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
 
 </LinearLayout>
