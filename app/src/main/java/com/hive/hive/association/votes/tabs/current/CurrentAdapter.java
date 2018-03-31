@@ -34,7 +34,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-
 public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestViewHolder> {
     private String TAG = CurrentAdapter.class.getSimpleName();
     //-- Data
@@ -181,7 +180,6 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
             mIconsDrawablePaths.put(icon, "ic_icones_"+icon+"_white");
             int imageResource = mContext.getResources()
                                         .getIdentifier(mIconsDrawablePaths.get(icon), "drawable", mContext.getPackageName());
-            System.out.println(" OOOOOOOOOOOOOOOOOOOEEE "+imageResource);
             mIconsDrawable.put(icon, imageResource);
         }
     }
