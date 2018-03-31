@@ -109,7 +109,7 @@ public class AssociationHelper {
      * @param associationID Association document ID where to set the categories from
      * @return Task that resolves in all request categories documents
      */
-    public static Task<QuerySnapshot> getAssociationRequestCategories(
+    public static Task<QuerySnapshot> getAllRequestCategories(
             FirebaseFirestore db,
             String associationID
     ) {
@@ -118,100 +118,6 @@ public class AssociationHelper {
                 .document(associationID)
                 .collection(Association.REQUEST_CATEGORIES_COLLECTION)
                 .get();
-    }
-
-    /**
-     * Fetches all categories referenced by the request
-     *
-     * @param db            Database reference
-     * @param associationID Association document ID where to get the request from
-     * @param requestID     Request document ID where to get the categories from
-     * @return Task that resolves in an ArrayList of RequestCategory associated with the
-     *         request under the provided requestID
-     */
-    public static Task<ArrayList<RequestCategory>> getRequestCategories(
-            FirebaseFirestore db,
-            String associationID,
-            String requestID
-    ) {
-        final DocumentReference associationRef = db
-                .collection(ASSOCIATION_COLLECTION)
-                .document(associationID);
-
-        final DocumentReference requestRef = associationRef
-                .collection(Association.REQUESTS_COLLECTION)
-                .document(requestID);
-
-        final CollectionReference requestCategoriesRef = associationRef
-                .collection(Association.REQUEST_CATEGORIES_COLLECTION);
-
-        // Gets all categories referenced by the request
-        return db.runTransaction(new Transaction.Function<ArrayList<RequestCategory>>() {
-            @Nullable
-            @Override
-            public ArrayList<RequestCategory> apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                // Get request
-                DocumentSnapshot requestDoc = transaction.get(requestRef);
-                Request request = requestDoc.toObject(Request.class);
-
-                // Get all categories referenced by the request
-                ArrayList<RequestCategory> requestCategoriesDocs = new ArrayList<>();
-                for (DocumentReference categoryRef : request.getCategories()) {
-                    DocumentSnapshot categoryDoc = transaction.get(categoryRef);
-                    requestCategoriesDocs.add(categoryDoc.toObject(RequestCategory.class));
-                }
-
-                return requestCategoriesDocs;
-            }
-        });
-    }
-
-    public static Task<ArrayList<Request>> getRequestsByCategory(
-            FirebaseFirestore db,
-            String associationID,
-            final String categoryName
-    ) {
-        final DocumentReference associationRef = db
-                .collection(ASSOCIATION_COLLECTION)
-                .document(associationID);
-
-        // Gets request by categories.
-        return db.runTransaction(new Transaction.Function<ArrayList<Request>>() {
-            @Nullable
-            @Override
-            public ArrayList<Request> apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                // Get association in order to get it's request categories
-                Association association = transaction.get(associationRef).toObject(Association.class);
-
-                // Find request category by name
-                DocumentReference selectedCategoryRef = null;
-                for (DocumentReference categoryRef : association.getRequestCategories()) {
-                    RequestCategory category = transaction.get(categoryRef).toObject(RequestCategory.class);
-                    if (category.getName().equals(categoryName)) {
-                        selectedCategoryRef = categoryRef;
-                        break;
-                    }
-                }
-
-                // Check if the selected category was found
-                if (selectedCategoryRef.equals(null)) {
-                    return null;
-                }
-
-                // Get requests that belongs to the selected request category
-                ArrayList<Request> selectedRequests = new ArrayList<>();
-                for (DocumentReference requestRef : association.getRequests()) {
-                    Request request = transaction.get(requestRef).toObject(Request.class);
-
-                    if (request.getCategories().contains(selectedCategoryRef)) {
-                        selectedRequests.add(request);
-                    }
-                }
-
-
-                return selectedRequests;
-            }
-        });
     }
 
     //--- Request Support
