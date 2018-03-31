@@ -107,6 +107,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
         final String agendaId = mAgendaIds.get(position);
         final Agenda agenda = mAgendas.get(agendaId);
         holder.mTitle.setText(agenda.getTitle());
+        holder.mCategoryIcon.setImageResource(R.drawable.ic_icones_gardening_white);
         holder.mVote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -158,14 +159,16 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
      * Class to serve as ViewHolder for a Request model in this adapter
      */
     class RequestViewHolder extends RecyclerView.ViewHolder{
-        final CardView mVote;
-        final TextView mTitle;
+        CardView mVote;
+        TextView mTitle;
+        ImageView mCategoryIcon;
 
 
         RequestViewHolder(View view){
             super(view);
-            mTitle = view.findViewById(R.id.budgetNameTV);
+            mTitle = view.findViewById(R.id.titleTV);
             mVote =  view.findViewById(R.id.cardVote);
+            mCategoryIcon = view.findViewById(R.id.category_IV);
         }
 
         @Override
