@@ -1,6 +1,7 @@
 package com.hive.hive.association.votes;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import java.util.HashMap;
 
 public class QuestionGridAdapter extends BaseAdapter {
 
+    private ArrayList<Integer> mColors = null;
     private Context mContext;
     private ArrayList<QuestionOptions> mOptions;
 
@@ -29,6 +31,7 @@ public class QuestionGridAdapter extends BaseAdapter {
     public QuestionGridAdapter(Context mContext, ArrayList<QuestionOptions> mOptions) {
         this.mContext = mContext;
         this.mOptions = mOptions;
+        initStuff();
     }
 
     @Override
@@ -59,6 +62,7 @@ public class QuestionGridAdapter extends BaseAdapter {
 
             holder.optionTV =  convertView.findViewById(R.id.optionTV);
             holder.optionTV.setText(mOptions.get(position).getTitle());
+            holder.optionTV.setTextColor(mColors.get(position));
 
             convertView.setTag(holder);
         } else {
@@ -67,6 +71,14 @@ public class QuestionGridAdapter extends BaseAdapter {
 
         //holder.text.setText(mMobileValues[position]);
         return convertView;
+    }
+
+    public void initStuff(){
+        mColors = new ArrayList<>();
+        mColors.add(0, Color.parseColor("#ff6347"));
+        mColors.add(1, Color.parseColor("#82b3b3"));
+        mColors.add(2, Color.parseColor("#fbfb33"));
+        mColors.add(3, Color.parseColor("#90ee90"));
     }
 
     static class ViewHolder {
