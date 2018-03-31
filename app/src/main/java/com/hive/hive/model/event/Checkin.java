@@ -13,11 +13,10 @@ public class Checkin extends EventAction {
 
     //--- Constructors
 
-    public Checkin(
-            String id, long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId,
+    public Checkin(long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId,
             Event event, LatLng checkedPosition)
     {
-        super(id, createdAt, updatedAt, authorId, pointsTransactionId, event);
+        super(createdAt, updatedAt, authorId, pointsTransactionId, event);
         this.checkedPosition = checkedPosition;
     }
 

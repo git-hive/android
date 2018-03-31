@@ -2,6 +2,8 @@ package com.hive.hive.association.votes.tabs.questions;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,12 +11,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hive.hive.R;
 import com.hive.hive.association.votes.tabs.questions.model.OrderStatus;
 import com.hive.hive.association.votes.tabs.questions.model.Orientation;
 import com.hive.hive.association.votes.tabs.questions.model.TimeLineModel;
 import com.hive.hive.model.association.Question;
+import com.hive.hive.model.association.QuestionOptions;
+import com.hive.hive.model.association.Vote;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,8 +35,6 @@ public class QuestionForm extends AppCompatActivity {
     private boolean mWithLinePadding;
 
     // Data stuff
-    private HashMap<Integer, ArrayList<String> > formQuestions;
-    private ArrayList<String> arrayList;
     private ArrayList<OrderStatus> mQuestionStatus;
     private ArrayList<Integer> mQuestionStatusValue;
     private GridListAdapter adapter;
@@ -39,6 +42,8 @@ public class QuestionForm extends AppCompatActivity {
 
     HashMap<String, Question> mQuestions;
     ArrayList<String> mQuestionsIds;
+
+    ArrayList<Vote> mVotes;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,8 +52,12 @@ public class QuestionForm extends AppCompatActivity {
 
         mQuestionTV = findViewById(R.id.questionTV);
 
+        //Getting the Questions from the previusly activity
         mQuestionsIds = (ArrayList<String>) getIntent().getSerializableExtra("questionsIds");
         mQuestions = (HashMap<String, Question>) getIntent().getSerializableExtra("questions");
+
+        //Create  Votes
+        mVotes = new ArrayList<>();
 
         loadListView();
 
@@ -88,7 +97,7 @@ public class QuestionForm extends AppCompatActivity {
         mQuestionStatus = new ArrayList<OrderStatus>();
         mQuestionStatusValue = new ArrayList<Integer>();
 
-        for (Integer i = 0; i <= mQuestions.size(); i++){
+        for (Integer i = 0; i < mQuestions.size(); i++){
 
             mQuestionStatus.add(i, OrderStatus.INACTIVE);
             mQuestionStatusValue.add(i, -1);
@@ -117,7 +126,14 @@ public class QuestionForm extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Next Question
-                adapter.nextQuestion();
+                Vote vote = adapter.getSelectedVote();
+                if(vote != null) {
+                    mVotes.add(adapter.getSelectedVote());
+                    adapter.nextQuestion();
+                }else{
+                Toast.makeText(QuestionForm.this, getString(R.string.should_answer), Toast.LENGTH_SHORT).show();
+                }
+             //   QuestionOptions currentOptions = mQuestions.get(mQuestionsIds.get())
             }
         });
 

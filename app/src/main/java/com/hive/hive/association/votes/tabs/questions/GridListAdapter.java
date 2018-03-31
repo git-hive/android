@@ -17,6 +17,8 @@ import android.widget.Toast;
 import com.hive.hive.R;
 import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.QuestionOptions;
+import com.hive.hive.model.association.Vote;
+import com.hive.hive.utils.DocReferences;
 
 import java.sql.Time;
 import java.util.ArrayList;
@@ -128,13 +130,17 @@ public class GridListAdapter extends BaseAdapter {
     }
  
     //Return the selectedPosition item
-//    public String getSelectedItem() {
-//        if (selectedPosition != -1) {
-//            Toast.makeText(mContext, "Selected Item : " + arrayList.get(selectedPosition), Toast.LENGTH_SHORT).show();
-//            return arrayList.get(selectedPosition);
-//        }
-//        return "";
-//    }
+    public Vote getSelectedVote() {
+        if (selectedPosition != -1) {
+            //TODO FILL REFERENCES
+            QuestionOptions selectedOption = mQuestions.get(mQuestionsIds.get(currentFormIndex)).getOptions().get(selectedPosition);
+            Vote vote = new Vote(0, 0, DocReferences.getUserRef(), null, null,
+                    selectedOption.getTitle(), 0, null, null, null);
+            Toast.makeText(mContext, "Selected Item : " + selectedOption.getTitle(), Toast.LENGTH_SHORT).show();
+            return vote;
+        }
+        return null;
+    }
 
     //Delete the selected position from the arrayList
     public void previousQuestion() {

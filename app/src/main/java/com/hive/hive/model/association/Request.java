@@ -29,7 +29,6 @@ public class Request extends AssociationAction {
 
 
     public Request(
-            String id,
             long createdAt,
             long updatedAt,
             DocumentReference authorId,
@@ -41,7 +40,7 @@ public class Request extends AssociationAction {
             int numComments,
             ArrayList<DocumentReference> categories
     ) {
-        super(id, createdAt, updatedAt, authorId, pointsTransactionId, associationId);
+        super(createdAt, updatedAt, authorId, pointsTransactionId, associationId);
         this.title = title;
         this.content = content;
         this.score = score;
