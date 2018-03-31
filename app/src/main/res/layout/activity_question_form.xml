@@ -50,7 +50,8 @@
         android:padding="10dp"
         android:text="@string/lore_ipsun"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:id="@+id/questionTV"/>
 
 
     <ListView

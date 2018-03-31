@@ -8,16 +8,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import com.hive.hive.R;
 import com.hive.hive.association.votes.tabs.questions.model.OrderStatus;
 import com.hive.hive.association.votes.tabs.questions.model.Orientation;
 import com.hive.hive.association.votes.tabs.questions.model.TimeLineModel;
+import com.hive.hive.model.association.Question;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class QuestionForm extends AppCompatActivity {
-
+    private TextView mQuestionTV;
     // Timeline stuff
     private RecyclerView mRecyclerView;
     private TimeLineAdapter mTimeLineAdapter;
@@ -33,26 +37,34 @@ public class QuestionForm extends AppCompatActivity {
     private GridListAdapter adapter;
     private Context context;
 
+    HashMap<String, Question> mQuestions;
+    ArrayList<String> mQuestionsIds;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_form);
         context = this;
+
+        mQuestionTV = findViewById(R.id.questionTV);
+
+        mQuestionsIds = (ArrayList<String>) getIntent().getSerializableExtra("questionsIds");
+        mQuestions = (HashMap<String, Question>) getIntent().getSerializableExtra("questions");
+
         loadListView();
 
         onClickEvent();
 
         mOrientation = Orientation.HORIZONTAL;
         mWithLinePadding = false;
-        mRecyclerView = (RecyclerView) findViewById(R.id.question_timeline_RV);
+        mRecyclerView = findViewById(R.id.question_timeline_RV);
         mRecyclerView.setLayoutManager(getLinearLayoutManager());
         mRecyclerView.setHasFixedSize(true);
         initView();
 
-
         // Pass Storyline adapter as reference
         adapter.setStorylineAdapter(mTimeLineAdapter);
 
+        mQuestionTV.setText(mQuestions.get(mQuestionsIds.get(0)).getQuestion());
     }
 
     private LinearLayoutManager getLinearLayoutManager() {
@@ -71,7 +83,7 @@ public class QuestionForm extends AppCompatActivity {
 
     // Populate Form locally for now
     private void loadListView() {
-        ListView listView = (ListView) findViewById(R.id.list_view);
+        ListView listView = findViewById(R.id.list_view);
 
         formQuestions = new HashMap<Integer, ArrayList<String>>();
         mQuestionStatus = new ArrayList<OrderStatus>();
@@ -90,7 +102,7 @@ public class QuestionForm extends AppCompatActivity {
         //Set First manually
         mQuestionStatus.set(0, OrderStatus.ACTIVE);
 
-        adapter = new GridListAdapter(context, formQuestions, true);
+        adapter = new GridListAdapter(context, mQuestions, mQuestionsIds, mQuestionTV,true);
         listView.setAdapter(adapter);
     }
 

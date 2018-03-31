@@ -2,9 +2,10 @@ package com.hive.hive.model.association;
 
 import com.google.firebase.firestore.DocumentReference;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Question {
+public class Question implements Serializable{
 
     private String question;
     private String info;

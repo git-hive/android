@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 
 import com.hive.hive.R;
+import com.hive.hive.model.association.Question;
+import com.hive.hive.model.association.QuestionOptions;
 
 import java.sql.Time;
 import java.util.ArrayList;
@@ -25,32 +27,41 @@ import java.util.HashMap;
  */
 
 public class GridListAdapter extends BaseAdapter {
+
     private Context mContext;
-    private HashMap<Integer, ArrayList<String> > mFormQuestions;
-    private ArrayList<String> arrayList;
+
+    private HashMap<String, Question> mQuestions;
+    private ArrayList<String> mQuestionsIds;
+    private ArrayList<QuestionOptions> mOptions;
+
+    private TextView mContentTV;
+
     private LayoutInflater inflater;
     private boolean isListView;
     private int selectedPosition = -1;
     private Integer currentFormIndex = 0;
     private TimeLineAdapter refStorylineAdapter;
  
-    public GridListAdapter(Context context, HashMap<Integer, ArrayList<String> > formQuestions, boolean isListView) {
+    public GridListAdapter(Context context, HashMap<String, Question> questions, ArrayList<String> questionsIds, TextView contentTV,boolean isListView) {
         mContext = context;
-        mFormQuestions = formQuestions;
-        this.arrayList = mFormQuestions.get(currentFormIndex);
+        mQuestions = questions;
+        mQuestionsIds = questionsIds;
+        mOptions = mQuestions.get(mQuestionsIds.get(currentFormIndex)).getOptions();
         this.isListView = isListView;
+        mContentTV = contentTV;
         inflater = LayoutInflater.from(mContext);
+        mContentTV.setText(mQuestions.get(mQuestionsIds.get(currentFormIndex)).getQuestion());
     }
 
  
     @Override
     public int getCount() {
-        return arrayList.size();
+        return mOptions.size();
     }
  
     @Override
     public Object getItem(int i) {
-        return arrayList.get(i);
+        return mOptions.get(i);
     }
  
     @Override
@@ -60,7 +71,6 @@ public class GridListAdapter extends BaseAdapter {
  
     @Override
     public View getView(final int i, View view, ViewGroup viewGroup) {
-        System.out.println(i + "OWOOEOEOWEOWOEWO "+ refStorylineAdapter.mStatusListValue.get(currentFormIndex));
         selectedPosition = refStorylineAdapter.mStatusListValue.get(currentFormIndex);
         ViewHolder viewHolder;
         if (view == null) {
@@ -77,7 +87,7 @@ public class GridListAdapter extends BaseAdapter {
         } else
             viewHolder = (ViewHolder) view.getTag();
  
-        viewHolder.label.setText(arrayList.get(i));
+        viewHolder.label.setText(((QuestionOptions) getItem(i)).getContent());
  
         //check the radio button if both position and selectedPosition matches
         viewHolder.radioButton.setChecked(i == selectedPosition);
@@ -118,13 +128,13 @@ public class GridListAdapter extends BaseAdapter {
     }
  
     //Return the selectedPosition item
-    public String getSelectedItem() {
-        if (selectedPosition != -1) {
-            Toast.makeText(mContext, "Selected Item : " + arrayList.get(selectedPosition), Toast.LENGTH_SHORT).show();
-            return arrayList.get(selectedPosition);
-        }
-        return "";
-    }
+//    public String getSelectedItem() {
+//        if (selectedPosition != -1) {
+//            Toast.makeText(mContext, "Selected Item : " + arrayList.get(selectedPosition), Toast.LENGTH_SHORT).show();
+//            return arrayList.get(selectedPosition);
+//        }
+//        return "";
+//    }
 
     //Delete the selected position from the arrayList
     public void previousQuestion() {
@@ -142,9 +152,12 @@ public class GridListAdapter extends BaseAdapter {
 
             refStorylineAdapter.notifyDataSetChanged();
 
-            arrayList = mFormQuestions.get(currentFormIndex-1);
+            mOptions = mQuestions.get(mQuestionsIds.get(currentFormIndex-1)).getOptions();
             currentFormIndex -=1;
             selectedPosition = -1;//after removing selectedPosition set it back to -1
+
+
+            mContentTV.setText(mQuestions.get(mQuestionsIds.get(currentFormIndex)).getQuestion());
 
             notifyDataSetChanged();
 
@@ -156,7 +169,7 @@ public class GridListAdapter extends BaseAdapter {
 
             refStorylineAdapter.notifyDataSetChanged();
 
-            arrayList = mFormQuestions.get(currentFormIndex-1);
+            mOptions = mQuestions.get(mQuestionsIds.get(currentFormIndex-1)).getOptions();
             currentFormIndex -=1;
             selectedPosition = -1;//after removing selectedPosition set it back to -1
 
@@ -170,7 +183,7 @@ public class GridListAdapter extends BaseAdapter {
         notifyDataSetChanged();
 
         // Check if all is selected and send answers
-        if(currentFormIndex == mFormQuestions.size()-1){
+        if(currentFormIndex == mQuestions.size()-1){
 
             // Everything is answered and send options
             if(refStorylineAdapter.checkAnswers()){
@@ -188,21 +201,26 @@ public class GridListAdapter extends BaseAdapter {
             refStorylineAdapter.inactivePoint(currentFormIndex);
             refStorylineAdapter.notifyDataSetChanged();
 
-            arrayList = mFormQuestions.get(currentFormIndex+1);
+            mOptions = mQuestions.get(mQuestionsIds.get(currentFormIndex+1)).getOptions();
+
             currentFormIndex +=1;
             selectedPosition = -1;//after removing selectedPosition set it back to -1
+
+            mContentTV.setText(mQuestions.get(mQuestionsIds.get(currentFormIndex)).getQuestion());
+
             notifyDataSetChanged();
             //Toast.makeText(context, "You should choose an option", Toast.LENGTH_SHORT).show();
 
             // Option Selected
-        }else if (currentFormIndex != mFormQuestions.size()-1) {
+        }else if (currentFormIndex != mQuestions.size()-1) {
             // Change Storyline marker
             refStorylineAdapter.activePoint(currentFormIndex+1);
             refStorylineAdapter.completePoint(currentFormIndex);
 
             refStorylineAdapter.notifyDataSetChanged();
 
-            arrayList = mFormQuestions.get(currentFormIndex+1);
+            mOptions = mQuestions.get(mQuestionsIds.get(currentFormIndex+1)).getOptions();
+
             currentFormIndex +=1;
             selectedPosition = -1;//after removing selectedPosition set it back to -1
             notifyDataSetChanged();
