@@ -7,7 +7,16 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ListView
+            android:orientation="horizontal"
+            android:id="@+id/percentageLV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </ListView>
 
         <!-- hexagonal graph-->
         <com.hive.hive.utils.hexagonsPercentBar.HexagonView

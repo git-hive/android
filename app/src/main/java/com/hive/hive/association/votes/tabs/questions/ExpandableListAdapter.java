@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,20 +20,22 @@ import com.hive.hive.association.transparency.tabs.staff.CustomGridView;
 import com.hive.hive.association.votes.QuestionGridAdapter;
 import com.hive.hive.model.association.Question;
 import com.hive.hive.utils.hexagonsPercentBar.HexagonView;
+import com.hive.hive.utils.hexagonsPercentBar.HexagonalBarAdapter;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
-	private Context _context;
+	private Context mContext;
 	private HashMap<String, Question> mQuestions;
 	private ArrayList<String> mQuestionsIds;
 
 	// Percentage bar
 	HexagonView mPercentageBar;
-
+    ListView mPercentageLV;
+    HexagonalBarAdapter mHexBarAdapter;
 
 
 	public ExpandableListAdapter(Context context, HashMap<String, Question> questions, ArrayList<String> mQuestionsIds) {
-		this._context = context;
+		mContext = context;
 		this.mQuestions = questions;
 		this.mQuestionsIds = mQuestionsIds;
 	}
@@ -88,7 +92,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
 		// Inflating header layout and setting text
 		if (convertView == null) {
-			LayoutInflater infalInflater = (LayoutInflater) this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			LayoutInflater infalInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = infalInflater.inflate(R.layout.question_header, parent, false);
 		}
 
@@ -113,12 +117,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
 	@Override
 	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-		// Getting child text
-//		final String childText = (String) getChild(groupPosition, childPosition);
-		// Inflating child layout and setting textview
 
 		if (convertView == null) {
-			LayoutInflater infalInflater = (LayoutInflater) this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			LayoutInflater infalInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = infalInflater.inflate(R.layout.question_grid_view, null);
 		}
 
@@ -130,7 +131,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
         String questionId = mQuestionsIds.get(groupPosition);
         Question question = mQuestions.get(questionId);
-		QuestionGridAdapter adapter = new QuestionGridAdapter(this._context, question.getOptions());
+		QuestionGridAdapter adapter = new QuestionGridAdapter(mContext, question.getOptions());
 		gridView.setAdapter(adapter);// Adapter
 
 		int totalHeight = 0;
@@ -146,6 +147,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 		// TODO: Take care you should call autoInit always
 		mPercentageBar =  convertView.findViewById(R.id.percentageBar);
 		mPercentageBar.autoInit(4);
+
+		mPercentageLV = convertView.findViewById(R.id.percentageLV);
+
+		mHexBarAdapter = new HexagonalBarAdapter(((Activity)mContext), question.getOptions());
+
+        mPercentageLV.setAdapter(mHexBarAdapter);
 
 		return convertView;
 	}

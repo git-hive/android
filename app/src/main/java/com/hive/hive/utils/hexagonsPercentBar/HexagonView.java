@@ -217,46 +217,6 @@ public class HexagonView extends View{
 
 
 
-
-
-//        start_y = (FINAL_HEIGHT) * DEN;
-//        Path path3 = new Path();
-//        path3.moveTo(start_x, start_y);
-//
-//        path3.lineTo(start_x + size, (FINAL_HEIGHT) * DEN);
-//        path3.lineTo(start_x, start_y + size);
-//        path3.lineTo(start_x, start_y);
-//        Matrix mMatrix3 = new Matrix();
-//        RectF bounds3 = new RectF();
-//
-//        path3.computeBounds(bounds3, true);
-//        mMatrix3.postRotate(-90, bounds3.centerX(), bounds3.centerY());
-//        path3.transform(mMatrix3);
-//
-//        canvas.drawPath(path3, trianglePaint);
-
-//        new_start_x = start_x + ((FINAL_WIDTH * FINAL_HEXAGON_RATIO) * DEN);
-//        start_y = FINAL_HEIGHT * DEN;
-//
-//
-//        Path path4 = new Path();
-//        path4.moveTo(new_start_x, start_y - size);
-//
-//        path4.lineTo(new_start_x - size, start_y);
-//        path4.lineTo(new_start_x, start_y);
-//        path4.lineTo(new_start_x, start_y-size);
-//
-//        //        Matrix mMatrix4 = new Matrix();
-//        RectF bounds4 = new RectF();
-
-//        path4.computeBounds(bounds4, true);
-//        mMatrix4.postRotate(180, bounds4.centerX(), bounds4.centerY());
-//        path4.transform(mMatrix4);
-
-//        canvas.drawPath(path4, trianglePaint);
-
-
-
     }
 
 
