@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:id="@+id/cardScroll"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
@@ -14,7 +15,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:elevation="30dp"
     android:orientation="vertical">
@@ -111,7 +112,7 @@
         <!-- content body layout -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@color/bgContent"
             android:orientation="vertical"
             android:paddingBottom="6dp"
@@ -223,25 +224,30 @@
                 android:layout_width="match_parent"/>
 
             <!-- Vote button -->
-
-            <ImageButton
-                android:layout_gravity="center_horizontal|bottom"
-                android:id="@+id/choseVoteBT"
-                android:background="@drawable/ic_icones_double_like_orange"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                 />
-            <TextView
-                android:gravity="center"
-                android:layout_gravity="center_horizontal"
-                android:textSize="16sp"
-                android:textColor="@color/colorBlack"
-                android:text="@string/vote"
+            <LinearLayout
+                android:layout_gravity="center"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="10dp" />
+                android:layout_height="wrap_content">
+                    <ImageButton
+                        android:layout_gravity="center_horizontal|bottom"
+                        android:id="@+id/choseVoteBT"
+                        android:background="@drawable/ic_icones_double_like_orange"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        />
+                    <TextView
+                        android:gravity="center"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="16sp"
+                        android:textColor="@color/colorBlack"
+                        android:text="@string/vote"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+            </LinearLayout>
 
 
         </LinearLayout>
 
-</LinearLayout>
+    </LinearLayout>
 </ScrollView>

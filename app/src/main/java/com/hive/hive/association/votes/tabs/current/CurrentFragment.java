@@ -8,12 +8,16 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
+
 import com.alexvasilkov.foldablelayout.UnfoldableView;
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.DocumentChange;
@@ -57,7 +61,7 @@ public class CurrentFragment extends Fragment {
     View mListTouchInterceptor;
     FrameLayout mDetailsLayout;
     UnfoldableView mUnfoldableView;
-    HexagonView mPercentageBar;
+    ScrollView detailsScrollView;
 
     // Temporary solution to unfold card, TODO: Check with the @guys
     ImageView mTopClickableCardIV;
@@ -124,7 +128,7 @@ public class CurrentFragment extends Fragment {
                 mListTouchInterceptor.setClickable(false);
 
                 // Check this out to unfold when grab down TODO: @MarcoBirck
-                unfoldableView.setGesturesEnabled(false);
+                unfoldableView.setGesturesEnabled(true);
             }
 
             @Override
@@ -244,6 +248,18 @@ public class CurrentFragment extends Fragment {
             }
         });
 
+        // Get scroll refence
+        detailsScrollView = view.findViewById(R.id.cardScroll);
+
+        //Solution by: https://github.com/alexvasilkov/FoldableLayout/issues/38#issuecomment-192814520
+        detailsScrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mUnfoldableView.requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+
         return view;
     }
     @Override
@@ -309,5 +325,7 @@ public class CurrentFragment extends Fragment {
         listView.requestLayout();
 
     }
+
+
 
 }
