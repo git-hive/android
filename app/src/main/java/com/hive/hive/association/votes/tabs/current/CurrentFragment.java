@@ -269,6 +269,7 @@ public class CurrentFragment extends Fragment {
 
         // Setting adpater over expandablelistview
         expandableListView.setAdapter(adapter);
+        expandableListView.setDividerHeight(0);
 
     }
 

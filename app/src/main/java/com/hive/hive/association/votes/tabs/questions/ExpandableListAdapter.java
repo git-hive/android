@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -96,20 +97,24 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 			convertView = infalInflater.inflate(R.layout.question_header, parent, false);
 		}
 
-		TextView header_text = (TextView) convertView.findViewById(R.id.header);
+		TextView header_text = (TextView) convertView.findViewById(R.id.headerTV);
 		header_text.setText(question.getQuestion());
 
+        ImageView headerMarkerIV = convertView.findViewById(R.id.headerMarkerIV);
+
 		// If group is expanded then change the text into bold and change the
-		// icon
 		if (isExpanded) {
-			header_text.setTypeface(null, Typeface.BOLD);
-			header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_right_arrow, 0);
+		    headerMarkerIV.setImageResource(R.drawable.ic_baixolaranja);
+		    headerMarkerIV.setRotation(-180);
+//			header_text.setTypeface(null, Typeface.BOLD);
+//			header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_right_arrow, 0);
 		} else {
 			// If group is not expanded then change the text back into normal
 			// and change the icon
-
-			header_text.setTypeface(null, Typeface.NORMAL);
-			header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_right_arrow, 0);
+            headerMarkerIV.setImageResource(R.drawable.ic_baixolaranja);
+            headerMarkerIV.setRotation(-360);
+//			header_text.setTypeface(null, Typeface.NORMAL);
+//			header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_right_arrow, 0);
 		}
 
 		return convertView;

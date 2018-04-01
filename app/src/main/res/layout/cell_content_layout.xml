@@ -227,17 +227,18 @@
             <ImageButton
                 android:layout_gravity="center_horizontal|bottom"
                 android:id="@+id/choseVoteBT"
-                android:background="@drawable/ic_like"
-                android:layout_width="110dp"
+                android:background="@drawable/ic_icones_double_like_orange"
+                android:layout_width="100dp"
                 android:layout_height="100dp"
                  />
             <TextView
+                android:gravity="center"
                 android:layout_gravity="center_horizontal"
                 android:textSize="16sp"
                 android:textColor="@color/colorBlack"
                 android:text="@string/vote"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
 
 
         </LinearLayout>
