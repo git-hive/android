@@ -229,15 +229,7 @@ public class CurrentFragment extends Fragment {
         expandableListView = view.findViewById(R.id.questionExpandableLV);
         // Setting group indicator null for custom indicator
         expandableListView.setGroupIndicator(null);
-        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
 
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v,
-                                        int groupPosition, long id) {
-                setListViewHeight(parent, groupPosition);
-                return false;
-            }
-        });
 
         // Start Questions activity stuff
         choseVoteBT.setOnClickListener(new View.OnClickListener() {
@@ -287,11 +279,53 @@ public class CurrentFragment extends Fragment {
         expandableListView.setAdapter(adapter);
         expandableListView.setDividerHeight(0);
 
+        for (int i = 0; i < adapter.getGroupCount(); i++)
+            expandableListView.expandGroup(i);
+        setListViewHeight(expandableListView);
+        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                setListViewHeight(parent, groupPosition);
+                return false;
+            }
+        });
+
+        for (int i = 0; i < adapter.getGroupCount(); i++)
+            expandableListView.collapseGroup(i);
+        setListViewHeight(expandableListView);
+
+
     }
 
     // Workaround found in: https://thedeveloperworldisyours.com/android/expandable-listview-inside-scrollview/ to ExpandableListView
-    private void setListViewHeight(ExpandableListView listView,
-                                   int group) {
+    // https://stackoverflow.com/questions/17696039/expandablelistview-inside-a-scrollview
+
+    private static void setListViewHeight(ExpandableListView listView) {
+        ExpandableListAdapter listAdapter = (ExpandableListAdapter) listView.getExpandableListAdapter();
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getGroupCount(); i++) {
+            View groupView = listAdapter.getGroupView(i, true, null, listView);
+            groupView.measure(0, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += groupView.getMeasuredHeight();
+
+            if (listView.isGroupExpanded(i)){
+                for(int j = 0; j < listAdapter.getChildrenCount(i); j++){
+                    View listItem = listAdapter.getChildView(i, j, false, null, listView);
+                    listItem.measure(0, View.MeasureSpec.UNSPECIFIED);
+                    totalHeight += listItem.getMeasuredHeight();
+                }
+            }
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight
+                + (listView.getDividerHeight() * (listAdapter.getGroupCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
+
+    private static void setListViewHeight(ExpandableListView listView,
+                                          int group) {
         ExpandableListAdapter listAdapter = (ExpandableListAdapter) listView.getExpandableListAdapter();
         int totalHeight = 0;
         int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(),
@@ -299,7 +333,6 @@ public class CurrentFragment extends Fragment {
         for (int i = 0; i < listAdapter.getGroupCount(); i++) {
             View groupItem = listAdapter.getGroupView(i, false, null, listView);
             groupItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-
             totalHeight += groupItem.getMeasuredHeight();
 
             if (((listView.isGroupExpanded(i)) && (i != group))
@@ -308,9 +341,7 @@ public class CurrentFragment extends Fragment {
                     View listItem = listAdapter.getChildView(i, j, false, null,
                             listView);
                     listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-
                     totalHeight += listItem.getMeasuredHeight();
-
                 }
             }
         }
@@ -323,7 +354,6 @@ public class CurrentFragment extends Fragment {
         params.height = height;
         listView.setLayoutParams(params);
         listView.requestLayout();
-
     }
 
 
