@@ -62,7 +62,7 @@ public class HexagonalBarAdapter  extends RecyclerView.Adapter<HexagonalBarAdapt
             mColors = new ArrayList<>();
             mColors.add(0, Color.parseColor("#ff6347"));
             mColors.add(1, Color.parseColor("#82b3b3"));
-            mColors.add(2, Color.parseColor("#fbfb33"));
+            mColors.add(2, Color.parseColor("#ffbb3f"));
             mColors.add(3, Color.parseColor("#90ee90"));
         }
 

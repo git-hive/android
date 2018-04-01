@@ -37,13 +37,13 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <com.hive.hive.association.transparency.tabs.staff.CustomGridView
-            android:gravity="center_horizontal"
+            android:gravity="left"
             android:id="@+id/questionGV"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 

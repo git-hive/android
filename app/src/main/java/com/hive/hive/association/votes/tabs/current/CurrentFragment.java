@@ -243,7 +243,8 @@ public class CurrentFragment extends Fragment {
         // Get scroll refence
         detailsScrollView = view.findViewById(R.id.cardScroll);
 
-        //Solution by: https://github.com/alexvasilkov/FoldableLayout/issues/38#issuecomment-192814520
+        // Solution by: https://github.com/alexvasilkov/FoldableLayout/issues/38#issuecomment-192814520
+        // Allows scroll
         detailsScrollView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -251,6 +252,15 @@ public class CurrentFragment extends Fragment {
                 return false;
             }
         });
+        expandableListView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mUnfoldableView.requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+
+
 
         return view;
     }

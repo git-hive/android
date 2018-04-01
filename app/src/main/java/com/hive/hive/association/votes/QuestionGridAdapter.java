@@ -2,19 +2,21 @@ package com.hive.hive.association.votes;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hive.hive.R;
 import com.hive.hive.model.association.QuestionOptions;
+import static com.hive.hive.utils.Utils.getCharForNumber;
 
-import java.lang.reflect.Array;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by birck on 17/02/18.
@@ -52,7 +54,23 @@ public class QuestionGridAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
+
         ViewHolder holder = null;
+        String optionIdentifier = (getCharForNumber(position+1)+") ").toLowerCase();
+
+        // Set text to different colors
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        SpannableString redSpannable= new SpannableString(optionIdentifier);
+        redSpannable.setSpan(new ForegroundColorSpan(mColors.get(position)), 0, optionIdentifier.length(), 0);
+        builder.append(redSpannable);
+
+        String optionText = mOptions.get(position).getTitle();
+        SpannableString whiteSpannable= new SpannableString(optionText);
+        whiteSpannable.setSpan(new ForegroundColorSpan(Color.BLACK), 0, optionText.length(), 0);
+        builder.append(whiteSpannable);
+        /////////////////////////////////////////
+
+
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) mContext
@@ -61,7 +79,7 @@ public class QuestionGridAdapter extends BaseAdapter {
             holder = new ViewHolder();
 
             holder.optionTV =  convertView.findViewById(R.id.optionTV);
-            holder.optionTV.setText(mOptions.get(position).getTitle());
+            holder.optionTV.setText(builder, TextView.BufferType.SPANNABLE);
             holder.optionTV.setTextColor(mColors.get(position));
 
             convertView.setTag(holder);
@@ -77,7 +95,7 @@ public class QuestionGridAdapter extends BaseAdapter {
         mColors = new ArrayList<>();
         mColors.add(0, Color.parseColor("#ff6347"));
         mColors.add(1, Color.parseColor("#82b3b3"));
-        mColors.add(2, Color.parseColor("#fbfb33"));
+        mColors.add(2, Color.parseColor("#ffbb3f"));
         mColors.add(3, Color.parseColor("#90ee90"));
     }
 

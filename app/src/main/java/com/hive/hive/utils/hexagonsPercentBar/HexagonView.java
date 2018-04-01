@@ -157,7 +157,7 @@ public class HexagonView extends View{
         mBarColors = new ArrayList<>();
         mBarColors.add(0, Color.parseColor("#ff6347"));
         mBarColors.add(1, Color.parseColor("#82b3b3"));
-        mBarColors.add(2, Color.parseColor("#fbfb33"));
+        mBarColors.add(2, Color.parseColor("#ffbb3f"));
         mBarColors.add(3, Color.parseColor("#90ee90"));
 
     }
