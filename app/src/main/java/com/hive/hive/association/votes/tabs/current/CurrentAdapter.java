@@ -117,7 +117,6 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
         final String agendaId = mAgendaIds.get(position);
         final Agenda agenda = mAgendas.get(agendaId);
         holder.mTitle.setText(agenda.getTitle());
-
         //TODO:Change this line to get from server
         holder.mCategoryIcon.setImageResource(getDrawable("services"));
 
@@ -138,8 +137,9 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
     }
 
     private void changeUnfoldableContent(Agenda agenda, String agendaId){
-        TextView titleTV = mView.findViewById(R.id.titleTV);
+        TextView titleTV = mView.findViewById(R.id.titleContentTV);
         TextView descriptionTV = mView.findViewById(R.id.contentTV);
+
         Log.d(TAG, "title "+agenda.getTitle());
         titleTV.setText(agenda.getTitle());
         descriptionTV.setText(agenda.getContent());
