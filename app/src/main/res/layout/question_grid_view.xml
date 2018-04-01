@@ -21,7 +21,6 @@
 
         <!-- hexagonal graph-->
         <LinearLayout
-            android:layout_marginLeft="18dp"
             android:gravity="center_horizontal"
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
