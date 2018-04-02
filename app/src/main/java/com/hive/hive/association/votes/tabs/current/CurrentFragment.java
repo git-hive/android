@@ -256,7 +256,7 @@ public class CurrentFragment extends Fragment {
         mAgendasLR.remove();
     }
     // Setting headers and childs to expandable listview
-    public static void setItems(final Context context, final HashMap<String, Question> questions, final ArrayList<String> questionsIds){
+    public static void setItems(final Context context, final HashMap<String, Question> questions, final ArrayList<String> questionsIds, final String agendaID ){
 
         adapter = new ExpandableListAdapter(context, questions, questionsIds);
 
@@ -268,6 +268,11 @@ public class CurrentFragment extends Fragment {
                 Intent it = new Intent(context, QuestionForm.class);
                 it.putExtra("questions", questions);
                 it.putExtra("questionsIds", questionsIds);
+                //TODO STATIC ASSOCIATION ID
+                it.putExtra("associationID", "gVw7dUkuw3SSZSYRXe8s");
+                it.putExtra("sessionID", mCurrentSessionId);
+                it.putExtra("agendaID", agendaID );
+
                 context.startActivity(it);
             }
         });
