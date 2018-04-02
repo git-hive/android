@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -18,6 +19,7 @@ import com.hive.hive.model.association.QuestionOptions;
 import com.hive.hive.model.association.Vote;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Created by vplentz on 22/03/18.
@@ -32,6 +34,8 @@ public class VotesHelper {
     public static String SESSIONS_COLLECTION = "sessions";
 
     public static String AGENDAS_COLLECTION = "agendas";
+
+    public static String VOTES_COLLECTION = "votes";
 
     //--- Sessions
 
@@ -93,7 +97,6 @@ public class VotesHelper {
             @Nullable
             @Override
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                //TODO send vote, and then score the option
                 int questionToAnswer = 0;
                 ArrayList<Question> questions = new ArrayList<>();
                 for(DocumentReference documentReference : documentReferences ){
@@ -107,13 +110,10 @@ public class VotesHelper {
                 }
                 for(int i = 0; i < documentReferences.size(); i++){
                     transaction.set(documentReferences.get(i), questions.get(i));
+                    transaction.set(
+                            documentReferences.get(i).collection(VOTES_COLLECTION).document(FirebaseAuth.getInstance().getUid())
+                            , votes.get(i));
                 }
-
-                //
-//                for(Vote vote : votes){
-//
-//                }
-
 
 
                 return null;
