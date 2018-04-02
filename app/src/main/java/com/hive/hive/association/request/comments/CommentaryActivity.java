@@ -118,7 +118,7 @@ public class CommentaryActivity extends AppCompatActivity {
                 }
                 String commentID = UUID.randomUUID().toString();
                 String commentText = mCommentET.getText().toString();
-                AssociationComment comment = new AssociationComment(commentID, Calendar.getInstance().getTimeInMillis(),
+                AssociationComment comment = new AssociationComment( Calendar.getInstance().getTimeInMillis(),
                         Calendar.getInstance().getTimeInMillis(),
                         DocReferences.getUserRef(), null, DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s"),
                         commentText, 0, DocReferences.getRequestRef("gVw7dUkuw3SSZSYRXe8s", mRequestId));
@@ -275,7 +275,7 @@ public class CommentaryActivity extends AppCompatActivity {
                             String supportId = FirebaseAuth.getInstance().getUid();
                             //TODO review refs
 
-                            AssociationSupport support = new AssociationSupport(supportId, Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
+                            AssociationSupport support = new AssociationSupport( Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
                                     userRef, null, assocRef, null);
                             AssociationHelper.setRequestSupport(FirebaseFirestore.getInstance(),
                                     "gVw7dUkuw3SSZSYRXe8s", mRequestId, supportId, support).addOnSuccessListener(new OnSuccessListener<Void>() {

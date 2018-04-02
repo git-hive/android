@@ -71,7 +71,7 @@ public class CurrentFragment extends Fragment {
     private static ExpandableListAdapter adapter;
 
     // Views references
-    ImageButton choseVoteBT;
+    static ImageButton choseVoteBT;
 
 
     public static CurrentFragment newInstance(int page) {
@@ -281,6 +281,26 @@ public class CurrentFragment extends Fragment {
         mAgendasLR.remove();
     }
     // Setting headers and childs to expandable listview
+    public static void setItems(final Context context, final HashMap<String, Question> questions, final ArrayList<String> questionsIds, final String agendaID ){
+
+        adapter = new ExpandableListAdapter(context, questions, questionsIds);
+
+        // Setting adpater over expandablelistview
+        expandableListView.setAdapter(adapter);
+        choseVoteBT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent it = new Intent(context, QuestionForm.class);
+                it.putExtra("questions", questions);
+                it.putExtra("questionsIds", questionsIds);
+                //TODO STATIC ASSOCIATION ID
+                it.putExtra("associationID", "gVw7dUkuw3SSZSYRXe8s");
+                it.putExtra("sessionID", mCurrentSessionId);
+                it.putExtra("agendaID", agendaID );
+
+                context.startActivity(it);
+            }
+        });
     public static void setItems(Context context, HashMap<String, Question> questions, ArrayList<String> questionsIds){
 
         adapter = new ExpandableListAdapter(context, questions, questionsIds);

@@ -32,6 +32,7 @@ import com.hive.hive.utils.ProfilePhotoHelper;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.List;
 
 public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestViewHolder> {
@@ -55,6 +56,8 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
     private ArrayList<String> mQuestionsIds; // FROM CURRENT AGENDA
     private Context mContext;
 
+    //-- IDS TO PASS TO VOTE
+    String agendaID;
     public CurrentAdapter(Context context, HashMap<String, Agenda> agendas, ArrayList<String> agendasIds,
                           UnfoldableView unfoldableView, FrameLayout detailsLayout, View view){
         this.mContext = context;
@@ -91,19 +94,24 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
                             Question question = dc.getDocument().toObject(Question.class);
                             mQuestions.put(questionId, question);
                             mQuestionsIds.add(questionId);
-                            CurrentFragment.setItems(mContext, mQuestions, mQuestionsIds);
+                            CurrentFragment.setItems(mContext, mQuestions, mQuestionsIds, agendaID);
                             break;
                         case MODIFIED:
+//                            Question newQ = dc.getDocument().toObject(Question.class);
+//                            newQ.setInfo("info 3");
+//                            newQ.setQuestion("Question 3");
+//                            VotesHelper.getQuestions(FirebaseFirestore.getInstance(),"gVw7dUkuw3SSZSYRXe8s",
+//                                    CurrentFragment.mCurrentSessionId, "9c283f6a-d7a0-45c2-8762-6394efd68a51").document(UUID.randomUUID().toString()).set(newQ);
                             String modifiedId = dc.getDocument().getId();
                             mQuestions.remove(modifiedId);
                             mQuestions.put(modifiedId, dc.getDocument().toObject(Question.class));
-                            CurrentFragment.setItems(mContext, mQuestions, mQuestionsIds);
+                            CurrentFragment.setItems(mContext, mQuestions, mQuestionsIds, agendaID);
                             break;
                         case REMOVED:
                             String removedId = dc.getDocument().getId();
                             mQuestions.remove(removedId);
                             mQuestionsIds.remove(removedId);
-                            CurrentFragment.setItems(mContext, mQuestions, mQuestionsIds);
+                            CurrentFragment.setItems(mContext, mQuestions, mQuestionsIds, agendaID);
                             break;
                     }
                 }
@@ -114,8 +122,8 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
 
     @Override
     public void onBindViewHolder(RequestViewHolder holder, int position) {
-        final String agendaId = mAgendaIds.get(position);
-        final Agenda agenda = mAgendas.get(agendaId);
+        agendaID = mAgendaIds.get(position);
+        final Agenda agenda = mAgendas.get(agendaID);
         holder.mTitle.setText(agenda.getTitle());
         //TODO:Change this line to get from server
         holder.mCategoryIcon.setImageResource(getDrawable("services"));
@@ -123,7 +131,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
         holder.mVote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeUnfoldableContent(agenda, agendaId);
+                changeUnfoldableContent(agenda, agendaID);
                 mUnfoldableView.unfold(view, mDetailsLayout);
 
             }

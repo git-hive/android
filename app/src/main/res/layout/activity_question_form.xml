@@ -61,7 +61,8 @@
         android:textColor="@color/colorBlack"
         android:text="Pergunta longa número 2 bla bla bla?"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:id="@+id/questionTV"/>
 
 
     <ListView

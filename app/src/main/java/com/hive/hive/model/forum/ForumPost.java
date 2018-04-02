@@ -25,12 +25,12 @@ public class ForumPost extends ForumAction {
     }
 
     public ForumPost(
-            String id, long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId,
+            long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId,
             String forumId, String title, String content, int supportScore,
             HashMap<String, ForumCategory> categories, HashMap<String, ForumComment> comments,
             HashMap<String, ForumSupport> supports)
     {
-        super(id, createdAt, updatedAt, authorId, pointsTransactionId, forumId);
+        super(createdAt, updatedAt, authorId, pointsTransactionId, forumId);
         this.title = title;
         this.content = content;
         this.supportScore = supportScore;

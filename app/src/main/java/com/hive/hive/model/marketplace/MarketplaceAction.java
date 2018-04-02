@@ -17,8 +17,8 @@ public class MarketplaceAction extends UserAction {
         this.saleId = saleId;
     }
 
-    public MarketplaceAction(String id, long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId, String saleId) {
-        super(id, createdAt, updatedAt, authorId, pointsTransactionId);
+    public MarketplaceAction(long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId, String saleId) {
+        super(createdAt, updatedAt, authorId, pointsTransactionId);
         this.saleId = saleId;
     }
 

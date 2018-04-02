@@ -20,10 +20,10 @@ public class ForumComment extends ForumAction {
     //--- Constructor
 
     public ForumComment(
-            String id, long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId,
+            long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId,
             String forumId, String content, int supportScore, String postId, HashMap<String, ForumSupport> supports)
     {
-        super(id, createdAt, updatedAt, authorId, pointsTransactionId, forumId);
+        super(createdAt, updatedAt, authorId, pointsTransactionId, forumId);
         this.content = content;
         this.supportScore = supportScore;
         this.postId = postId;

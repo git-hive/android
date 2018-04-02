@@ -34,6 +34,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
     HexagonalBarAdapter mHexBarAdapter;
 
 
+
 	public ExpandableListAdapter(Context context, HashMap<String, Question> questions, ArrayList<String> mQuestionsIds) {
 		mContext = context;
 		this.mQuestions = questions;

@@ -13,6 +13,7 @@ import com.hive.hive.R;
 import com.hive.hive.association.votes.tabs.questions.model.OrderStatus;
 import com.hive.hive.association.votes.tabs.questions.model.Orientation;
 import com.hive.hive.association.votes.tabs.questions.utils.VectorDrawableUtils;
+import com.hive.hive.model.association.Question;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,13 +23,13 @@ import java.util.HashMap;
  */
 
 public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
-
-    private HashMap<Integer, ArrayList<String>> mFeedList;
+    private HashMap<String, Question> mQuestions;
     private ArrayList<OrderStatus> mStatusList;
     public ArrayList<Integer> mStatusListValue;
     private Context mContext;
     private Orientation mOrientation;
     private LayoutInflater mLayoutInflater;
+
 
 
     public TimeLineAdapter(HashMap<Integer, ArrayList<String> > feedList, ArrayList<OrderStatus> statusList, ArrayList<Integer> statusListValue) {
@@ -73,7 +74,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
     @Override
     public int getItemCount() {
-        return (mFeedList!=null? mFeedList.size():0);
+        return (mQuestions!=null? mQuestions.size():0);
     }
 
     public void completePoint(int position){

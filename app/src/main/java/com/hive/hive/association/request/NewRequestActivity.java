@@ -71,7 +71,7 @@ public class NewRequestActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //TODO association shouldnt be setted this way
                 String requestUUID = UUID.randomUUID().toString();
-                Request request = new Request(requestUUID, Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
+                Request request = new Request(Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
                         DocReferences.getUserRef(), null, DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s")
                         , titleET.getText().toString(),
                         descriptionET.getText().toString(), 0, 0, null);

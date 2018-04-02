@@ -2,22 +2,33 @@ package com.hive.hive.association.votes.tabs.questions;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
+import com.hive.hive.association.votes.VotesHelper;
 import com.hive.hive.association.votes.tabs.questions.model.OrderStatus;
 import com.hive.hive.association.votes.tabs.questions.model.Orientation;
 import com.hive.hive.association.votes.tabs.questions.model.TimeLineModel;
+import com.hive.hive.model.association.Question;
+import com.hive.hive.model.association.QuestionOptions;
+import com.hive.hive.model.association.Vote;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class QuestionForm extends AppCompatActivity {
-
+    private TextView mQuestionTV;
     // Timeline stuff
     private RecyclerView mRecyclerView;
     private TimeLineAdapter mTimeLineAdapter;
@@ -26,32 +37,54 @@ public class QuestionForm extends AppCompatActivity {
 
 
     // Data stuff
-    private HashMap<Integer, ArrayList<String> > formQuestions;
-    private ArrayList<String> arrayList;
     private ArrayList<OrderStatus> mQuestionStatus;
     private ArrayList<Integer> mQuestionStatusValue;
     private GridListAdapter formAdapter;
     private Context context;
+
+    HashMap<String, Question> mQuestions;
+    ArrayList<String> mQuestionsIds;
+
+    ArrayList<Vote> mVotes;
+
+    String mAssociationID;
+    String mSessionID;
+    String mAgendaID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_form);
         context = this;
+
+        mQuestionTV = findViewById(R.id.questionTV);
+
+        //Getting the Questions from the previusly activity
+        mQuestionsIds = (ArrayList<String>) getIntent().getSerializableExtra("questionsIds");
+        mQuestions = (HashMap<String, Question>) getIntent().getSerializableExtra("questions");
+
+        //Getting ids to send vote
+        mAssociationID = getIntent().getStringExtra("associationID");
+        mSessionID = getIntent().getStringExtra("sessionID");
+        mAgendaID = getIntent().getStringExtra("agendaID");
+        //Create  Votes
+        mVotes = new ArrayList<>();
+
         loadListView();
 
         onClickEvent();
 
         mOrientation = Orientation.HORIZONTAL;
+
         mRecyclerView = (RecyclerView) findViewById(R.id.question_timeline_RV);
         mRecyclerView.setLayoutManager(getLinearLayoutManager());
         mRecyclerView.setHasFixedSize(true);
         initView();
 
-
         // Pass Storyline adapter as reference
         formAdapter.setStorylineAdapter(mTimeLineAdapter);
 
+        mQuestionTV.setText(mQuestions.get(mQuestionsIds.get(0)).getQuestion());
     }
 
     private LinearLayoutManager getLinearLayoutManager() {
@@ -64,12 +97,13 @@ public class QuestionForm extends AppCompatActivity {
 
     private void initView() {
         //setDataListItems();
+
         mTimeLineAdapter = new TimeLineAdapter(formQuestions, mQuestionStatus, mQuestionStatusValue);
         mRecyclerView.setAdapter(mTimeLineAdapter);
     }
 
-    // Populate Form locally for now
     private void loadListView() {
+
         ListView formListView = (ListView) findViewById(R.id.list_view);
         formListView.setDivider(null);
         formListView.setDividerHeight(0);
@@ -77,20 +111,18 @@ public class QuestionForm extends AppCompatActivity {
         mQuestionStatus = new ArrayList<OrderStatus>();
         mQuestionStatusValue = new ArrayList<Integer>();
 
-        for (Integer i = 0; i <= 4; i++){
-            arrayList = new ArrayList<>();
-            for (int j = 0; j <= 4; j++)
-                arrayList.add("ListView Items " + j + " from "+ i);
+        for (Integer i = 0; i < mQuestions.size(); i++){
 
-            formQuestions.put(i,  arrayList);
             mQuestionStatus.add(i, OrderStatus.INACTIVE);
             mQuestionStatusValue.add(i, -1);
+
         }
 
         //Set First manually
         mQuestionStatus.set(0, OrderStatus.ACTIVE);
 
-        formAdapter = new GridListAdapter(context, formQuestions, true);
+
+        formAdapter = new GridListAdapter(context, mQuestions, mQuestionsIds, mQuestionTV,true);
         formListView.setAdapter(formAdapter);
     }
 
@@ -109,6 +141,18 @@ public class QuestionForm extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Next Question
+                Vote vote = adapter.getSelectedVote();
+                if(vote != null) {
+                    mVotes.add(adapter.getSelectedVote());
+                    if(adapter.nextQuestion()){
+                        VotesHelper.setVote(FirebaseFirestore.getInstance(), mAssociationID, mSessionID, mAgendaID, mQuestionsIds
+                                , mTimeLineAdapter.mStatusListValue, mVotes);
+                        finish();
+                    }
+                }else{
+                Toast.makeText(QuestionForm.this, getString(R.string.should_answer), Toast.LENGTH_SHORT).show();
+                }
+             //   QuestionOptions currentOptions = mQuestions.get(mQuestionsIds.get())
                 formAdapter.nextQuestion();
             }
         });
