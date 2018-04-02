@@ -30,14 +30,20 @@ import com.hive.hive.model.user.User;
 import com.hive.hive.utils.ProfilePhotoHelper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
-
+import java.util.List;
 
 public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestViewHolder> {
     private String TAG = CurrentAdapter.class.getSimpleName();
     //-- Data
     private HashMap<String, Agenda> mAgendas;
+
+    // Local for now
+    private HashMap<String, String> mIconsDrawablePaths;
+    private HashMap<String, Integer> mIconsDrawable;
+
     private ArrayList<String> mAgendaIds;
     //-- Views
     private  UnfoldableView mUnfoldableView;
@@ -60,12 +66,15 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
         this.mUnfoldableView = unfoldableView;
         this.mDetailsLayout = detailsLayout;
         this.mView = view;
+
     }
 
     @Override
     public RequestViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.vote_cell, parent, false);
 
+        // Init locally
+        initStuff();
 
         mQuestionsIds = new ArrayList<>();
 
@@ -116,6 +125,9 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
         agendaID = mAgendaIds.get(position);
         final Agenda agenda = mAgendas.get(agendaID);
         holder.mTitle.setText(agenda.getTitle());
+        //TODO:Change this line to get from server
+        holder.mCategoryIcon.setImageResource(getDrawable("services"));
+
         holder.mVote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -133,8 +145,9 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
     }
 
     private void changeUnfoldableContent(Agenda agenda, String agendaId){
-        TextView titleTV = mView.findViewById(R.id.titleTV);
+        TextView titleTV = mView.findViewById(R.id.titleContentTV);
         TextView descriptionTV = mView.findViewById(R.id.contentTV);
+
         Log.d(TAG, "title "+agenda.getTitle());
         titleTV.setText(agenda.getTitle());
         descriptionTV.setText(agenda.getContent());
@@ -163,18 +176,40 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
             }
         });
     }
+
+    // Use to get the drawables programmatically
+    public void initStuff(){
+        List<String> iconsList = Arrays.asList("services", "cleaning", "gardening", "security");
+        mIconsDrawable = new HashMap<>();
+        mIconsDrawablePaths = new HashMap<>();
+
+        for (String icon:
+             iconsList) {
+            mIconsDrawablePaths.put(icon, "ic_icones_"+icon+"_white");
+            int imageResource = mContext.getResources()
+                                        .getIdentifier(mIconsDrawablePaths.get(icon), "drawable", mContext.getPackageName());
+            mIconsDrawable.put(icon, imageResource);
+        }
+    }
+
+    public int getDrawable(String icon){
+        return mIconsDrawable.get(icon);
+    }
+
     /**
      * Class to serve as ViewHolder for a Request model in this adapter
      */
     class RequestViewHolder extends RecyclerView.ViewHolder{
-        final CardView mVote;
-        final TextView mTitle;
+        CardView mVote;
+        TextView mTitle;
+        ImageView mCategoryIcon;
 
 
         RequestViewHolder(View view){
             super(view);
-            mTitle = view.findViewById(R.id.budgetNameTV);
+            mTitle = view.findViewById(R.id.titleTV);
             mVote =  view.findViewById(R.id.cardVote);
+            mCategoryIcon = view.findViewById(R.id.category_IV);
         }
 
         @Override

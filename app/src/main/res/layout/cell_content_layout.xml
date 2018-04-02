@@ -1,39 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardScroll"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:custom="http://schemas.android.com/tools"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:scrollbars="none"
+    android:paddingTop="20dp"
+    android:paddingBottom="20dp"
+    android:clipToPadding="false"
     android:orientation="vertical">
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite"
+    android:elevation="30dp"
     android:orientation="vertical">
 
         <!-- content header line -->
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp">
+            android:layout_height="wrap_content">
 
 
+                <RelativeLayout
+                    android:paddingBottom="30dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/topCardIV"
+                            android:layout_width="match_parent"
+                            android:layout_height="160dp"
+                            android:background="@drawable/city_login" />
 
-                <ImageView
-                    android:id="@+id/topCardIV"
-                    android:layout_width="match_parent"
-                    android:layout_height="160dp"
-                    android:background="@drawable/city_login" />
-
-                <TextView
-                    android:paddingTop="120dp"
-                    android:gravity="center"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="20sp"
-                    android:text="@string/pattern_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/titleTV"/>
+                        <TextView
+                            android:layout_alignParentBottom="true"
+                            android:gravity="center"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="20sp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/titleContentTV"/>
+                </RelativeLayout>
 
                 <LinearLayout
                         android:paddingRight="20dp"
@@ -44,7 +55,7 @@
                         android:layout_height="wrap_content">
 
                         <LinearLayout
-                            android:paddingRight="30dp"
+                            android:paddingRight="20dp"
                             android:layout_gravity="bottom"
                             android:gravity="bottom"
                             android:layout_width="wrap_content"
@@ -52,9 +63,9 @@
 
                                 <ImageView
                                     android:layout_gravity="left|bottom"
-                                    app:srcCompat="@drawable/ic_support_borderline"
-                                    android:layout_width="50dp"
-                                    android:layout_height="50dp" />
+                                    app:srcCompat="@drawable/ic_icones_support_orange"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
 
                                 <TextView
                                     android:layout_gravity="right|center"
@@ -70,19 +81,18 @@
 
 
                         <LinearLayout
-                            android:paddingBottom="12dp"
+                            android:layout_marginLeft="20dp"
                             android:gravity="bottom"
                             android:layout_gravity="bottom"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
 
                                 <ImageView
-                                    app:srcCompat="@drawable/ic_clock"
-                                    android:layout_width="25dp"
-                                    android:layout_height="25dp" />
+                                    app:srcCompat="@drawable/ic_icones_clock"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content" />
 
                                 <TextView
-                                    android:layout_marginLeft="10dp"
                                     android:textColor="@color/colorBlack"
                                     android:textSize="14sp"
                                     android:layout_gravity="right|center"
@@ -102,7 +112,7 @@
         <!-- content body layout -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@color/bgContent"
             android:orientation="vertical"
             android:paddingBottom="6dp"
@@ -116,8 +126,8 @@
                     android:layout_height="wrap_content">
 
                         <TextView
-                            android:paddingTop="15dp"
-                            android:gravity="center_vertical"
+                            android:paddingTop="5dp"
+                            android:gravity="center"
                             android:id="@+id/content_avatar_title"
                             style="@style/ContentMainBadgeTitle"
                             android:layout_width="wrap_content"
@@ -125,23 +135,27 @@
                             android:text="@string/suggested" />
 
                         <ImageView
-                            android:layout_marginLeft="50dp"
+                            android:layout_marginLeft="35dp"
                             android:id="@+id/suggestedByIV"
-                            android:layout_width="50dp"
+                            android:layout_width="wrap_content"
                             android:layout_toRightOf="@id/content_avatar_title"
-                            android:layout_height="50dp"
+                            android:layout_height="35dp"
                             app:srcCompat="@drawable/ic_profile_photo" />
 
                         <TextView
-                            android:paddingTop="10dp"
+                            android:paddingTop="3dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginBottom="5dp"
                             android:layout_centerVertical="true"
                             android:id="@+id/suggestedByTV"
+
+
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+
                             android:layout_alignTop="@id/suggestedByIV"
                             android:layout_toEndOf="@id/suggestedByIV"
                             android:layout_toRightOf="@id/suggestedByIV"
-                            android:text="@string/client_name_mock"
                             android:textColor="@color/mainTextColor"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -149,12 +163,12 @@
                 </RelativeLayout>
 
                 <!-- divider line -->
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="6dp"
-                    android:layout_marginTop="9dp"
-                    android:src="@color/contentDividerLine" />
+                <!--<ImageView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="1dp"-->
+                    <!--android:layout_marginBottom="6dp"-->
+                    <!--android:layout_marginTop="9dp"-->
+                    <!--android:src="@color/contentDividerLine" />-->
 
 
                 <!-- divider line -->
@@ -168,7 +182,7 @@
                     android:text="@string/lore_ipsun"
                     android:textColor="@color/mainTextColor"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="italic" />
 
                 <TextView
                     android:paddingTop="10dp"
@@ -181,22 +195,22 @@
                     android:textSize="16sp"
                     android:textStyle="italic" />
 
-             <LinearLayout
-                 android:layout_gravity="center_horizontal"
-                 android:gravity="center"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content">
-                     <!-- hexagonal graph-->
-                     <com.hive.hive.utils.hexagonsPercentBar.HexagonView
-                         android:layout_marginLeft="30dp"
-                         android:layout_gravity="center_horizontal"
-                         android:id="@+id/percentageBar"
-                         android:layout_width="wrap_content"
-                         android:layout_height="100dp"
+             <!--<LinearLayout-->
+                 <!--android:layout_gravity="center_horizontal"-->
+                 <!--android:gravity="center"-->
+                 <!--android:layout_width="wrap_content"-->
+                 <!--android:layout_height="wrap_content">-->
+                     <!--&lt;!&ndash; hexagonal graph&ndash;&gt;-->
+                     <!--<com.hive.hive.utils.hexagonsPercentBar.HexagonView-->
+                         <!--android:layout_marginLeft="30dp"-->
+                         <!--android:layout_gravity="center_horizontal"-->
+                         <!--android:id="@+id/percentageBar"-->
+                         <!--android:layout_width="wrap_content"-->
+                         <!--android:layout_height="100dp"-->
 
-                         />
+                         <!--/>-->
 
-             </LinearLayout>
+             <!--</LinearLayout>-->
 
 
             <!-- Question Options -->
@@ -206,28 +220,35 @@
                 android:id="@+id/questionExpandableLV"
                 android:gravity="left"
                 android:layoutDirection="ltr"
-                android:layout_height="300dp"
+                android:layout_height="wrap_content"
                 android:layout_width="match_parent"/>
 
             <!-- Vote button -->
-
-            <ImageButton
-                android:layout_gravity="center_horizontal|bottom"
-                android:id="@+id/choseVoteBT"
-                android:background="@drawable/ic_like"
-                android:layout_width="110dp"
-                android:layout_height="100dp"
-                 />
-            <TextView
-                android:layout_gravity="center_horizontal"
-                android:textSize="16sp"
-                android:textColor="@color/colorBlack"
-                android:text="@string/vote"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            <LinearLayout
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                    <ImageButton
+                        android:layout_gravity="center_horizontal|bottom"
+                        android:id="@+id/choseVoteBT"
+                        android:background="@drawable/ic_icones_double_like_orange"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        />
+                    <TextView
+                        android:layout_marginBottom="15dp"
+                        android:gravity="center"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="16sp"
+                        android:textColor="@color/colorBlack"
+                        android:text="@string/vote"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+            </LinearLayout>
 
 
         </LinearLayout>
 
-</LinearLayout>
+    </LinearLayout>
 </ScrollView>

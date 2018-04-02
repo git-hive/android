@@ -12,13 +12,11 @@ import com.github.vipulasri.timelineview.TimelineView;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.tabs.questions.model.OrderStatus;
 import com.hive.hive.association.votes.tabs.questions.model.Orientation;
-import com.hive.hive.association.votes.tabs.questions.model.TimeLineModel;
 import com.hive.hive.association.votes.tabs.questions.utils.VectorDrawableUtils;
 import com.hive.hive.model.association.Question;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Birck.
@@ -30,16 +28,14 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
     public ArrayList<Integer> mStatusListValue;
     private Context mContext;
     private Orientation mOrientation;
-    private boolean mWithLinePadding;
     private LayoutInflater mLayoutInflater;
 
 
-    public TimeLineAdapter(HashMap<String, Question> questions, ArrayList<OrderStatus> statusList, ArrayList<Integer> statusListValue, Orientation orientation, boolean withLinePadding) {
-        mQuestions = questions;
+
+    public TimeLineAdapter(ArrayList<OrderStatus> statusList, ArrayList<Integer> statusListValue) {
         mStatusList = statusList;
         mStatusListValue = statusListValue;
         mOrientation = Orientation.HORIZONTAL;
-        mWithLinePadding = withLinePadding;
     }
 
     @Override
@@ -66,11 +62,11 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
         OrderStatus currentStatus = mStatusList.get(position);
 
         if(currentStatus == OrderStatus.ACTIVE) {
-            holder.mTimelineView.setMarker(VectorDrawableUtils.getDrawable(mContext, R.drawable.ic_marker_active, R.color.colorPrimary));
+            holder.mTimelineView.setMarker(VectorDrawableUtils.getDrawable(mContext, R.drawable.ic_marker_active, R.color.colorOrange));
         } else if(currentStatus == OrderStatus.INACTIVE) {
-            holder.mTimelineView.setMarker(ContextCompat.getDrawable(mContext, R.drawable.ic_marker_inactive), ContextCompat.getColor(mContext, R.color.colorPrimary));
+            holder.mTimelineView.setMarker(ContextCompat.getDrawable(mContext, R.drawable.ic_marker_inactive), ContextCompat.getColor(mContext, R.color.colorOrange));
         }else{
-            holder.mTimelineView.setMarker(ContextCompat.getDrawable(mContext, R.drawable.ic_marker), ContextCompat.getColor(mContext, R.color.colorPrimary));
+            holder.mTimelineView.setMarker(ContextCompat.getDrawable(mContext, R.drawable.ic_marker), ContextCompat.getColor(mContext, R.color.colorOrange));
         }
 
     }
