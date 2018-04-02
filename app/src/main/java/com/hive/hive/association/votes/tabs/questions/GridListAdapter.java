@@ -1,10 +1,8 @@
 package com.hive.hive.association.votes.tabs.questions;
  
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

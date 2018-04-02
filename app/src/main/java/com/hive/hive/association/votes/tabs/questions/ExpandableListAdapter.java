@@ -2,14 +2,16 @@ package com.hive.hive.association.votes.tabs.questions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
-import android.graphics.Typeface;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,18 +19,24 @@ import com.hive.hive.R;
 import com.hive.hive.association.transparency.tabs.staff.CustomGridView;
 import com.hive.hive.association.votes.QuestionGridAdapter;
 import com.hive.hive.model.association.Question;
+import com.hive.hive.utils.hexagonsPercentBar.HexagonView;
+import com.hive.hive.utils.hexagonsPercentBar.HexagonalBarAdapter;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
-	private Context _context;
+	private Context mContext;
 	private HashMap<String, Question> mQuestions;
 	private ArrayList<String> mQuestionsIds;
 
-	static final String[] MOBILE_OS = new String[] { "Android", "iOS",
-			"Windows", "Blackberry" };
+	// Percentage bar
+	HexagonView mPercentageBar;
+    RecyclerView mPercentageRV;
+    HexagonalBarAdapter mHexBarAdapter;
+
+
 
 	public ExpandableListAdapter(Context context, HashMap<String, Question> questions, ArrayList<String> mQuestionsIds) {
-		this._context = context;
+		mContext = context;
 		this.mQuestions = questions;
 		this.mQuestionsIds = mQuestionsIds;
 	}
@@ -85,24 +93,28 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
 		// Inflating header layout and setting text
 		if (convertView == null) {
-			LayoutInflater infalInflater = (LayoutInflater) this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			LayoutInflater infalInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = infalInflater.inflate(R.layout.question_header, parent, false);
 		}
 
-		TextView header_text = (TextView) convertView.findViewById(R.id.header);
+		TextView header_text = (TextView) convertView.findViewById(R.id.headerTV);
 		header_text.setText(question.getQuestion());
 
+        ImageView headerMarkerIV = convertView.findViewById(R.id.headerMarkerIV);
+
 		// If group is expanded then change the text into bold and change the
-		// icon
 		if (isExpanded) {
-			header_text.setTypeface(null, Typeface.BOLD);
-			header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_right_arrow, 0);
+		    headerMarkerIV.setImageResource(R.drawable.ic_baixolaranja);
+		    headerMarkerIV.setRotation(-180);
+//			header_text.setTypeface(null, Typeface.BOLD);
+//			header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_right_arrow, 0);
 		} else {
 			// If group is not expanded then change the text back into normal
 			// and change the icon
-
-			header_text.setTypeface(null, Typeface.NORMAL);
-			header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_right_arrow, 0);
+            headerMarkerIV.setImageResource(R.drawable.ic_baixolaranja);
+            headerMarkerIV.setRotation(-360);
+//			header_text.setTypeface(null, Typeface.NORMAL);
+//			header_text.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_right_arrow, 0);
 		}
 
 		return convertView;
@@ -110,14 +122,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
 	@Override
 	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-		// Getting child text
-//		final String childText = (String) getChild(groupPosition, childPosition);
-		// Inflating child layout and setting textview
+
 		if (convertView == null) {
-			LayoutInflater infalInflater = (LayoutInflater) this._context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			//convertView = infalInflater.inflate(R.layout.question_child, parent, false);
+			LayoutInflater infalInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = infalInflater.inflate(R.layout.question_grid_view, null);
 		}
+
 		CustomGridView gridView = (CustomGridView) convertView
 				.findViewById(R.id.questionGV);
 
@@ -126,7 +136,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
         String questionId = mQuestionsIds.get(groupPosition);
         Question question = mQuestions.get(questionId);
-		QuestionGridAdapter adapter = new QuestionGridAdapter(this._context, MOBILE_OS, question.getOptions());
+		QuestionGridAdapter adapter = new QuestionGridAdapter(mContext, question.getOptions());
 		gridView.setAdapter(adapter);// Adapter
 
 		int totalHeight = 0;
@@ -138,6 +148,22 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 			totalHeight += questionTV.getMeasuredHeight();
 		}
 		gridView.SetHeight(totalHeight);
+
+		// TODO: Take care you should call autoInit always
+		mPercentageBar =  convertView.findViewById(R.id.percentageBar);
+		mPercentageBar.autoInit(4);
+
+        // Setting percentage view stuff
+		mPercentageRV = convertView.findViewById(R.id.percentageRV);
+		mHexBarAdapter = new HexagonalBarAdapter(((Activity)mContext), question.getOptions());
+
+        LinearLayoutManager layoutManager
+                = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+
+        layoutManager.setAutoMeasureEnabled(true);
+        mPercentageRV.setLayoutManager(layoutManager);
+        mPercentageRV.setAdapter(mHexBarAdapter);
+
 		return convertView;
 	}
 

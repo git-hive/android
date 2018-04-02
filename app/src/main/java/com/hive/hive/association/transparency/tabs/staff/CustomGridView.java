@@ -17,7 +17,7 @@ public class CustomGridView extends GridView {
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int desiredWidth = 200;
+        int desiredWidth = (int) (200 * getResources().getDisplayMetrics().density);
 
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);

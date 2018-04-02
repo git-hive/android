@@ -1,11 +1,50 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical" >
 
-    <com.hive.hive.association.transparency.tabs.staff.CustomGridView
-        android:id="@+id/questionGV"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"/>
+    <LinearLayout
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:id="@+id/percentageRV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </android.support.v7.widget.RecyclerView>
+
+        <!-- hexagonal graph-->
+        <LinearLayout
+            android:gravity="center_horizontal"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <com.hive.hive.utils.hexagonsPercentBar.HexagonView
+                android:layout_marginTop="10dp"
+                android:id="@+id/percentageBar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.hive.hive.association.transparency.tabs.staff.CustomGridView
+            android:gravity="left"
+            android:id="@+id/questionGV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
 
 </LinearLayout>

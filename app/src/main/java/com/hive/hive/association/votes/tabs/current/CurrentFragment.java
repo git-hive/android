@@ -8,12 +8,16 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
+
 import com.alexvasilkov.foldablelayout.UnfoldableView;
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.DocumentChange;
@@ -57,7 +61,7 @@ public class CurrentFragment extends Fragment {
     View mListTouchInterceptor;
     FrameLayout mDetailsLayout;
     UnfoldableView mUnfoldableView;
-    HexagonView mPercentageBar;
+    ScrollView detailsScrollView;
 
     // Temporary solution to unfold card, TODO: Check with the @guys
     ImageView mTopClickableCardIV;
@@ -105,9 +109,7 @@ public class CurrentFragment extends Fragment {
         mDetailsLayout = view.findViewById(R.id.details_layout);
         mDetailsLayout.setVisibility(View.INVISIBLE);
 
-        // TODO: Take care you should call autoInit always
-        mPercentageBar =  view.findViewById(R.id.percentageBar);
-        mPercentageBar.autoInit(4);
+
 
         // Call set config to set percentage
         // mPercentageBar.setConfig();
@@ -126,7 +128,7 @@ public class CurrentFragment extends Fragment {
                 mListTouchInterceptor.setClickable(false);
 
                 // Check this out to unfold when grab down TODO: @MarcoBirck
-                unfoldableView.setGesturesEnabled(false);
+                unfoldableView.setGesturesEnabled(true);
             }
 
             @Override
@@ -228,6 +230,7 @@ public class CurrentFragment extends Fragment {
         // Setting group indicator null for custom indicator
         expandableListView.setGroupIndicator(null);
 
+
         // Start Questions activity stuff
         choseVoteBT.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -236,6 +239,28 @@ public class CurrentFragment extends Fragment {
 
             }
         });
+
+        // Get scroll refence
+        detailsScrollView = view.findViewById(R.id.cardScroll);
+
+        // Solution by: https://github.com/alexvasilkov/FoldableLayout/issues/38#issuecomment-192814520
+        // Allows scroll
+        detailsScrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mUnfoldableView.requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+        expandableListView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mUnfoldableView.requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+
+
 
         return view;
     }
@@ -276,6 +301,91 @@ public class CurrentFragment extends Fragment {
                 context.startActivity(it);
             }
         });
+    public static void setItems(Context context, HashMap<String, Question> questions, ArrayList<String> questionsIds){
+
+        adapter = new ExpandableListAdapter(context, questions, questionsIds);
+
+        // Setting adpater over expandablelistview
+        expandableListView.setAdapter(adapter);
+        expandableListView.setDividerHeight(0);
+
+        for (int i = 0; i < adapter.getGroupCount(); i++)
+            expandableListView.expandGroup(i);
+        setListViewHeight(expandableListView);
+        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                setListViewHeight(parent, groupPosition);
+                return false;
+            }
+        });
+
+        for (int i = 0; i < adapter.getGroupCount(); i++)
+            expandableListView.collapseGroup(i);
+        setListViewHeight(expandableListView);
+
+
     }
+
+    // Workaround found in: https://thedeveloperworldisyours.com/android/expandable-listview-inside-scrollview/ to ExpandableListView
+    // https://stackoverflow.com/questions/17696039/expandablelistview-inside-a-scrollview
+
+    private static void setListViewHeight(ExpandableListView listView) {
+        ExpandableListAdapter listAdapter = (ExpandableListAdapter) listView.getExpandableListAdapter();
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getGroupCount(); i++) {
+            View groupView = listAdapter.getGroupView(i, true, null, listView);
+            groupView.measure(0, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += groupView.getMeasuredHeight();
+
+            if (listView.isGroupExpanded(i)){
+                for(int j = 0; j < listAdapter.getChildrenCount(i); j++){
+                    View listItem = listAdapter.getChildView(i, j, false, null, listView);
+                    listItem.measure(0, View.MeasureSpec.UNSPECIFIED);
+                    totalHeight += listItem.getMeasuredHeight();
+                }
+            }
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight
+                + (listView.getDividerHeight() * (listAdapter.getGroupCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
+
+    private static void setListViewHeight(ExpandableListView listView,
+                                          int group) {
+        ExpandableListAdapter listAdapter = (ExpandableListAdapter) listView.getExpandableListAdapter();
+        int totalHeight = 0;
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(),
+                View.MeasureSpec.EXACTLY);
+        for (int i = 0; i < listAdapter.getGroupCount(); i++) {
+            View groupItem = listAdapter.getGroupView(i, false, null, listView);
+            groupItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += groupItem.getMeasuredHeight();
+
+            if (((listView.isGroupExpanded(i)) && (i != group))
+                    || ((!listView.isGroupExpanded(i)) && (i == group))) {
+                for (int j = 0; j < listAdapter.getChildrenCount(i); j++) {
+                    View listItem = listAdapter.getChildView(i, j, false, null,
+                            listView);
+                    listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+                    totalHeight += listItem.getMeasuredHeight();
+                }
+            }
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        int height = totalHeight
+                + (listView.getDividerHeight() * (listAdapter.getGroupCount() - 1));
+        if (height < 10)
+            height = 200;
+        params.height = height;
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
+
+
 
 }
