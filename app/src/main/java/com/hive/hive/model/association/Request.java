@@ -37,13 +37,15 @@ public class Request extends AssociationAction {
             String title,
             String content,
             int score,
-            int numComments
+            int numComments,
+            ArrayList<DocumentReference> categoriesRefs
     ) {
         super(id, createdAt, updatedAt, authorRef, pointsTransactionRef, associationRef);
         this.title = title;
         this.content = content;
         this.score = score;
         this.numComments = numComments;
+        this.categoriesRefs = categoriesRefs;
     }
 
     //--- Getters
