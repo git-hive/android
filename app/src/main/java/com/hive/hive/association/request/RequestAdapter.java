@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ import com.hive.hive.association.AssociationHelper;
 import com.hive.hive.association.request.comments.CommentaryActivity;
 import com.hive.hive.model.association.AssociationSupport;
 import com.hive.hive.model.association.Request;
-import com.hive.hive.model.association.RequestCategory;
 import com.hive.hive.model.user.User;
 import com.hive.hive.utils.DocReferences;
 import com.hive.hive.utils.ProfilePhotoHelper;
@@ -31,15 +29,11 @@ import com.hive.hive.utils.SupportMutex;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-/**
- * Created by vplentz on 04/02/18.
- */
-
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestViewHolder> {
     private String TAG = RequestAdapter.class.getSimpleName();
 
     //-- Data
-    private ArrayList<Pair<Request, ArrayList<RequestCategory>>> joinedRequestWithCategories;
+    private ArrayList<Request> requests;
     private ArrayList<SupportMutex> mLocks;
     private Context context;
 
@@ -49,11 +43,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     private FirebaseFirestore mDB = FirebaseFirestore.getInstance();
     private String mAssociationID = "gVw7dUkuw3SSZSYRXe8s";
 
-    public RequestAdapter(
-            ArrayList<Pair<Request, ArrayList<RequestCategory>>> joinedRequestWithCategories,
-            Context context
-    ) {
-        this.joinedRequestWithCategories = joinedRequestWithCategories;
+    public RequestAdapter(ArrayList<Request> requests, Context context) {
+        this.requests = requests;
         this.context = context;
         this.mLocks = new ArrayList<>();
     }
@@ -76,7 +67,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             mLocks.add(new SupportMutex(holder.mNumberOfSupportsTV, holder.mSupportsIV));
         }
 
-        final Request request = joinedRequestWithCategories.get(position).first;
+        final Request request = requests.get(position);
 
         holder.mItem = request;
 
@@ -105,15 +96,21 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
     @Override
     public int getItemCount() {
-        return joinedRequestWithCategories.size();
+        return requests.size();
     }
 
     private View.OnClickListener createToggleSupportOnClickListener(int position) {
-        return v -> getRequestSupportAndCallSupportActionHandler(
-                position,
-                getRequestID(position),
-                mLocks.get(position)
-        );
+        return v -> {
+            // Lock the mutex as soon as the user clicks
+            SupportMutex mutex = mLocks.get(position);
+            mutex.lock();
+
+            getRequestSupportAndCallSupportActionHandler(
+                    position,
+                    getRequestID(position),
+                    mutex
+            );
+        };
     }
 
     // TODO: FINISH
@@ -128,8 +125,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         });
     }
 
-    private String getRequestID(int joinedRequestsPosition) {
-        return joinedRequestWithCategories.get(joinedRequestsPosition).first.getId();
+    private String getRequestID(int requestPosition) {
+        return requests.get(requestPosition).getId();
     }
 
     private void shouldFillSupport(final RequestViewHolder holder, String requestId){
@@ -157,12 +154,11 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             String requestID,
             final SupportMutex mutex
     ) {
-        mutex.lock();
         AssociationHelper.getRequestSupport(
-                FirebaseFirestore.getInstance(),
+                mDB,
                 mAssociationID,
                 requestID,
-                FirebaseAuth.getInstance().getUid()
+                mUser.getUid()
         )
                 .addOnSuccessListener(
                         documentSnapshot -> supportActionHandler(
@@ -180,7 +176,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             DocumentSnapshot supportSnap,
             final SupportMutex mutex
     ) {
-        Request request = joinedRequestWithCategories.get(requestPosition).first;
+        Request request = requests.get(requestPosition);
         // Toggle request support
         if (supportSnap.exists()) {
             // Remove support
@@ -190,14 +186,11 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                     requestID,
                     supportSnap.getId()
             )
+                    .addOnCompleteListener(task -> mutex.unlock())
+                    .addOnFailureListener(e -> Log.e(TAG, e.toString()))
                     .addOnSuccessListener(aVoid -> {
                         request.decrementScore();
                         RequestAdapter.this.notifyDataSetChanged();
-                        mutex.unlock();
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e(TAG, e.toString());
-                        mutex.unlock();
                     });
         } else {
             // Create and save support
@@ -224,14 +217,11 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                     supportId,
                     support
             )
+                    .addOnCompleteListener(task -> mutex.unlock())
+                    .addOnFailureListener(e ->Log.e(TAG, e.toString()))
                     .addOnSuccessListener(aVoid -> {
                         request.incrementScore();
                         RequestAdapter.this.notifyDataSetChanged();
-                        mutex.unlock();
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e(TAG, e.toString());
-                        mutex.unlock();
                     });
         }
     }
@@ -249,7 +239,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         final ImageView mCommentsIV;
 
         final TextView mUserName;
-        final TextView mUserLeaderboardPostion;
+        final TextView mUserLeaderboardPosition;
         final TextView mRequestTitle;
         final TextView mRequestCost;
         final TextView mRequestContent;
@@ -272,7 +262,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             mRequestCategory = view.findViewById(R.id.request_budget_category_iv);
 
             mUserName = view.findViewById(R.id.request_author_name_tv);
-            mUserLeaderboardPostion = view.findViewById(R.id.request_leaderboard_position_tv);
+            mUserLeaderboardPosition = view.findViewById(R.id.request_leaderboard_position_tv);
             mRequestTitle = view.findViewById(R.id.request_title_tv);
             mRequestCost = view.findViewById(R.id.request_cost_tv);
             mRequestContent = view.findViewById(R.id.request_content_tv);
