@@ -13,7 +13,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
+import com.hive.hive.association.votes.VotesHelper;
 import com.hive.hive.association.votes.tabs.questions.model.OrderStatus;
 import com.hive.hive.association.votes.tabs.questions.model.Orientation;
 import com.hive.hive.association.votes.tabs.questions.model.TimeLineModel;
@@ -44,6 +46,11 @@ public class QuestionForm extends AppCompatActivity {
     ArrayList<String> mQuestionsIds;
 
     ArrayList<Vote> mVotes;
+
+    String mAssociationID;
+    String mSessionID;
+    String mAgendaID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +63,10 @@ public class QuestionForm extends AppCompatActivity {
         mQuestionsIds = (ArrayList<String>) getIntent().getSerializableExtra("questionsIds");
         mQuestions = (HashMap<String, Question>) getIntent().getSerializableExtra("questions");
 
+        //Getting ids to send vote
+        mAssociationID = getIntent().getStringExtra("associationID");
+        mSessionID = getIntent().getStringExtra("sessionID");
+        mAgendaID = getIntent().getStringExtra("agendaID");
         //Create  Votes
         mVotes = new ArrayList<>();
 
@@ -90,7 +101,6 @@ public class QuestionForm extends AppCompatActivity {
         mRecyclerView.setAdapter(mTimeLineAdapter);
     }
 
-    // Populate Form locally for now
     private void loadListView() {
         ListView listView = findViewById(R.id.list_view);
 
@@ -129,7 +139,11 @@ public class QuestionForm extends AppCompatActivity {
                 Vote vote = adapter.getSelectedVote();
                 if(vote != null) {
                     mVotes.add(adapter.getSelectedVote());
-                    adapter.nextQuestion();
+                    if(adapter.nextQuestion()){
+                        VotesHelper.setVote(FirebaseFirestore.getInstance(), mAssociationID, mSessionID, mAgendaID, mQuestionsIds
+                                , mTimeLineAdapter.mStatusListValue, mVotes);
+                        finish();
+                    }
                 }else{
                 Toast.makeText(QuestionForm.this, getString(R.string.should_answer), Toast.LENGTH_SHORT).show();
                 }

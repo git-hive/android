@@ -182,8 +182,8 @@ public class GridListAdapter extends BaseAdapter {
             notifyDataSetChanged();
         }
     }
-    //Delete the selected position from the arrayList
-    public void nextQuestion() {
+    //Returns if is the last Question anf if it all got answered
+    public boolean nextQuestion() {
 
         selectedPosition = refStorylineAdapter.mStatusListValue.get(currentFormIndex);
         notifyDataSetChanged();
@@ -194,8 +194,7 @@ public class GridListAdapter extends BaseAdapter {
             // Everything is answered and send options
             if(refStorylineAdapter.checkAnswers()){
                 Toast.makeText(mContext, "All done, questions sent!", Toast.LENGTH_LONG).show();
-                ((Activity)mContext).finish();
-
+                return true;
             // When there is still questions to be answered
             }else{
                 Toast.makeText(mContext, "You should answer all questions!", Toast.LENGTH_LONG).show();
@@ -231,6 +230,7 @@ public class GridListAdapter extends BaseAdapter {
             selectedPosition = -1;//after removing selectedPosition set it back to -1
             notifyDataSetChanged();
         }
+        return false;
     }
 
     public void setStorylineAdapter(TimeLineAdapter storylineAdapter){

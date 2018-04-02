@@ -50,6 +50,8 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
     private ArrayList<String> mQuestionsIds; // FROM CURRENT AGENDA
     private Context mContext;
 
+    //-- IDS TO PASS TO VOTE
+    String agendaID;
     public CurrentAdapter(Context context, HashMap<String, Agenda> agendas, ArrayList<String> agendasIds,
                           UnfoldableView unfoldableView, FrameLayout detailsLayout, View view){
         this.mContext = context;
@@ -83,7 +85,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
                             Question question = dc.getDocument().toObject(Question.class);
                             mQuestions.put(questionId, question);
                             mQuestionsIds.add(questionId);
-                            CurrentFragment.setItems(mContext, mQuestions, mQuestionsIds);
+                            CurrentFragment.setItems(mContext, mQuestions, mQuestionsIds, agendaID);
                             break;
                         case MODIFIED:
 //                            Question newQ = dc.getDocument().toObject(Question.class);
@@ -94,13 +96,13 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
                             String modifiedId = dc.getDocument().getId();
                             mQuestions.remove(modifiedId);
                             mQuestions.put(modifiedId, dc.getDocument().toObject(Question.class));
-                            CurrentFragment.setItems(mContext, mQuestions, mQuestionsIds);
+                            CurrentFragment.setItems(mContext, mQuestions, mQuestionsIds, agendaID);
                             break;
                         case REMOVED:
                             String removedId = dc.getDocument().getId();
                             mQuestions.remove(removedId);
                             mQuestionsIds.remove(removedId);
-                            CurrentFragment.setItems(mContext, mQuestions, mQuestionsIds);
+                            CurrentFragment.setItems(mContext, mQuestions, mQuestionsIds, agendaID);
                             break;
                     }
                 }
@@ -111,13 +113,13 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
 
     @Override
     public void onBindViewHolder(RequestViewHolder holder, int position) {
-        final String agendaId = mAgendaIds.get(position);
-        final Agenda agenda = mAgendas.get(agendaId);
+        agendaID = mAgendaIds.get(position);
+        final Agenda agenda = mAgendas.get(agendaID);
         holder.mTitle.setText(agenda.getTitle());
         holder.mVote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeUnfoldableContent(agenda, agendaId);
+                changeUnfoldableContent(agenda, agendaID);
                 mUnfoldableView.unfold(view, mDetailsLayout);
 
             }
