@@ -2,6 +2,8 @@ package com.hive.hive.model.association;
 
 import com.google.firebase.firestore.DocumentReference;
 
+import java.util.ArrayList;
+
 public class Request extends AssociationAction {
 
     //--- SubCollections
@@ -18,8 +20,7 @@ public class Request extends AssociationAction {
     private int score;
     private int numComments;
 
-    private DocumentReference categoryRef;
-    private RequestCategory category;
+    private ArrayList<DocumentReference> categoriesRefs;
 
 //--- Constructors
 
@@ -36,15 +37,13 @@ public class Request extends AssociationAction {
             String title,
             String content,
             int score,
-            int numComments,
-            RequestCategory category
+            int numComments
     ) {
         super(id, createdAt, updatedAt, authorRef, pointsTransactionRef, associationRef);
         this.title = title;
         this.content = content;
         this.score = score;
         this.numComments = numComments;
-        this.category = category;
     }
 
     //--- Getters
@@ -63,12 +62,8 @@ public class Request extends AssociationAction {
 
     public int getNumComments() { return numComments;}
 
-    public DocumentReference getCategoryRef() {
-        return categoryRef;
-    }
-
-    public RequestCategory getCategory() {
-        return category;
+    public ArrayList<DocumentReference> getCategoriesRefs() {
+        return categoriesRefs;
     }
 
     //--- Setters
@@ -95,12 +90,8 @@ public class Request extends AssociationAction {
 
     public void setNumComments(int numComments) { this.numComments = numComments; }
 
-    public void setCategoryRef(DocumentReference categoryRef) {
-        this.categoryRef = categoryRef;
-    }
-
-    public void setCategory(RequestCategory category) {
-        this.category = category;
+    public void setCategoriesRefs(ArrayList<DocumentReference> categoriesRefs) {
+        this.categoriesRefs = categoriesRefs;
     }
 
 }
