@@ -23,14 +23,14 @@ public class QuestionForm extends AppCompatActivity {
     private TimeLineAdapter mTimeLineAdapter;
     private List<TimeLineModel> mDataList = new ArrayList<>();
     private Orientation mOrientation;
-    private boolean mWithLinePadding;
+
 
     // Data stuff
     private HashMap<Integer, ArrayList<String> > formQuestions;
     private ArrayList<String> arrayList;
     private ArrayList<OrderStatus> mQuestionStatus;
     private ArrayList<Integer> mQuestionStatusValue;
-    private GridListAdapter adapter;
+    private GridListAdapter formAdapter;
     private Context context;
 
     @Override
@@ -43,7 +43,6 @@ public class QuestionForm extends AppCompatActivity {
         onClickEvent();
 
         mOrientation = Orientation.HORIZONTAL;
-        mWithLinePadding = false;
         mRecyclerView = (RecyclerView) findViewById(R.id.question_timeline_RV);
         mRecyclerView.setLayoutManager(getLinearLayoutManager());
         mRecyclerView.setHasFixedSize(true);
@@ -51,7 +50,7 @@ public class QuestionForm extends AppCompatActivity {
 
 
         // Pass Storyline adapter as reference
-        adapter.setStorylineAdapter(mTimeLineAdapter);
+        formAdapter.setStorylineAdapter(mTimeLineAdapter);
 
     }
 
@@ -65,14 +64,15 @@ public class QuestionForm extends AppCompatActivity {
 
     private void initView() {
         //setDataListItems();
-        mTimeLineAdapter = new TimeLineAdapter(formQuestions, mQuestionStatus, mQuestionStatusValue, mOrientation, mWithLinePadding);
+        mTimeLineAdapter = new TimeLineAdapter(formQuestions, mQuestionStatus, mQuestionStatusValue);
         mRecyclerView.setAdapter(mTimeLineAdapter);
     }
 
     // Populate Form locally for now
     private void loadListView() {
-        ListView listView = (ListView) findViewById(R.id.list_view);
-
+        ListView formListView = (ListView) findViewById(R.id.list_view);
+        formListView.setDivider(null);
+        formListView.setDividerHeight(0);
         formQuestions = new HashMap<Integer, ArrayList<String>>();
         mQuestionStatus = new ArrayList<OrderStatus>();
         mQuestionStatusValue = new ArrayList<Integer>();
@@ -90,8 +90,8 @@ public class QuestionForm extends AppCompatActivity {
         //Set First manually
         mQuestionStatus.set(0, OrderStatus.ACTIVE);
 
-        adapter = new GridListAdapter(context, formQuestions, true);
-        listView.setAdapter(adapter);
+        formAdapter = new GridListAdapter(context, formQuestions, true);
+        formListView.setAdapter(formAdapter);
     }
 
 
@@ -102,14 +102,14 @@ public class QuestionForm extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Next Question
-                adapter.previousQuestion();
+                formAdapter.previousQuestion();
             }
         });
         findViewById(R.id.questionNextBT).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Next Question
-                adapter.nextQuestion();
+                formAdapter.nextQuestion();
             }
         });
 
