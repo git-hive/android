@@ -32,8 +32,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
 
 
-    public TimeLineAdapter(HashMap<Integer, ArrayList<String> > feedList, ArrayList<OrderStatus> statusList, ArrayList<Integer> statusListValue) {
-        mFeedList = feedList;
+    public TimeLineAdapter(ArrayList<OrderStatus> statusList, ArrayList<Integer> statusListValue) {
         mStatusList = statusList;
         mStatusListValue = statusListValue;
         mOrientation = Orientation.HORIZONTAL;

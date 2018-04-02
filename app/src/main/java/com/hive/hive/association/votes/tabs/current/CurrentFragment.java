@@ -301,12 +301,7 @@ public class CurrentFragment extends Fragment {
                 context.startActivity(it);
             }
         });
-    public static void setItems(Context context, HashMap<String, Question> questions, ArrayList<String> questionsIds){
 
-        adapter = new ExpandableListAdapter(context, questions, questionsIds);
-
-        // Setting adpater over expandablelistview
-        expandableListView.setAdapter(adapter);
         expandableListView.setDividerHeight(0);
 
         for (int i = 0; i < adapter.getGroupCount(); i++)

@@ -32,6 +32,7 @@
     </FrameLayout>
 
     <LinearLayout
+        android:background="@color/colorOrange"
         android:padding="15dp"
         android:layout_below="@id/superiorBar"
         android:id="@+id/timelineFrame"
@@ -54,7 +55,6 @@
   
     <TextView
         android:layout_centerHorizontal="true"
-        android:id="@+id/questionForm"
         android:layout_below="@id/timelineFrame"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -68,7 +68,7 @@
     <ListView
         android:foregroundGravity="center_horizontal"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/questionForm"
+        android:layout_below="@id/questionTV"
         android:id="@+id/list_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

@@ -98,7 +98,7 @@ public class QuestionForm extends AppCompatActivity {
     private void initView() {
         //setDataListItems();
 
-        mTimeLineAdapter = new TimeLineAdapter(formQuestions, mQuestionStatus, mQuestionStatusValue);
+        mTimeLineAdapter = new TimeLineAdapter(mQuestionStatus, mQuestionStatusValue);
         mRecyclerView.setAdapter(mTimeLineAdapter);
     }
 
@@ -107,7 +107,6 @@ public class QuestionForm extends AppCompatActivity {
         ListView formListView = (ListView) findViewById(R.id.list_view);
         formListView.setDivider(null);
         formListView.setDividerHeight(0);
-        formQuestions = new HashMap<Integer, ArrayList<String>>();
         mQuestionStatus = new ArrayList<OrderStatus>();
         mQuestionStatusValue = new ArrayList<Integer>();
 
@@ -141,10 +140,10 @@ public class QuestionForm extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Next Question
-                Vote vote = adapter.getSelectedVote();
+                Vote vote = formAdapter.getSelectedVote();
                 if(vote != null) {
-                    mVotes.add(adapter.getSelectedVote());
-                    if(adapter.nextQuestion()){
+                    mVotes.add(formAdapter.getSelectedVote());
+                    if(formAdapter.nextQuestion()){
                         VotesHelper.setVote(FirebaseFirestore.getInstance(), mAssociationID, mSessionID, mAgendaID, mQuestionsIds
                                 , mTimeLineAdapter.mStatusListValue, mVotes);
                         finish();
