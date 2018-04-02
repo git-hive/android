@@ -3,6 +3,7 @@ package com.hive.hive.association.votes.tabs.questions;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import java.util.HashMap;
  */
 
 public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
+    private String TAG = TimeLineAdapter.class.getSimpleName();
     private HashMap<String, Question> mQuestions;
     private ArrayList<OrderStatus> mStatusList;
     public ArrayList<Integer> mStatusListValue;
@@ -32,10 +34,12 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
 
 
 
-    public TimeLineAdapter(ArrayList<OrderStatus> statusList, ArrayList<Integer> statusListValue) {
-        mStatusList = statusList;
-        mStatusListValue = statusListValue;
-        mOrientation = Orientation.HORIZONTAL;
+    public TimeLineAdapter(HashMap<String, Question> mQuestions, ArrayList<OrderStatus> mStatusList, ArrayList<Integer> mStatusListValue, Context mContext) {
+        this.mQuestions = mQuestions;
+        this.mStatusList = mStatusList;
+        this.mStatusListValue = mStatusListValue;
+        this.mContext = mContext;
+        this.mOrientation = Orientation.HORIZONTAL;
     }
 
     @Override
@@ -68,7 +72,7 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
         }else{
             holder.mTimelineView.setMarker(ContextCompat.getDrawable(mContext, R.drawable.ic_marker), ContextCompat.getColor(mContext, R.color.colorOrange));
         }
-
+        Log.d(TAG, "position : "+position);
     }
 
     @Override

@@ -32,7 +32,6 @@
     </FrameLayout>
 
     <LinearLayout
-        android:background="@color/colorOrange"
         android:padding="15dp"
         android:layout_below="@id/superiorBar"
         android:id="@+id/timelineFrame"
