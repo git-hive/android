@@ -2,6 +2,7 @@ package com.hive.hive.association.transparency.tabs.staff;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hive.hive.R;
+import com.hive.hive.association.transparency.TransparencyActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,20 +20,25 @@ import java.util.List;
 
 
 public class StaffFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
+    private static final String TAG = StaffFragment.class.getSimpleName();
     public static final String ARG_PAGE = "Funcionários";
+
+    //--- Views
     ExpandableListAdapter listAdapter;
     ExpandableListView staffExpLV;
+
+    //--- Data
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild;
 
+    //-- Context
+    private TransparencyActivity mActivity;
 
     public StaffFragment() {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static StaffFragment newInstance(int page) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
@@ -117,14 +124,14 @@ public class StaffFragment extends Fragment {
             }
         });
 
+        mActivity = (TransparencyActivity) getActivity();
+
         return  view;
     }
 
-
-
     /*
-     * Preparing the list data
-     */
+         * Preparing the list data
+         */
     private void prepareListData() {
         listDataHeader = new ArrayList<String>();
         listDataChild = new HashMap<String, List<String>>();

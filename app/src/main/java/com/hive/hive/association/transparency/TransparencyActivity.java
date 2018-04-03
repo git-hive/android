@@ -1,5 +1,6 @@
 package com.hive.hive.association.transparency;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -15,13 +16,17 @@ import com.hive.hive.R;
 
 public class TransparencyActivity extends AppCompatActivity {
     // Superior Tab items
-    TextView mTitleTV;
-    ImageView mUpButtonIV;
-    ImageView mSearchIV;
+    private TextView mTitleTV;
+    private ImageView mUpButtonIV;
+    private ImageView mSearchIV;
+
+    //Fab
+    private FloatingActionButton transparencyFAB;
 
     // Tab components
-    TabLayout transparencyTL;
-    ViewPager transparencyVP;
+    private TabLayout transparencyTL;
+    private ViewPager transparencyVP;
+    private TransparencyFragmentPagerAdapter mViewPagerAdapter;
 
 
 
@@ -36,11 +41,33 @@ public class TransparencyActivity extends AppCompatActivity {
         mUpButtonIV = findViewById(R.id.up_button_transparency_IV);
         mSearchIV = findViewById(R.id.search_transparency_IV);
 
+        transparencyFAB = findViewById(R.id.transparency_FAB);
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         transparencyVP = (ViewPager) findViewById(R.id.transparency_VP);
-        transparencyVP.setAdapter(new TransparencyFragmentPagerAdapter(getSupportFragmentManager(),
-                TransparencyActivity.this));
+        mViewPagerAdapter = new TransparencyFragmentPagerAdapter(
+                getSupportFragmentManager(),
+                TransparencyActivity.this,
+                transparencyFAB
+        );
+        transparencyVP.setAdapter(mViewPagerAdapter);
+        final TransparencyFragmentPagerAdapter ref = mViewPagerAdapter;
+        transparencyVP.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                  ref.updateFAB(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         // Give the TabLayout the ViewPager
         transparencyTL = (TabLayout) findViewById(R.id.sliding_tabs_transparency_TL);
@@ -61,6 +88,7 @@ public class TransparencyActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
             }
         });
+
         // Set Style and Make up things
         styleThings();
 
@@ -71,4 +99,5 @@ public class TransparencyActivity extends AppCompatActivity {
         content.setSpan(new UnderlineSpan(), 0+1, content.length()-1, 0);
         mTitleTV.setText(content);
     }
+
 }

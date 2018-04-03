@@ -4,26 +4,33 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.hive.hive.R;
+import com.hive.hive.association.transparency.TransparencyActivity;
+import com.hive.hive.association.transparency.tabs.budget.BudgetFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DocumentFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    public static final String ARG_PAGE = "Boletos";
+
+    private static final String TAG = DocumentFragment.class.getSimpleName();
+    public static final String ARG_PAGE = "Documentos";
+
+    //--- Data
     private List<Bill> bills;
+
+    //--- Context
+    private TransparencyActivity mActivity;
 
     public DocumentFragment() {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static DocumentFragment newInstance(int page) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
@@ -51,9 +58,10 @@ public class DocumentFragment extends Fragment {
         DocumentAdapter mAdapter = new DocumentAdapter(bills);
         rv.setAdapter(mAdapter);
 
+        mActivity = (TransparencyActivity) getActivity();
+
         return  view;
     }
-
 
     // Dummy Content
     class Bill {

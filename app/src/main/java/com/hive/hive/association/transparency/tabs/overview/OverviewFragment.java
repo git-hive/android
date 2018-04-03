@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,8 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.hive.hive.R;
+import com.hive.hive.association.transparency.TransparencyActivity;
+import com.hive.hive.association.transparency.tabs.staff.StaffFragment;
 import com.hive.hive.model.association.BudgetTransaction;
 import com.hive.hive.model.association.BudgetTransactionCategories;
 
@@ -32,12 +35,12 @@ import java.util.Random;
 
 
 public class OverviewFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    public static final String ARG_PAGE = "Caixa";
+
+    private static final String TAG = OverviewFragment.class.getSimpleName();
+    public static final String ARG_PAGE = "Resumo";
 
     //--- Context
-    private Activity mActivity;
+    private TransparencyActivity mActivity;
 
     //--- Data
     private List<BudgetTransaction> transactions;
@@ -53,7 +56,6 @@ public class OverviewFragment extends Fragment {
     }
 
 
-    // TODO: Rename and change types and number of parameters
     public static OverviewFragment newInstance(int page) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
@@ -79,7 +81,7 @@ public class OverviewFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_overview, container, false);
 
         //--- Activity and Context
-        mActivity = getActivity();
+        mActivity = (TransparencyActivity) getActivity();
 
         //--- Views
         monthlyChart = view.findViewById(R.id.monthly_chart);
@@ -122,8 +124,6 @@ public class OverviewFragment extends Fragment {
 
         return view;
     }
-
-
 
     /*
     * ------------------------------------ Dummy Content -------------------------------------------

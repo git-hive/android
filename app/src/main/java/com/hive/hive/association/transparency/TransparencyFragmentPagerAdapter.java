@@ -1,8 +1,13 @@
 package com.hive.hive.association.transparency;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import com.hive.hive.association.transparency.tabs.document.DocumentFragment;
 import com.hive.hive.association.transparency.tabs.budget.BudgetFragment;
@@ -10,17 +15,28 @@ import com.hive.hive.association.transparency.tabs.overview.OverviewFragment;
 import com.hive.hive.association.transparency.tabs.staff.StaffFragment;
 
 /**
- * Created by birck on 16/02/18.
+ * Created by Marco Antônio Birck on 16/02/18.
+ * Update by Nícolas Oreques de Araujo on 03/04/18
  */
 
 public class TransparencyFragmentPagerAdapter extends FragmentPagerAdapter {
+
+    private static final String TAG = TransparencyFragmentPagerAdapter.class.getSimpleName();
+
+    //--- Parameters
     final int PAGE_COUNT = 4;
-    private String tabTitles[] = new String[] { "Caixa", "Boletos", "Orçamentos", "Funcionários" };
+    private String tabTitles[] = new String[] { "Resumo", "Documentos", "Orçamentos", "Funcionários" };
+
+    //--- Views
+    private FloatingActionButton FAB;
+
+    //--- Context
     private Context context;
 
-    public TransparencyFragmentPagerAdapter(FragmentManager fm, Context context) {
+    TransparencyFragmentPagerAdapter(FragmentManager fm, Context context, FloatingActionButton FAB) {
         super(fm);
         this.context = context;
+        this.FAB = FAB;
     }
 
     @Override
@@ -48,5 +64,46 @@ public class TransparencyFragmentPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         // Generate title based on item position
         return tabTitles[position];
+    }
+
+
+    void updateFAB(int position){
+
+        switch (position){
+            case 0:
+                FAB.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(context, "On Click Caixa", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                FAB.setVisibility(View.VISIBLE);
+                break;
+            case 1:
+                FAB.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(context, "On Click Documentos", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                FAB.setVisibility(View.VISIBLE);
+                break;
+            case 2:
+                FAB.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(context, "On Click Orçamentos", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                FAB.setVisibility(View.VISIBLE);
+                break;
+            case 3:
+                FAB.setVisibility(View.GONE);
+                break;
+            default:
+                Log.e(TAG, "Erro ao receber tab position inesperada - " + Integer.toString(position));
+                break;
+        }
+
     }
 }
