@@ -98,23 +98,21 @@ public class QuestionForm extends AppCompatActivity {
     private void initView() {
         //setDataListItems();
 
-        mTimeLineAdapter = new TimeLineAdapter(mQuestionStatus, mQuestionStatusValue);
+        mTimeLineAdapter = new TimeLineAdapter(mQuestions, mQuestionStatus, mQuestionStatusValue, QuestionForm.this);
         mRecyclerView.setAdapter(mTimeLineAdapter);
     }
 
     private void loadListView() {
 
-        ListView formListView = (ListView) findViewById(R.id.list_view);
+        ListView formListView =  findViewById(R.id.list_view);
         formListView.setDivider(null);
         formListView.setDividerHeight(0);
-        mQuestionStatus = new ArrayList<OrderStatus>();
-        mQuestionStatusValue = new ArrayList<Integer>();
+        mQuestionStatus = new ArrayList<>();
+        mQuestionStatusValue = new ArrayList<>();
 
         for (Integer i = 0; i < mQuestions.size(); i++){
-
             mQuestionStatus.add(i, OrderStatus.INACTIVE);
             mQuestionStatusValue.add(i, -1);
-
         }
 
         //Set First manually
@@ -152,7 +150,6 @@ public class QuestionForm extends AppCompatActivity {
                 Toast.makeText(QuestionForm.this, getString(R.string.should_answer), Toast.LENGTH_SHORT).show();
                 }
              //   QuestionOptions currentOptions = mQuestions.get(mQuestionsIds.get())
-                formAdapter.nextQuestion();
             }
         });
 

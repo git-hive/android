@@ -140,6 +140,7 @@ public class CurrentFragment extends Fragment {
             public void onFoldedBack(UnfoldableView unfoldableView) {
                 mListTouchInterceptor.setClickable(false);
                 mDetailsLayout.setVisibility(View.INVISIBLE);
+                mRVAdapter.getmUnfoldableTimer().cancel();
             }
         });
         //GET CURRENT SESSION
@@ -170,6 +171,8 @@ public class CurrentFragment extends Fragment {
                             mAgendasLR =
                                     VotesHelper.getAgendas(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mCurrentSessionId)
                                             .addSnapshotListener(mAgendasEL);
+                            mRVAdapter.setmCurrentSession(mCurrentSession);
+                            mRVAdapter.notifyDataSetChanged();
                             break;
                         case MODIFIED:
                             mCurrentSession = dc.getDocument().toObject(Session.class);
@@ -220,7 +223,7 @@ public class CurrentFragment extends Fragment {
             }
         };
 
-        mRVAdapter = new CurrentAdapter(this.getContext(),  mAgendas, mAgendasIds , mUnfoldableView, mDetailsLayout, view);
+        mRVAdapter = new CurrentAdapter(this.getContext(), mCurrentSession, mAgendas, mAgendasIds , mUnfoldableView, mDetailsLayout, view);
         mRV = view.findViewById(R.id.cellRV);
         mRV.setAdapter(mRVAdapter);
 

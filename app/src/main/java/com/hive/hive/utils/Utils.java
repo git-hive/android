@@ -77,5 +77,4 @@ public abstract class Utils {
         return i > 0 && i < 27 ? String.valueOf((char)(i + 64)) : null;
     }
 
-
 }

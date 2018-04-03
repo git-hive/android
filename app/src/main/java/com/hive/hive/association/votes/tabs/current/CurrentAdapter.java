@@ -2,6 +2,7 @@ package com.hive.hive.association.votes.tabs.current;
 
 
 import android.content.Context;
+import android.os.CountDownTimer;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,11 +27,15 @@ import com.hive.hive.R;
 import com.hive.hive.association.votes.VotesHelper;
 import com.hive.hive.model.association.Agenda;
 import com.hive.hive.model.association.Question;
+import com.hive.hive.model.association.Session;
 import com.hive.hive.model.user.User;
 import com.hive.hive.utils.ProfilePhotoHelper;
+import com.hive.hive.utils.TimeUtils;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.List;
@@ -39,12 +44,15 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
     private String TAG = CurrentAdapter.class.getSimpleName();
     //-- Data
     private HashMap<String, Agenda> mAgendas;
-
+    private ArrayList<String> mAgendaIds;
+    private Session mCurrentSession;
+    //-- Timer
+    ArrayList<CountDownTimer> mTimers;
+    CountDownTimer mUnfoldableTimer;
     // Local for now
     private HashMap<String, String> mIconsDrawablePaths;
     private HashMap<String, Integer> mIconsDrawable;
 
-    private ArrayList<String> mAgendaIds;
     //-- Views
     private  UnfoldableView mUnfoldableView;
     private  FrameLayout mDetailsLayout;
@@ -58,15 +66,25 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
 
     //-- IDS TO PASS TO VOTE
     String agendaID;
-    public CurrentAdapter(Context context, HashMap<String, Agenda> agendas, ArrayList<String> agendasIds,
+    public CurrentAdapter(Context context, Session session, HashMap<String, Agenda> agendas, ArrayList<String> agendasIds,
                           UnfoldableView unfoldableView, FrameLayout detailsLayout, View view){
         this.mContext = context;
+        this.mCurrentSession = session;
         this.mAgendas = agendas;
         this.mAgendaIds = agendasIds;
         this.mUnfoldableView = unfoldableView;
         this.mDetailsLayout = detailsLayout;
         this.mView = view;
+        this.mTimers = new ArrayList<>();
 
+    }
+
+    public CountDownTimer getmUnfoldableTimer() {
+        return mUnfoldableTimer;
+    }
+
+    public void setmCurrentSession(Session mCurrentSession) {
+        this.mCurrentSession = mCurrentSession;
     }
 
     @Override
@@ -121,13 +139,14 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
     }
 
     @Override
-    public void onBindViewHolder(RequestViewHolder holder, int position) {
+    public void onBindViewHolder(final RequestViewHolder holder, int position) {
         agendaID = mAgendaIds.get(position);
         final Agenda agenda = mAgendas.get(agendaID);
         holder.mTitle.setText(agenda.getTitle());
         //TODO:Change this line to get from server
         holder.mCategoryIcon.setImageResource(getDrawable("services"));
-
+        //TODO USE RETURN FROM CLOCK TO STOP SHIT
+        mTimers.add(TimeUtils.clock(holder.mTime, mCurrentSession, mContext));
         holder.mVote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -147,11 +166,13 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
     private void changeUnfoldableContent(Agenda agenda, String agendaId){
         TextView titleTV = mView.findViewById(R.id.titleContentTV);
         TextView descriptionTV = mView.findViewById(R.id.contentTV);
-
+        TextView timeTV = mView.findViewById(R.id.timerTV);
         Log.d(TAG, "title "+agenda.getTitle());
         titleTV.setText(agenda.getTitle());
         descriptionTV.setText(agenda.getContent());
         fillUser(agenda.getSuggestedByRef());
+        mUnfoldableTimer = TimeUtils.clock(timeTV, mCurrentSession, mContext);
+
         //TODO CHECK LAST ITEM CLICKED BEFORE RELOADING DATA
         //IF CLICK IS DIFF
         if(mQuestionsLR != null) //catches the first run
@@ -160,6 +181,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
         if(CurrentFragment.mCurrentSessionId != null)// should'nt happen, but just to be sure
             mQuestionsLR = VotesHelper.getQuestions(FirebaseFirestore.getInstance(),"gVw7dUkuw3SSZSYRXe8s",
                     CurrentFragment.mCurrentSessionId, agendaId).addSnapshotListener(mQuestionsEL);
+
     }
     private void fillUser(DocumentReference userRef){
         userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -202,12 +224,14 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
     class RequestViewHolder extends RecyclerView.ViewHolder{
         CardView mVote;
         TextView mTitle;
+        TextView mTime;
         ImageView mCategoryIcon;
 
 
         RequestViewHolder(View view){
             super(view);
             mTitle = view.findViewById(R.id.titleTV);
+            mTime = view.findViewById(R.id.timeTV);
             mVote =  view.findViewById(R.id.cardVote);
             mCategoryIcon = view.findViewById(R.id.category_IV);
         }
