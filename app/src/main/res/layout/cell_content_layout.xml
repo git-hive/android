@@ -93,10 +93,10 @@
                                     android:layout_height="wrap_content" />
 
                                 <TextView
+                                    android:id="@+id/timerTV"
                                     android:textColor="@color/colorBlack"
                                     android:textSize="14sp"
                                     android:layout_gravity="right|center"
-                                    android:text="@string/fake_time"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content" />
 

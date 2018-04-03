@@ -82,6 +82,7 @@
 
             <TextView
                 android:textColor="@color/colorBlack"
+                android:id="@+id/timeTV"
                 android:textSize="14sp"
                 android:gravity="left"
                 android:text="@string/fake_time"
