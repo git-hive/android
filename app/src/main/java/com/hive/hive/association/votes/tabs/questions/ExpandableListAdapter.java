@@ -102,7 +102,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 		}
 
 		TextView header_text = (TextView) convertView.findViewById(R.id.headerTV);
-		header_text.setText(question.getQuestion());
+		header_text.setText("Pergunta "+String.valueOf(groupPosition+1));
 
         ImageView headerMarkerIV = convertView.findViewById(R.id.headerMarkerIV);
 

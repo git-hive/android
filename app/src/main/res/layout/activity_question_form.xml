@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    android:layout_marginLeft="40dp"
-    android:layout_marginRight="40dp"
+    android:paddingLeft="30dp"
+    android:paddingRight="30dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -53,6 +53,10 @@
 
   
     <TextView
+        android:paddingTop="15dp"
+        android:paddingBottom="20dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/timelineFrame"
         android:textSize="20sp"
@@ -65,9 +69,9 @@
 
 
     <ListView
-        android:foregroundGravity="center_horizontal"
+        android:paddingBottom="40dp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/questionTV"
+        android:layout_above="@id/footer"
         android:id="@+id/list_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -75,6 +79,7 @@
 
 
     <LinearLayout
+        android:id="@+id/footer"
         android:layout_marginBottom="10dp"
         android:gravity="center"
         android:layout_alignParentBottom="true"
@@ -82,6 +87,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageButton
+            android:background="@android:color/transparent"
             android:id="@+id/questionBackBT"
             android:layout_gravity="left|center_vertical"
             app:srcCompat="@drawable/ic_left_arrow"
@@ -89,9 +95,10 @@
             android:layout_height="40dp" />
         
         <TextView
+            android:textSize="16dp"
             android:textStyle="italic"
             android:textColor="@color/colorBlack"
-            android:layout_marginRight="50dp"
+            android:layout_marginRight="60dp"
             android:id="@+id/previousTextView"
             android:layout_gravity="left|center_vertical"
             android:text="Anterior"
@@ -99,9 +106,10 @@
             android:layout_height="wrap_content" />
 
         <TextView
+            android:textSize="16dp"
             android:textStyle="italic"
             android:textColor="@color/colorBlack"
-            android:layout_marginLeft="50dp"
+            android:layout_marginLeft="60dp"
             android:gravity="right|center_vertical"
             android:text="Proxima"
             android:layout_width="wrap_content"
@@ -109,6 +117,7 @@
 
 
         <ImageButton
+            android:background="@android:color/transparent"
             android:foregroundGravity="right"
             android:id="@+id/questionNextBT"
             android:layout_gravity="right|center_vertical"
