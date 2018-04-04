@@ -28,7 +28,6 @@ public class Vote extends AssociationAction {
     }
 
     public Vote(
-            String id,
             long createdAt,
             long updatedAt,
             DocumentReference authorRef,
@@ -40,7 +39,7 @@ public class Vote extends AssociationAction {
             DocumentReference agendaRef,
             DocumentReference sessionRef
     ) {
-        super(id, createdAt, updatedAt, authorRef, pointsTransactionRef, associationRef);
+        super(createdAt, updatedAt, authorRef, pointsTransactionRef, associationRef);
         this.votingOption = votingOption;
         this.weight = weight;
         this.rolesRefs = rolesRefs;

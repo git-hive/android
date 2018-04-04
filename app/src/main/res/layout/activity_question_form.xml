@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
+    android:paddingLeft="30dp"
+    android:paddingRight="30dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,6 +12,7 @@
 
 
     <FrameLayout
+        android:id="@+id/superiorBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
@@ -19,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <TextView
-            android:paddingTop="15dp"
+            android:paddingTop="18dp"
             android:gravity="center_horizontal"
             android:layout_gravity="center_horizontal"
             android:text="@string/pattern_title"
@@ -29,6 +32,9 @@
     </FrameLayout>
 
     <LinearLayout
+        android:padding="15dp"
+        android:layout_below="@id/superiorBar"
+        android:id="@+id/timelineFrame"
         android:gravity="center_horizontal"
         android:layout_gravity="center_horizontal"
         android:layout_width="match_parent"
@@ -45,47 +51,82 @@
 
     </LinearLayout>
 
-    <View
-        android:layout_margin="30dp"
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorBlack"/>
-
-
+  
     <TextView
-        android:padding="10dp"
-        android:text="@string/lore_ipsun"
+        android:paddingTop="15dp"
+        android:paddingBottom="20dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/timelineFrame"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorBlack"
+        android:text="Pergunta longa número 2 bla bla bla?"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/questionTV"/>
+
+
+    <ListView
+        android:paddingBottom="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/footer"
+        android:id="@+id/list_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
 
-    <ListView
-        android:id="@+id/list_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/bottom_container" />
 
-
-
-    <FrameLayout
+    <LinearLayout
+        android:id="@+id/footer"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageButton
+            android:background="@android:color/transparent"
             android:id="@+id/questionBackBT"
-            android:layout_gravity="left"
+            android:layout_gravity="left|center_vertical"
             app:srcCompat="@drawable/ic_left_arrow"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+        
+        <TextView
+            android:textSize="16dp"
+            android:textStyle="italic"
+            android:textColor="@color/colorBlack"
+            android:layout_marginRight="60dp"
+            android:id="@+id/previousTextView"
+            android:layout_gravity="left|center_vertical"
+            android:text="Anterior"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+        <TextView
+            android:textSize="16dp"
+            android:textStyle="italic"
+            android:textColor="@color/colorBlack"
+            android:layout_marginLeft="60dp"
+            android:gravity="right|center_vertical"
+            android:text="Proxima"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
 
         <ImageButton
+            android:background="@android:color/transparent"
+            android:foregroundGravity="right"
             android:id="@+id/questionNextBT"
-            android:layout_gravity="right"
+            android:layout_gravity="right|center_vertical"
             app:srcCompat="@drawable/ic_right_arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </FrameLayout>
+            android:layout_width="40dp"
+            android:layout_height="40dp"/>
+    </LinearLayout>
 
 
 
 
-</LinearLayout>
+</RelativeLayout>

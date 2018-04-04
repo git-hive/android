@@ -17,8 +17,8 @@ public abstract class ForumAction extends UserAction {
     public ForumAction() {
     }
 
-    public ForumAction(String id, long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId, String forumId) {
-        super(id, createdAt, updatedAt, authorId, pointsTransactionId);
+    public ForumAction(long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId, String forumId) {
+        super(createdAt, updatedAt, authorId, pointsTransactionId);
         this.forumId = forumId;
     }
 

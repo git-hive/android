@@ -14,8 +14,8 @@ public class Purchase extends MarketplaceAction {
         super(saleId);
     }
 
-    public Purchase(String id, long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId, String saleId) {
-        super(id, createdAt, updatedAt, authorId, pointsTransactionId, saleId);
+    public Purchase(long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId, String saleId) {
+        super(createdAt, updatedAt, authorId, pointsTransactionId, saleId);
     }
 
 

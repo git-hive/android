@@ -2,60 +2,89 @@ package com.hive.hive.association.votes.tabs.questions;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
-import com.hive.hive.association.votes.VotesActivity;
+import com.hive.hive.association.votes.VotesHelper;
 import com.hive.hive.association.votes.tabs.questions.model.OrderStatus;
 import com.hive.hive.association.votes.tabs.questions.model.Orientation;
 import com.hive.hive.association.votes.tabs.questions.model.TimeLineModel;
-import com.hive.hive.main.MainActivity;
+import com.hive.hive.model.association.Question;
+import com.hive.hive.model.association.QuestionOptions;
+import com.hive.hive.model.association.Vote;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class QuestionForm extends AppCompatActivity {
-
+    private TextView mQuestionTV;
     // Timeline stuff
     private RecyclerView mRecyclerView;
     private TimeLineAdapter mTimeLineAdapter;
     private List<TimeLineModel> mDataList = new ArrayList<>();
     private Orientation mOrientation;
-    private boolean mWithLinePadding;
+
 
     // Data stuff
-    private HashMap<Integer, ArrayList<String> > formQuestions;
-    private ArrayList<String> arrayList;
     private ArrayList<OrderStatus> mQuestionStatus;
-    private GridListAdapter adapter;
+    private ArrayList<Integer> mQuestionStatusValue;
+    private GridListAdapter formAdapter;
     private Context context;
+
+    HashMap<String, Question> mQuestions;
+    ArrayList<String> mQuestionsIds;
+
+    ArrayList<Vote> mVotes;
+
+    String mAssociationID;
+    String mSessionID;
+    String mAgendaID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_form);
-        context = getApplicationContext();
+        context = this;
+
+        mQuestionTV = findViewById(R.id.questionTV);
+
+        //Getting the Questions from the previusly activity
+        mQuestionsIds = (ArrayList<String>) getIntent().getSerializableExtra("questionsIds");
+        mQuestions = (HashMap<String, Question>) getIntent().getSerializableExtra("questions");
+
+        //Getting ids to send vote
+        mAssociationID = getIntent().getStringExtra("associationID");
+        mSessionID = getIntent().getStringExtra("sessionID");
+        mAgendaID = getIntent().getStringExtra("agendaID");
+        //Create  Votes
+        mVotes = new ArrayList<>();
+
         loadListView();
 
         onClickEvent();
 
         mOrientation = Orientation.HORIZONTAL;
-        mWithLinePadding = false;
+
         mRecyclerView = (RecyclerView) findViewById(R.id.question_timeline_RV);
         mRecyclerView.setLayoutManager(getLinearLayoutManager());
         mRecyclerView.setHasFixedSize(true);
         initView();
 
-
         // Pass Storyline adapter as reference
-        adapter.setStorylineAdapter(mTimeLineAdapter);
+        formAdapter.setStorylineAdapter(mTimeLineAdapter);
 
+        mQuestionTV.setText(mQuestions.get(mQuestionsIds.get(0)).getQuestion());
     }
 
     private LinearLayoutManager getLinearLayoutManager() {
@@ -68,43 +97,30 @@ public class QuestionForm extends AppCompatActivity {
 
     private void initView() {
         //setDataListItems();
-        mTimeLineAdapter = new TimeLineAdapter(formQuestions, mQuestionStatus, mOrientation, mWithLinePadding);
+
+        mTimeLineAdapter = new TimeLineAdapter(mQuestions, mQuestionStatus, mQuestionStatusValue, QuestionForm.this);
         mRecyclerView.setAdapter(mTimeLineAdapter);
     }
 
-    private void setDataListItems(){
-        mDataList.add(new TimeLineModel("Item successfully delivered", "", OrderStatus.INACTIVE));
-        mDataList.add(new TimeLineModel("Courier is out to delivery your order", "2017-02-12 08:00", OrderStatus.ACTIVE));
-        mDataList.add(new TimeLineModel("Item has reached courier facility at New Delhi", "2017-02-11 21:00", OrderStatus.COMPLETED));
-        mDataList.add(new TimeLineModel("Item has been given to the courier", "2017-02-11 18:00", OrderStatus.COMPLETED));
-        mDataList.add(new TimeLineModel("Item is packed and will dispatch soon", "2017-02-11 09:30", OrderStatus.COMPLETED));
-        mDataList.add(new TimeLineModel("Order is being readied for dispatch", "2017-02-11 08:00", OrderStatus.COMPLETED));
-        mDataList.add(new TimeLineModel("Order processing initiated", "2017-02-10 15:00", OrderStatus.COMPLETED));
-        mDataList.add(new TimeLineModel("Order confirmed by seller", "2017-02-10 14:30", OrderStatus.COMPLETED));
-        mDataList.add(new TimeLineModel("Order placed successfully", "2017-02-10 14:00", OrderStatus.COMPLETED));
-    }
-
-    // Populate Form locally for now
     private void loadListView() {
-        ListView listView = (ListView) findViewById(R.id.list_view);
 
-        formQuestions = new HashMap<Integer, ArrayList<String>>();
-        mQuestionStatus = new ArrayList<OrderStatus>();
+        ListView formListView =  findViewById(R.id.list_view);
+        formListView.setDivider(null);
+        formListView.setDividerHeight(0);
+        mQuestionStatus = new ArrayList<>();
+        mQuestionStatusValue = new ArrayList<>();
 
-        for (Integer i = 0; i <= 4; i++){
-            arrayList = new ArrayList<>();
-            for (int j = 0; j <= 4; j++)
-                arrayList.add("ListView Items " + j + " from "+ i);
-
-            formQuestions.put(i,  arrayList);
+        for (Integer i = 0; i < mQuestions.size(); i++){
             mQuestionStatus.add(i, OrderStatus.INACTIVE);
+            mQuestionStatusValue.add(i, -1);
         }
 
         //Set First manually
         mQuestionStatus.set(0, OrderStatus.ACTIVE);
 
-        adapter = new GridListAdapter(context, formQuestions, true);
-        listView.setAdapter(adapter);
+
+        formAdapter = new GridListAdapter(context, mQuestions, mQuestionsIds, mQuestionTV,true);
+        formListView.setAdapter(formAdapter);
     }
 
 
@@ -115,14 +131,25 @@ public class QuestionForm extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Next Question
-                adapter.previousQuestion();
+                formAdapter.previousQuestion();
             }
         });
         findViewById(R.id.questionNextBT).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Next Question
-                adapter.nextQuestion();
+                Vote vote = formAdapter.getSelectedVote();
+                if(vote != null) {
+                    mVotes.add(formAdapter.getSelectedVote());
+                    if(formAdapter.nextQuestion()){
+                        VotesHelper.setVote(FirebaseFirestore.getInstance(), mAssociationID, mSessionID, mAgendaID, mQuestionsIds
+                                , mTimeLineAdapter.mStatusListValue, mVotes);
+                        finish();
+                    }
+                }else{
+                Toast.makeText(QuestionForm.this, getString(R.string.should_answer), Toast.LENGTH_SHORT).show();
+                }
+             //   QuestionOptions currentOptions = mQuestions.get(mQuestionsIds.get())
             }
         });
 
@@ -156,20 +183,5 @@ public class QuestionForm extends AppCompatActivity {
         }
         super.onRestoreInstanceState(savedInstanceState);
     }
-
-
-    public class LocalQuestions{
-        ArrayList<String> localQuestionsList;
-        ArrayList<Boolean> localQuestionsStatus;
-
-        LocalQuestions(ArrayList<String> questionsList,ArrayList<Boolean> questionsStatus){
-            localQuestionsList = questionsList;
-            localQuestionsStatus = questionsStatus;
-        }
-
-        Boolean getStatus(int position){
-            return localQuestionsStatus.get(position);
-        }
-    };
 
 }

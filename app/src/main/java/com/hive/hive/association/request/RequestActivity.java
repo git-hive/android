@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -22,6 +23,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 import com.hive.hive.association.AssociationHelper;
 import com.hive.hive.model.association.Request;
+import com.hive.hive.utils.GlideApp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -176,10 +178,12 @@ public class RequestActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
+        GlideApp.with(getApplicationContext()).resumeRequestsRecursive();
     }
     @Override
     public void onStop(){
         super.onStop();
+        GlideApp.with(getApplicationContext()).pauseRequestsRecursive();
     }
     @Override
     public void onDestroy(){

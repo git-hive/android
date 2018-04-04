@@ -2,9 +2,10 @@ package com.hive.hive.model.association;
 
 import com.google.firebase.firestore.DocumentReference;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class QuestionOptions {
+public class QuestionOptions implements Serializable{
 
     private String title;
     private String content;
@@ -26,7 +27,10 @@ public class QuestionOptions {
         this.votesRefs = votesRefs;
     }
 
-    //--- Getters
+    public QuestionOptions() {
+    }
+
+//--- Getters
 
     public String getTitle() {
         return title;
