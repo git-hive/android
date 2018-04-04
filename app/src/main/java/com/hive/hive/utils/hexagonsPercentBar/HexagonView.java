@@ -13,7 +13,11 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.hive.hive.utils.Utils;
+import com.hive.hive.utils.circularFilter.Util;
+
 import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 
 /**
@@ -36,10 +40,8 @@ public class HexagonView extends View{
 
     float FINAL_HEXAGON_RATIO = (float) 0.1;
     float FIXED_FULL_STEP = FINAL_WIDTH * FINAL_HEXAGON_RATIO * DEN;
-    int FINAL_BAR_LENGTH = 10;
 
     // Config values
-    int mNumOfOptions = 0;
     ArrayList<Float> mPercentage;
     ArrayList<Integer> mBarColors;
 
@@ -52,20 +54,24 @@ public class HexagonView extends View{
 
     public HexagonView(Context context) {
         this(context, null);
+        autoInit();
     }
 
     public HexagonView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
+        autoInit();
 
     }
 
     public HexagonView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        autoInit();
     }
 
 
     @Override protected void onDraw(Canvas canvas) {
         // General Rect
+        float theta = (float) 0.01;
         super.onDraw(canvas);
         trianglePaint.setColor(Color.WHITE);
         trianglePaint.setAntiAlias(true);
@@ -77,12 +83,18 @@ public class HexagonView extends View{
 
         float fillAll = 10;
         float currentFilled = 0;
-
+        System.out.println(" MFuckingPercentage "+mPercentage.size());
         for (Float value:
                 mPercentage) {
             System.out.println(" I ENTER _________________________________________");
 
             while(true){
+                    //Making hard coded stop to really small numbers
+//                    if(value < theta) {
+//                        value = Float.valueOf(0);
+//                    }
+
+
 
                     if(fillAll - currentFilled > value) {
 
@@ -137,22 +149,35 @@ public class HexagonView extends View{
 
 
 
-    public void setConfig(ArrayList<Float> percentage){
-        mPercentage = percentage;
+    public void setConfig(ArrayList<Float> scoreValues){
+
+        // Such an uggly code
+        float totalScores = 0;
+        for (Float score:
+             scoreValues) {
+            System.out.println(" HAAYAYAHAHYAAHAYAYA"+score);
+            totalScores +=  score;
+        }
+
+        System.out.println(" Total scores "+ totalScores);
+        for(int i = 0;i<scoreValues.size();i++){
+            if(totalScores == 0) {
+                System.out.println(" BEYYYYYYYYYYYYYYYY 1 "+ scoreValues.get(i)+" " + scoreValues.get(i) / totalScores);
+                mPercentage.add(i, (float) 25.0);
+               // break;
+            }else {
+                System.out.println(" BEYYYYYYYYYYYYYYYY  2 "+ scoreValues.get(i)+" " + scoreValues.get(i) / totalScores);
+                mPercentage.add(i, Utils.round(scoreValues.get(i) / totalScores * 100, 2));
+              //  break;
+            }
+            //mPercentage.add(i, (float) 25.0);
+        }
+
         postInvalidate();
     }
 
-    public void autoInit(int numOfOptions){
+    public void autoInit(){
         mPercentage = new ArrayList<>();
-        mNumOfOptions = numOfOptions;
-//        for(int i=0;i<mNumOfOptions;i++){
-//            mPercentage.add(i, (float)100/mNumOfOptions);
-//            System.out.println(mPercentage.get(i) +"   HEEEEEEY");
-//        }
-        mPercentage.add(0, (float) 37.0);
-        mPercentage.add(1, (float) 13.0);
-        mPercentage.add(2, (float) 14.0);
-        mPercentage.add(3, (float) 36.0);
 
         mBarColors = new ArrayList<>();
         mBarColors.add(0, Color.parseColor("#ff6347"));

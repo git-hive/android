@@ -19,6 +19,7 @@ import com.hive.hive.R;
 import com.hive.hive.association.transparency.tabs.staff.CustomGridView;
 import com.hive.hive.association.votes.QuestionGridAdapter;
 import com.hive.hive.model.association.Question;
+import com.hive.hive.model.association.QuestionOptions;
 import com.hive.hive.utils.hexagonsPercentBar.HexagonView;
 import com.hive.hive.utils.hexagonsPercentBar.HexagonalBarAdapter;
 
@@ -32,6 +33,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 	HexagonView mPercentageBar;
     RecyclerView mPercentageRV;
     HexagonalBarAdapter mHexBarAdapter;
+
+    // List of percentages
+	ArrayList<Float> mPercentages;
 
 
 
@@ -151,7 +155,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 
 		// TODO: Take care you should call autoInit always
 		mPercentageBar =  convertView.findViewById(R.id.percentageBar);
-		mPercentageBar.autoInit(4);
+		mPercentageBar.autoInit();
+
+		// Update when this is called
+		updatePercentages(question.getOptions());
+		mPercentageBar.setConfig(mPercentages);
 
         // Setting percentage view stuff
 		mPercentageRV = convertView.findViewById(R.id.percentageRV);
@@ -171,6 +179,16 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 	public boolean isChildSelectable(int groupPosition, int childPosition) {
 		// TODO Auto-generated method stub
 		return true;
+	}
+
+	public void updatePercentages(ArrayList<QuestionOptions> options){
+        mPercentages = new ArrayList<>();
+		for (int i=0;i<options.size();i++) {
+		    mPercentages.add(i, (float) options.get(i).getScore());
+		    System.out.println(" LOLOLOLOLOLOLOLOLOLOLOLOL "+ options.get(i).getScore());
+		}
+		System.out.println(" size "+ mPercentages.size());
+
 	}
 
 }

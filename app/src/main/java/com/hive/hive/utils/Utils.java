@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.support.design.widget.TextInputEditText;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -77,4 +78,7 @@ public abstract class Utils {
         return i > 0 && i < 27 ? String.valueOf((char)(i + 64)) : null;
     }
 
+    public static float round(float d, int decimalPlace) {
+        return BigDecimal.valueOf(d).setScale(decimalPlace, BigDecimal.ROUND_HALF_UP).floatValue();
+    }
 }
