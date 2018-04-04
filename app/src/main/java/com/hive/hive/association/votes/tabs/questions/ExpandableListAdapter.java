@@ -185,10 +185,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
         mPercentages = new ArrayList<>();
 		for (int i=0;i<options.size();i++) {
 		    mPercentages.add(i, (float) options.get(i).getScore());
-		    System.out.println(" LOLOLOLOLOLOLOLOLOLOLOLOL "+ options.get(i).getScore());
 		}
-		System.out.println(" size "+ mPercentages.size());
-
 	}
 
 }

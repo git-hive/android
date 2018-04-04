@@ -18,6 +18,7 @@ import com.hive.hive.association.votes.QuestionGridAdapter;
 import com.hive.hive.association.votes.tabs.current.CurrentAdapter;
 import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.QuestionOptions;
+import com.hive.hive.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -29,10 +30,12 @@ public class HexagonalBarAdapter  extends RecyclerView.Adapter<HexagonalBarAdapt
 
         private ArrayList<QuestionOptions> mQuestions;
         private ArrayList<Integer> mColors = null;
-        private Context mContext;
+        ArrayList<Float> mPercentages;
+        ArrayList<String> mPercentagesString;
+        Context mContext;
+        float mTotal;
 
-        // ListView stuff
-        RecyclerView mPercentageTextView;
+
 
         public HexagonalBarAdapter(Context context, ArrayList<QuestionOptions> questions) {
             mQuestions = questions;
@@ -47,8 +50,12 @@ public class HexagonalBarAdapter  extends RecyclerView.Adapter<HexagonalBarAdapt
 
         @Override
         public void onBindViewHolder(PercentageHolder holder, int position) {
-            //final String percentage = String.valueOf(mQuestions.get(position).getScore());
-            final String percentage = "25%";
+            // Update percentages;
+            updatePercentages();
+            setConfig();
+
+
+            final String percentage = mPercentagesString.get(position)+"%";
             holder.percentageTV.setText(percentage);
             holder.percentageTV.setTextColor(mColors.get(position));
         }
@@ -64,6 +71,9 @@ public class HexagonalBarAdapter  extends RecyclerView.Adapter<HexagonalBarAdapt
             mColors.add(1, Color.parseColor("#82b3b3"));
             mColors.add(2, Color.parseColor("#ffbb3f"));
             mColors.add(3, Color.parseColor("#90ee90"));
+
+            mPercentages = new ArrayList<>();
+            mPercentagesString = new ArrayList<>();
         }
 
 
@@ -100,5 +110,42 @@ public class HexagonalBarAdapter  extends RecyclerView.Adapter<HexagonalBarAdapt
         }
     }
 
+
+    public void updatePercentages(){
+        mPercentages = new ArrayList<>();
+        for (int i=0;i<mQuestions.size();i++) {
+            mPercentages.add(i, (float) mQuestions.get(i).getScore());
+            System.out.println(" LOLOLOLOLOLOLOLOLOLOLOLOL "+ mQuestions.get(i).getScore());
+        }
+        System.out.println(" size "+ mPercentages.size());
+
+    }
+
+    public void setConfig(){
+
+        // Such an uggly code
+        float totalScores = 0;
+        for (Float score:
+                mPercentages) {
+            System.out.println(" HAAYAYAHAHYAAHAYAYA"+score);
+            totalScores +=  score;
+        }
+
+        System.out.println(" Total scores "+ totalScores);
+        for(int i = 0;i<mPercentages.size();i++){
+            if(totalScores == 0) {
+                System.out.println(" BEYYYYYYYYYYYYYYYY 1 "+ mPercentages.get(i)+" " + mPercentages.get(i) / totalScores);
+                mPercentagesString.add(i, "25.0 %");
+                // break;
+            }else {
+                System.out.println(" BEYYYYYYYYYYYYYYYY  2 "+ mPercentages.get(i)+" " + mPercentages.get(i) / totalScores);
+                mPercentagesString.add(i, String.valueOf(Utils.round(mPercentages.get(i) / totalScores * 100, 2)));
+                //  break;
+            }
+            //mPercentage.add(i, (float) 25.0);
+        }
+
+        //notifyDataSetChanged();
+    }
 
 }
