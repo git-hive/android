@@ -127,6 +127,15 @@ public class QuestionForm extends AppCompatActivity {
 
     // Get actions in form
     private void onClickEvent() {
+
+        findViewById(R.id.questionBackTV).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Next Question
+                formAdapter.previousQuestion();
+            }
+        });
+
         findViewById(R.id.questionBackBT).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -152,6 +161,27 @@ public class QuestionForm extends AppCompatActivity {
              //   QuestionOptions currentOptions = mQuestions.get(mQuestionsIds.get())
             }
         });
+
+        findViewById(R.id.questionNextTV).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Next Question
+                Vote vote = formAdapter.getSelectedVote();
+                if(vote != null) {
+                    mVotes.add(formAdapter.getSelectedVote());
+                    if(formAdapter.nextQuestion()){
+                        VotesHelper.setVote(FirebaseFirestore.getInstance(), mAssociationID, mSessionID, mAgendaID, mQuestionsIds
+                                , mTimeLineAdapter.mStatusListValue, mVotes);
+                        finish();
+                    }
+                }else{
+                    Toast.makeText(QuestionForm.this, getString(R.string.should_answer), Toast.LENGTH_SHORT).show();
+                }
+                //   QuestionOptions currentOptions = mQuestions.get(mQuestionsIds.get())
+            }
+        });
+
+
 
     }
 
