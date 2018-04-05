@@ -21,6 +21,7 @@ import com.hive.hive.association.AssociationHelper;
 import com.hive.hive.association.request.comments.CommentaryActivity;
 import com.hive.hive.model.association.AssociationSupport;
 import com.hive.hive.model.association.Request;
+import com.hive.hive.model.association.RequestCategory;
 import com.hive.hive.model.user.User;
 import com.hive.hive.utils.DocReferences;
 import com.hive.hive.utils.ProfilePhotoHelper;
@@ -28,14 +29,16 @@ import com.hive.hive.utils.SupportMutex;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestViewHolder> {
     private String TAG = RequestAdapter.class.getSimpleName();
 
     //-- Data
-    private ArrayList<Request> requests;
+    HashMap<String, ArrayList<Request>> categoriesRequests;
     private ArrayList<SupportMutex> mLocks;
     private Context context;
+    private String categoryName;
 
     //--- Firestore
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -43,10 +46,13 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     private FirebaseFirestore mDB = FirebaseFirestore.getInstance();
     private String mAssociationID = "gVw7dUkuw3SSZSYRXe8s";
 
-    public RequestAdapter(ArrayList<Request> requests, Context context) {
-        this.requests = requests;
+    public RequestAdapter(
+            HashMap<String, ArrayList<Request>> categoriesRequests, Context context
+    ) {
+        this.categoriesRequests = categoriesRequests;
         this.context = context;
         this.mLocks = new ArrayList<>();
+        this.categoryName = "services";
     }
 
     @Override
@@ -67,7 +73,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             mLocks.add(new SupportMutex(holder.mNumberOfSupportsTV, holder.mSupportsIV));
         }
 
-        final Request request = requests.get(position);
+        final Request request = getRequest(position);
 
         holder.mItem = request;
 
@@ -96,7 +102,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
     @Override
     public int getItemCount() {
-        return requests.size();
+        return getRequests().size();
     }
 
     private View.OnClickListener createToggleSupportOnClickListener(int position) {
@@ -125,8 +131,16 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         });
     }
 
+    private ArrayList<Request> getRequests() {
+        return categoriesRequests.get(categoryName);
+    }
+
+    private Request getRequest(int position) {
+        return getRequests().get(position);
+    }
+
     private String getRequestID(int requestPosition) {
-        return requests.get(requestPosition).getId();
+        return getRequest(requestPosition).getId();
     }
 
     private void shouldFillSupport(final RequestViewHolder holder, String requestId){
@@ -176,7 +190,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             DocumentSnapshot supportSnap,
             final SupportMutex mutex
     ) {
-        Request request = requests.get(requestPosition);
+        Request request = getRequest(requestPosition);
         // Toggle request support
         if (supportSnap.exists()) {
             // Remove support
