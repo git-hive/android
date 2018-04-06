@@ -35,10 +35,9 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     private String TAG = RequestAdapter.class.getSimpleName();
 
     //-- Data
-    HashMap<String, ArrayList<Request>> categoriesRequests;
+    ArrayList<Request> requests;
     private ArrayList<SupportMutex> mLocks;
     private Context context;
-    private String categoryName;
 
     //--- Firestore
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -47,12 +46,11 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     private String mAssociationID = "gVw7dUkuw3SSZSYRXe8s";
 
     public RequestAdapter(
-            HashMap<String, ArrayList<Request>> categoriesRequests, Context context
+            ArrayList<Request> requests, Context context
     ) {
-        this.categoriesRequests = categoriesRequests;
+        this.requests = requests;
         this.context = context;
         this.mLocks = new ArrayList<>();
-        this.categoryName = "services";
     }
 
     @Override
@@ -73,7 +71,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             mLocks.add(new SupportMutex(holder.mNumberOfSupportsTV, holder.mSupportsIV));
         }
 
-        final Request request = getRequest(position);
+        final Request request = requests.get(position);
 
         holder.mItem = request;
 
@@ -102,7 +100,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
     @Override
     public int getItemCount() {
-        return getRequests().size();
+        return requests.size();
     }
 
     private View.OnClickListener createToggleSupportOnClickListener(int position) {
@@ -131,16 +129,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         });
     }
 
-    private ArrayList<Request> getRequests() {
-        return categoriesRequests.get(categoryName);
-    }
-
-    private Request getRequest(int position) {
-        return getRequests().get(position);
-    }
-
     private String getRequestID(int requestPosition) {
-        return getRequest(requestPosition).getId();
+        return requests.get(requestPosition).getId();
     }
 
     private void shouldFillSupport(final RequestViewHolder holder, String requestId){
@@ -190,7 +180,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             DocumentSnapshot supportSnap,
             final SupportMutex mutex
     ) {
-        Request request = getRequest(requestPosition);
+        Request request = requests.get(requestPosition);
         // Toggle request support
         if (supportSnap.exists()) {
             // Remove support
@@ -238,6 +228,10 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                         RequestAdapter.this.notifyDataSetChanged();
                     });
         }
+    }
+
+    public void setRequests(ArrayList<Request> requests) {
+        this.requests = requests;
     }
 
     /**
