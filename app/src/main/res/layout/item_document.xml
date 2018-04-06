@@ -7,7 +7,10 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/billCV"
+        android:id="@+id/document_CV"
+        app:cardElevation="@dimen/cardview_default_elevation"
+        app:cardCornerRadius="@dimen/cardview_default_radius"
+        android:layout_margin="2.5dp"
         >
 
         <FrameLayout
@@ -15,22 +18,22 @@
             android:layout_gravity="center"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            >
+            android:layout_height="wrap_content">
             <TextView
                 android:text="@string/client_name_mock"
-                android:gravity="left"
+                android:gravity="start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/billNameTV"
+                android:id="@+id/document_name_TV"
+                android:textColor="@color/colorBlack"
                 />
             <ImageView
-                android:layout_gravity="right"
-                app:srcCompat="@drawable/ic_back_arrow"
+                android:layout_gravity="end"
+                app:srcCompat="@android:drawable/stat_sys_download"
+                android:tint="@color/colorOrange"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/person_photo" />
+                android:id="@+id/ic_download_IV" />
 
         </FrameLayout>
 

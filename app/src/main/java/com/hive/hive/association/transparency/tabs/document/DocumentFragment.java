@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,16 +13,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.hive.hive.R;
 import com.hive.hive.association.transparency.TransparencyActivity;
-import com.hive.hive.association.transparency.tabs.budget.BudgetFragment;
-import com.hive.hive.main.MainActivity;
 import com.hive.hive.utils.FileUtils;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class DocumentFragment extends Fragment {
 
@@ -31,7 +26,7 @@ public class DocumentFragment extends Fragment {
     public static final String ARG_PAGE = "Documentos";
 
     //--- Data
-    private List<Bill> bills;
+    private ArrayList<Document> documents;
 
     //--- Context
     private TransparencyActivity mActivity;
@@ -64,7 +59,7 @@ public class DocumentFragment extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         rv.setLayoutManager(llm);
         initializeData();
-        DocumentAdapter mAdapter = new DocumentAdapter(bills);
+        DocumentAdapter mAdapter = new DocumentAdapter(documents, getActivity());
         rv.setAdapter(mAdapter);
 
         mActivity = (TransparencyActivity) getActivity();
@@ -103,14 +98,16 @@ public class DocumentFragment extends Fragment {
 
 
     // Dummy Content
-    class Bill {
+    class Document {
         String billName;
         int origin;
+        String extension;
 
 
-        Bill(String name, int origin) {
+        Document(String name, String extension,  int origin) {
             this.billName = name;
             this.origin = origin;
+            this.extension = extension;
 
         }
     }
@@ -121,10 +118,14 @@ public class DocumentFragment extends Fragment {
 // Checkout the project associated with this tutorial on Github if
 // you want to use the same images.
     private void initializeData(){
-        bills = new ArrayList<>();
-        bills.add(new Bill("hive_staff.pdf", 0));
-        bills.add(new Bill("pizzas.pdf", 0));
-        bills.add(new Bill("apple_phones.pdf", 0));
+        documents = new ArrayList<>();
+        documents.add(new Document("Computer-graphics", "pdf", 0));
+        documents.add(new Document("context_systems", "pdf", 0));
+        documents.add(new Document("Human-Behaviour.", "pdf", 0));
+        documents.add(new Document("Mechanics-of-Fluids-Fourth-Edition-", "pdf", 0));
+        documents.add(new Document("ocean_shader", "pdf", 0));
+        documents.add(new Document("Point-Based-Surface", "pdf", 0));
+        documents.add(new Document("tcc", "pdf", 0));
     }
 
 

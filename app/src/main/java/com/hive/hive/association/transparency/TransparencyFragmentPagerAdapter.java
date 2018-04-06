@@ -82,7 +82,7 @@ public class TransparencyFragmentPagerAdapter extends FragmentPagerAdapter {
                         Toast.makeText(context, "On Click Caixa", Toast.LENGTH_SHORT).show();
                     }
                 });
-                FAB.setVisibility(View.VISIBLE);
+                FAB.setVisibility(View.GONE);
                 break;
             case 1:
                 FAB.setOnClickListener(new View.OnClickListener() {
@@ -92,7 +92,7 @@ public class TransparencyFragmentPagerAdapter extends FragmentPagerAdapter {
                         FileUtils.downloadFile(activity, context, "big_file", "pdf");
                     }
                 });
-                FAB.setVisibility(View.VISIBLE);
+                FAB.setVisibility(View.GONE);
                 break;
             case 2:
                 FAB.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +102,7 @@ public class TransparencyFragmentPagerAdapter extends FragmentPagerAdapter {
                         FileUtils.uploadFile(context, "big_file", "pdf");
                     }
                 });
-                FAB.setVisibility(View.VISIBLE);
+                FAB.setVisibility(View.GONE);
                 break;
             case 3:
                 FAB.setVisibility(View.GONE);
