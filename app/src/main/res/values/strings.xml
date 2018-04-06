@@ -178,6 +178,7 @@
     <string name="request_category_security">Segurança</string>
     <string name="request_category_gardening">Jardinagem</string>
     <string name="request_category_maintenance">Manuntenção</string>
+    <string name="request_category_cleaning">Limpeza</string>
 
 
 </resources>
