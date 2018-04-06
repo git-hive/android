@@ -4,9 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+
 
 import com.hive.hive.R;
 import com.hive.hive.model.user.User;
@@ -65,14 +63,14 @@ public class SupportListActivity extends AppCompatActivity {
         mUsers = new ArrayList<>();
         for(int i=0;i<100;i++){
             User user = new User();
-            user.setName("Guy Number "+i);
+            user.setName(getCharForNumber((i%26)+1)+"_Guy Number "+i);
             mUsers.add(i, user);
         }
 
         mAlphabet = new ArrayList<>();
         mAlphabet.add(0, "Todos os 100");
         for(int i=1;i<27;i++){
-            mAlphabet.add(i, getCharForNumber(i));
+            mAlphabet.add(i, getCharForNumber(i).toLowerCase());
         }
     }
 }

@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +42,7 @@ public class QuestionForm extends AppCompatActivity {
     private ArrayList<Integer> mQuestionStatusValue;
     private GridListAdapter formAdapter;
     private Context context;
+
 
     HashMap<String, Question> mQuestions;
     ArrayList<String> mQuestionsIds;
@@ -162,6 +164,7 @@ public class QuestionForm extends AppCompatActivity {
             }
         });
 
+
         findViewById(R.id.questionNextTV).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -178,6 +181,13 @@ public class QuestionForm extends AppCompatActivity {
                     Toast.makeText(QuestionForm.this, getString(R.string.should_answer), Toast.LENGTH_SHORT).show();
                 }
                 //   QuestionOptions currentOptions = mQuestions.get(mQuestionsIds.get())
+            }
+        });
+
+        findViewById(R.id.backArrow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
 

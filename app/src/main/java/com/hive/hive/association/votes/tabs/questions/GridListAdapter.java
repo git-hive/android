@@ -3,6 +3,7 @@ package com.hive.hive.association.votes.tabs.questions;
 import android.app.Activity;
 import android.content.Context;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,6 +82,7 @@ public class GridListAdapter extends BaseAdapter {
                 view = inflater.inflate(R.layout.list_custom_row_layout, viewGroup, false);
 
             viewHolder.label = (TextView) view.findViewById(R.id.label);
+
             viewHolder.radioButton = (RadioButton) view.findViewById(R.id.radio_button);
  
             view.setTag(viewHolder);
@@ -91,6 +93,12 @@ public class GridListAdapter extends BaseAdapter {
  
         //check the radio button if both position and selectedPosition matches
         viewHolder.radioButton.setChecked(i == selectedPosition);
+
+        // Change its color when checked
+        if(i == selectedPosition)
+            viewHolder.label.setTextColor(Color.BLACK);
+        else
+            viewHolder.label.setTextColor(Color.parseColor("#D3D3D3"));
  
         //Set the position tag to both radio button and label
         viewHolder.radioButton.setTag(i);

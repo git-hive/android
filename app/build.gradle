@@ -70,6 +70,7 @@ dependencies {
     // Butterknife for convenience
     compile 'com.jakewharton:butterknife:8.1.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.1.0'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -39,6 +39,10 @@
     </FrameLayout>
 
     <FrameLayout
+
+        android:translationZ="-5dp"
+        android:background="@color/com_facebook_button_login_silver_background_color"
+        android:elevation="6dp"
         android:paddingLeft="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">

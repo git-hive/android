@@ -4,22 +4,25 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <ImageView
+        android:paddingLeft="15dp"
         android:layout_gravity="left"
         android:id="@+id/person_photo"
         app:srcCompat="@drawable/ic_profile_photo"
         android:layout_width="60dp"
         android:layout_height="60dp" />
     <TextView
+        android:textColor="@color/colorBlack"
         android:layout_gravity="center_horizontal|center_vertical"
         android:textSize="20sp"
         android:id="@+id/person_name"
         android:text="@string/client_name_mock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-    <ImageView
+    <com.hive.hive.utils.CustomViews.Hexagon
+        android:id="@+id/coloredHexagon"
+        android:paddingRight="15dp"
         android:layout_gravity="right|center_vertical"
         android:foregroundGravity="right"
-        android:src="@drawable/ic_profile_photo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="30dp"
+        android:layout_height="30dp" />
 </FrameLayout>
