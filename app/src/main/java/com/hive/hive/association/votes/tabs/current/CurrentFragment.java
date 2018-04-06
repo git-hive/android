@@ -11,12 +11,12 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.alexvasilkov.foldablelayout.UnfoldableView;
 import com.bumptech.glide.Glide;
@@ -27,27 +27,29 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.VotesHelper;
+import com.hive.hive.association.votes.tabs.SupportList.SupportListActivity;
 import com.hive.hive.association.votes.tabs.questions.QuestionForm;
 import com.hive.hive.association.votes.tabs.questions.ExpandableListAdapter;
 import com.hive.hive.model.association.Agenda;
 import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.Session;
-import com.hive.hive.utils.hexagonsPercentBar.HexagonView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 // In this case, the fragment displays simple text based on the page
 public class CurrentFragment extends Fragment {
-    private static final int NUM_LIST_ITEMS= 6;
+
     public static final String ARG_PAGE = "Passadas";
     private static final String TAG = CurrentFragment.class.getSimpleName();
+    View mView;
+
     //Session
     private Session mCurrentSession;
     public static String mCurrentSessionId;
     private com.google.firebase.firestore.EventListener<QuerySnapshot> mSessionEL;
     private ListenerRegistration mSessionLR;
+
     //Agendas
     private HashMap<String, Agenda> mAgendas;
     private ArrayList<String> mAgendasIds;
@@ -57,6 +59,7 @@ public class CurrentFragment extends Fragment {
     //Recycler Things
     RecyclerView mRV;
     CurrentAdapter mRVAdapter;
+
     //Views
     View mListTouchInterceptor;
     FrameLayout mDetailsLayout;
@@ -72,6 +75,8 @@ public class CurrentFragment extends Fragment {
 
     // Views references
     static ImageButton choseVoteBT;
+    ImageView supportsIV;
+    TextView supportsTV;
 
 
     public static CurrentFragment newInstance(int page) {
@@ -88,6 +93,8 @@ public class CurrentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_current, container, false);
+
+        mView = view;
 
         choseVoteBT = view.findViewById(R.id.choseVoteBT);
 
@@ -263,7 +270,8 @@ public class CurrentFragment extends Fragment {
             }
         });
 
-
+        // Start acitity with supports
+        setSupportListeners();
 
         return view;
     }
@@ -384,6 +392,26 @@ public class CurrentFragment extends Fragment {
         listView.requestLayout();
     }
 
+    public void setSupportListeners(){
+        // Start Questions activity stuff
+        supportsTV = mView.findViewById(R.id.supportTV);
+        supportsIV = mView.findViewById(R.id.supportIV);
 
+        supportsIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(mView.getContext(), SupportListActivity.class));
+            }
+        });
+
+
+        supportsTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(mView.getContext(), SupportListActivity.class));
+            }
+        });
+
+    }
 
 }

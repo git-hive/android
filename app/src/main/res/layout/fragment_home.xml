@@ -1,17 +1,45 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorWhite"
     android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/topCardIV"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:background="@drawable/city_login" />
+
+                <ImageView
+                    android:translationY="20dp"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    app:srcCompat="@drawable/ic_profile_photo"
+                    android:gravity="center"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:id="@+id/titleContentTV"/>
+
+        </RelativeLayout>
+
         <TextView
+            android:textSize="20dp"
+            android:textColor="@color/colorBlack"
             android:id="@+id/textViewGreetings"
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/hello" />
+            android:text="Bem Vinda, Pessoa" />
         <android.support.v4.widget.Space
             android:layout_width="match_parent"
             android:layout_height="5dp" />
+
         <TextView
+            android:textSize="18dp"
+            android:textColor="@color/colorBlack"
             android:id="@+id/textViewToday"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

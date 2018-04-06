@@ -55,6 +55,7 @@
                         android:layout_height="wrap_content">
 
                         <LinearLayout
+                            android:id="@+id/supportLL"
                             android:paddingRight="20dp"
                             android:layout_gravity="bottom"
                             android:gravity="bottom"
@@ -62,6 +63,7 @@
                             android:layout_height="wrap_content">
 
                                 <ImageView
+                                    android:id="@+id/supportIV"
                                     android:layout_gravity="left|bottom"
                                     app:srcCompat="@drawable/ic_icones_support_orange"
                                     android:layout_width="wrap_content"
@@ -74,7 +76,7 @@
                                     android:text="@string/zeroin3"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:id="@+id/budgetTotalAppliedTV"/>
+                                    android:id="@+id/supportTV"/>
 
 
                         </LinearLayout>
