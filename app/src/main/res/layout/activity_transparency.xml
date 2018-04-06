@@ -1,53 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="end">
-    <FrameLayout
-        android:paddingTop="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:orientation="horizontal"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp">
-        <ImageView
-            android:id="@+id/up_button_transparency_IV"
-            android:layout_gravity="left"
-            android:src="@drawable/ic_back"
-            android:layout_width="40dp"
-            android:layout_height="40dp" />
-        <TextView
-            android:id="@+id/transparency_activity_title_TV"
-            android:textColor="@color/colorBlack"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="end">
+        <FrameLayout
             android:paddingTop="10dp"
-            android:textSize="20sp"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/transparency_activity_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <ImageView
-            android:id="@+id/search_transparency_IV"
-            android:layout_gravity="right"
-            android:src="@drawable/ic_search"
-            android:layout_width="40dp"
-            android:layout_height="40dp" />
-    </FrameLayout>
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="70dp">
+            <ImageView
+                android:id="@+id/up_button_transparency_IV"
+                android:layout_gravity="left"
+                android:src="@drawable/ic_back"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
+            <TextView
+                android:id="@+id/transparency_activity_title_TV"
+                android:textColor="@color/colorBlack"
+                android:paddingTop="10dp"
+                android:textSize="20sp"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/transparency_activity_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/search_transparency_IV"
+                android:layout_gravity="right"
+                android:src="@drawable/ic_search"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
+        </FrameLayout>
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/sliding_tabs_transparency_TL"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tabMode="fixed" />
+        <android.support.design.widget.TabLayout
+            android:id="@+id/sliding_tabs_transparency_TL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabMode="fixed" />
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/transparency_VP"
-        android:layout_width="match_parent"
-        android:layout_height="0px"
-        android:layout_weight="1"
-        android:background="@android:color/white" />
+        <android.support.v4.view.ViewPager
+            android:id="@+id/transparency_VP"
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            android:background="@android:color/white" />
+
+    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/transparency_FAB"
@@ -55,6 +63,8 @@
         android:layout_height="@dimen/fab_size"
         android:src="@android:drawable/ic_input_add"
         android:tint="@color/colorWhite"
-        android:layout_margin="@dimen/fab_margin"/>
-
-</LinearLayout>
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_anchorGravity="bottom|right|end"
+        android:layout_gravity="end|bottom"
+        />
+</android.support.design.widget.CoordinatorLayout>
