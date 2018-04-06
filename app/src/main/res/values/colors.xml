@@ -13,6 +13,10 @@
     <color name="green_text">#006837</color>
     <color name="red_text">#ED1C24</color>
 
+    <!--Chart Colors-->
+    <color name="chart_green">#388E3C</color>
+    <color name="chart_red">#D32F2F</color>
+
     <!-- Folding Cell Stuff -->
     <color name="colorPrimary">#594691</color>
     <color name="colorPrimaryDark">#3e2d70</color>
