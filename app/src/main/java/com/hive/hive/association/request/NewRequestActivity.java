@@ -50,17 +50,26 @@ public class NewRequestActivity extends AppCompatActivity {
     private TextView selectedBudgetCategoryTV;
 
     //--- Request categories
+
+    // Security category
     private LinearLayout requestCategorySecurityLL;
     private ImageView requestCategorySecurityIV;
     private CheckBox requestCategorySecurityCB;
 
+    // Gardening category
     private LinearLayout requestCategoryGardeningLL;
     private ImageView requestCategoryGardeningIV;
     private CheckBox requestCategoryGardeningCB;
 
+    // Services category
     private LinearLayout requestCategoryServicesLL;
     private ImageView requestCategoryServicesIV;
     private CheckBox requestCategoryServicesCB;
+
+    // Cleaning category
+    private LinearLayout requestCategoryCleaningLL;
+    private ImageView requestCategoryCleaningIV;
+    private CheckBox requestCategoryCleaningCB;
 
     private TextView selectedRequestCategoryTV;
     private Pair<DocumentReference, RequestCategory> selectedRequestCategoryPair;
@@ -156,6 +165,13 @@ public class NewRequestActivity extends AppCompatActivity {
         requestCategoryServicesCB =
                 findViewById(R.id.new_request_request_category_maintenance_cb);
 
+        // Cleaning
+        requestCategoryCleaningLL = findViewById(R.id.new_request_request_category_cleaning_ll);
+        requestCategoryCleaningLL.setOnClickListener(requestCategoriesOnClickListener());
+
+        requestCategoryCleaningIV = findViewById(R.id.new_request_request_category_cleaning_iv);
+        requestCategoryCleaningCB = findViewById(R.id.new_request_request_category_cleaning_cb);
+
 
         // OnClick Listeners
         saveBT.setOnClickListener(view -> {
@@ -241,6 +257,12 @@ public class NewRequestActivity extends AppCompatActivity {
                     requestCategoryServicesIV.setSelected(true);
                     searchAndSetRequestCategory("services");
                     break;
+                case R.id.new_request_request_category_cleaning_ll:
+                    selectedRequestCategoryTV.setText(R.string.request_category_cleaning);
+                    requestCategoryCleaningIV.setImageResource(R.drawable.ic_category_cleaning);
+                    requestCategoryCleaningCB.setSelected(true);
+                    searchAndSetRequestCategory("cleaning");
+                    break;
                 default:
                     break;
             }
@@ -277,6 +299,9 @@ public class NewRequestActivity extends AppCompatActivity {
 
         requestCategoryServicesIV.setImageResource(R.drawable.ic_category_services_disabled);
         requestCategoryServicesIV.setSelected(false);
+
+        requestCategoryCleaningIV.setImageResource(R.drawable.ic_category_cleaning_disabled);
+        requestCategoryCleaningCB.setSelected(false);
     }
 
     /**
