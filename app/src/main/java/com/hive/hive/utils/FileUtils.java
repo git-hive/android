@@ -147,8 +147,17 @@ public abstract class FileUtils {
 
         try{
             //-- Gets stream to read from internal directory
-            Log.d(TAG, "Nome: " +context.getFilesDir() + "/" + fileName + "." + fileExtension );
-            inputStream = context.openFileInput(context.getFilesDir() + "/" + fileName + "." + fileExtension);
+            Log.d(TAG, "Nome: " + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + "/" + fileName + "." + fileExtension );
+            inputStream = new FileInputStream(
+                    new File(
+                            Environment.getExternalStoragePublicDirectory(
+                                    Environment.DIRECTORY_DOWNLOADS).toString() +
+                                    "/" +
+                                    fileName +
+                                    "." +
+                                    fileExtension
+                    )
+            );
 
             //-- Byte array to store data
             byte[] data = new byte[inputStream.available()];
