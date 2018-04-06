@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -23,7 +24,11 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.hive.hive.R;
 import com.hive.hive.association.transparency.TransparencyActivity;
@@ -54,6 +59,7 @@ public class OverviewFragment extends Fragment {
 
     //--- Chart
     private BarChart mMonthlyChart;
+    private PieChart mAnnualChart;
 
 
 
@@ -92,6 +98,7 @@ public class OverviewFragment extends Fragment {
 
         //--- Views
         mMonthlyChart = view.findViewById(R.id.monthly_chart);
+        mAnnualChart = view.findViewById(R.id.annual_chart);
 
 
         //------------------------------------ Monthly Chart ------------------------------------//
@@ -167,17 +174,17 @@ public class OverviewFragment extends Fragment {
         leftAxis.setAxisMinimum(0f);
 
         //-- Format chart legend
-        Legend mLegend = mMonthlyChart.getLegend();
-        mLegend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
-        mLegend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
-        mLegend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
-        mLegend.setDrawInside(false);
-        mLegend.setXEntrySpace(5);
-        mLegend.setYEntrySpace(5);
-        mLegend.setTextSize(15f);
-        mLegend.setTextColor(Color.BLACK);
-        mLegend.setFormSize(10f);
-        mLegend.setWordWrapEnabled(true);
+        Legend mBarLegend = mMonthlyChart.getLegend();
+        mBarLegend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        mBarLegend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        mBarLegend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        mBarLegend.setDrawInside(false);
+        mBarLegend.setXEntrySpace(5);
+        mBarLegend.setYEntrySpace(5);
+        mBarLegend.setTextSize(15f);
+        mBarLegend.setTextColor(Color.BLACK);
+        mBarLegend.setFormSize(10f);
+        mBarLegend.setWordWrapEnabled(true);
 
         //-- Config chart generic options
         mMonthlyChart.setEnabled(false);
@@ -198,7 +205,52 @@ public class OverviewFragment extends Fragment {
         mMonthlyChart.invalidate();
 
 
+        //------------------------------------ Monthly Chart ------------------------------------//
 
+        mAnnualChart.setUsePercentValues(true);
+        mAnnualChart.getDescription().setEnabled(false);
+        mAnnualChart.setDrawHoleEnabled(true);
+        mAnnualChart.setDrawCenterText(false);
+        mAnnualChart.setDrawEntryLabels(false);
+
+        float totalIncome = 0, totalExpense = 0;
+        for (int i = 0; i < incomes.size(); i ++){
+            totalIncome += incomes.get(i).getValue();
+            totalExpense += expenses.get(i).getValue();
+        }
+
+        ArrayList<PieEntry> pieEntries = new ArrayList<>();
+        pieEntries.add(new PieEntry(totalIncome, "Receitas"));
+        pieEntries.add(new PieEntry(totalExpense, "Despesas"));
+
+        ArrayList<Integer> pieColors = new ArrayList<>();
+        pieColors.add(ContextCompat.getColor(getActivity(), R.color.green_text));
+        pieColors.add(ContextCompat.getColor(getActivity(), R.color.red_text));
+
+        PieDataSet pieDataSet = new PieDataSet(pieEntries, "");
+        pieDataSet.setColors(pieColors);
+        pieDataSet.setValueTextSize(9);
+
+        PieData pieData = new PieData(pieDataSet);
+        pieData.setValueTextColor(Color.WHITE);
+        pieData.setValueFormatter(new PercentFormatter());
+
+        // Personalizar Legenda
+        Legend mPieLegend = mAnnualChart.getLegend();
+        mPieLegend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        mPieLegend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        mPieLegend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        mPieLegend.setDrawInside(false);
+        mPieLegend.setXEntrySpace(7);
+        mPieLegend.setYEntrySpace(5);
+        mPieLegend.setTextSize(15f);
+        mPieLegend.setTextColor(Color.BLACK);
+        mPieLegend.setFormSize(10f);
+        mPieLegend.setWordWrapEnabled(true);
+
+        mAnnualChart.setEnabled(false);
+        mAnnualChart.setData(pieData);
+        mAnnualChart.invalidate();
 
         return view;
     }

@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="center_horizontal"
         android:orientation="vertical"
         tools:context="com.hive.hive.association.transparency.tabs.overview.OverviewFragment"
         android:gravity="center_horizontal">
@@ -20,21 +20,33 @@
             android:textColor="@android:color/black"
             android:text="Balanço Mensal"
             android:gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="5dp"/>
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="5dp"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
 
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/monthly_chart"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="250dp"
             android:layout_margin="20dp"/>
 
         <TextView
-            android:gravity="center"
-            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:text="Balanço Anual"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:textStyle="bold"
+            android:textSize="16sp"/>
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/annual_chart"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hard_coded_i_do_like_pdfs_3" />
+            android:layout_height="200dp"
+            android:layout_margin="20dp"/>
 
     </LinearLayout>
 
