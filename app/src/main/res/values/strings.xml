@@ -175,6 +175,7 @@
     <string name="vertical_timeline">Vertical Timeline</string>
     <string name="horizontal_timeline_w_padding">Horizontal Timeline With Line Padding</string>
     <string name="vertical_timeline_w_padding">Vertical Timeline With Line Padding</string>
+    <string name="parque_una">Parque Una</string>
 
     <!-- Session stuff -->
     <string name="session_fin">Sessão finalizada</string>
