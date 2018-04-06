@@ -1,5 +1,7 @@
 package com.hive.hive.association.transparency;
 
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -7,14 +9,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hive.hive.R;
+import com.hive.hive.utils.FileUtils;
 
 public class TransparencyActivity extends AppCompatActivity {
+
+    private static final String TAG = TransparencyActivity.class.getSimpleName();
+
     // Superior Tab items
     private TextView mTitleTV;
     private ImageView mUpButtonIV;
@@ -48,7 +55,8 @@ public class TransparencyActivity extends AppCompatActivity {
         mViewPagerAdapter = new TransparencyFragmentPagerAdapter(
                 getSupportFragmentManager(),
                 TransparencyActivity.this,
-                transparencyFAB
+                transparencyFAB,
+                this
         );
         transparencyVP.setAdapter(mViewPagerAdapter);
         final TransparencyFragmentPagerAdapter ref = mViewPagerAdapter;
@@ -98,6 +106,32 @@ public class TransparencyActivity extends AppCompatActivity {
         SpannableString content = new SpannableString(getResources().getString(R.string.transparency_activity_title));
         content.setSpan(new UnderlineSpan(), 0+1, content.length()-1, 0);
         mTitleTV.setText(content);
+    }
+
+    @Override // android recommended class to handle permissions
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults)
+    {
+        switch (requestCode) {
+            case FileUtils.STORAGE_REQUEST_CODE: {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    Log.d(TAG, "Permission granted");
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.uujm
+                    Toast.makeText(this, "Permission denied to read your External storage", Toast.LENGTH_SHORT).show();
+
+                    Log.d(TAG, "Permission not granted");
+
+                }
+            }
+        }
     }
 
 }

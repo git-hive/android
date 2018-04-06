@@ -1,7 +1,14 @@
 package com.hive.hive.utils;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -27,6 +34,7 @@ import java.io.InputStream;
 public abstract class FileUtils {
 
     private final static String TAG = FileUtils.class.getSimpleName();
+    public final static int STORAGE_REQUEST_CODE = 99;
 
     private final static String basePath = "gs://hive-mvp.appspot.com/";
 
@@ -36,10 +44,17 @@ public abstract class FileUtils {
     private FileUtils(){}
 
 
-    public static void downloadFile(final Context context, final String fileName, final String fileExtension){
 
-        //- Activity Log
-        Log.d(TAG, "Starting download of file \"" + fileName + "." + fileExtension + "\"...");
+
+
+    public static void downloadFile(
+            @NonNull final Activity activity,
+            @NonNull final Context context,
+            @NonNull final String fileName,
+            @NonNull final String fileExtension)
+    {
+
+
 
         //--- Gets instace of Firebase storage
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -47,9 +62,15 @@ public abstract class FileUtils {
         //--- Gets ref to desired file
         StorageReference storageRef = storage.getReferenceFromUrl(basePath).child(fileName + "." + fileExtension);
 
-
         try {
-            final File localFile = new File(context.getFilesDir(), fileName + "." + fileExtension);
+            final File localFile = new File(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString(),
+                    fileName + "." + fileExtension
+            );
+
+            //- Activity Log
+            Log.d(TAG, "Starting download of file \"" + localFile.getAbsolutePath() + "\"...");
+
             storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
@@ -70,10 +91,19 @@ public abstract class FileUtils {
                         //-- Close stream
                         outputStream.close();
 
-                        //-- Operation log
+                        //- Activity log
                         Log.d(TAG, "File \"" + fileName + "." + fileExtension + "\" sucessfully downloaded.");
 
-                        Toast.makeText(context, "Transfered " + Long.toString(taskSnapshot.getBytesTransferred()/(1024*1024)) + " Mbytes" , Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "Downloaded " + Long.toString(taskSnapshot.getBytesTransferred() / (1024 * 1024)) + " Mbytes");
+
+                        DownloadManager manager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
+                        if (manager != null){
+                            manager.addCompletedDownload(fileName + "." + fileExtension, "PDF", false, "pdf", localFile.getAbsolutePath(), localFile.length(), true);
+                            Log.d(TAG, "Download adicionado no manager");
+                        }
+                        else{
+                            Log.d(TAG, "Download Manager == null");
+                        }
 
                     } catch (Exception e){
                         e.printStackTrace();
@@ -85,7 +115,8 @@ public abstract class FileUtils {
                 public void onFailure(@NonNull Exception exception) {
 
                     //-- System log
-                    Log.e(TAG, "Error downloading file \"" + fileName + "." + fileExtension + "\".");
+                    Log.e(TAG, "Error downloading file \"" + fileName + "." + fileExtension + "\" - ");
+                    exception.printStackTrace();
 
                 }
             });
@@ -97,11 +128,13 @@ public abstract class FileUtils {
     /**
      * Upload File to Firebase Storage
      * @param context - context used to open FileOutputStream
-     * @param path - path to file
      * @param fileName - name of the file
      * @param fileExtension - extension of the file
      */
-    public static void uploadFile(final Context context, final String path, final String fileName, final String fileExtension){
+    public static void uploadFile(final Context context, final String fileName, final String fileExtension){
+
+        //- Activity Log
+        Log.d(TAG, "Starting to upload file \"" + fileName + "." + fileExtension + "\"...");
 
         //--- Gets instace of Firebase storage
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -114,7 +147,8 @@ public abstract class FileUtils {
 
         try{
             //-- Gets stream to read from internal directory
-            inputStream = context.openFileInput(path + fileName + "." + fileExtension);
+            Log.d(TAG, "Nome: " +context.getFilesDir() + "/" + fileName + "." + fileExtension );
+            inputStream = context.openFileInput(context.getFilesDir() + "/" + fileName + "." + fileExtension);
 
             //-- Byte array to store data
             byte[] data = new byte[inputStream.available()];
@@ -131,19 +165,22 @@ public abstract class FileUtils {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
-                    //-- Operation log
+                    //- Activity log
                     Log.d(TAG, "File \"" + fileName + "." + fileExtension + "\" sucessfully uploaded.");
+
+                    Toast.makeText(context, "Uploaded " + Long.toString(taskSnapshot.getBytesTransferred()/(1024*1024)) + " Mbytes" , Toast.LENGTH_SHORT).show();
 
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    //-- Operation log
-                    Log.d(TAG, "Error uploading file \"" + fileName + "." + fileExtension + "\".");
+                    //- Activity log
+                    Log.e(TAG, "Error uploading file \"" + fileName + "." + fileExtension + "\".");
                 }
             });
         } catch (Exception e){
             e.printStackTrace();
+            Log.wtf(TAG, "Error uploading file");
         }
 
 

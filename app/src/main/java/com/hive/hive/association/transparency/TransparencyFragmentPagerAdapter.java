@@ -1,5 +1,6 @@
 package com.hive.hive.association.transparency;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +14,8 @@ import com.hive.hive.association.transparency.tabs.document.DocumentFragment;
 import com.hive.hive.association.transparency.tabs.budget.BudgetFragment;
 import com.hive.hive.association.transparency.tabs.overview.OverviewFragment;
 import com.hive.hive.association.transparency.tabs.staff.StaffFragment;
+import com.hive.hive.utils.FileUtils;
+import com.hive.hive.utils.circularFilter.Util;
 
 /**
  * Created by Marco Antônio Birck on 16/02/18.
@@ -32,11 +35,13 @@ public class TransparencyFragmentPagerAdapter extends FragmentPagerAdapter {
 
     //--- Context
     private Context context;
+    private Activity activity;
 
-    TransparencyFragmentPagerAdapter(FragmentManager fm, Context context, FloatingActionButton FAB) {
+    TransparencyFragmentPagerAdapter(FragmentManager fm, Context context, FloatingActionButton FAB, Activity activity) {
         super(fm);
         this.context = context;
         this.FAB = FAB;
+        this.activity = activity;
     }
 
     @Override
@@ -84,6 +89,7 @@ public class TransparencyFragmentPagerAdapter extends FragmentPagerAdapter {
                     @Override
                     public void onClick(View view) {
                         Toast.makeText(context, "On Click Documentos", Toast.LENGTH_SHORT).show();
+                        FileUtils.downloadFile(activity, context, "big_file", "pdf");
                     }
                 });
                 FAB.setVisibility(View.VISIBLE);
@@ -93,6 +99,7 @@ public class TransparencyFragmentPagerAdapter extends FragmentPagerAdapter {
                     @Override
                     public void onClick(View view) {
                         Toast.makeText(context, "On Click Orçamentos", Toast.LENGTH_SHORT).show();
+                        FileUtils.uploadFile(context, "big_file", "pdf");
                     }
                 });
                 FAB.setVisibility(View.VISIBLE);
