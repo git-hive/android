@@ -46,6 +46,7 @@ public class RequestActivity extends AppCompatActivity {
     // TODO: Change hardcoded associationID
     private String associationID = "gVw7dUkuw3SSZSYRXe8s";
     private ArrayList<Request> allRequests;
+    private String mCategoryName = "services";
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -129,6 +130,7 @@ public class RequestActivity extends AppCompatActivity {
     ) {
         // "category name" -> [RequestCategory]
         HashMap<String, ArrayList<Request>> categoriesRequests = new HashMap<>();
+        categoriesRequests.put("all", new ArrayList<>());
         // For each request
         for (Request request : requests) {
             // For each of it's categories
@@ -141,6 +143,7 @@ public class RequestActivity extends AppCompatActivity {
                     categoriesRequests.put(requestCategoryName, new ArrayList<>());
                 }
 
+                categoriesRequests.get("all").add(request);
                 categoriesRequests.get(requestCategoryName).add(request);
             }
         }
@@ -150,8 +153,10 @@ public class RequestActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void setupRecyclerView(HashMap<String, ArrayList<Request>> categoriesRequests) {
+        ArrayList<Request> dataAdapter = categoriesRequests.get(mCategoryName);
+
         RequestAdapter mRecyclerAdapter = new RequestAdapter(
-                categoriesRequests,
+                dataAdapter,
                 this
         );
         mRecyclerAdapter.notifyDataSetChanged();
@@ -172,7 +177,18 @@ public class RequestActivity extends AppCompatActivity {
         ) -> {
             TextView filterName = v.findViewById(R.id.menuItemCategorieTV);
             if (filterName != null) {
-                mFilterTV.setText(mmap.get(filterName.getText()));
+                String categoryName = mmap.get(filterName.getText()).toLowerCase();
+                // If the category has actually changed
+                if (!categoryName.equals(mCategoryName)) {
+                    mCategoryName = categoryName;
+                    mFilterTV.setText(mmap.get(filterName.getText()));
+                    if (categoriesRequests.containsKey(categoryName)) {
+                        mRecyclerAdapter.setRequests(categoriesRequests.get(categoryName));
+                    } else {
+                        mRecyclerAdapter.setRequests(new ArrayList<>());
+                    }
+                    mRecyclerAdapter.notifyDataSetChanged();
+                }
             }
         });
     }
