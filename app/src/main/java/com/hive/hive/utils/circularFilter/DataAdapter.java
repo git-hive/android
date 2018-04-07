@@ -31,6 +31,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         holder.filterNameTV.setText(images[position]);
     }
 
+
+
     @Override
     public int getItemCount() {
         return images.length;

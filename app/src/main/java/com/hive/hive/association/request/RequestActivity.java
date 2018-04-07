@@ -46,7 +46,7 @@ public class RequestActivity extends AppCompatActivity {
     // TODO: Change hardcoded associationID
     private String associationID = "gVw7dUkuw3SSZSYRXe8s";
     private ArrayList<Request> allRequests;
-    private String mCategoryName = "services";
+    private String mCategoryName = "Services";
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -184,10 +184,12 @@ public class RequestActivity extends AppCompatActivity {
         mRecyclerAdapter.notifyDataSetChanged();
 
         RecyclerView mRequestRV = findViewById(R.id.requestRV);
-        mRequestRV.setHasFixedSize(true);
         mRequestRV.setAdapter(mRecyclerAdapter);
 
         mMenuRV = findViewById(R.id.recyclerMenu);
+//        mMenuRV.setHasFixedSize(true);
+//        mMenuRV.setItemViewCacheSize();
+
         mFilterTV = findViewById(R.id.menuFilterTV);
 
         mMenuRV.setOnScrollChangeListener((
@@ -197,8 +199,33 @@ public class RequestActivity extends AppCompatActivity {
                 int oldScrollX,
                 int oldScrollY
         ) -> {
+
             TextView filterName = v.findViewById(R.id.menuItemCategorieTV);
-            if (filterName != null) {
+
+            if(mMenuRV.getLayoutManager()!= null) {
+                View nodeInRV = mMenuRV.getChildAt(1);
+                if(nodeInRV != null) {
+                    TextView localFilterName = nodeInRV.findViewById(R.id.menuItemCategorieTV);
+                    if (localFilterName != null) {
+                        if(mFilterTV != null) {
+                            mFilterTV.setText(mmap.get(localFilterName.getText()));
+                            Log.d(TAG, mmap.get(localFilterName.getText()) + "**********************************************************"+ localFilterName.getText());
+
+                        } else
+                            Log.d(TAG, localFilterName.getText() + " /////////////////////////////////////////////// ");
+
+
+                        //Toast.makeText(v.getContext(), "clicked:" + localFilterName, Toast.LENGTH_SHORT).show();
+                    }else
+                        Log.d(TAG, localFilterName.getText() + "##################################################33");
+
+
+                }
+            }
+
+
+
+        if (filterName != null) {
                 String categoryName = mmap.get(filterName.getText()).toLowerCase();
                 // If the category has actually changed
                 if (!categoryName.equals(mCategoryName)) {

@@ -103,7 +103,9 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
     @Override
     public int getItemCount() {
-        return requests.size();
+        if(requests != null)
+            return requests.size();
+        return 0;
     }
 
     private View.OnClickListener createToggleSupportOnClickListener(int position) {

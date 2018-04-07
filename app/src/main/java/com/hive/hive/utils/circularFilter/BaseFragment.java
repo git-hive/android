@@ -48,7 +48,8 @@ public abstract class BaseFragment<V extends ViewPagerLayoutManager, S extends S
         recyclerView = view.findViewById(R.id.recyclerMenu);
         viewPagerLayoutManager = createLayoutManager();
         //Set to scroll Infinitely
-        viewPagerLayoutManager.setSmoothScrollbarEnabled(true);
+        viewPagerLayoutManager.setEnableBringCenterToFront(true);
+        viewPagerLayoutManager.setSmoothScrollbarEnabled(false);
         viewPagerLayoutManager.setInfinite(true);
         recyclerView.setAdapter(new DataAdapter());
         recyclerView.setLayoutManager(viewPagerLayoutManager);

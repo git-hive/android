@@ -27,7 +27,7 @@
         android:paddingRight="20dp"
         android:scrollbars="none"
         android:id="@+id/recyclerMenu"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <!-- Arrow 2 -->
