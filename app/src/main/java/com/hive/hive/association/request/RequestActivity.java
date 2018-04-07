@@ -177,7 +177,9 @@ public class RequestActivity extends AppCompatActivity {
 
         RequestAdapter mRecyclerAdapter = new RequestAdapter(
                 dataAdapter,
-                this
+                this,
+                40,
+                150
         );
         mRecyclerAdapter.notifyDataSetChanged();
 

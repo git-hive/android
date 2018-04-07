@@ -8,7 +8,7 @@ import java.util.Locale;
  * Created by birck on 18/02/18.
  */
 
-public class Util {
+public class CircularFilterUtils {
     public static int Dp2px(Context context, float dp) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);

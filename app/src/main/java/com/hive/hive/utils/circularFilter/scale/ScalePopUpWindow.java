@@ -1,6 +1,5 @@
 package com.hive.hive.utils.circularFilter.scale;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +12,7 @@ import android.widget.TextView;
 
 import com.hive.hive.R;
 import com.hive.hive.utils.circularFilter.SettingPopUpWindow;
-import com.hive.hive.utils.circularFilter.Util;
+import com.hive.hive.utils.circularFilter.CircularFilterUtils;
 import com.leochuan.CenterSnapHelper;
 import com.leochuan.ScaleLayoutManager;
 import com.leochuan.ViewPagerLayoutManager;
@@ -86,10 +85,10 @@ public class ScalePopUpWindow extends SettingPopUpWindow
         minAlpha.setProgress(Math.round(scaleLayoutManager.getMinAlpha() * 100));
 
         itemSpaceValue.setText(String.valueOf(scaleLayoutManager.getItemSpace()));
-        speedValue.setText(Util.formatFloat(scaleLayoutManager.getMoveSpeed()));
-        minScaleValue.setText(Util.formatFloat(scaleLayoutManager.getMinScale()));
-        minAlphaValue.setText(Util.formatFloat(scaleLayoutManager.getMinAlpha()));
-        maxAlphaValue.setText(Util.formatFloat(scaleLayoutManager.getMaxAlpha()));
+        speedValue.setText(CircularFilterUtils.formatFloat(scaleLayoutManager.getMoveSpeed()));
+        minScaleValue.setText(CircularFilterUtils.formatFloat(scaleLayoutManager.getMinScale()));
+        minAlphaValue.setText(CircularFilterUtils.formatFloat(scaleLayoutManager.getMinAlpha()));
+        maxAlphaValue.setText(CircularFilterUtils.formatFloat(scaleLayoutManager.getMaxAlpha()));
 
         changeOrientation.setChecked(scaleLayoutManager.getOrientation() == ViewPagerLayoutManager.VERTICAL);
         reverse.setChecked(scaleLayoutManager.getReverseLayout());
@@ -112,22 +111,22 @@ public class ScalePopUpWindow extends SettingPopUpWindow
             case R.id.sb_min_scale:
                 final float scale = 0.5f + (progress / 200f);
                 scaleLayoutManager.setMinScale(scale);
-                minScaleValue.setText(Util.formatFloat(scale));
+                minScaleValue.setText(CircularFilterUtils.formatFloat(scale));
                 break;
             case R.id.sb_speed:
                 final float speed = progress * 0.05f;
                 scaleLayoutManager.setMoveSpeed(speed);
-                speedValue.setText(Util.formatFloat(speed));
+                speedValue.setText(CircularFilterUtils.formatFloat(speed));
                 break;
             case R.id.sb_max_alpha:
                 final float maxAlpha = progress / 100f;
                 scaleLayoutManager.setMaxAlpha(maxAlpha);
-                maxAlphaValue.setText(Util.formatFloat(maxAlpha));
+                maxAlphaValue.setText(CircularFilterUtils.formatFloat(maxAlpha));
                 break;
             case R.id.sb_min_alpha:
                 final float minAlpha = progress / 100f;
                 scaleLayoutManager.setMinAlpha(minAlpha);
-                minAlphaValue.setText(Util.formatFloat(minAlpha));
+                minAlphaValue.setText(CircularFilterUtils.formatFloat(minAlpha));
                 break;
         }
     }

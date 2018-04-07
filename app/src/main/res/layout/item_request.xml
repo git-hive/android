@@ -22,7 +22,7 @@
         <LinearLayout
             android:id="@+id/card_linear_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
@@ -36,16 +36,17 @@
                 android:id="@+id/request_avatar_ll"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.3"
+                android:layout_weight="0.2"
                 android:layout_marginEnd="5dp"
                 android:orientation="vertical"
                 android:layout_gravity="center_vertical|center_horizontal"
                 android:gravity="center_horizontal|top">
 
                 <ImageView
+                    android:layout_marginTop="10dp"
                     android:id="@+id/request_author_photo_iv"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     app:srcCompat="@drawable/ic_profile_photo"
                     />
 
@@ -81,6 +82,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/request_title_font_size"
+                    android:text="Porposta de Reforma do Parquinho"
                     android:textColor="@color/colorOrange"
                     />
 
@@ -105,9 +107,9 @@
 
                     <ImageView
                         android:id="@+id/request_budget_category_iv"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:layout_marginEnd="5dp"
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_marginEnd="30dp"
                        app:srcCompat="@drawable/ic_budget_category_savings"
                         android:contentDescription="@string/ic_budget_category_savings"/>
 
@@ -115,10 +117,14 @@
 
                 <!-- Content Text View -->
                 <TextView
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="1dp"
                     android:id="@+id/request_content_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/request_content_font_size" />
+                    android:textSize="@dimen/request_content_font_size"
+                    android:text="Proponho a reforma do parquinho. Testando tamanho diferente de texto. Temos que testar. Testá-los eu testarei."/>
 
                 <!-- Comments and Supports Layout -->
                 <LinearLayout
@@ -127,12 +133,14 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_gravity="end|bottom"
-                    android:gravity="end|bottom">
+                    android:gravity="end|bottom"
+                    android:layout_marginBottom="2dp">
 
                     <ImageView
                         android:id="@+id/commentsIV"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginEnd="5dp"
                         app:srcCompat="@drawable/ic_comment"
                         android:contentDescription="@string/ic_comment"/>
 
@@ -142,13 +150,16 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/request_author_leaderboard_position_font_size"
+                        android:text="10"
+                        android:layout_marginEnd="20dp"
                         android:paddingBottom="12dp"
                         />
 
                     <ImageView
                         android:id="@+id/supportsIV"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginEnd="5dp"
                         app:srcCompat="@drawable/ic_support_borderline"
                         android:contentDescription="@string/ic_support"/>
 
@@ -159,6 +170,8 @@
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/request_author_leaderboard_position_font_size"
                         android:paddingBottom="12dp"
+                        android:layout_marginEnd="20dp"
+                        android:text="34"
                         />
 
                 </LinearLayout>

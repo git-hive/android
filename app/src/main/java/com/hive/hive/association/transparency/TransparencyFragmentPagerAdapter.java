@@ -2,7 +2,6 @@ package com.hive.hive.association.transparency;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -15,7 +14,6 @@ import com.hive.hive.association.transparency.tabs.budget.BudgetFragment;
 import com.hive.hive.association.transparency.tabs.overview.OverviewFragment;
 import com.hive.hive.association.transparency.tabs.staff.StaffFragment;
 import com.hive.hive.utils.FileUtils;
-import com.hive.hive.utils.circularFilter.Util;
 
 /**
  * Created by Marco Antônio Birck on 16/02/18.

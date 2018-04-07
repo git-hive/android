@@ -32,13 +32,14 @@ import java.util.HashMap;
  * Created by vplentz on 15/02/18.
  */
 
-public class CommentaryAdapter extends RecyclerView.Adapter<CommentaryAdapter.CommentaryViewHolder>  {
+public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.CommentaryViewHolder>  {
     private HashMap<String,  AssociationComment> mComments;
     private ArrayList<String> mIds;
     private Context mContext;
     private String mRequestId;
     private ArrayList<SupportMutex> mLocks;
-    public CommentaryAdapter(Context context, HashMap<String, AssociationComment> comments, ArrayList<String> ids, String requestId){
+
+    public CommentsAdapter(Context context, HashMap<String, AssociationComment> comments, ArrayList<String> ids, String requestId){
         this.mContext = context;
         this.mComments = comments;
         this.mIds = ids;
@@ -46,14 +47,14 @@ public class CommentaryAdapter extends RecyclerView.Adapter<CommentaryAdapter.Co
         this.mLocks = new ArrayList<>();
     }
     @Override
-    public CommentaryAdapter.CommentaryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CommentsAdapter.CommentaryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_commentary, parent, false);
 
         return new CommentaryViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final CommentaryAdapter.CommentaryViewHolder holder, final int position) {
+    public void onBindViewHolder(final CommentsAdapter.CommentaryViewHolder holder, final int position) {
         //SUPPORT LOCK
         try{
             if(mLocks.get(position) == null) mLocks.add(new SupportMutex(holder.supportTV, holder.supportIV));
@@ -86,7 +87,7 @@ public class CommentaryAdapter extends RecyclerView.Adapter<CommentaryAdapter.Co
     public int getItemCount() {
         return mComments.size();
     }
-    private void fillUser(final CommentaryAdapter.CommentaryViewHolder holder, DocumentReference userRef){
+    private void fillUser(final CommentsAdapter.CommentaryViewHolder holder, DocumentReference userRef){
         userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -146,7 +147,7 @@ public class CommentaryAdapter extends RecyclerView.Adapter<CommentaryAdapter.Co
                                }
                            });
                         }
-                        CommentaryAdapter.this.notifyDataSetChanged();
+                        CommentsAdapter.this.notifyDataSetChanged();
                     }
                 });
     }

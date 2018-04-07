@@ -18,10 +18,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
 import com.hive.hive.association.AssociationHelper;
-import com.hive.hive.association.request.comments.CommentaryActivity;
+import com.hive.hive.association.request.comments.CommentsActivity;
 import com.hive.hive.model.association.AssociationSupport;
 import com.hive.hive.model.association.Request;
-import com.hive.hive.model.association.RequestCategory;
 import com.hive.hive.model.user.User;
 import com.hive.hive.utils.DocReferences;
 import com.hive.hive.utils.ProfilePhotoHelper;
@@ -29,10 +28,12 @@ import com.hive.hive.utils.SupportMutex;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestViewHolder> {
     private String TAG = RequestAdapter.class.getSimpleName();
+
+    private int MAX_TITLE_SIZE = 47;
+    private int MAX_CONTENT_SIZE = 147;
 
     //-- Data
     ArrayList<Request> requests;
@@ -46,11 +47,13 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     private String mAssociationID = "gVw7dUkuw3SSZSYRXe8s";
 
     public RequestAdapter(
-            ArrayList<Request> requests, Context context
+            ArrayList<Request> requests, Context context, int max_title, int max_content
     ) {
         this.requests = requests;
         this.context = context;
         this.mLocks = new ArrayList<>();
+        MAX_TITLE_SIZE = max_title - 3;
+        MAX_CONTENT_SIZE = max_title - 3;
     }
 
     @Override
@@ -89,8 +92,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
         holder.mView.setOnClickListener(view ->
                 context.startActivity(
-                        new Intent(context, CommentaryActivity.class)
-                                .putExtra(CommentaryActivity.REQUEST_ID ,request.getId())
+                        new Intent(context, CommentsActivity.class)
+                                .putExtra(CommentsActivity.REQUEST_ID ,request.getId())
                 )
         );
 

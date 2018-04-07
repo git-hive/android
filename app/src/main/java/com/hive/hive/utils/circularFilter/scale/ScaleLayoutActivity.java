@@ -10,7 +10,7 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 
 import com.hive.hive.utils.circularFilter.BaseFragment;
-import com.hive.hive.utils.circularFilter.Util;
+import com.hive.hive.utils.circularFilter.CircularFilterUtils;
 import com.leochuan.ScaleLayoutManager;
 
 
@@ -19,7 +19,7 @@ public class ScaleLayoutActivity extends BaseFragment<ScaleLayoutManager, ScaleP
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected ScaleLayoutManager createLayoutManager() {
-        return new ScaleLayoutManager(this.getContext(), Util.Dp2px(this.getContext(), 30));
+        return new ScaleLayoutManager(this.getContext(), CircularFilterUtils.Dp2px(this.getContext(), 30));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

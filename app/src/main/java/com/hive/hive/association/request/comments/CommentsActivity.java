@@ -40,14 +40,14 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class CommentaryActivity extends AppCompatActivity {
-    private final String TAG = CommentaryActivity.class.getSimpleName();
+public class CommentsActivity extends AppCompatActivity {
+    private final String TAG = CommentsActivity.class.getSimpleName();
     public final static String REQUEST_ID = "request_id";
 
 
     //--- Views
     private RecyclerView mCommentRV;
-    private CommentaryAdapter mRecyclerAdapter;
+    private CommentsAdapter mRecyclerAdapter;
 
     private EditText mCommentET;
     private ImageView mCommentIV;
@@ -76,7 +76,7 @@ public class CommentaryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_commentary);
+        setContentView(R.layout.activity_comments);
 
 
         Toolbar toolbar = findViewById(R.id.requestTB);
@@ -111,7 +111,7 @@ public class CommentaryActivity extends AppCompatActivity {
         mCommentIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mCommentET.getText().equals("")){
+                if(mCommentET.getText().toString().trim().equals("")){
                     mCommentET.setError(getString(R.string.should_text));
                     mCommentET.requestFocus();
                     return;
@@ -218,7 +218,7 @@ public class CommentaryActivity extends AppCompatActivity {
         mCommentRV.setHasFixedSize(true);
 
         //Set Adapter
-        mRecyclerAdapter = new CommentaryAdapter(this, mComments, mIds, mRequestId);
+        mRecyclerAdapter = new CommentsAdapter(this, mComments, mIds, mRequestId);
         mCommentRV.setAdapter(mRecyclerAdapter);
 
     }
@@ -296,9 +296,9 @@ public class CommentaryActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if(documentSnapshot.exists())
-                            mRequestSupportsIV.setImageDrawable(CommentaryActivity.this.getResources().getDrawable(R.drawable.ic_support_filled));
+                            mRequestSupportsIV.setImageDrawable(CommentsActivity.this.getResources().getDrawable(R.drawable.ic_support_filled));
                         else
-                            mRequestSupportsIV.setImageDrawable(CommentaryActivity.this.getResources().getDrawable(R.drawable.ic_support_borderline));
+                            mRequestSupportsIV.setImageDrawable(CommentsActivity.this.getResources().getDrawable(R.drawable.ic_support_borderline));
                     }
                 });
     }

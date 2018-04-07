@@ -14,7 +14,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.hive.hive.utils.Utils;
-import com.hive.hive.utils.circularFilter.Util;
+import com.hive.hive.utils.circularFilter.CircularFilterUtils;
 
 import java.util.ArrayList;
 import java.util.stream.IntStream;

@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hive.hive.association.request.RequestAdapter;
-import com.hive.hive.association.request.comments.CommentaryAdapter;
+import com.hive.hive.association.request.comments.CommentsAdapter;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
