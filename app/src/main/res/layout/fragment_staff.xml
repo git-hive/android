@@ -1,15 +1,411 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:background="#f4f4f4" >
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
 
-    <ExpandableListView
-        android:id="@+id/staffExpandableLV"
-        android:gravity="left"
-        android:layoutDirection="rtl"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"/>
 
-</LinearLayout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:orientation="vertical"
+        >
+
+
+        <!-- Staff Group 1 -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/staff_group_1_LL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:orientation="horizontal"
+                android:background="@color/colorWhite">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_weight="0.2"
+                    android:src="@drawable/ic_staff_category_manager_orange"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.6"
+                    android:text="Administração"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_margin="10dp"/>
+
+                <ImageView
+                    android:id="@+id/staff_group_1_arrow_iv"
+                    android:layout_weight="0.2"
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/ic_down_arrow_orange"
+                    android:layout_gravity="center_vertical|end"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/staff_group_1_expanded_LL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:background="@color/colorWhite">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/staff_group_1_RV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:animateLayoutChanges="true"
+                    android:layout_margin="10dp"
+                    android:nestedScrollingEnabled="false"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Staff Group 2 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/staff_group_2_LL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_margin="10dp"
+                    android:orientation="horizontal"
+                    android:background="@color/colorWhite">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
+                        android:layout_weight="0.2"
+                        android:src="@drawable/ic_staff_category_gardening_green"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.6"
+                        android:text="Jardinagem"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_margin="10dp"/>
+
+                    <ImageView
+                        android:id="@+id/staff_group_2_arrow_iv"
+                        android:layout_weight="0.2"
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
+                        android:src="@drawable/ic_down_arrow_green"
+                        android:layout_gravity="center_vertical|end"/>
+
+
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/staff_group_2_expanded_LL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:background="@color/colorWhite">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/staff_group_2_RV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:animateLayoutChanges="true"
+                    android:layout_margin="10dp"
+                    android:nestedScrollingEnabled="false"
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Staff Group 3 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:id="@+id/staff_group_3_LL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_margin="10dp"
+                    android:orientation="horizontal"
+                    android:background="@color/colorWhite">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
+                        android:layout_weight="0.2"
+                        android:src="@drawable/ic_staff_category_cleaning_blue"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.6"
+                        android:text="Limpeza"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_margin="10dp"/>
+
+                    <ImageView
+                        android:id="@+id/staff_group_3_arrow_iv"
+                        android:layout_weight="0.2"
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
+                        android:src="@drawable/ic_down_arrow_blue"
+                        android:layout_gravity="center_vertical|end"/>
+
+
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/staff_group_3_expanded_LL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:background="@color/colorWhite">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/staff_group_3_RV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:animateLayoutChanges="true"
+                    android:layout_margin="10dp"
+                    android:nestedScrollingEnabled="false"
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Staff Group 4 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/staff_group_4_LL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_margin="10dp"
+                    android:orientation="horizontal"
+                    android:background="@color/colorWhite">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
+                        android:layout_weight="0.2"
+                        android:src="@drawable/ic_staff_category_gatekeeper"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.6"
+                        android:text="Portaria"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_margin="10dp"/>
+
+                    <ImageView
+                        android:layout_weight="0.2"
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
+                        android:id="@+id/staff_group_4_arrow_iv"
+                        android:src="@drawable/ic_down_arrow_yellow"
+                        android:layout_gravity="center_vertical|end"/>
+
+
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/staff_group_4_expanded_LL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:background="@color/colorWhite">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/staff_group_4_RV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:visibility="gone"
+                    android:animateLayoutChanges="true"
+                    android:nestedScrollingEnabled="false"
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <!-- Staff Group 5 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/staff_group_5_LL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_margin="10dp"
+                    android:orientation="horizontal"
+                    android:background="@color/colorWhite">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
+                        android:layout_weight="0.2"
+                        android:src="@drawable/ic_staff_category_security_red"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.6"
+                        android:text="Segurança"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_margin="10dp"/>
+
+                    <ImageView
+                        android:layout_weight="0.2"
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
+                        android:id="@+id/staff_group_5_arrow_iv"
+                        android:src="@drawable/ic_down_arrow_red"
+                        android:layout_gravity="center_vertical|end"/>
+
+
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/staff_group_5_expanded_LL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:background="@color/colorWhite">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/staff_group_5_RV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
+                    android:layout_margin="10dp"
+                    android:visibility="gone"
+                    android:nestedScrollingEnabled="false"
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Staff Group 6 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/staff_group_6_LL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_margin="10dp"
+                    android:orientation="horizontal"
+                    android:background="@color/colorWhite">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
+                        android:layout_weight="0.2"
+                        android:src="@drawable/ic_staff_category_services_gray"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.6"
+                        android:text="Serviços"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_margin="10dp"/>
+
+                    <ImageView
+                        android:layout_weight="0.2"
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
+                        android:id="@+id/staff_group_6_arrow_iv"
+                        android:src="@drawable/ic_down_arrow_gray"
+                        android:layout_gravity="center_vertical|end"/>
+
+
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/staff_group_6_expanded_LL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:background="@color/colorWhite"
+                android:animateLayoutChanges="true"
+                >
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/staff_group_6_RV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:animateLayoutChanges="true"
+                    android:visibility="gone"
+                    android:nestedScrollingEnabled="false"
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

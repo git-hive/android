@@ -12,18 +12,20 @@ public class BudgetTransaction {
     private long created_at;
     private long updated_at;
     private long date;
+    private float value;
 
     private String authorId;
     private HashMap<String, BudgetTransactionCategories> budgetTransactionCategoriesIds;
 
     //--- Constructor
-    public BudgetTransaction(String id, long created_at, long updated_at, long date, String authorId, HashMap<String, BudgetTransactionCategories> budgetTransactionCategoriesIds) {
+    public BudgetTransaction(String id, long created_at, long updated_at, long date, String authorId, HashMap<String, BudgetTransactionCategories> budgetTransactionCategoriesIds, float value) {
         this.id = id;
         this.created_at = created_at;
         this.updated_at = updated_at;
         this.date = date;
         this.authorId = authorId;
         this.budgetTransactionCategoriesIds = budgetTransactionCategoriesIds;
+        this.value = value;
     }
 
     //--- Getters
@@ -46,6 +48,14 @@ public class BudgetTransaction {
 
     public String getAuthorId() {
         return authorId;
+    }
+
+    public HashMap<String, BudgetTransactionCategories> getBudgetTransactionCategoriesIds() {
+        return budgetTransactionCategoriesIds;
+    }
+
+    public float getValue() {
+        return value;
     }
 
     //--- Setters
@@ -74,7 +84,7 @@ public class BudgetTransaction {
         this.budgetTransactionCategoriesIds = budgetTransactionCategoriesIds;
     }
 
-    public HashMap<String, BudgetTransactionCategories> getBudgetTransactionCategoriesIds() {
-        return budgetTransactionCategoriesIds;
+    public void setValue(float value) {
+        this.value = value;
     }
 }
