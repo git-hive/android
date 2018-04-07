@@ -4,12 +4,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
+
+import java.util.ArrayList;
 
 public class AssociationHelper {
     public static String ASSOCIATION_COLLECTION = "associations";
@@ -96,6 +100,26 @@ public class AssociationHelper {
                 .set(request);
     }
 
+    //--- Request Categories
+
+    /**
+     * Fetches all request categories from an association
+     *
+     * @param db Database reference
+     * @param associationID Association document ID where to set the categories from
+     * @return Task that resolves in all request categories documents
+     */
+    public static Task<QuerySnapshot> getAllRequestCategories(
+            FirebaseFirestore db,
+            String associationID
+    ) {
+        return db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(Association.REQUEST_CATEGORIES_COLLECTION)
+                .get();
+    }
+
     //--- Request Support
 
     /**
@@ -173,21 +197,14 @@ public class AssociationHelper {
                 .document(supportID);
 
         // Set the request support and increment request score
-        return db.runTransaction(new Transaction.Function<Void>() {
-            @Nullable
-            @Override
-            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                // Get and update request score
-                DocumentSnapshot requestSnap = transaction.get(requestRef);
-                Double newScore = requestSnap.getDouble(Request.SCORE_FIELD);
-                newScore += Request.SUPPORT_ACTION_VALUE;
-                transaction.update(requestRef, Request.SCORE_FIELD, newScore);
-
-                // Set request support
-                transaction.set(supportRef, support);
-
-                return null;
-            }
+        return db.runTransaction(transaction -> {
+            setRequestSupportWithinTransaction(
+                    transaction,
+                    requestRef,
+                    supportRef,
+                    support
+            );
+            return null;
         });
     }
 
@@ -211,27 +228,68 @@ public class AssociationHelper {
                 .document(associationID)
                 .collection(Association.REQUESTS_COLLECTION)
                 .document(requestID);
+
         final DocumentReference supportRef = requestRef
                 .collection(Request.SUPPORTS_COLLECTION)
                 .document(supportID);
 
         // Delete request support and decrement request score
-        return db.runTransaction(new Transaction.Function<Void>() {
-            @Nullable
-            @Override
-            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                // Get and update request score
-                DocumentSnapshot requestSnap = transaction.get(requestRef);
-                Double newScore = requestSnap.getDouble(Request.SCORE_FIELD);
-                newScore -= Request.SUPPORT_ACTION_VALUE;
-                transaction.update(requestRef, Request.SCORE_FIELD, newScore);
-
-                // Delete request support
-                transaction.delete(supportRef);
-
-                return null;
-            }
+        return db.runTransaction(transaction -> {
+            removeRequestSupportWithinTransaction(
+                    transaction,
+                    requestRef,
+                    supportRef
+            );
+            return null;
         });
+    }
+
+    /**
+     * Sets a request support document using the provided transaction
+     *
+     * @param transaction Transaction used to set the support
+     * @param requestRef Request being supported
+     * @param supportRef New support reference
+     * @param support Support document to be set under the provided support ID
+     * @throws FirebaseFirestoreException Thrown when the request document doesn't exist
+     */
+    public static void setRequestSupportWithinTransaction(
+            Transaction transaction,
+            DocumentReference requestRef,
+            DocumentReference supportRef,
+            AssociationSupport support
+    ) throws FirebaseFirestoreException {
+        // Get and update request score
+        DocumentSnapshot requestSnap = transaction.get(requestRef);
+        Double newScore = requestSnap.getDouble(Request.SCORE_FIELD);
+        newScore += Request.SUPPORT_ACTION_VALUE;
+        transaction.update(requestRef, Request.SCORE_FIELD, newScore);
+
+        // Set request support
+        transaction.set(supportRef, support);
+    }
+
+    /**
+     * Deletes a request support using the provided transaction
+     *
+     * @param transaction Transaction used to set the support
+     * @param requestRef Request being unsupported
+     * @param supportRef Support to be removed
+     * @throws FirebaseFirestoreException Thrown when the request document doesn't exist
+     */
+    public static void removeRequestSupportWithinTransaction(
+            Transaction transaction,
+            DocumentReference requestRef,
+            DocumentReference supportRef
+    ) throws FirebaseFirestoreException {
+        // Get and update request score
+        DocumentSnapshot requestSnap = transaction.get(requestRef);
+        Double newScore = requestSnap.getDouble(Request.SCORE_FIELD);
+        newScore -= Request.SUPPORT_ACTION_VALUE;
+        transaction.update(requestRef, Request.SCORE_FIELD, newScore);
+
+        // Delete request support
+        transaction.delete(supportRef);
     }
 
     /**
@@ -407,6 +465,7 @@ public class AssociationHelper {
     }
 
     //--- Support Request Comment
+
     /**
      * Gets a support from a request comment
      *
@@ -435,6 +494,7 @@ public class AssociationHelper {
                 .document(supportID)
                 .get();
     }
+
     /**
      * Gets all supports from a request comment
      *

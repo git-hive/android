@@ -3,7 +3,6 @@ package com.hive.hive.model.association;
 import com.google.firebase.firestore.DocumentReference;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Request extends AssociationAction {
 
@@ -21,7 +20,7 @@ public class Request extends AssociationAction {
     private int score;
     private int numComments;
 
-    private ArrayList<DocumentReference> categories;
+    private ArrayList<DocumentReference> categoriesRefs;
 
 //--- Constructors
 
@@ -31,21 +30,42 @@ public class Request extends AssociationAction {
     public Request(
             long createdAt,
             long updatedAt,
-            DocumentReference authorId,
-            DocumentReference pointsTransactionId,
-            DocumentReference associationId,
+            DocumentReference authorRef,
+            DocumentReference pointsTransactionRef,
+            DocumentReference associationRef,
             String title,
             String content,
             int score,
             int numComments,
-            ArrayList<DocumentReference> categories
+            ArrayList<DocumentReference> categoriesRefs
     ) {
-        super(createdAt, updatedAt, authorId, pointsTransactionId, associationId);
+        super(createdAt, updatedAt, authorRef, pointsTransactionRef, associationRef);
         this.title = title;
         this.content = content;
         this.score = score;
         this.numComments = numComments;
-        this.categories = categories;
+        this.categoriesRefs = categoriesRefs;
+    }
+
+    public Request(
+            String id,
+            long createdAt,
+            long updatedAt,
+            DocumentReference authorRef,
+            DocumentReference pointsTransactionRef,
+            DocumentReference associationRef,
+            String title,
+            String content,
+            int score,
+            int numComments,
+            ArrayList<DocumentReference> categoriesRefs
+    ) {
+        super(id, createdAt, updatedAt, authorRef, pointsTransactionRef, associationRef);
+        this.title = title;
+        this.content = content;
+        this.score = score;
+        this.numComments = numComments;
+        this.categoriesRefs = categoriesRefs;
     }
 
     //--- Getters
@@ -64,8 +84,8 @@ public class Request extends AssociationAction {
 
     public int getNumComments() { return numComments;}
 
-    public ArrayList<DocumentReference> getCategories() {
-        return categories;
+    public ArrayList<DocumentReference> getCategoriesRefs() {
+        return categoriesRefs;
     }
 
     //--- Setters
@@ -82,10 +102,18 @@ public class Request extends AssociationAction {
         this.score = score;
     }
 
+    public void incrementScore() {
+        this.setScore(this.score + 1);
+    }
+
+    public void decrementScore() {
+        this.setScore(this.score - 1);
+    }
+
     public void setNumComments(int numComments) { this.numComments = numComments; }
 
-    public void setCategories(ArrayList<DocumentReference> categories) {
-        this.categories = categories;
+    public void setCategoriesRefs(ArrayList<DocumentReference> categoriesRefs) {
+        this.categoriesRefs = categoriesRefs;
     }
 
 }

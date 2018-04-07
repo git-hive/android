@@ -8,6 +8,7 @@ import com.google.firebase.firestore.DocumentReference;
 
 public abstract class UserAction {
 
+    String id;
     private long createdAt;
     private long updatedAt;
     private DocumentReference authorRef;
@@ -32,9 +33,27 @@ public abstract class UserAction {
         this.pointsTransactionRef = pointsTransactionRef;
     }
 
+    public UserAction(
+            String id,
+            long createdAt,
+            long updatedAt,
+            DocumentReference authorRef,
+            DocumentReference pointsTransactionRef
+    ) {
+        this.id = id;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.authorRef = authorRef;
+        this.pointsTransactionRef = pointsTransactionRef;
+    }
+
 
     //--- Getters
 
+
+    public String getId() {
+        return id;
+    }
 
     public long getCreatedAt() {
         return createdAt;
@@ -55,6 +74,10 @@ public abstract class UserAction {
 
     //--- Setters
 
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;

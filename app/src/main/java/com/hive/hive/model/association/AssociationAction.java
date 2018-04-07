@@ -23,6 +23,18 @@ public class AssociationAction extends UserAction {
         this.associationRef = associationRef;
     }
 
+    public AssociationAction(
+            String id,
+            long createdAt,
+            long updatedAt,
+            DocumentReference authorRef,
+            DocumentReference pointsTransactionRef,
+            DocumentReference associationRef
+    ) {
+        super(id, createdAt, updatedAt, authorRef, pointsTransactionRef);
+        this.associationRef = associationRef;
+    }
+
     //--- Getters
 
     public DocumentReference getAssociationRef() {

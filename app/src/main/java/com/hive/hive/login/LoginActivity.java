@@ -330,6 +330,7 @@ public class LoginActivity extends AppCompatActivity {
             } catch (ApiException e) {
                 Log.w(TAG, "google sign in failed", e);
                 returnFromProgress();
+                Toast.makeText(this, "Failed to sign in with google", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -427,6 +428,7 @@ public class LoginActivity extends AppCompatActivity {
         mFacebookSignInBtn.setVisibility(View.VISIBLE);
         mGoogleSignInBT.setVisibility(View.VISIBLE);
         mButtonEmailLogin.setVisibility(View.VISIBLE);
+        mPBLogin.setVisibility(View.GONE);
     }
 }
 

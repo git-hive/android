@@ -11,6 +11,7 @@ public class Association {
     public static String BUDGET_TRANSACTIONS_COLLECTION = "budgetTransactions";
     public static String SESSIONS_COLLECTION = "sessions";
     public static String REQUESTS_COLLECTION = "requests";
+    public static String REQUEST_CATEGORIES_COLLECTION = "requestCategories";
     public static String LOCATIONS_COLLECTION = "locations";
 
     //--- Base attributes
@@ -22,6 +23,10 @@ public class Association {
 
     //--- Association related
     private int totalNumberOfAssociates;
+
+    //--- Requests related
+    private ArrayList<DocumentReference> requests;
+    private ArrayList<DocumentReference> requestCategories;
 
     //--- Constructor
 
@@ -76,4 +81,19 @@ public class Association {
         this.totalNumberOfAssociates = totalNumberOfAssociates;
     }
 
+    public ArrayList<DocumentReference> getRequests() {
+        return requests;
+    }
+
+    public void setRequests(ArrayList<DocumentReference> requests) {
+        this.requests = requests;
+    }
+
+    public ArrayList<DocumentReference> getRequestCategories() {
+        return requestCategories;
+    }
+
+    public void setRequestCategories(ArrayList<DocumentReference> requestCategories) {
+        this.requestCategories = requestCategories;
+    }
 }

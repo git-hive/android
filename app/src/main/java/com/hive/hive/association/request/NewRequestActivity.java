@@ -5,383 +5,359 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
-import com.hive.hive.association.AssociationHelper;
+import com.hive.hive.model.association.AssociationHelper;
 import com.hive.hive.model.association.Request;
 import com.hive.hive.model.association.RequestCategory;
 import com.hive.hive.utils.DocReferences;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.UUID;
 
 public class NewRequestActivity extends AppCompatActivity {
-
-    //-- Static
     public static String TAG = NewRequestActivity.class.getSimpleName();
 
-    //-- Data
-    private HashMap<String, RequestCategory> categories;
-    private int chosenBudgetCategory = 0;
+    //--- Budget categories
+    
+    // Ordinary
+    private LinearLayout budgetCategoryOrdinaryLL;
+    private ImageView budgetCategoryOrdinaryIV;
+    private CheckBox budgetCategoryOrdinaryCB;
 
-    //-- Views
+    // Savings
+    private LinearLayout budgetCategorySavingsLL;
+    private ImageView budgetCategorySavingsIV;
+    private CheckBox budgetCategorySavingsCB;
 
-    //-Buttons
+    // Extra ordinary
+    private LinearLayout budgetCategoryExtraordinaryLL;
+    private ImageView budgetCategoryExtraordinaryIV;
+    private CheckBox budgetCategoryExtraordinaryCB;
+
+    private TextView selectedBudgetCategoryTV;
+
+    //--- Request categories
+
+    // Security category
+    private LinearLayout requestCategorySecurityLL;
+    private ImageView requestCategorySecurityIV;
+    private CheckBox requestCategorySecurityCB;
+
+    // Gardening category
+    private LinearLayout requestCategoryGardeningLL;
+    private ImageView requestCategoryGardeningIV;
+    private CheckBox requestCategoryGardeningCB;
+
+    // Services category
+    private LinearLayout requestCategoryServicesLL;
+    private ImageView requestCategoryServicesIV;
+    private CheckBox requestCategoryServicesCB;
+
+    // Cleaning category
+    private LinearLayout requestCategoryCleaningLL;
+    private ImageView requestCategoryCleaningIV;
+    private CheckBox requestCategoryCleaningCB;
+
+    private TextView selectedRequestCategoryTV;
+    private Pair<DocumentReference, RequestCategory> selectedRequestCategoryPair;
+    private ArrayList<Pair<DocumentReference, RequestCategory>> requestCategoriesPairs;
+
+
+    // Buttons
     private Button saveBT;
 
-    //-EditTexts
+    // EditTexts
     private EditText titleET;
-    private EditText locationET;
     private EditText descriptionET;
+    private EditText locationET;
+
+    // Firestore
+    private FirebaseFirestore mDB = FirebaseFirestore.getInstance();
+
+    // Association
+    final String associationID = "gVw7dUkuw3SSZSYRXe8s";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_request);
 
-        //-- Toolbar
+        requestCategoriesPairs = new ArrayList<>();
+
+        // Toolbar
         Toolbar toolbar = findViewById(R.id.newRequestTB);
         setSupportActionBar(toolbar);
+
         ActionBar actionBar = this.getSupportActionBar();
         if (actionBar != null)
             actionBar.setDisplayHomeAsUpEnabled(true);
 
-        //Finding Views
-        saveBT = findViewById(R.id.saveBT);
+
         titleET = findViewById(R.id.titleET);
-        locationET = findViewById(R.id.locationET);
         descriptionET = findViewById(R.id.descriptionET);
+        locationET = findViewById(R.id.locationET);
+        saveBT = findViewById(R.id.saveBT);
 
-        //OnClick Listeners
-        saveBT.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO association shouldnt be setted this way
-                String requestUUID = UUID.randomUUID().toString();
-                Request request = new Request(Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
-                        DocReferences.getUserRef(), null, DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s")
-                        , titleET.getText().toString(),
-                        descriptionET.getText().toString(), 0, 0, null);
+        //--- Budget categories
+        selectedBudgetCategoryTV = findViewById(R.id.new_request_selected_budget_category_tv);
 
-                AssociationHelper.setRequest(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", requestUUID, request);
-                finish();
+        // Ordinary
+        budgetCategoryOrdinaryLL = findViewById(R.id.new_request_budget_category_ordinary_ll);
+        budgetCategoryOrdinaryLL.setOnClickListener(budgetCategoriesOnClickListener());
 
-            }
+        budgetCategoryOrdinaryIV = findViewById(R.id.new_request_budget_category_ordinary_iv);
+        budgetCategoryOrdinaryCB = findViewById(R.id.new_request_budget_category_ordinary_cb);
+
+        // Savings
+        budgetCategorySavingsLL = findViewById(R.id.new_request_budget_category_savings_ll);
+        budgetCategorySavingsLL.setOnClickListener(budgetCategoriesOnClickListener());
+
+        budgetCategorySavingsIV = findViewById(R.id.new_request_budget_category_savings_iv);
+        budgetCategorySavingsCB = findViewById(R.id.new_request_budget_category_savings_cb);
+
+        // Extraordinary
+        budgetCategoryExtraordinaryLL =
+                findViewById(R.id.new_request_budget_category_extraordinary_ll);
+        budgetCategoryExtraordinaryLL.setOnClickListener(budgetCategoriesOnClickListener());
+
+        budgetCategoryExtraordinaryIV =
+                findViewById(R.id.new_request_budget_category_extraordinary_iv);
+        budgetCategoryExtraordinaryCB =
+                findViewById(R.id.new_request_budget_category_extraordinary_cb);
+
+        //--- Request categories
+        selectedRequestCategoryTV = findViewById(R.id.new_request_selected_request_category_tv);
+
+        // Security
+        requestCategorySecurityLL = findViewById(R.id.new_request_request_category_security_ll);
+        requestCategorySecurityLL.setOnClickListener(requestCategoriesOnClickListener());
+
+        requestCategorySecurityIV = findViewById(R.id.new_request_request_category_security_iv);
+        requestCategorySecurityCB = findViewById(R.id.new_request_request_category_security_cb);
+
+        // Gardening
+        requestCategoryGardeningLL = findViewById(R.id.new_request_request_category_gardening_ll);
+        requestCategoryGardeningLL.setOnClickListener(requestCategoriesOnClickListener());
+
+        requestCategoryGardeningIV = findViewById(R.id.new_request_request_category_gardening_iv);
+        requestCategoryGardeningCB = findViewById(R.id.new_request_request_category_gardening_cb);
+
+        // Maintenance
+        requestCategoryServicesLL =
+                findViewById(R.id.new_request_request_category_maintenance_ll);
+        requestCategoryServicesLL.setOnClickListener(requestCategoriesOnClickListener());
+
+        requestCategoryServicesIV =
+                findViewById(R.id.new_request_request_category_maintenance_iv);
+        requestCategoryServicesCB =
+                findViewById(R.id.new_request_request_category_maintenance_cb);
+
+        // Cleaning
+        requestCategoryCleaningLL = findViewById(R.id.new_request_request_category_cleaning_ll);
+        requestCategoryCleaningLL.setOnClickListener(requestCategoriesOnClickListener());
+
+        requestCategoryCleaningIV = findViewById(R.id.new_request_request_category_cleaning_iv);
+        requestCategoryCleaningCB = findViewById(R.id.new_request_request_category_cleaning_cb);
+
+
+        // OnClick Listeners
+        saveBT.setOnClickListener(view -> {
+            handleOnSaveButtonClick();
+            finish();
         });
 
-        //Categories Dummy Data
-        categories = new HashMap<>();
-
+        fetchAndSetRequestCategories();
     }
 
     /**
-     * Checkboxes onClick - receives clicked view and processes the category choice
-     * @param view - clicked view
+     * Fetches all association request categories from Firestore and add them to requestCategoriesPairs
      */
-    public void onCategoryClicked(View view) {
+    private void fetchAndSetRequestCategories() {
+        AssociationHelper.getAllRequestCategories(
+                mDB,
+                associationID
+        )
+                .addOnSuccessListener(documentSnapshots -> {
+                    for (DocumentSnapshot categoryDoc : documentSnapshots) {
+                        RequestCategory requestCategory =
+                                categoryDoc.toObject(RequestCategory.class);
+                        Pair<DocumentReference, RequestCategory> newPair =
+                            Pair.create(categoryDoc.getReference(), requestCategory);
 
-        CheckBox checkBox;
-        ImageView imageView;
+                        requestCategoriesPairs.add(newPair);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(
+                            this,
+                            "Failed to get categories",
+                            Toast.LENGTH_SHORT
+                    ).show();
+                    Log.e(TAG, "failed to get association categories: " + e.toString());
+                });
+    }
 
-        // Check which checkbox was clicked
-        switch(view.getId()) {
-            case R.id.cat1IV:
+    private View.OnClickListener budgetCategoriesOnClickListener() {
+        return v -> {
+            resetSelectedBudgetCategory();
+            switch (v.getId()) {
+                case R.id.new_request_budget_category_ordinary_ll:
+                    selectedBudgetCategoryTV.setText(R.string.budget_category_ordinary);
+                    budgetCategoryOrdinaryIV.setImageResource(R.drawable.ic_budget_category_ordinary);
+                    budgetCategoryOrdinaryCB.setSelected(true);
+                    break;
+                case R.id.new_request_budget_category_savings_ll:
+                    selectedBudgetCategoryTV.setText(R.string.budget_category_savings);
+                    budgetCategorySavingsIV.setImageResource(R.drawable.ic_budget_category_savings);
+                    budgetCategorySavingsCB.setSelected(true);
+                    break;
+                case R.id.new_request_budget_category_extraordinary_ll:
+                    selectedBudgetCategoryTV.setText(R.string.budget_category_extraordinary);
+                    budgetCategoryExtraordinaryIV.setImageResource(R.drawable.ic_budget_category_extraordinary);
+                    budgetCategoryExtraordinaryCB.setSelected(true);
+                    break;
+                default:
+                    break;
+            }
+        };
+    }
 
-                //Gets views
-                checkBox = findViewById(R.id.cat1CB);
-                imageView = findViewById(R.id.cat1IV);
+    private View.OnClickListener requestCategoriesOnClickListener() {
+        return v -> {
+            resetSelectedRequestCategory();
+            switch (v.getId()) {
+                case R.id.new_request_request_category_security_ll:
+                    selectedRequestCategoryTV.setText(R.string.request_category_security);
+                    requestCategorySecurityIV.setImageResource(R.drawable.ic_category_security);
+                    requestCategorySecurityCB.setSelected(true);
+                    searchAndSetRequestCategory("security");
+                    break;
+                case R.id.new_request_request_category_gardening_ll:
+                    selectedRequestCategoryTV.setText(R.string.request_category_gardening);
+                    requestCategoryGardeningIV.setImageResource(R.drawable.ic_category_gardening);
+                    requestCategoryGardeningIV.setSelected(true);
+                    searchAndSetRequestCategory("gardening");
+                    break;
+                case R.id.new_request_request_category_maintenance_ll:
+                    selectedRequestCategoryTV.setText(R.string.request_category_maintenance);
+                    requestCategoryServicesIV.setImageResource(R.drawable.ic_category_services);
+                    requestCategoryServicesIV.setSelected(true);
+                    searchAndSetRequestCategory("services");
+                    break;
+                case R.id.new_request_request_category_cleaning_ll:
+                    selectedRequestCategoryTV.setText(R.string.request_category_cleaning);
+                    requestCategoryCleaningIV.setImageResource(R.drawable.ic_category_cleaning);
+                    requestCategoryCleaningCB.setSelected(true);
+                    searchAndSetRequestCategory("cleaning");
+                    break;
+                default:
+                    break;
+            }
+        };
+    }
 
-                //Insert category
-                insertCategory(checkBox, "cat1", "cat1");
+    /**
+     * Reset all Budget Category fields to their default state
+     */
+    private void resetSelectedBudgetCategory() {
+        selectedBudgetCategoryTV.setText("");
 
-                //Changes image
-                if (checkBox.isSelected())
-                    imageView.setImageResource(R.drawable.ic_category_security_disabled);
-                else
-                    imageView.setImageResource(R.drawable.ic_category_security);
+        budgetCategoryOrdinaryIV.setImageResource(R.drawable.ic_budget_category_ordinary_disabled);
+        budgetCategoryOrdinaryCB.setSelected(false);
 
-                //Inverts selected
-                checkBox.setSelected(!checkBox.isSelected());
+        budgetCategorySavingsIV.setImageResource(R.drawable.ic_budget_category_savings_disabled);
+        budgetCategorySavingsCB.setSelected(false);
 
+        budgetCategoryExtraordinaryIV.setImageResource(R.drawable.ic_budget_category_extraordinary_disabled);
+        budgetCategoryExtraordinaryCB.setSelected(false);
+    }
+
+    /**
+     * Reset all Request Category fields to their default state
+     */
+    private void resetSelectedRequestCategory() {
+        selectedRequestCategoryTV.setText("");
+
+        requestCategorySecurityIV.setImageResource(R.drawable.ic_category_security_disabled);
+        requestCategorySecurityCB.setSelected(false);
+
+        requestCategoryGardeningIV.setImageResource(R.drawable.ic_category_gardening_disabled);
+        requestCategoryGardeningIV.setSelected(false);
+
+        requestCategoryServicesIV.setImageResource(R.drawable.ic_category_services_disabled);
+        requestCategoryServicesIV.setSelected(false);
+
+        requestCategoryCleaningIV.setImageResource(R.drawable.ic_category_cleaning_disabled);
+        requestCategoryCleaningCB.setSelected(false);
+    }
+
+    /**
+     * Search for a category by name in requestCategoriesPairs, if found,
+     * set as selectedRequestCategoryPair
+     *
+     * @param categoryName Self descriptive
+     */
+    private void searchAndSetRequestCategory(String categoryName) {
+        for (Pair<DocumentReference, RequestCategory> pair : requestCategoriesPairs) {
+            if (pair.second.getName().equals(categoryName)) {
+                selectedRequestCategoryPair = pair;
                 break;
-            case R.id.cat2IV:
-
-                //Gets views
-                checkBox = findViewById(R.id.cat2CB);
-                imageView = findViewById(R.id.cat2IV);
-
-                //Insert category
-                insertCategory(checkBox, "cat2", "cat2");
-
-                //Changes image
-                if (checkBox.isSelected())
-                    imageView.setImageResource(R.drawable.ic_category_gardening_disabled);
-                else
-                    imageView.setImageResource(R.drawable.ic_category_gardening);
-
-                //Inverts selected
-                checkBox.setSelected(!checkBox.isSelected());
-
-                break;
-            case R.id.cat3IV:
-
-                //Gets views
-                checkBox = findViewById(R.id.cat3CB);
-                imageView = findViewById(R.id.cat3IV);
-
-                //Insert category
-                insertCategory(checkBox, "cat3", "cat3");
-
-                //Changes image
-                if (checkBox.isSelected())
-                    imageView.setImageResource(R.drawable.ic_category_services_disabled);
-                else
-                    imageView.setImageResource(R.drawable.ic_category_services);
-
-                //Inverts selected
-                checkBox.setSelected(!checkBox.isSelected());
-
-                break;
-            case R.id.cat4IV:
-
-                //Gets views
-                checkBox = findViewById(R.id.cat4CB);
-                imageView = findViewById(R.id.cat4IV);
-
-                //Insert category
-                insertCategory(checkBox, "cat4", "cat4");
-
-                //Changes image
-                if (checkBox.isSelected())
-                    imageView.setImageResource(R.drawable.ic_category_security_disabled);
-                else
-                    imageView.setImageResource(R.drawable.ic_category_security);
-
-                //Inverts selected
-                checkBox.setSelected(!checkBox.isSelected());
-
-                break;
-            case R.id.cat5IV:
-
-                //Gets views
-                checkBox = findViewById(R.id.cat5CB);
-                imageView = findViewById(R.id.cat5IV);
-
-                //Insert category
-                insertCategory(checkBox, "cat5", "cat5");
-
-                //Changes image
-                if (checkBox.isSelected())
-                    imageView.setImageResource(R.drawable.ic_category_gardening_disabled);
-                else
-                    imageView.setImageResource(R.drawable.ic_category_gardening);
-
-                //Inverts selected
-                checkBox.setSelected(!checkBox.isSelected());
-
-                break;
-
-            case R.id.cat6IV:
-
-                //Gets views
-                checkBox = findViewById(R.id.cat6CB);
-                imageView = findViewById(R.id.cat6IV);
-
-                //Insert category
-                insertCategory(checkBox, "cat6", "cat6");
-
-                //Changes image
-                if (checkBox.isSelected())
-                    imageView.setImageResource(R.drawable.ic_category_services_disabled);
-                else
-                    imageView.setImageResource(R.drawable.ic_category_services);
-
-                //Inverts selected
-                checkBox.setSelected(!checkBox.isSelected());
-
-                break;
-
-            default:
-                break;
+            }
         }
     }
 
+    private void handleOnSaveButtonClick() {
+        String requestUUID = UUID.randomUUID().toString();
+        long currentTimeMillis = System.currentTimeMillis();
 
-    /**
-     * Checkboxes onClick - receives clicked view and processes the category choice
-     * @param view - clicked view
-     */
-    public void onBudgetCategoryClicked(View view) {
+        ArrayList<DocumentReference> categoriesRefs = new ArrayList<>();
+        categoriesRefs.add(selectedRequestCategoryPair.first);
 
-        ImageView imageView1, imageView2, imageView3;
-        TextView textView;
-        String budgetString;
+        Request request = new Request(
+                requestUUID,
+                currentTimeMillis,
+                currentTimeMillis,
+                DocReferences.getUserRef(),
+                null,
+                DocReferences.getAssociationRef(associationID),
+                titleET.getText().toString(),
+                descriptionET.getText().toString(),
+                0,
+                0,
+                categoriesRefs
+        );
 
-        textView = findViewById(R.id.new_request_current_budget_value_tv);
-
-        // Check which checkbox was clicked
-        switch(view.getId()) {
-            case R.id.new_request_budget_category_1_iv:
-
-                //Gets views
-                imageView1 = findViewById(R.id.new_request_budget_category_1_iv);
-                imageView2 = findViewById(R.id.new_request_budget_category_2_iv);
-                imageView3 = findViewById(R.id.new_request_budget_category_3_iv);
-
-
-                //Changes images
-                switch (this.chosenBudgetCategory){
-                    case 0:
-
-                        imageView1.setImageResource(R.drawable.ic_budget_category_ordinary);
-                        this.chosenBudgetCategory = 1;
-                        textView.setVisibility(View.VISIBLE);
-
-                        break;
-                    case 1:
-
-                        imageView1.setImageResource(R.drawable.ic_budget_category_ordinary_disabled);
-                        this.chosenBudgetCategory = 0;
-                        textView.setVisibility(View.GONE);
-
-                        break;
-                    case 2:
-
-                        imageView1.setImageResource(R.drawable.ic_budget_category_ordinary);
-                        imageView2.setImageResource(R.drawable.ic_budget_category_savings_disabled);
-                        this.chosenBudgetCategory = 1;
-
-                        break;
-                    case 3:
-                        imageView1.setImageResource(R.drawable.ic_budget_category_ordinary);
-                        imageView3.setImageResource(R.drawable.ic_budget_category_extraordinary_disabled);
-                        this.chosenBudgetCategory = 1;
-                        break;
-                    default:
-                        break;
-                }
-
-
-                budgetString = getResources().getString(R.string.new_request_current_budget_string1)
-                        + "000.000.000,00"
-                        + getResources().getString(R.string.new_request_current_budget_string2)
-                        + getResources().getString(R.string.new_request_current_budget_ordinary_string);
-                textView.setText(budgetString);
-
-                break;
-
-            case R.id.new_request_budget_category_2_iv:
-
-                //Gets views
-                imageView1 = findViewById(R.id.new_request_budget_category_1_iv);
-                imageView2 = findViewById(R.id.new_request_budget_category_2_iv);
-                imageView3 = findViewById(R.id.new_request_budget_category_3_iv);
-
-                //Changes images
-                switch (this.chosenBudgetCategory){
-                    case 0:
-                        imageView2.setImageResource(R.drawable.ic_budget_category_savings);
-                        this.chosenBudgetCategory = 2;
-                        textView.setVisibility(View.VISIBLE);
-                        break;
-                    case 1:
-                        imageView1.setImageResource(R.drawable.ic_budget_category_ordinary_disabled);
-                        imageView2.setImageResource(R.drawable.ic_budget_category_savings);
-                        this.chosenBudgetCategory = 2;
-                        break;
-                    case 2:
-                        imageView2.setImageResource(R.drawable.ic_budget_category_savings_disabled);
-                        this.chosenBudgetCategory = 0;
-                        textView.setVisibility(View.GONE);
-                        break;
-                    case 3:
-                        imageView2.setImageResource(R.drawable.ic_budget_category_savings);
-                        imageView3.setImageResource(R.drawable.ic_budget_category_extraordinary_disabled);
-                        this.chosenBudgetCategory = 2;
-                        break;
-                    default:
-                        break;
-                }
-
-                budgetString = getResources().getString(R.string.new_request_current_budget_string1)
-                        + "000.000.000,00"
-                        + getResources().getString(R.string.new_request_current_budget_string2)
-                        + getResources().getString(R.string.new_request_current_budget_savings_string);
-                textView.setText(budgetString);
-
-                break;
-
-            case R.id.new_request_budget_category_3_iv:
-
-                //Gets views
-                imageView1 = findViewById(R.id.new_request_budget_category_1_iv);
-                imageView2 = findViewById(R.id.new_request_budget_category_2_iv);
-                imageView3 = findViewById(R.id.new_request_budget_category_3_iv);
-
-                //Changes images
-                switch (this.chosenBudgetCategory){
-                    case 0:
-                        imageView3.setImageResource(R.drawable.ic_budget_category_extraordinary);
-                        this.chosenBudgetCategory = 3;
-                        textView.setVisibility(View.VISIBLE);
-                        break;
-                    case 1:
-                        imageView1.setImageResource(R.drawable.ic_budget_category_ordinary_disabled);
-                        imageView3.setImageResource(R.drawable.ic_budget_category_extraordinary);
-                        this.chosenBudgetCategory = 3;
-                        break;
-                    case 2:
-                        imageView2.setImageResource(R.drawable.ic_budget_category_savings_disabled);
-                        imageView3.setImageResource(R.drawable.ic_budget_category_extraordinary);
-                        this.chosenBudgetCategory = 3;
-                        break;
-                    case 3:
-                        imageView3.setImageResource(R.drawable.ic_budget_category_extraordinary_disabled);
-                        this.chosenBudgetCategory = 0;
-                        textView.setVisibility(View.GONE);
-                        break;
-                    default:
-                        break;
-                }
-
-                budgetString = getResources().getString(R.string.new_request_current_budget_string1)
-                        + "000.000.000,00"
-                        + getResources().getString(R.string.new_request_current_budget_string2)
-                        + getResources().getString(R.string.new_request_current_budget_extraordinary_string);
-                textView.setText(budgetString);
-
-            default:
-                break;
-        }
-
-        Log.d(TAG, "Current budget category: " + this.chosenBudgetCategory);
-    }
-
-
-    /**
-     * Adds a category to the new Request
-     * @param view - View with the checkgbox category
-     * @param id - category id
-     * @param categoryName - category name
-     */
-    private void insertCategory(View view, String id, String categoryName){
-        if(((CheckBox) view).isChecked())
-            categories.put(id, new RequestCategory(id, categoryName));
-        else
-            categories.remove(id);
-        Log.d(TAG, categories.toString());
+        AssociationHelper.setRequest(
+                mDB,
+                associationID,
+                requestUUID,
+                request
+        )
+                .addOnSuccessListener(aVoid -> Toast.makeText(
+                        this,
+                        "Request saved",
+                        Toast.LENGTH_SHORT
+                ).show())
+                .addOnFailureListener(e -> {
+                    Toast.makeText(
+                            this,
+                            "Failed to save request",
+                            Toast.LENGTH_SHORT
+                    ).show();
+                    Log.e(TAG, "[Request] failed to save: " + e.toString());
+                });
     }
 }
