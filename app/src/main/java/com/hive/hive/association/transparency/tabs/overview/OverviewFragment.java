@@ -35,6 +35,9 @@ import com.hive.hive.association.transparency.TransparencyActivity;
 import com.hive.hive.association.transparency.tabs.staff.StaffFragment;
 import com.hive.hive.model.association.BudgetTransaction;
 import com.hive.hive.model.association.BudgetTransactionCategories;
+import com.hive.hive.utils.chart.RoundRenderer;
+import com.hive.hive.utils.chart.RoundedBarChart;
+import com.hive.hive.utils.chart.RoundedBarChartRenderer;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -102,10 +105,19 @@ public class OverviewFragment extends Fragment {
 
 
         //------------------------------------ Monthly Chart ------------------------------------//
+//
+//        RoundRenderer roundRenderer = new RoundRenderer(
+//                mMonthlyChart,
+//                mMonthlyChart.getAnimator(),
+//                mMonthlyChart.getViewPortHandler());
+//
+//        mMonthlyChart.setRenderer(roundRenderer);
+//        mMonthlyChart.invalidate();
+
 
         //--- Formatting Parameters
-        float groupSpace = 0.2f;
-        float barSpace = 0.03f;
+        float groupSpace = 0.3f;
+        float barSpace = 0.04f;
         float barWidth = 0.02f;
         float monthsToShow = 12;
 
@@ -157,6 +169,7 @@ public class OverviewFragment extends Fragment {
 
         //-- Create Chart data with combined datasets
         BarData barData = new BarData(dataSets);
+        //barData.setBarWidth(barWidth);
 
         //-- Format Chart xAxis
         XAxis xAxis = mMonthlyChart.getXAxis();
@@ -172,6 +185,7 @@ public class OverviewFragment extends Fragment {
         YAxis leftAxis = mMonthlyChart.getAxisLeft();
         leftAxis.setDrawGridLines(false);
         leftAxis.setAxisMinimum(0f);
+        leftAxis.setEnabled(false);
 
         //-- Format chart legend
         Legend mBarLegend = mMonthlyChart.getLegend();
