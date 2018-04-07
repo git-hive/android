@@ -39,27 +39,6 @@ public class Request extends AssociationAction {
             int numComments,
             ArrayList<DocumentReference> categoriesRefs
     ) {
-        super(createdAt, updatedAt, authorRef, pointsTransactionRef, associationRef);
-        this.title = title;
-        this.content = content;
-        this.score = score;
-        this.numComments = numComments;
-        this.categoriesRefs = categoriesRefs;
-    }
-
-    public Request(
-            String id,
-            long createdAt,
-            long updatedAt,
-            DocumentReference authorRef,
-            DocumentReference pointsTransactionRef,
-            DocumentReference associationRef,
-            String title,
-            String content,
-            int score,
-            int numComments,
-            ArrayList<DocumentReference> categoriesRefs
-    ) {
         super(id, createdAt, updatedAt, authorRef, pointsTransactionRef, associationRef);
         this.title = title;
         this.content = content;
