@@ -46,6 +46,7 @@
                     android:layout_margin="10dp"/>
 
                 <ImageView
+                    android:id="@+id/staff_group_1_arrow_iv"
                     android:layout_weight="0.2"
                     android:layout_width="0dp"
                     android:layout_height="64dp"
@@ -110,6 +111,7 @@
                         android:layout_margin="10dp"/>
 
                     <ImageView
+                        android:id="@+id/staff_group_2_arrow_iv"
                         android:layout_weight="0.2"
                         android:layout_width="0dp"
                         android:layout_height="64dp"
@@ -174,6 +176,7 @@
                         android:layout_margin="10dp"/>
 
                     <ImageView
+                        android:id="@+id/staff_group_3_arrow_iv"
                         android:layout_weight="0.2"
                         android:layout_width="0dp"
                         android:layout_height="64dp"
@@ -241,6 +244,7 @@
                         android:layout_weight="0.2"
                         android:layout_width="0dp"
                         android:layout_height="64dp"
+                        android:id="@+id/staff_group_4_arrow_iv"
                         android:src="@drawable/ic_down_arrow_yellow"
                         android:layout_gravity="center_vertical|end"/>
 
@@ -306,6 +310,7 @@
                         android:layout_weight="0.2"
                         android:layout_width="0dp"
                         android:layout_height="64dp"
+                        android:id="@+id/staff_group_5_arrow_iv"
                         android:src="@drawable/ic_down_arrow_red"
                         android:layout_gravity="center_vertical|end"/>
 
@@ -370,6 +375,7 @@
                         android:layout_weight="0.2"
                         android:layout_width="0dp"
                         android:layout_height="64dp"
+                        android:id="@+id/staff_group_6_arrow_iv"
                         android:src="@drawable/ic_down_arrow_gray"
                         android:layout_gravity="center_vertical|end"/>
 

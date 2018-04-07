@@ -14,8 +14,8 @@
     <color name="red_text">#ED1C24</color>
 
     <!--Chart Colors-->
-    <color name="chart_green">#388E3C</color>
-    <color name="chart_red">#D32F2F</color>
+    <color name="chart_green">#B0D864</color>
+    <color name="chart_red">#F77463</color>
 
     <!-- Folding Cell Stuff -->
     <color name="colorPrimary">#594691</color>

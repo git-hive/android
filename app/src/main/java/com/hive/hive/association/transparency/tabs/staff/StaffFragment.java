@@ -13,6 +13,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ViewAnimator;
 
@@ -75,22 +79,22 @@ public class StaffFragment extends Fragment {
 
         //--- Group Views
         LinearLayout linearLayout = view.findViewById(R.id.staff_group_1_LL);
-        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_1_RV));
+        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_1_RV, R.id.staff_group_1_arrow_iv));
 
         linearLayout = view.findViewById(R.id.staff_group_2_LL);
-        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_2_RV));
+        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_2_RV, R.id.staff_group_2_arrow_iv));
 
         linearLayout = view.findViewById(R.id.staff_group_3_LL);
-        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_3_RV));
+        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_3_RV, R.id.staff_group_3_arrow_iv));
 
         linearLayout = view.findViewById(R.id.staff_group_4_LL);
-        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_4_RV));
+        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_4_RV, R.id.staff_group_4_arrow_iv));
 
         linearLayout = view.findViewById(R.id.staff_group_5_LL);
-        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_5_RV));
+        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_5_RV, R.id.staff_group_5_arrow_iv));
 
         linearLayout = view.findViewById(R.id.staff_group_6_LL);
-        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_6_RV));
+        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_6_RV, R.id.staff_group_6_arrow_iv));
 
         mActivity = (TransparencyActivity) getActivity();
 
@@ -155,12 +159,13 @@ public class StaffFragment extends Fragment {
         mStaffMembers.add(new Staff("Stormtrooper",  R.drawable.avatar_trooper));
     }
 
-    private View.OnClickListener getGroupOnClickListener(final int targetViewId){
+    private View.OnClickListener getGroupOnClickListener(final int targetViewId, final int arrowId){
         final Activity activity = getActivity();
         if (activity == null){
             Log.d(TAG, "Activity null");
             return null;
         }
+
 
         return (new View.OnClickListener() {
             @Override
@@ -168,9 +173,37 @@ public class StaffFragment extends Fragment {
                 final View rootView = activity.findViewById(targetViewId);
                 if (rootView != null){
 
-                    if (rootView.getVisibility() == View.VISIBLE) {
-                        rootView.clearAnimation();
 
+                    final ImageView arrowIV = rootView.getRootView().findViewById(arrowId);
+
+                    if (rootView.getVisibility() == View.VISIBLE) {
+
+                        //Arrow
+                        if (arrowIV != null){
+                            arrowIV.clearAnimation();
+                            Log.d(TAG, "Rotating arrow");
+                            AnimationSet animSet = new AnimationSet(true);
+                            animSet.setInterpolator(new DecelerateInterpolator());
+                            animSet.setFillAfter(true);
+                            animSet.setFillEnabled(true);
+
+                            final RotateAnimation animRotate = new RotateAnimation(180.0f, 0.0f,
+                                    RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+                                    RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+
+                            animRotate.setDuration(250);
+                            animRotate.setFillAfter(true);
+                            animSet.addAnimation(animRotate);
+
+                            arrowIV.startAnimation(animSet);
+                        }
+                        else{
+                            Log.d(TAG, "Error in rotating arrow");
+                        }
+
+
+                        //Recycle
+                        rootView.clearAnimation();
                         rootView.animate().alpha(0.0f)
                                 .setDuration(250)
                                 .setListener(new Animator.AnimatorListener() {
@@ -200,7 +233,33 @@ public class StaffFragment extends Fragment {
                         }).start();
                     }
                     else {
-                            rootView.animate()
+
+
+                        //Arrow
+                        if (arrowIV != null){
+                            arrowIV.clearAnimation();
+                            Log.d(TAG, "Rotating arrow");
+                            AnimationSet animSet = new AnimationSet(true);
+                            animSet.setInterpolator(new DecelerateInterpolator());
+                            animSet.setFillAfter(true);
+                            animSet.setFillEnabled(true);
+
+                            final RotateAnimation animRotate = new RotateAnimation(0.0f, 180.0f,
+                                    RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+                                    RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+
+                            animRotate.setDuration(250);
+                            animRotate.setFillAfter(true);
+                            animSet.addAnimation(animRotate);
+
+                            arrowIV.startAnimation(animSet);
+                        }
+                        else{
+                            Log.d(TAG, "Error in rotating arrow");
+                        }
+
+                        //Recycle
+                        rootView.animate()
                                 .alpha(1.0f)
                                 .setDuration(250)
                                 .setListener(new Animator.AnimatorListener() {

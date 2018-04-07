@@ -124,11 +124,11 @@ public class OverviewFragment extends Fragment {
 
         //-- Creates Income Dataset with entries
         BarDataSet incomeDataset = new BarDataSet(incomesEntries, "Receita");
-        incomeDataset.setColor(ContextCompat.getColor(this.getActivity(), R.color.green_text));
+        incomeDataset.setColor(ContextCompat.getColor(this.getActivity(), R.color.chart_green));
 
         //-- Creates Expense Dataset with Entries
         BarDataSet expensesDataset = new BarDataSet(expensesEntries, "Despesa");
-        expensesDataset.setColor(ContextCompat.getColor(this.getActivity(), R.color.red_text));
+        expensesDataset.setColor(ContextCompat.getColor(this.getActivity(), R.color.chart_red));
 
         //-- Creates label formatter
         final String[] monthLabels = {
@@ -224,8 +224,8 @@ public class OverviewFragment extends Fragment {
         pieEntries.add(new PieEntry(totalExpense, "Despesas"));
 
         ArrayList<Integer> pieColors = new ArrayList<>();
-        pieColors.add(ContextCompat.getColor(getActivity(), R.color.green_text));
-        pieColors.add(ContextCompat.getColor(getActivity(), R.color.red_text));
+        pieColors.add(ContextCompat.getColor(getActivity(), R.color.chart_green));
+        pieColors.add(ContextCompat.getColor(getActivity(), R.color.chart_red));
 
         PieDataSet pieDataSet = new PieDataSet(pieEntries, "");
         pieDataSet.setColors(pieColors);
