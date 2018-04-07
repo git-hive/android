@@ -1,18 +1,16 @@
 package com.hive.hive.association.transparency.tabs.overview;
 
-import android.app.Activity;
-import android.content.Context;
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
@@ -21,9 +19,7 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
+
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -32,14 +28,11 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.hive.hive.R;
 import com.hive.hive.association.transparency.TransparencyActivity;
-import com.hive.hive.association.transparency.tabs.staff.StaffFragment;
+
 import com.hive.hive.model.association.BudgetTransaction;
 import com.hive.hive.model.association.BudgetTransactionCategories;
-import com.hive.hive.utils.chart.RoundRenderer;
-import com.hive.hive.utils.chart.RoundedBarChart;
-import com.hive.hive.utils.chart.RoundedBarChartRenderer;
 
-import java.lang.reflect.Array;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
