@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hive.hive.R;
-import com.hive.hive.association.transparency.tabs.budget.BudgetFragment;
-import com.hive.hive.home.RecyclerViewHomeAdapter;
 import com.hive.hive.model.association.Request;
 import com.hive.hive.model.forum.ForumPost;
 
@@ -21,7 +19,7 @@ import java.util.ArrayList;
 public class FeedFragment extends Fragment {
 
     private RecyclerView mRecyclerViewHome;
-    private RecyclerViewHomeAdapter mRecyclerViewHomeAdapter;
+    private RecyclerViewFeedAdapter mRecyclerViewHomeAdapter;
     ArrayList<Object> DUMMYARRAY;
 
 
@@ -54,7 +52,7 @@ public class FeedFragment extends Fragment {
         DUMMYARRAY.add(new Request());
 
         mRecyclerViewHome = v.findViewById(R.id.recyclerViewFeed);
-        mRecyclerViewHomeAdapter = new RecyclerViewHomeAdapter(DUMMYARRAY);
+        mRecyclerViewHomeAdapter = new RecyclerViewFeedAdapter(DUMMYARRAY);
         mRecyclerViewHome.setAdapter(mRecyclerViewHomeAdapter);
         mRecyclerViewHome.setLayoutManager(new LinearLayoutManager(v.getContext()));
         return v;

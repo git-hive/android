@@ -74,11 +74,9 @@ public class BudgetFragment extends Fragment {
         String budgetName;
         int origin;
 
-
         Budget(String name, int origin) {
             this.budgetName = name;
             this.origin = origin;
-
         }
     }
 
