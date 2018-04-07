@@ -93,11 +93,21 @@ public class RequestActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void getAllRequestCategoriesAndCallGetAllRequests() {
-        com.hive.hive.model.association.AssociationHelper.getAllRequestCategories(
+        AssociationHelper.getAllRequestCategories(
                 mDB,
                 associationID
         )
                 .addOnSuccessListener(documentSnapshots -> {
+
+                    if (documentSnapshots.isEmpty()) {
+                        Toast.makeText(
+                                this,
+                                "Falha ao pegar categorias",
+                                Toast.LENGTH_SHORT
+                        ).show();
+                        return;
+                    }
+
                     ArrayMap<DocumentReference, RequestCategory> categories = new ArrayMap<>();
                     for (DocumentSnapshot doc : documentSnapshots.getDocuments()) {
                         RequestCategory requestCategory = doc.toObject(RequestCategory.class);
@@ -114,6 +124,16 @@ public class RequestActivity extends AppCompatActivity {
     ) {
         AssociationHelper.getAllRequests(mDB, associationID)
                 .addOnSuccessListener(documentSnapshots -> {
+
+                    if (documentSnapshots.isEmpty()) {
+                        Toast.makeText(
+                                this,
+                                "Falha ao pegar requisições",
+                                Toast.LENGTH_SHORT
+                        ).show();
+                        return;
+                    }
+
                     ArrayList<Request> requests = new ArrayList<>();
                     for (DocumentSnapshot doc : documentSnapshots) {
                         requests.add(doc.toObject(Request.class));
