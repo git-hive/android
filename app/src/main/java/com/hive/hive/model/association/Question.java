@@ -2,14 +2,14 @@ package com.hive.hive.model.association;
 
 import com.google.firebase.firestore.DocumentReference;
 
-import java.util.HashMap;
+import java.io.Serializable;
+import java.util.ArrayList;
 
-public class Question {
+public class Question implements Serializable{
 
-    private String id;
     private String question;
     private String info;
-    private HashMap<String, QuestionOptions> options;
+    private ArrayList<QuestionOptions> options;
     private String winningOption;
 
     private DocumentReference sessionRef;
@@ -18,15 +18,13 @@ public class Question {
     //--- Constructor
 
     public Question(
-            String id,
             String question,
             String info,
-            HashMap<String, QuestionOptions> options,
+            ArrayList<QuestionOptions> options,
             String winningOption,
             DocumentReference sessionRef,
             DocumentReference agendaRef
     ) {
-        this.id = id;
         this.question = question;
         this.info = info;
         this.options = options;
@@ -35,12 +33,11 @@ public class Question {
         this.agendaRef = agendaRef;
     }
 
+    public Question() {
+    }
 
     //--- Getters
 
-    public String getId() {
-        return id;
-    }
 
     public String getQuestion() {
         return question;
@@ -50,7 +47,7 @@ public class Question {
         return info;
     }
 
-    public HashMap<String, QuestionOptions> getOptions() {
+    public ArrayList<QuestionOptions> getOptions() {
         return options;
     }
 
@@ -69,9 +66,6 @@ public class Question {
 
     //--- Setters
     
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public void setQuestion(String question) {
         this.question = question;
@@ -81,7 +75,7 @@ public class Question {
         this.info = info;
     }
 
-    public void setOptions(HashMap<String, QuestionOptions> options) {
+    public void setOptions(ArrayList<QuestionOptions> options) {
         this.options = options;
     }
 

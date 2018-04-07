@@ -3,6 +3,7 @@ package com.hive.hive.association.votes.tabs.questions;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,31 +13,33 @@ import com.github.vipulasri.timelineview.TimelineView;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.tabs.questions.model.OrderStatus;
 import com.hive.hive.association.votes.tabs.questions.model.Orientation;
-import com.hive.hive.association.votes.tabs.questions.model.TimeLineModel;
 import com.hive.hive.association.votes.tabs.questions.utils.VectorDrawableUtils;
+import com.hive.hive.model.association.Question;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Birck.
  */
 
 public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
-
-    private HashMap<Integer, ArrayList<String>> mFeedList;
+    private String TAG = TimeLineAdapter.class.getSimpleName();
+    private HashMap<String, Question> mQuestions;
     private ArrayList<OrderStatus> mStatusList;
+    public ArrayList<Integer> mStatusListValue;
     private Context mContext;
     private Orientation mOrientation;
-    private boolean mWithLinePadding;
     private LayoutInflater mLayoutInflater;
 
-    public TimeLineAdapter(HashMap<Integer, ArrayList<String> > feedList, ArrayList<OrderStatus> statusList, Orientation orientation, boolean withLinePadding) {
-        mFeedList = feedList;
-        mStatusList = statusList;
-        mOrientation = Orientation.HORIZONTAL;
-        mWithLinePadding = withLinePadding;
+
+
+    public TimeLineAdapter(HashMap<String, Question> mQuestions, ArrayList<OrderStatus> mStatusList, ArrayList<Integer> mStatusListValue, Context mContext) {
+        this.mQuestions = mQuestions;
+        this.mStatusList = mStatusList;
+        this.mStatusListValue = mStatusListValue;
+        this.mContext = mContext;
+        this.mOrientation = Orientation.HORIZONTAL;
     }
 
     @Override
@@ -63,18 +66,18 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
         OrderStatus currentStatus = mStatusList.get(position);
 
         if(currentStatus == OrderStatus.ACTIVE) {
-            holder.mTimelineView.setMarker(VectorDrawableUtils.getDrawable(mContext, R.drawable.ic_marker_active, R.color.colorPrimary));
+            holder.mTimelineView.setMarker(VectorDrawableUtils.getDrawable(mContext, R.drawable.ic_marker_active, R.color.colorOrange));
         } else if(currentStatus == OrderStatus.INACTIVE) {
-            holder.mTimelineView.setMarker(ContextCompat.getDrawable(mContext, R.drawable.ic_marker_inactive), ContextCompat.getColor(mContext, R.color.colorPrimary));
+            holder.mTimelineView.setMarker(ContextCompat.getDrawable(mContext, R.drawable.ic_marker_inactive), ContextCompat.getColor(mContext, R.color.colorOrange));
         }else{
-            holder.mTimelineView.setMarker(ContextCompat.getDrawable(mContext, R.drawable.ic_marker), ContextCompat.getColor(mContext, R.color.colorPrimary));
+            holder.mTimelineView.setMarker(ContextCompat.getDrawable(mContext, R.drawable.ic_marker), ContextCompat.getColor(mContext, R.color.colorOrange));
         }
-
+        Log.d(TAG, "position : "+position);
     }
 
     @Override
     public int getItemCount() {
-        return (mFeedList!=null? mFeedList.size():0);
+        return (mQuestions!=null? mQuestions.size():0);
     }
 
     public void completePoint(int position){
@@ -90,6 +93,11 @@ public class TimeLineAdapter extends RecyclerView.Adapter<TimeLineViewHolder> {
     }
 
     public boolean checkAnswers(){
+        for (Integer value:
+             mStatusListValue) {
+            if(value == -1)
+                return false;
+        }
         return true;
     }
 

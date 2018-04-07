@@ -4,8 +4,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.View;
@@ -25,9 +23,6 @@ public class VotesActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager viewPager;
 
-
-//    public final static String EXTRA_ORIENTATION = "EXTRA_ORIENTATION";
-//    public final static String EXTRA_WITH_LINE_PADDING = "EXTRA_WITH_LINE_PADDING";
 
 
     @Override

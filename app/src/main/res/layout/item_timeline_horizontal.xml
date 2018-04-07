@@ -51,7 +51,7 @@
         android:layout_marginTop="10dp"
         app:markerSize="20dp"
         app:lineSize="2dp"
-        app:line="@color/colorPrimary"
+        app:line="@color/colorOrange"
         app:lineOrientation="horizontal"/>
 
 </LinearLayout>

@@ -13,10 +13,10 @@ public class ForumSupport extends ForumAction {
     //--- Constructor
 
     public ForumSupport(
-            String id, long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId,
+            long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId,
             String forumId, ForumAction targetAction)
     {
-        super(id, createdAt, updatedAt, authorId, pointsTransactionId, forumId);
+        super( createdAt, updatedAt, authorId, pointsTransactionId, forumId);
         this.targetAction = targetAction;
     }
 
