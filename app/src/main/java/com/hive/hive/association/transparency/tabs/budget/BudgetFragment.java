@@ -4,24 +4,29 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.hive.hive.R;
-import com.hive.hive.association.transparency.tabs.bills.BillsFragment;
+import com.hive.hive.association.transparency.TransparencyActivity;
+import com.hive.hive.association.transparency.tabs.overview.OverviewFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class BudgetFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    public static final String ARG_PAGE = "Orçamento";
+
+    private static final String TAG = BudgetFragment.class.getSimpleName();
+    public static final String ARG_PAGE = "Orçamentos";
+
+    //--- Data
     private List<Budget> budgets;
 
-
+    //--- Context
+    private TransparencyActivity mActivity;
 
 
     public BudgetFragment() {
@@ -29,7 +34,6 @@ public class BudgetFragment extends Fragment {
     }
 
 
-    // TODO: Rename and change types and number of parameters
     public static BudgetFragment newInstance(int page) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
@@ -59,6 +63,8 @@ public class BudgetFragment extends Fragment {
         initializeData();
         BudgetAdapter mAdapter = new BudgetAdapter(budgets);
         rv.setAdapter(mAdapter);
+
+        mActivity = (TransparencyActivity) getActivity();
 
         return  view;
     }
