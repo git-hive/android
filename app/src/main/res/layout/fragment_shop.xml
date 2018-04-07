@@ -1,8 +1,9 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.hive.hive.ShopFragment">
 
     <LinearLayout
@@ -14,7 +15,7 @@
     <ImageView
         android:layout_marginTop="5dp"
         android:layout_marginLeft="5dp"
-        android:src="@drawable/ic_profile_photo"
+        app:srcCompat="@drawable/ic_profile_photo"
         android:layout_gravity="top|left"
         android:layout_width="85dp"
         android:layout_height="75dp" />
@@ -42,10 +43,11 @@
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
+        android:orientation="vertical"
         android:layout_below="@+id/topContainer"
         android:id="@+id/recyclerViewFeed"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" />
 
-</FrameLayout>
+</LinearLayout>
 

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.widget.LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/requestCV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_margin="15dp"
+        app:cardBackgroundColor="#ececec"
+        app:cardElevation="6dp"
+        app:contentPadding="10dp"
+        >
+
+        <LinearLayout
+            android:id="@+id/card_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:gravity="top|center_horizontal">
+
+            <!-- Avatar Layout -->
+            <LinearLayout
+                android:id="@+id/request_avatar_ll"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:orientation="vertical"
+                android:layout_gravity="left"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_gravity="center"
+                    android:id="@+id/request_author_photo_iv"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    app:srcCompat="@drawable/now" />
+
+
+            </LinearLayout>
+
+            <!-- Info Layout -->
+            <LinearLayout
+                android:layout_marginLeft="5dp"
+                android:id="@+id/request_info_ll"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
+                android:layout_marginStart="5dp"
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:gravity="start|top">
+
+                <TextView
+                    android:gravity="center_horizontal"
+                    android:text="Now Café"
+                    android:id="@+id/request_title_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="22sp"
+                    android:textColor="@color/colorBlack"
+                    />
+
+                <!-- Cost Linear Layout -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_vertical|center_horizontal"
+                    android:gravity="center">
+
+                    <TextView
+                        android:paddingTop="10dp"
+                        android:maxLength="100"
+                        android:id="@+id/request_cost_tv"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.9"
+                        android:text="Direito a 1 café expresso no Now Café"
+                        android:textSize="18sp"
+                        android:textColor="@color/gray_text"
+                        android:textStyle="italic"
+                        />
+
+                </LinearLayout>
+
+                <!-- Content Text View -->
+                <TextView
+                    android:id="@+id/request_content_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/request_content_font_size" />
+
+                <!-- Comments and Supports Layout -->
+                <LinearLayout
+                    android:id="@+id/request_stats_ll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="end|bottom"
+                    android:gravity="end|bottom">
+
+                    <ImageView
+                        android:id="@+id/commentsIV"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/ic_comment"
+                        android:contentDescription="@string/ic_comment"/>
+
+                    <TextView
+                        android:id="@+id/request_number_of_comments_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/request_author_leaderboard_position_font_size"
+                        android:paddingBottom="12dp"
+                        />
+
+                    <ImageView
+                        android:id="@+id/supportsIV"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:srcCompat="@drawable/ic_support_borderline"
+                        android:contentDescription="@string/ic_support"/>
+
+                    <TextView
+                        android:id="@+id/supportsTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/request_author_leaderboard_position_font_size"
+                        android:paddingBottom="12dp"
+                        />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</android.widget.LinearLayout>
