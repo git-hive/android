@@ -225,6 +225,25 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"/>
 
+             <LinearLayout
+                 android:gravity="center"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content">
+                     <TextView
+                         android:textColor="@color/colorBlack"
+                         android:textStyle="italic"
+                         android:text="Status: "
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content" />
+                     <TextView
+                         android:textColor="@color/red_text"
+                         android:textStyle="italic"
+                         android:text="Você ainda não votou!"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content" />
+
+             </LinearLayout>
+
             <!-- Vote button -->
             <LinearLayout
                 android:layout_gravity="center"
@@ -244,7 +263,7 @@
                         android:layout_gravity="center_horizontal"
                         android:textSize="16sp"
                         android:textColor="@color/colorBlack"
-                        android:text="@string/vote"
+                        android:text="Votar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
             </LinearLayout>

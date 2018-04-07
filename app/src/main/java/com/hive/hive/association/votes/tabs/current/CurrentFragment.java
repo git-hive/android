@@ -205,8 +205,10 @@ public class CurrentFragment extends Fragment {
                     switch (dc.getType()) {
                         case ADDED:
                             Agenda agenda = dc.getDocument().toObject(Agenda.class);
-                            mAgendas.put(dc.getDocument().getId(), agenda);
-                            mAgendasIds.add(dc.getDocument().getId());
+                            for(int i =0;i<10;i++) {
+                                mAgendas.put(dc.getDocument().getId(), agenda);
+                                mAgendasIds.add(dc.getDocument().getId());
+                            }
                             Log.d(TAG, mAgendas.toString());
                             mRVAdapter.notifyDataSetChanged();
                             break;
