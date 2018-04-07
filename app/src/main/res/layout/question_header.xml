@@ -2,16 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="5dp" >
+    android:paddingTop="15dp"
+    android:orientation="horizontal"
+     >
 
     <TextView
-        android:id="@+id/header"
-        android:layout_width="fill_parent"
+        android:id="@+id/headerTV"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
-        android:textColor="@color/colorOrange"
-        android:drawablePadding="10dp"
+        android:textColor="@color/colorBlack"
         android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/headerMarkerIV"
+        android:layout_width="30dp"
+        android:layout_height="30dp" />
 
 </LinearLayout>

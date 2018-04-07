@@ -1,8 +1,10 @@
 package com.hive.hive.utils;
 
+import android.content.res.Resources;
 import android.support.design.widget.TextInputEditText;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -70,5 +72,13 @@ public abstract class Utils {
         mmap.put("res/drawable/ic_category_all.xml", "All");
         mmap.put("res/drawable/ic_category_security.xml", "Security");
         return mmap;
+    }
+
+    public static String getCharForNumber(int i) {
+        return i > 0 && i < 27 ? String.valueOf((char)(i + 64)) : null;
+    }
+
+    public static float round(float d, int decimalPlace) {
+        return BigDecimal.valueOf(d).setScale(decimalPlace, BigDecimal.ROUND_HALF_UP).floatValue();
     }
 }

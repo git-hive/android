@@ -34,4 +34,9 @@
 
     <color name="black_overlay">#66000000</color>
 
+    <!-- Hexagonal bar -->
+    <color name="colorAccent">#FF4081</color>
+    <color name="squareColor">#3F51B5</color>
+
+
 </resources>

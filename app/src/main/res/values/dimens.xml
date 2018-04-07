@@ -31,5 +31,8 @@
     <dimen name="new_request_budget_category_font_size">12sp</dimen>
     <dimen name="new_request_budget_category_icon_size">70dp</dimen>
 
+    <!-- Hexagonal bar-->
+    <dimen name="square_size">100dp</dimen>
+
 
 </resources>

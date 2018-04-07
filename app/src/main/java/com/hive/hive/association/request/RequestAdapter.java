@@ -84,7 +84,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                context.startActivity(new Intent(context, CommentaryActivity.class).putExtra(CommentaryActivity.REQUEST_ID ,request.getId()));
+                context.startActivity(new Intent(context, CommentaryActivity.class).putExtra(CommentaryActivity.REQUEST_ID , mIds.get(position)));
             }
         });
         holder.mSupportsIV.setOnClickListener(new View.OnClickListener() {
@@ -115,7 +115,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                     Log.d(RequestAdapter.class.getSimpleName(), documentSnapshot.get("name").toString());
                     User user = documentSnapshot.toObject(User.class);
                     holder.mUserName.setText(user.getName());
-                    ProfilePhotoHelper.loadImage(context, holder.mUserAvatar, user.getPhotoUrl());
+                    ProfilePhotoHelper.loadImage(context.getApplicationContext(), holder.mUserAvatar, user.getPhotoUrl());
                     //Log.d(RequestAdapter.class.getSimpleName(), user.getPhotoUrl());
                 }
             }
@@ -157,7 +157,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                                 String supportId = FirebaseAuth.getInstance().getUid();
                                 //TODO review refs
 
-                                AssociationSupport support = new AssociationSupport(supportId, Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
+                                AssociationSupport support = new AssociationSupport(Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
                                         userRef, null, assocRef, null);
                                 AssociationHelper.setRequestSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s"
                                         , requestId, supportId, support)

@@ -176,7 +176,14 @@
     <string name="vertical_timeline">Vertical Timeline</string>
     <string name="horizontal_timeline_w_padding">Horizontal Timeline With Line Padding</string>
     <string name="vertical_timeline_w_padding">Vertical Timeline With Line Padding</string>
+    <string name="parque_una">Parque Una</string>
 
-
+    <!-- Session stuff -->
+    <string name="session_fin">Sessão finalizada</string>
+    <string name="days"> dias </string>
+    <string name="hours"> horas </string>
+    <string name="minutes"> minutos</string>
+    <!-- Question Answering -->
+    <string name="should_answer"> Dê a sua opnião nesta questão para visualizar a próxima. :)</string>
 
 </resources>

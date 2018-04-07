@@ -94,7 +94,7 @@ public class CommentaryAdapter extends RecyclerView.Adapter<CommentaryAdapter.Co
                     Log.d(RequestAdapter.class.getSimpleName(), documentSnapshot.get("name").toString());
                     User user = documentSnapshot.toObject(User.class);
                     holder.authorTV.setText(user.getName());
-                    ProfilePhotoHelper.loadImage(mContext, holder.avatarIV, user.getPhotoUrl());
+                    ProfilePhotoHelper.loadImage(mContext.getApplicationContext(), holder.avatarIV, user.getPhotoUrl());
                 }
             }
         });
@@ -136,7 +136,7 @@ public class CommentaryAdapter extends RecyclerView.Adapter<CommentaryAdapter.Co
                             String supportId = FirebaseAuth.getInstance().getUid();
                             //TODO review refs
 
-                            AssociationSupport support = new AssociationSupport(supportId, Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
+                            AssociationSupport support = new AssociationSupport( Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
                                     userRef, null, assocRef, null);
                            AssociationHelper.setRequestCommentSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s",
                                    mRequestId, commentId, supportId, support).addOnSuccessListener(new OnSuccessListener<Void>() {

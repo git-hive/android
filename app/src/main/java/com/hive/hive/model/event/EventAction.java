@@ -13,8 +13,8 @@ public abstract class EventAction extends UserAction {
 
     //--- Cosntructor
 
-    public EventAction(String id, long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId, Event event) {
-        super(id, createdAt, updatedAt, authorId, pointsTransactionId);
+    public EventAction(long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId, Event event) {
+        super(createdAt, updatedAt, authorId, pointsTransactionId);
         this.event = event;
     }
 

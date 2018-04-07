@@ -16,11 +16,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".main.MainActivity"
             android:windowSoftInputMode="stateHidden" />
-
         <activity
             android:name=".login.LoginActivity"
             android:windowSoftInputMode="stateHidden">
@@ -30,7 +28,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".login.SignupActivity" />
 
         <meta-data
@@ -41,6 +38,12 @@
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
+
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
 
         <activity
             android:name="com.facebook.CustomTabActivity"
@@ -54,7 +57,6 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".association.request.RequestActivity"
             android:label="@string/title_activity_request"
@@ -64,12 +66,10 @@
             android:name=".association.request.NewRequestActivity"
             android:parentActivityName=".main.MainActivity" />
         <activity android:name=".association.votes.VotesActivity" />
-
-        <activity android:name=".association.transparency.TransparencyActivity"/>
+        <activity android:name=".association.transparency.TransparencyActivity" />
         <activity android:name=".association.request.comments.CommentaryActivity" />
-
-        <activity android:name=".association.votes.tabs.questions.QuestionForm"></activity>
-
+        <activity android:name=".association.votes.tabs.questions.QuestionForm" />
+        <activity android:name=".association.votes.tabs.SupportList.SupportListActivity"></activity>
     </application>
 
 </manifest>
