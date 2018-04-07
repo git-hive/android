@@ -16,9 +16,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hive.hive.R;
+import com.hive.hive.association.transparency.tabs.staff.StaffFragment;
 import com.hive.hive.utils.FileUtils;
 
-public class TransparencyActivity extends AppCompatActivity {
+public class TransparencyActivity extends AppCompatActivity implements StaffFragment.OnListFragmentInteractionListener {
 
     private static final String TAG = TransparencyActivity.class.getSimpleName();
 
@@ -134,4 +135,8 @@ public class TransparencyActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onListFragmentInteraction(StaffFragment.Staff item) {
+        Toast.makeText(this, item.name, Toast.LENGTH_SHORT).show();
+    }
 }

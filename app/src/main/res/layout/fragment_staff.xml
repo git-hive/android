@@ -14,37 +14,62 @@
 
 
         <!-- Staff Group 1 -->
-        
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:layout_margin="10dp"
-            android:orientation="horizontal"
-            android:background="@color/colorWhite">
+            android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="64dp"
-                android:layout_weight="0.2"
-                android:src="@drawable/ic_staff_category_manager_orange"/>
-
-            <TextView
-                android:layout_width="0dp"
+            <LinearLayout
+                android:id="@+id/staff_group_1_LL"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.6"
-                android:text="Administração"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_margin="10dp"/>
+                android:gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:orientation="horizontal"
+                android:background="@color/colorWhite">
 
-            <ImageView
-                android:layout_weight="0.2"
-                android:layout_width="0dp"
-                android:layout_height="64dp"
-                android:src="@drawable/ic_down_arrow_orange"
-                android:layout_gravity="center_vertical|end"/>
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:layout_weight="0.2"
+                    android:src="@drawable/ic_staff_category_manager_orange"/>
 
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.6"
+                    android:text="Administração"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_margin="10dp"/>
+
+                <ImageView
+                    android:layout_weight="0.2"
+                    android:layout_width="0dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/ic_down_arrow_orange"
+                    android:layout_gravity="center_vertical|end"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/staff_group_1_expanded_LL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:orientation="horizontal"
+                android:background="@color/colorWhite"
+                android:visibility="gone">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/staff_group_1_RV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -52,102 +77,186 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:layout_margin="10dp"
-            android:orientation="horizontal"
-            android:background="@color/colorWhite">
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="64dp"
-                android:layout_weight="0.2"
-                android:src="@drawable/ic_staff_category_gardening_green"/>
-
-            <TextView
-                android:layout_width="0dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/staff_group_2_LL"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.6"
-                android:text="Jardinagem"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_margin="10dp"/>
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_margin="10dp"
+                    android:orientation="horizontal"
+                    android:background="@color/colorWhite">
 
-            <ImageView
-                android:layout_weight="0.2"
-                android:layout_width="0dp"
-                android:layout_height="64dp"
-                android:src="@drawable/ic_down_arrow_green"
-                android:layout_gravity="center_vertical|end"/>
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
+                        android:layout_weight="0.2"
+                        android:src="@drawable/ic_staff_category_gardening_green"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.6"
+                        android:text="Jardinagem"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_margin="10dp"/>
+
+                    <ImageView
+                        android:layout_weight="0.2"
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
+                        android:src="@drawable/ic_down_arrow_green"
+                        android:layout_gravity="center_vertical|end"/>
 
 
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/staff_group_2_expanded_LL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:orientation="horizontal"
+                android:background="@color/colorWhite"
+                android:visibility="gone">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/staff_group_2_RV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+            </LinearLayout>
         </LinearLayout>
 
         <!-- Staff Group 3 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:layout_margin="10dp"
-            android:orientation="horizontal"
-            android:background="@color/colorWhite">
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="64dp"
-                android:layout_weight="0.2"
-                android:src="@drawable/ic_staff_category_cleaning_blue"/>
-
-            <TextView
-                android:layout_width="0dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.6"
-                android:text="Limpeza"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_margin="10dp"/>
+                android:orientation="vertical">
+                <LinearLayout
+                    android:id="@+id/staff_group_3_LL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_margin="10dp"
+                    android:orientation="horizontal"
+                    android:background="@color/colorWhite">
 
-            <ImageView
-                android:layout_weight="0.2"
-                android:layout_width="0dp"
-                android:layout_height="64dp"
-                android:src="@drawable/ic_down_arrow_blue"
-                android:layout_gravity="center_vertical|end"/>
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
+                        android:layout_weight="0.2"
+                        android:src="@drawable/ic_staff_category_cleaning_blue"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.6"
+                        android:text="Limpeza"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_margin="10dp"/>
+
+                    <ImageView
+                        android:layout_weight="0.2"
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
+                        android:src="@drawable/ic_down_arrow_blue"
+                        android:layout_gravity="center_vertical|end"/>
 
 
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/staff_group_3_expanded_LL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:orientation="horizontal"
+                android:background="@color/colorWhite"
+                android:visibility="gone">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/staff_group_3_RV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+            </LinearLayout>
         </LinearLayout>
 
         <!-- Staff Group 4 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:layout_margin="10dp"
-            android:orientation="horizontal"
-            android:background="@color/colorWhite">
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="64dp"
-                android:layout_weight="0.2"
-                android:src="@drawable/ic_staff_category_gatekeeper"/>
-
-            <TextView
-                android:layout_width="0dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/staff_group_4_LL"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.6"
-                android:text="Portaria"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_margin="10dp"/>
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_margin="10dp"
+                    android:orientation="horizontal"
+                    android:background="@color/colorWhite">
 
-            <ImageView
-                android:layout_weight="0.2"
-                android:layout_width="0dp"
-                android:layout_height="64dp"
-                android:src="@drawable/ic_down_arrow_yellow"
-                android:layout_gravity="center_vertical|end"/>
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
+                        android:layout_weight="0.2"
+                        android:src="@drawable/ic_staff_category_gatekeeper"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.6"
+                        android:text="Portaria"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_margin="10dp"/>
+
+                    <ImageView
+                        android:layout_weight="0.2"
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
+                        android:src="@drawable/ic_down_arrow_yellow"
+                        android:layout_gravity="center_vertical|end"/>
 
 
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/staff_group_4_expanded_LL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:orientation="horizontal"
+                android:background="@color/colorWhite"
+                android:visibility="gone">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/staff_group_4_RV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+            </LinearLayout>
         </LinearLayout>
 
 
@@ -155,68 +264,124 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:layout_margin="10dp"
-            android:orientation="horizontal"
-            android:background="@color/colorWhite">
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="64dp"
-                android:layout_weight="0.2"
-                android:src="@drawable/ic_staff_category_security_red"/>
-
-            <TextView
-                android:layout_width="0dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/staff_group_5_LL"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.6"
-                android:text="Segurança"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_margin="10dp"/>
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_margin="10dp"
+                    android:orientation="horizontal"
+                    android:background="@color/colorWhite">
 
-            <ImageView
-                android:layout_weight="0.2"
-                android:layout_width="0dp"
-                android:layout_height="64dp"
-                android:src="@drawable/ic_down_arrow_red"
-                android:layout_gravity="center_vertical|end"/>
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
+                        android:layout_weight="0.2"
+                        android:src="@drawable/ic_staff_category_security_red"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.6"
+                        android:text="Segurança"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_margin="10dp"/>
+
+                    <ImageView
+                        android:layout_weight="0.2"
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
+                        android:src="@drawable/ic_down_arrow_red"
+                        android:layout_gravity="center_vertical|end"/>
 
 
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/staff_group_5_expanded_LL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:orientation="horizontal"
+                android:background="@color/colorWhite"
+                android:visibility="gone">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/staff_group_5_RV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+            </LinearLayout>
         </LinearLayout>
 
         <!-- Staff Group 6 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:layout_margin="10dp"
-            android:orientation="horizontal"
-            android:background="@color/colorWhite">
-
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="64dp"
-                android:layout_weight="0.2"
-                android:src="@drawable/ic_staff_category_services_gray"/>
-
-            <TextView
-                android:layout_width="0dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/staff_group_6_LL"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.6"
-                android:text="Serviços"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_margin="10dp"/>
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_margin="10dp"
+                    android:orientation="horizontal"
+                    android:background="@color/colorWhite">
 
-            <ImageView
-                android:layout_weight="0.2"
-                android:layout_width="0dp"
-                android:layout_height="64dp"
-                android:src="@drawable/ic_down_arrow_gray"
-                android:layout_gravity="center_vertical|end"/>
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
+                        android:layout_weight="0.2"
+                        android:src="@drawable/ic_staff_category_services_gray"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.6"
+                        android:text="Serviços"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:layout_margin="10dp"/>
+
+                    <ImageView
+                        android:layout_weight="0.2"
+                        android:layout_width="0dp"
+                        android:layout_height="64dp"
+                        android:src="@drawable/ic_down_arrow_gray"
+                        android:layout_gravity="center_vertical|end"/>
 
 
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/staff_group_6_expanded_LL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:orientation="horizontal"
+                android:background="@color/colorWhite"
+                android:visibility="gone">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/staff_group_6_RV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+            </LinearLayout>
         </LinearLayout>
 
 

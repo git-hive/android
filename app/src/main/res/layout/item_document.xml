@@ -10,7 +10,10 @@
         android:id="@+id/document_CV"
         app:cardElevation="@dimen/cardview_default_elevation"
         app:cardCornerRadius="@dimen/cardview_default_radius"
-        android:layout_margin="2.5dp"
+        android:layout_marginTop="2.5dp"
+        android:layout_marginBottom="2.5dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp"
         >
 
         <FrameLayout
@@ -29,10 +32,10 @@
                 />
             <ImageView
                 android:layout_gravity="end"
-                app:srcCompat="@android:drawable/stat_sys_download"
+                app:srcCompat="@drawable/ic_downloads"
                 android:tint="@color/colorOrange"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:id="@+id/ic_download_IV" />
 
         </FrameLayout>
