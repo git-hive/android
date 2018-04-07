@@ -31,11 +31,11 @@ public class VotesFragmentPagerAdapter extends FragmentPagerAdapter {
     public android.support.v4.app.Fragment getItem(int position) {
         switch (position) {
             case 0: // Fragment # 0 - This will show FirstFragment
-                return CurrentFragment.newInstance(position+1);
+                return OldFragment.newInstance(position+1);
             case 1: // Fragment # 0 - This will show SecondFragment different title
                 return CurrentFragment.newInstance(position+1);
             case 2: // Fragment # 1 - This will show ThirdFragment
-                return CurrentFragment.newInstance(position+1);
+                return FutureFragment.newInstance(position+1);
             default:
                 return null;
         }
