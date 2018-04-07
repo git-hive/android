@@ -1,5 +1,7 @@
 package com.hive.hive.association.transparency.tabs.staff;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ViewAnimator;
 
 import com.hive.hive.R;
 import com.hive.hive.association.transparency.TransparencyActivity;
@@ -72,22 +75,22 @@ public class StaffFragment extends Fragment {
 
         //--- Group Views
         LinearLayout linearLayout = view.findViewById(R.id.staff_group_1_LL);
-        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_1_expanded_LL));
+        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_1_RV));
 
         linearLayout = view.findViewById(R.id.staff_group_2_LL);
-        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_2_expanded_LL));
+        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_2_RV));
 
         linearLayout = view.findViewById(R.id.staff_group_3_LL);
-        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_4_expanded_LL));
+        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_3_RV));
 
         linearLayout = view.findViewById(R.id.staff_group_4_LL);
-        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_4_expanded_LL));
+        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_4_RV));
 
         linearLayout = view.findViewById(R.id.staff_group_5_LL);
-        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_5_expanded_LL));
+        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_5_RV));
 
         linearLayout = view.findViewById(R.id.staff_group_6_LL);
-        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_6_expanded_LL));
+        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_6_RV));
 
         mActivity = (TransparencyActivity) getActivity();
 
@@ -143,16 +146,16 @@ public class StaffFragment extends Fragment {
     void prepareMockData(){
         mStaffMembers.add(new Staff("C3PO", R.drawable.avatar_c3po));
         mStaffMembers.add(new Staff("Jedi Linux",  R.drawable.avatar_linux));
-        mStaffMembers.add(new Staff("Suzana Rettzlaf",  R.drawable.avatar_chewie));
-        mStaffMembers.add(new Staff("Mariana Araújo",  R.drawable.avatar_r2d2));
-        mStaffMembers.add(new Staff("Jonathan Martins",  R.drawable.avatar_maul));
-        mStaffMembers.add(new Staff("Roberta Santos",  R.drawable.avatar_vader));
-        mStaffMembers.add(new Staff("Bernardo da Silva",  R.drawable.avatar_yoda));
-        mStaffMembers.add(new Staff("Rosângela Correia",  R.drawable.avatar_leia));
-        mStaffMembers.add(new Staff("Rita Azevedo",  R.drawable.avatar_trooper));
+        mStaffMembers.add(new Staff("Chewbaca",  R.drawable.avatar_chewie));
+        mStaffMembers.add(new Staff("R2D2",  R.drawable.avatar_r2d2));
+        mStaffMembers.add(new Staff("Darth Maul",  R.drawable.avatar_maul));
+        mStaffMembers.add(new Staff("Darth Vader",  R.drawable.avatar_vader));
+        mStaffMembers.add(new Staff("Master Yoda",  R.drawable.avatar_yoda));
+        mStaffMembers.add(new Staff("Princess Leia",  R.drawable.avatar_leia));
+        mStaffMembers.add(new Staff("Stormtrooper",  R.drawable.avatar_trooper));
     }
 
-    private View.OnClickListener getGroupOnClickListener(final int recycleViewId){
+    private View.OnClickListener getGroupOnClickListener(final int targetViewId){
         final Activity activity = getActivity();
         if (activity == null){
             Log.d(TAG, "Activity null");
@@ -162,14 +165,70 @@ public class StaffFragment extends Fragment {
         return (new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                View rootView = activity.findViewById(recycleViewId);
+                final View rootView = activity.findViewById(targetViewId);
                 if (rootView != null){
-                    Log.d(TAG, "Group View found");
 
-                    if (rootView.getVisibility() == View.VISIBLE)
-                        rootView.setVisibility(View.GONE);
-                    else
-                        rootView.setVisibility(View.VISIBLE);
+                    if (rootView.getVisibility() == View.VISIBLE) {
+                        rootView.clearAnimation();
+
+                        rootView.animate().alpha(0.0f)
+                                .setDuration(250)
+                                .setListener(new Animator.AnimatorListener() {
+
+                            @Override
+                            public void onAnimationStart(Animator animator) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animator) {
+                                rootView.clearAnimation();
+                                rootView.setVisibility(View.GONE);
+                                Log.d(TAG, "Hide Animation Completed");
+                            }
+
+                            @Override
+                            public void onAnimationCancel(Animator animator) {
+                                rootView.clearAnimation();
+                                Log.d(TAG, "Hide Animation Canceled");
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animator) {
+
+                            }
+                        }).start();
+                    }
+                    else {
+                            rootView.animate()
+                                .alpha(1.0f)
+                                .setDuration(250)
+                                .setListener(new Animator.AnimatorListener() {
+
+                                    @Override
+                                    public void onAnimationStart(Animator animator) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationEnd(Animator animator) {
+                                        rootView.clearAnimation();
+                                        rootView.setVisibility(View.VISIBLE);
+                                        Log.d(TAG, "Show Animation Completed");
+                                    }
+
+                                    @Override
+                                    public void onAnimationCancel(Animator animator) {
+                                        rootView.clearAnimation();
+                                        Log.d(TAG, "Show Animation Canceled");
+                                    }
+
+                                    @Override
+                                    public void onAnimationRepeat(Animator animator) {
+
+                                    }
+                                }).start();
+                    }
                 }
                 else
                     Log.d(TAG, "Group View not Found 2");

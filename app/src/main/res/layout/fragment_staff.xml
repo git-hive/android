@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true">
 
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -58,15 +59,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:layout_margin="10dp"
                 android:orientation="horizontal"
-                android:background="@color/colorWhite"
-                android:visibility="gone">
+                android:background="@color/colorWhite">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/staff_group_1_RV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:animateLayoutChanges="true"
+                    android:layout_margin="10dp"
+                    android:nestedScrollingEnabled="false"
                     />
 
             </LinearLayout>
@@ -121,15 +124,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:layout_margin="10dp"
                 android:orientation="horizontal"
-                android:background="@color/colorWhite"
-                android:visibility="gone">
+                android:background="@color/colorWhite">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/staff_group_2_RV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:animateLayoutChanges="true"
+                    android:layout_margin="10dp"
+                    android:nestedScrollingEnabled="false"
                     />
 
             </LinearLayout>
@@ -183,15 +188,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:layout_margin="10dp"
                 android:orientation="horizontal"
-                android:background="@color/colorWhite"
-                android:visibility="gone">
+                android:background="@color/colorWhite">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/staff_group_3_RV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:animateLayoutChanges="true"
+                    android:layout_margin="10dp"
+                    android:nestedScrollingEnabled="false"
                     />
 
             </LinearLayout>
@@ -245,15 +252,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:layout_margin="10dp"
                 android:orientation="horizontal"
-                android:background="@color/colorWhite"
-                android:visibility="gone">
+                android:background="@color/colorWhite">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/staff_group_4_RV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:visibility="gone"
+                    android:animateLayoutChanges="true"
+                    android:nestedScrollingEnabled="false"
                     />
 
             </LinearLayout>
@@ -308,15 +317,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:layout_margin="10dp"
                 android:orientation="horizontal"
-                android:background="@color/colorWhite"
-                android:visibility="gone">
+                android:background="@color/colorWhite">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/staff_group_5_RV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
+                    android:layout_margin="10dp"
+                    android:visibility="gone"
+                    android:nestedScrollingEnabled="false"
                     />
 
             </LinearLayout>
@@ -370,15 +381,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:layout_margin="10dp"
                 android:orientation="horizontal"
                 android:background="@color/colorWhite"
-                android:visibility="gone">
+                android:animateLayoutChanges="true"
+                >
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/staff_group_6_RV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:animateLayoutChanges="true"
+                    android:visibility="gone"
+                    android:nestedScrollingEnabled="false"
                     />
 
             </LinearLayout>
@@ -387,4 +402,4 @@
 
     </LinearLayout>
 
-</ScrollView>
+</android.support.v4.widget.NestedScrollView>
