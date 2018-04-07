@@ -9,16 +9,30 @@ public class AssociationSupport extends AssociationAction {
     private DocumentReference targetActionRef;
 
     //--- Constructor
+    public AssociationSupport() {}
+
     public AssociationSupport(
-            long
-            createdAt, long
-            updatedAt,
+            long createdAt,
+            long updatedAt,
             DocumentReference authorRef,
             DocumentReference pointsTransactionRef,
             DocumentReference associationRef,
             DocumentReference targetActionRef
     ) {
         super(createdAt, updatedAt, authorRef, pointsTransactionRef, associationRef);
+        this.targetActionRef = targetActionRef;
+    }
+
+    public AssociationSupport(
+            String id,
+            long createdAt,
+            long updatedAt,
+            DocumentReference authorRef,
+            DocumentReference pointsTransactionRef,
+            DocumentReference associationRef,
+            DocumentReference targetActionRef
+    ) {
+        super(id, createdAt, updatedAt, authorRef, pointsTransactionRef, associationRef);
         this.targetActionRef = targetActionRef;
     }
 
