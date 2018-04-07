@@ -28,7 +28,6 @@ public class Request extends AssociationAction {
 
 
     public Request(
-            String id,
             long createdAt,
             long updatedAt,
             DocumentReference authorRef,

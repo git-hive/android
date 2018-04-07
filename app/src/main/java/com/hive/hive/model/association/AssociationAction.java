@@ -13,14 +13,13 @@ public class AssociationAction extends UserAction {
     public AssociationAction() {}
 
     public AssociationAction(
-            String id,
             long createdAt,
             long updatedAt,
             DocumentReference authorRef,
             DocumentReference pointsTransactionRef,
             DocumentReference associationRef
     ) {
-        super(id, createdAt, updatedAt, authorRef, pointsTransactionRef);
+        super(createdAt, updatedAt, authorRef, pointsTransactionRef);
         this.associationRef = associationRef;
     }
 

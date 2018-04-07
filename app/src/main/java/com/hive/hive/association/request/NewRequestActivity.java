@@ -42,6 +42,17 @@ public class NewRequestActivity extends AppCompatActivity {
     private ImageView budgetCategorySavingsIV;
     private CheckBox budgetCategorySavingsCB;
 
+        //OnClick Listeners
+        saveBT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO association shouldnt be setted this way
+                String requestUUID = UUID.randomUUID().toString();
+                Request request = new Request(Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
+                        DocReferences.getUserRef(), null, DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s")
+                        , titleET.getText().toString(),
+                        descriptionET.getText().toString(), 0, 0, null);
+
     // Extra ordinary
     private LinearLayout budgetCategoryExtraordinaryLL;
     private ImageView budgetCategoryExtraordinaryIV;

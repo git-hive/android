@@ -10,7 +10,7 @@ public class AssociationSupport extends AssociationAction {
 
     //--- Constructor
     public AssociationSupport(
-            String id, long
+            long
             createdAt, long
             updatedAt,
             DocumentReference authorRef,
@@ -18,7 +18,7 @@ public class AssociationSupport extends AssociationAction {
             DocumentReference associationRef,
             DocumentReference targetActionRef
     ) {
-        super(id, createdAt, updatedAt, authorRef, pointsTransactionRef, associationRef);
+        super(createdAt, updatedAt, authorRef, pointsTransactionRef, associationRef);
         this.targetActionRef = targetActionRef;
     }
 

@@ -23,7 +23,6 @@ public class AssociationComment extends AssociationAction {
     }
 
     public AssociationComment(
-            String id,
             long createdAt,
             long updatedAt,
             DocumentReference authorId,
@@ -33,7 +32,7 @@ public class AssociationComment extends AssociationAction {
             int score,
             DocumentReference requestRef
     ) {
-        super(id, createdAt, updatedAt, authorId, pointsTransactionId, associationId);
+        super(createdAt, updatedAt, authorId, pointsTransactionId, associationId);
         this.content = content;
         this.score = score;
         this.requestRef = requestRef;

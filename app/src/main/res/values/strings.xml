@@ -181,4 +181,14 @@
     <string name="request_category_cleaning">Limpeza</string>
 
 
+    <string name="parque_una">Parque Una</string>
+
+    <!-- Session stuff -->
+    <string name="session_fin">Sessão finalizada</string>
+    <string name="days"> dias </string>
+    <string name="hours"> horas </string>
+    <string name="minutes"> minutos</string>
+    <!-- Question Answering -->
+    <string name="should_answer"> Dê a sua opnião nesta questão para visualizar a próxima. :)</string>
+
 </resources>

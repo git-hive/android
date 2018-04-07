@@ -86,6 +86,24 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
         // fill support if necessary
         shouldFillSupport(holder, getRequestID(position));
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                context.startActivity(new Intent(context, CommentaryActivity.class).putExtra(CommentaryActivity.REQUEST_ID , mIds.get(position)));
+            }
+        });
+        holder.mSupportsIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                scoreClick(holder, mIds.get(position), mLocks.get(position));
+            }
+        });
+        holder.mNumberOfSupportsTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                scoreClick(holder, mIds.get(position), mLocks.get(position));
+            }
+        });
 
         holder.mView.setOnClickListener(view ->
                 context.startActivity(
@@ -119,12 +137,23 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
     // TODO: FINISH
     private void fillUser(final RequestViewHolder holder, DocumentReference userRef){
-        userRef.get().addOnSuccessListener(documentSnapshot -> {
+
+      userRef.get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {
                 Log.d(TAG, documentSnapshot.get("name").toString());
                 User user = documentSnapshot.toObject(User.class);
                 holder.mUserName.setText(user.getName());
                 ProfilePhotoHelper.loadImage(context, holder.mUserAvatar, user.getPhotoUrl());
+      userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()){
+                    Log.d(RequestAdapter.class.getSimpleName(), documentSnapshot.get("name").toString());
+                    User user = documentSnapshot.toObject(User.class);
+                    holder.mUserName.setText(user.getName());
+                    ProfilePhotoHelper.loadImage(context.getApplicationContext(), holder.mUserAvatar, user.getPhotoUrl());
+                    //Log.d(RequestAdapter.class.getSimpleName(), user.getPhotoUrl());
+                }
             }
         });
     }
@@ -195,6 +224,43 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                     .addOnSuccessListener(aVoid -> {
                         request.decrementScore();
                         RequestAdapter.this.notifyDataSetChanged();
+    private void scoreClick(final RequestViewHolder holder, final String requestId, final SupportMutex mutex){
+
+        mutex.lock();
+            AssociationHelper.getRequestSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", requestId, FirebaseAuth.getInstance().getUid())
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            //if support already exists, should delete it
+                            if (documentSnapshot.exists()) {
+                                AssociationHelper.removeRequestSupport(FirebaseFirestore.getInstance(),
+                                        "gVw7dUkuw3SSZSYRXe8s", requestId, FirebaseAuth.getInstance().getUid())
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        mutex.unlock();
+                                    }
+                                });
+                            } else {// else should add it
+                                DocumentReference userRef = DocReferences.getUserRef();
+                                DocumentReference assocRef = DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s");
+                                String supportId = FirebaseAuth.getInstance().getUid();
+                                //TODO review refs
+
+                                AssociationSupport support = new AssociationSupport(Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
+                                        userRef, null, assocRef, null);
+                                AssociationHelper.setRequestSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s"
+                                        , requestId, supportId, support)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        mutex.unlock();
+                                    }
+                                });
+                            }
+                            RequestAdapter.this.notifyDataSetChanged();
+
+                        }
                     });
         } else {
             // Create and save support
