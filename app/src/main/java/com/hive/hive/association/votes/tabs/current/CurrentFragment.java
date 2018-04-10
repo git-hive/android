@@ -270,9 +270,6 @@ public class CurrentFragment extends Fragment {
             }
         });
 
-        // Start acitity with supports
-        setSupportListeners();
-
         return view;
     }
     @Override
@@ -391,27 +388,4 @@ public class CurrentFragment extends Fragment {
         listView.setLayoutParams(params);
         listView.requestLayout();
     }
-
-    public void setSupportListeners(){
-        // Start Questions activity stuff
-        supportsTV = mView.findViewById(R.id.supportTV);
-        supportsIV = mView.findViewById(R.id.supportIV);
-
-        supportsIV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(mView.getContext(), SupportListActivity.class));
-            }
-        });
-
-
-        supportsTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(mView.getContext(), SupportListActivity.class));
-            }
-        });
-
-    }
-
 }

@@ -11,7 +11,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
@@ -22,7 +21,6 @@ import com.hive.hive.model.association.QuestionOptions;
 import com.hive.hive.model.association.Vote;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 /**
  * Created by vplentz on 22/03/18.
@@ -149,5 +147,9 @@ public class VotesHelper {
                 Toast.makeText(context, context.getString(R.string.vote_not_ok), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public static CollectionReference getVoters(FirebaseFirestore db, String votersPath){
+        return db.collection(votersPath);
     }
 }

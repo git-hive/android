@@ -2,6 +2,7 @@ package com.hive.hive.utils;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -11,8 +12,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class DocReferences {
     private static String USERS_COLLECTION = "users";
-    private static String ASSOCIATION_COLLECTION = "associations";
+    private static String ASSOCIATIONS_COLLECTION = "associations";
     private static String REQUESTS_COLLECTION = "requests";
+    private static String SESSIONS_COLLECTION = "sessions";
+    private static String AGENDAS_COLLECTION = "agendas";
+    private static String QUESTIONS_COLLECTION = "questions";
+    private static String VOTES_COLLECTION = "votes";
+
 
     public static DocumentReference getUserRef(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -25,15 +31,30 @@ public class DocReferences {
     public static DocumentReference getAssociationRef(String associationId){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         //TODO HARDCODED ASSOCIATION
-        return  db.collection(ASSOCIATION_COLLECTION)
+        return  db.collection(ASSOCIATIONS_COLLECTION)
                     .document(associationId);
     }
     public static DocumentReference getRequestRef(String associationId, String requestId){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         return db
-                .collection(ASSOCIATION_COLLECTION)
+                .collection(ASSOCIATIONS_COLLECTION)
                 .document(associationId)
                 .collection(REQUESTS_COLLECTION)
                 .document(requestId);
     }
+    public static CollectionReference getVotersRef(String associationId, String sessionId, String agendaId, String questionId){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        return db
+                .collection(ASSOCIATIONS_COLLECTION)
+                .document(associationId)
+                .collection(SESSIONS_COLLECTION)
+                .document(sessionId)
+                .collection(AGENDAS_COLLECTION)
+                .document(agendaId)
+                .collection(QUESTIONS_COLLECTION)
+                .document(questionId)
+                .collection(VOTES_COLLECTION);
+    }
+
+
 }

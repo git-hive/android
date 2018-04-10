@@ -2,6 +2,7 @@ package com.hive.hive.association.votes.tabs.current;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -25,10 +26,12 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.VotesHelper;
+import com.hive.hive.association.votes.tabs.SupportList.SupportListActivity;
 import com.hive.hive.model.association.Agenda;
 import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.Session;
 import com.hive.hive.model.user.User;
+import com.hive.hive.utils.DocReferences;
 import com.hive.hive.utils.ProfilePhotoHelper;
 import com.hive.hive.utils.TimeUtils;
 
@@ -45,6 +48,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
     //-- Data
     private HashMap<String, Agenda> mAgendas;
     private ArrayList<String> mAgendaIds;
+    private String mCurrentAgendaId;
     private Session mCurrentSession;
     //-- Timer
     ArrayList<CountDownTimer> mTimers;
@@ -133,6 +137,27 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
                             break;
                     }
                 }
+                if(mQuestionsIds != null){
+                    TextView votersTV = mView.findViewById(R.id.supportTV);
+                    ImageView votersIV = mView.findViewById(R.id.supportIV);
+
+                    View.OnClickListener votersOnClickListener = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent votersIntent = new Intent(mContext, SupportListActivity.class);
+                            Log.d(TAG, DocReferences.getVotersRef("gVw7dUkuw3SSZSYRXe8s", CurrentFragment.mCurrentSessionId,
+                                    mCurrentAgendaId, mQuestionsIds.get(0)).getPath());
+                            votersIntent.putExtra(SupportListActivity.VOTERS_REF_STRING,
+                                    DocReferences.getVotersRef("gVw7dUkuw3SSZSYRXe8s", CurrentFragment.mCurrentSessionId,
+                                            mCurrentAgendaId, mQuestionsIds.get(0)).getPath());
+                            mContext.startActivity(votersIntent);
+                        }
+                    };
+
+                    votersIV.setOnClickListener(votersOnClickListener);
+                    votersTV.setOnClickListener(votersOnClickListener);
+
+                }
             }
         };
         return new RequestViewHolder(itemView);
@@ -167,12 +192,17 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
         TextView titleTV = mView.findViewById(R.id.titleContentTV);
         TextView descriptionTV = mView.findViewById(R.id.contentTV);
         TextView timeTV = mView.findViewById(R.id.timerTV);
-        Log.d(TAG, "title "+agenda.getTitle());
+
+
         titleTV.setText(agenda.getTitle());
         descriptionTV.setText(agenda.getContent());
+
         fillUser(agenda.getSuggestedByRef());
+
         mUnfoldableTimer = TimeUtils.clock(timeTV, mCurrentSession, mContext);
 
+
+        mCurrentAgendaId = agendaId;
         //TODO CHECK LAST ITEM CLICKED BEFORE RELOADING DATA
         //IF CLICK IS DIFF
         if(mQuestionsLR != null) //catches the first run
@@ -181,6 +211,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
         if(CurrentFragment.mCurrentSessionId != null)// should'nt happen, but just to be sure
             mQuestionsLR = VotesHelper.getQuestions(FirebaseFirestore.getInstance(),"gVw7dUkuw3SSZSYRXe8s",
                     CurrentFragment.mCurrentSessionId, agendaId).addSnapshotListener(mQuestionsEL);
+
 
     }
     private void fillUser(DocumentReference userRef){
