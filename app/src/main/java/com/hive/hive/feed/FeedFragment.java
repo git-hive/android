@@ -1,8 +1,10 @@
 package com.hive.hive.feed;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +23,8 @@ public class FeedFragment extends Fragment {
     private RecyclerView mRecyclerViewFeed;
     private RecyclerViewFeedAdapter mRecyclerViewFeedAdapter;
     ArrayList<Object> DUMMYARRAY;
+
+    private FloatingActionButton feedFab;
 
 
     public FeedFragment() {
@@ -52,9 +56,23 @@ public class FeedFragment extends Fragment {
         DUMMYARRAY.add(new Request());
 
         mRecyclerViewFeed = v.findViewById(R.id.recyclerViewFeed);
+
         mRecyclerViewFeedAdapter = new RecyclerViewFeedAdapter(DUMMYARRAY);
+
         mRecyclerViewFeed.setAdapter(mRecyclerViewFeedAdapter);
         mRecyclerViewFeed.setLayoutManager(new LinearLayoutManager(v.getContext()));
+
+        feedFab = v.findViewById(R.id.fab);
+
+        feedFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(
+                        new Intent(v.getContext(), NewPostActivity.class)
+                );
+            }
+        });
+
         return v;
     }
 

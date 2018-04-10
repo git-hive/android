@@ -4,7 +4,7 @@ package com.hive.hive.feed;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.model.forum.Forum;
-
+import com.hive.hive.model.forum.ForumPost;
 
 
 /**
@@ -23,7 +23,7 @@ public class FeedHelper {
     public static Task<Void> setForumPost(FirebaseFirestore db,
                                           String associationID,
                                           String forumID,
-                                          Forum forumPost
+                                          ForumPost forumPost
     ){
         return db.collection(ASSOCIATION_COLLECTION).document(associationID).collection(FORUM_COLLECTION).document(forumID).set(forumPost);
     }
