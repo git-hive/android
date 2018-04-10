@@ -83,10 +83,10 @@ public class HexagonView extends View{
 
         float fillAll = 10;
         float currentFilled = 0;
-        System.out.println(" MFuckingPercentage "+mPercentage.size());
+       // System.out.println(" MFuckingPercentage "+mPercentage.size());
         for (Float value:
                 mPercentage) {
-            System.out.println(" I ENTER _________________________________________");
+         //   System.out.println(" I ENTER _________________________________________");
 
             while(true){
                     //Making hard coded stop to really small numbers
@@ -101,7 +101,7 @@ public class HexagonView extends View{
                         // Hexagon
 
                         Paint paint = new Paint();
-                        System.out.println(" I first _________________________________________ "+(fillAll - currentFilled)+" "+value+" "+start_x+ " "+index+" "+value/10);
+                      //  System.out.println(" I first _________________________________________ "+(fillAll - currentFilled)+" "+value+" "+start_x+ " "+index+" "+value/10);
 
                         paint.setColor(mBarColors.get(index));
                         canvas.drawRect(start_x, start_y, start_x + ((value/10) * FINAL_HEXAGON_RATIO * FINAL_WIDTH * DEN), end_y, paint);
@@ -116,7 +116,7 @@ public class HexagonView extends View{
                         break;
 
                     }else if(fillAll - currentFilled <= value){
-                        System.out.println(" I Second _________________________________________ "+(fillAll - currentFilled)+" "+value+" "+start_x+ " "+index+" "+value/10);
+                  //      System.out.println(" I Second _________________________________________ "+(fillAll - currentFilled)+" "+value+" "+start_x+ " "+index+" "+value/10);
 
                         paint.setColor(mBarColors.get(index));
 
@@ -155,14 +155,14 @@ public class HexagonView extends View{
         float totalScores = 0;
         for (Float score:
              scoreValues) {
-            System.out.println(" HAAYAYAHAHYAAHAYAYA"+score);
+            //System.out.println(" HAAYAYAHAHYAAHAYAYA"+score);
             totalScores +=  score;
         }
 
-        System.out.println(" Total scores "+ totalScores);
+        //System.out.println(" Total scores "+ totalScores);
         for(int i = 0;i<scoreValues.size();i++){
             if(totalScores == 0) {
-                System.out.println(" BEYYYYYYYYYYYYYYYY 1 "+ scoreValues.get(i)+" " + scoreValues.get(i) / totalScores);
+                //System.out.println(" BEYYYYYYYYYYYYYYYY 1 "+ scoreValues.get(i)+" " + scoreValues.get(i) / totalScores);
                 mPercentage.add(i, (float) 25.0);
                // break;
             }else {

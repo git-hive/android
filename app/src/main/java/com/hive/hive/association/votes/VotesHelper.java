@@ -1,8 +1,10 @@
 package com.hive.hive.association.votes;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -14,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.Transaction;
+import com.hive.hive.R;
 import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.QuestionOptions;
 import com.hive.hive.model.association.Vote;
@@ -73,7 +76,7 @@ public class VotesHelper {
 
     //--- Vote
     public static void setVote(FirebaseFirestore db, String associationID, String sessionID, String agendaID, ArrayList<String> questionsIDs,
-                               final ArrayList<Integer> answersPositions, final ArrayList<Vote> votes){
+                               final ArrayList<Integer> answersPositions, final ArrayList<Vote> votes, Context context){
 
         //reference to questionOption
         final ArrayList<DocumentReference> documentReferences = new ArrayList<>();
@@ -98,13 +101,28 @@ public class VotesHelper {
             @Override
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                 int questionToAnswer = 0;
+                String userID = FirebaseAuth.getInstance().getUid();
+
+                if(userID == null) return null; //SOME USER PROBLEM OCCURED
+
                 ArrayList<Question> questions = new ArrayList<>();
                 for(DocumentReference documentReference : documentReferences ){
                     Question question = transaction.get(documentReference).toObject(Question.class);
                     ArrayList<QuestionOptions> questionOptions =  question.getOptions();
-                    //sets the score for all options
-                    questionOptions.get(answersPositions.get(questionToAnswer))
-                            .setScore(questionOptions.get(answersPositions.get(questionToAnswer)).getScore() + 1);
+
+                    //decrement last voting option score, if needed
+                    if(transaction.get(documentReference.collection(VOTES_COLLECTION).document(userID)).exists()){
+                        Vote lastVote = transaction.get(documentReference.collection(VOTES_COLLECTION).document(userID)).toObject(Vote.class);
+                        if(lastVote.getVotingOption() != answersPositions.get(questionToAnswer)){
+                            questionOptions.get(lastVote.getVotingOption())
+                                    .setScore(questionOptions.get(lastVote.getVotingOption()).getScore() - 1);
+                            questionOptions.get(answersPositions.get(questionToAnswer))
+                                    .setScore(questionOptions.get(answersPositions.get(questionToAnswer)).getScore() + 1);
+
+                        }
+                    }else
+                        questionOptions.get(answersPositions.get(questionToAnswer))
+                                .setScore(questionOptions.get(answersPositions.get(questionToAnswer)).getScore() + 1);
                     questionToAnswer++;
                     questions.add(question);
                 }
@@ -121,13 +139,14 @@ public class VotesHelper {
         }).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d(TAG, "Message sended");
+                Toast.makeText(context, context.getString(R.string.vote_ok), Toast.LENGTH_SHORT).show();
             }
         })
         .addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.e(TAG, e.getMessage());
+                Toast.makeText(context, context.getString(R.string.vote_not_ok), Toast.LENGTH_SHORT).show();
             }
         });
     }

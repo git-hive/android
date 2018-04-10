@@ -109,7 +109,7 @@ public class GridListAdapter extends BaseAdapter {
             public void onClick(View v) {
                 itemCheckChanged(v);
                 refStorylineAdapter.mStatusListValue.set(currentFormIndex, selectedPosition);
-                System.out.println(i + " " + selectedPosition);
+               // System.out.println(i + " " + selectedPosition);
             }
         });
  
@@ -141,8 +141,7 @@ public class GridListAdapter extends BaseAdapter {
             //TODO FILL REFERENCES
             QuestionOptions selectedOption = mQuestions.get(mQuestionsIds.get(currentFormIndex)).getOptions().get(selectedPosition);
             Vote vote = new Vote(0, 0, DocReferences.getUserRef(), null, null,
-                    selectedOption.getTitle(), 0, null, null, null);
-            Toast.makeText(mContext, "Selected Item : " + selectedOption.getTitle(), Toast.LENGTH_SHORT).show();
+                    selectedPosition, 0, null, null, null);
             return vote;
         }
         return null;
@@ -199,11 +198,10 @@ public class GridListAdapter extends BaseAdapter {
 
             // Everything is answered and send options
             if(refStorylineAdapter.checkAnswers()){
-                Toast.makeText(mContext, "All done, questions sent!", Toast.LENGTH_LONG).show();
                 return true;
             // When there is still questions to be answered
             }else{
-                Toast.makeText(mContext, "You should answer all questions!", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, mContext.getString(R.string.all_questions), Toast.LENGTH_LONG).show();
 
             }
         }else if(selectedPosition == -1){
@@ -220,7 +218,6 @@ public class GridListAdapter extends BaseAdapter {
             mContentTV.setText(mQuestions.get(mQuestionsIds.get(currentFormIndex)).getQuestion());
 
             notifyDataSetChanged();
-            //Toast.makeText(context, "You should choose an option", Toast.LENGTH_SHORT).show();
 
             // Option Selected
         }else if (currentFormIndex != mQuestions.size()-1) {

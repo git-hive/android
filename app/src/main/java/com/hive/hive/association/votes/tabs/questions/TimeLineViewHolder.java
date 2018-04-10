@@ -25,10 +25,10 @@ public class TimeLineViewHolder extends RecyclerView.ViewHolder {
 
     public TimeLineViewHolder(View itemView, int viewType) {
         super(itemView);
-        System.out.println(" WOW ______________________________");
+       // System.out.println(" WOW ______________________________");
         ButterKnife.bind(this, itemView);
         if(mTimelineView != null) {
-            System.out.println("NEVER ENTER ______________________________");
+         //   System.out.println("NEVER ENTER ______________________________");
             mTimelineView.initLine(viewType);
         }
 

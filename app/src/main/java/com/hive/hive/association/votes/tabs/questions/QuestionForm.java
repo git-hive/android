@@ -154,7 +154,7 @@ public class QuestionForm extends AppCompatActivity {
                     mVotes.add(formAdapter.getSelectedVote());
                     if(formAdapter.nextQuestion()){
                         VotesHelper.setVote(FirebaseFirestore.getInstance(), mAssociationID, mSessionID, mAgendaID, mQuestionsIds
-                                , mTimeLineAdapter.mStatusListValue, mVotes);
+                                , mTimeLineAdapter.mStatusListValue, mVotes, context);
                         finish();
                     }
                 }else{
@@ -174,7 +174,7 @@ public class QuestionForm extends AppCompatActivity {
                     mVotes.add(formAdapter.getSelectedVote());
                     if(formAdapter.nextQuestion()){
                         VotesHelper.setVote(FirebaseFirestore.getInstance(), mAssociationID, mSessionID, mAgendaID, mQuestionsIds
-                                , mTimeLineAdapter.mStatusListValue, mVotes);
+                                , mTimeLineAdapter.mStatusListValue, mVotes, context);
                         finish();
                     }
                 }else{

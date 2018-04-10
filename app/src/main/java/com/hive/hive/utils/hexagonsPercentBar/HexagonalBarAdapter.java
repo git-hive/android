@@ -115,9 +115,9 @@ public class HexagonalBarAdapter  extends RecyclerView.Adapter<HexagonalBarAdapt
         mPercentages = new ArrayList<>();
         for (int i=0;i<mQuestions.size();i++) {
             mPercentages.add(i, (float) mQuestions.get(i).getScore());
-            System.out.println(" LOLOLOLOLOLOLOLOLOLOLOLOL "+ mQuestions.get(i).getScore());
+//            System.out.println(" LOLOLOLOLOLOLOLOLOLOLOLOL "+ mQuestions.get(i).getScore());
         }
-        System.out.println(" size "+ mPercentages.size());
+//        System.out.println(" size "+ mPercentages.size());
 
     }
 
@@ -127,18 +127,18 @@ public class HexagonalBarAdapter  extends RecyclerView.Adapter<HexagonalBarAdapt
         float totalScores = 0;
         for (Float score:
                 mPercentages) {
-            System.out.println(" HAAYAYAHAHYAAHAYAYA"+score);
+//            System.out.println(" HAAYAYAHAHYAAHAYAYA"+score);
             totalScores +=  score;
         }
 
-        System.out.println(" Total scores "+ totalScores);
+//        System.out.println(" Total scores "+ totalScores);
         for(int i = 0;i<mPercentages.size();i++){
             if(totalScores == 0) {
-                System.out.println(" BEYYYYYYYYYYYYYYYY 1 "+ mPercentages.get(i)+" " + mPercentages.get(i) / totalScores);
+//                System.out.println(" BEYYYYYYYYYYYYYYYY 1 "+ mPercentages.get(i)+" " + mPercentages.get(i) / totalScores);
                 mPercentagesString.add(i, "25.0 %");
                 // break;
             }else {
-                System.out.println(" BEYYYYYYYYYYYYYYYY  2 "+ mPercentages.get(i)+" " + mPercentages.get(i) / totalScores);
+//                System.out.println(" BEYYYYYYYYYYYYYYYY  2 "+ mPercentages.get(i)+" " + mPercentages.get(i) / totalScores);
                 mPercentagesString.add(i, String.valueOf(Utils.round(mPercentages.get(i) / totalScores * 100, 2)));
                 //  break;
             }

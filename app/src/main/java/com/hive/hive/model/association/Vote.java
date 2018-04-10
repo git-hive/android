@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class Vote extends AssociationAction {
 
-    private String votingOption;
+    private Integer votingOption;
     private float weight;
 
     private ArrayList<DocumentReference> rolesRefs;
@@ -33,7 +33,7 @@ public class Vote extends AssociationAction {
             DocumentReference authorRef,
             DocumentReference pointsTransactionRef,
             DocumentReference associationRef,
-            String votingOption,
+            Integer votingOption,
             float weight,
             ArrayList<DocumentReference> rolesRefs,
             DocumentReference agendaRef,
@@ -50,7 +50,7 @@ public class Vote extends AssociationAction {
 
     //--- Getters
 
-    public String getVotingOption() {
+    public Integer getVotingOption() {
         return votingOption;
     }
 
@@ -74,7 +74,7 @@ public class Vote extends AssociationAction {
     //--- Setters
 
 
-    public void setVotingOption(String votingOption) {
+    public void setVotingOption(Integer votingOption) {
         this.votingOption = votingOption;
     }
 
