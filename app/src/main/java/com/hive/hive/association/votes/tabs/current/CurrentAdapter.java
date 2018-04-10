@@ -26,7 +26,7 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.VotesHelper;
-import com.hive.hive.association.votes.tabs.SupportList.SupportListActivity;
+import com.hive.hive.association.votes.voters.VotersListActivity;
 import com.hive.hive.model.association.Agenda;
 import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.Session;
@@ -35,12 +35,9 @@ import com.hive.hive.utils.DocReferences;
 import com.hive.hive.utils.ProfilePhotoHelper;
 import com.hive.hive.utils.TimeUtils;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.UUID;
 import java.util.List;
 
 public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestViewHolder> {
@@ -144,10 +141,10 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
                     View.OnClickListener votersOnClickListener = new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Intent votersIntent = new Intent(mContext, SupportListActivity.class);
+                            Intent votersIntent = new Intent(mContext, VotersListActivity.class);
                             Log.d(TAG, DocReferences.getVotersRef("gVw7dUkuw3SSZSYRXe8s", CurrentFragment.mCurrentSessionId,
                                     mCurrentAgendaId, mQuestionsIds.get(0)).getPath());
-                            votersIntent.putExtra(SupportListActivity.VOTERS_REF_STRING,
+                            votersIntent.putExtra(VotersListActivity.VOTERS_REF_STRING,
                                     DocReferences.getVotersRef("gVw7dUkuw3SSZSYRXe8s", CurrentFragment.mCurrentSessionId,
                                             mCurrentAgendaId, mQuestionsIds.get(0)).getPath());
                             mContext.startActivity(votersIntent);

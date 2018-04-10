@@ -1,4 +1,4 @@
-package com.hive.hive.association.votes.tabs.SupportList;
+package com.hive.hive.association.votes.voters;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,13 +20,14 @@ import com.hive.hive.R;
 import com.hive.hive.association.votes.VotesHelper;
 import com.hive.hive.model.association.Vote;
 import com.hive.hive.model.user.User;
+import com.hive.hive.utils.GlideApp;
 
 import java.util.ArrayList;
 
 import static com.hive.hive.utils.Utils.getCharForNumber;
 
-public class SupportListActivity extends AppCompatActivity {
-    private final String TAG = SupportListActivity.class.getSimpleName();
+public class VotersListActivity extends AppCompatActivity {
+    private final String TAG = VotersListActivity.class.getSimpleName();
 
     //voters things
     public final static String VOTERS_REF_STRING = "voterRef";
@@ -77,7 +78,7 @@ public class SupportListActivity extends AppCompatActivity {
                 = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
 
         // Setting profile list content
-        mProfileListAdapter = new ProfileListAdapter(mUsers);
+        mProfileListAdapter = new ProfileListAdapter(mUsers, this.getApplicationContext());
 
         mSupportProfileRV.setHasFixedSize(true);
         mSupportProfileRV.setLayoutManager(vertcalLayoutManager);
@@ -123,6 +124,19 @@ public class SupportListActivity extends AppCompatActivity {
         super.onDestroy();
         mVotersLR.remove();
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        GlideApp.with(getApplicationContext()).resumeRequestsRecursive();
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        GlideApp.with(getApplication()).pauseRequestsRecursive();
+    }
+
     private void initDataset(){
         mAlphabet = new ArrayList<>();
         mAlphabet.add(0, "Todos os 100");

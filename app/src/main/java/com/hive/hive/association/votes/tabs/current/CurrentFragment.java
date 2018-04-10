@@ -27,7 +27,6 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.VotesHelper;
-import com.hive.hive.association.votes.tabs.SupportList.SupportListActivity;
 import com.hive.hive.association.votes.tabs.questions.QuestionForm;
 import com.hive.hive.association.votes.tabs.questions.ExpandableListAdapter;
 import com.hive.hive.model.association.Agenda;

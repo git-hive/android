@@ -69,7 +69,7 @@
         <activity android:name=".association.transparency.TransparencyActivity" />
         <activity android:name=".association.request.comments.CommentsActivity" />
         <activity android:name=".association.votes.tabs.questions.QuestionForm" />
-        <activity android:name=".association.votes.tabs.SupportList.SupportListActivity"></activity>
+        <activity android:name=".association.votes.voters.VotersListActivity"></activity>
     </application>
 
 </manifest>
