@@ -32,11 +32,11 @@ public class VotesHelper {
     private static String TAG = VotesHelper.class.getSimpleName();
     public static String ASSOCIATION_COLLECTION = "associations";
 
-    public static String QUESTIONS_COLLECTION = "questions";
-
     public static String SESSIONS_COLLECTION = "sessions";
 
     public static String AGENDAS_COLLECTION = "agendas";
+
+    public static String QUESTIONS_COLLECTION = "questions";
 
     public static String VOTES_COLLECTION = "votes";
 

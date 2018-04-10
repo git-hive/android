@@ -18,8 +18,8 @@ import java.util.ArrayList;
 
 public class FeedFragment extends Fragment {
 
-    private RecyclerView mRecyclerViewHome;
-    private RecyclerViewFeedAdapter mRecyclerViewHomeAdapter;
+    private RecyclerView mRecyclerViewFeed;
+    private RecyclerViewFeedAdapter mRecyclerViewFeedAdapter;
     ArrayList<Object> DUMMYARRAY;
 
 
@@ -51,10 +51,10 @@ public class FeedFragment extends Fragment {
         DUMMYARRAY.add(new ForumPost());
         DUMMYARRAY.add(new Request());
 
-        mRecyclerViewHome = v.findViewById(R.id.recyclerViewFeed);
-        mRecyclerViewHomeAdapter = new RecyclerViewFeedAdapter(DUMMYARRAY);
-        mRecyclerViewHome.setAdapter(mRecyclerViewHomeAdapter);
-        mRecyclerViewHome.setLayoutManager(new LinearLayoutManager(v.getContext()));
+        mRecyclerViewFeed = v.findViewById(R.id.recyclerViewFeed);
+        mRecyclerViewFeedAdapter = new RecyclerViewFeedAdapter(DUMMYARRAY);
+        mRecyclerViewFeed.setAdapter(mRecyclerViewFeedAdapter);
+        mRecyclerViewFeed.setLayoutManager(new LinearLayoutManager(v.getContext()));
         return v;
     }
 
