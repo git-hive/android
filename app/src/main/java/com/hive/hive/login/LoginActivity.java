@@ -174,7 +174,7 @@ public class LoginActivity extends AppCompatActivity {
                 if((!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pwd))) {
                     email = mEditTextUser.getText().toString().trim();
                     pwd = mEditTextPassword.getText().toString().trim();
-                    System.out.println(email+pwd);
+                  //  System.out.println(email+pwd);
                     // TODO: validate email and pwd
                     mAuth.createUserWithEmailAndPassword(email, pwd).addOnSuccessListener(new OnSuccessListener<AuthResult>(){
                         @Override

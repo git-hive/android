@@ -189,5 +189,7 @@
     <string name="minutes"> minutos</string>
     <!-- Question Answering -->
     <string name="should_answer"> Dê a sua opnião nesta questão para visualizar a próxima. :)</string>
-
+    <string name="all_questions">Por favor dê sua opinião em todas questões.</string>
+    <string name="vote_ok">Seu voto foi contabilizado.</string>
+    <string name="vote_not_ok">Houve algum problema com a contabilização do seu voto, por favor vote novamente.</string>
 </resources>
