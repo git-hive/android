@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hive.hive.R;
+import com.hive.hive.model.user.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,21 +24,15 @@ public class ProfileFilterAdapter extends RecyclerView.Adapter<ProfileFilterAdap
 
     public String mCurrentSelected;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView name;
-        public LinearLayout frame;
+    public ArrayList<User> mUsers;
 
-        public MyViewHolder(View view) {
-            super(view);
-            name = (TextView) view.findViewById(R.id.person_name);
-            frame = view.findViewById(R.id.frame);
-        }
-    }
+    private ProfileListAdapter mProfileListAdapter;
 
-
-    public ProfileFilterAdapter(ArrayList<String> userList) {
+    public ProfileFilterAdapter(ArrayList<String> userList, ArrayList<User> users, ProfileListAdapter profileListAdapter) {
         this.userList = userList;
         mCurrentSelected = "";
+        this.mUsers = users;
+        this.mProfileListAdapter = profileListAdapter;
     }
 
     @Override
@@ -58,25 +53,46 @@ public class ProfileFilterAdapter extends RecyclerView.Adapter<ProfileFilterAdap
         else
             holder.name.setTextColor(Color.BLACK);
 
-        holder.name.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener filterOnclick = new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 mCurrentSelected = (String) holder.name.getText();
                 notifyDataSetChanged();
+                //to filter the users
+                if(position != 0) {
+                    ArrayList<User> filteredUsers = new ArrayList<>();
+                    for (User user : mUsers) {
+                        if (user.getName().startsWith(mCurrentSelected.toUpperCase()))
+                            filteredUsers.add(user);
+                    }
+                    mProfileListAdapter.setUserList(filteredUsers);
+                    mProfileListAdapter.notifyDataSetChanged();
+                }else {
+                    mProfileListAdapter.setUserList(mUsers);
+                    mProfileListAdapter.notifyDataSetChanged();
+                }
             }
-        });
+        };
+        holder.name.setOnClickListener(filterOnclick);
 
-        holder.frame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mCurrentSelected = (String) holder.name.getText();
-                notifyDataSetChanged();
-            }
-        });
+        holder.frame.setOnClickListener(filterOnclick);
     }
 
     @Override
     public int getItemCount() {
         return userList.size();
     }
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        public TextView name;
+        public LinearLayout frame;
+
+        public MyViewHolder(View view) {
+            super(view);
+            name = (TextView) view.findViewById(R.id.person_name);
+            frame = view.findViewById(R.id.frame);
+        }
+    }
+
+
 }

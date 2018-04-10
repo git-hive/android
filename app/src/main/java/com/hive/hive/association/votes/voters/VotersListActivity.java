@@ -62,18 +62,6 @@ public class VotersListActivity extends AppCompatActivity {
         mSupportProfileRV = findViewById(R.id.supportProfileListRV);
 
 
-        LinearLayoutManager horizontalLayoutManager
-                = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-
-
-        // Setting profile filter list content
-        mFilterListAdapter = new ProfileFilterAdapter(mAlphabet);
-
-        mSupportFilterRV.setHasFixedSize(true);
-        mSupportFilterRV.setLayoutManager(horizontalLayoutManager);
-        mSupportFilterRV.setAdapter(mFilterListAdapter);
-
-
         LinearLayoutManager vertcalLayoutManager
                 = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
 
@@ -83,6 +71,19 @@ public class VotersListActivity extends AppCompatActivity {
         mSupportProfileRV.setHasFixedSize(true);
         mSupportProfileRV.setLayoutManager(vertcalLayoutManager);
         mSupportProfileRV.setAdapter(mProfileListAdapter);
+
+
+        LinearLayoutManager horizontalLayoutManager
+                = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+
+
+        // Setting profile filter list content
+        mFilterListAdapter = new ProfileFilterAdapter(mAlphabet, mUsers, mProfileListAdapter);
+
+        mSupportFilterRV.setHasFixedSize(true);
+        mSupportFilterRV.setLayoutManager(horizontalLayoutManager);
+        mSupportFilterRV.setAdapter(mFilterListAdapter);
+
 
 
         mVotersEL = new EventListener<QuerySnapshot>() {
@@ -102,6 +103,7 @@ public class VotersListActivity extends AppCompatActivity {
                                     User user = documentSnapshot.toObject(User.class);
                                     mUsers.add(user);
                                     mProfileListAdapter.notifyDataSetChanged();
+                                    mFilterListAdapter.notifyDataSetChanged();
                                     Log.d(TAG, user.getName());
                                 }
                             });
@@ -139,7 +141,7 @@ public class VotersListActivity extends AppCompatActivity {
 
     private void initDataset(){
         mAlphabet = new ArrayList<>();
-        mAlphabet.add(0, "Todos os 100");
+        mAlphabet.add(0, "Todos");
         for(int i=1;i<27;i++){
             mAlphabet.add(i, getCharForNumber(i).toLowerCase());
         }

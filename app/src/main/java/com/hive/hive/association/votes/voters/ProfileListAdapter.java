@@ -36,7 +36,10 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
         mColors.add(3, Color.parseColor("#90ee90"));
 
     }
- 
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
+    }
+
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
