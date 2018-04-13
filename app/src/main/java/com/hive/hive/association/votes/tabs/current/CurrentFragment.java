@@ -328,8 +328,14 @@ public class CurrentFragment extends Fragment {
             expandableListView.collapseGroup(i);
         setListViewHeight(expandableListView);
 
-
     }
+
+
+    // Updating headers and childs to expandable listview
+    public static void updateItems(){
+        adapter.notifyDataSetChanged();
+    }
+
 
     // Workaround found in: https://thedeveloperworldisyours.com/android/expandable-listview-inside-scrollview/ to ExpandableListView
     // https://stackoverflow.com/questions/17696039/expandablelistview-inside-a-scrollview

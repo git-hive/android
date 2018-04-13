@@ -119,7 +119,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
                             String modifiedId = dc.getDocument().getId();
                             mQuestions.remove(modifiedId);
                             mQuestions.put(modifiedId, dc.getDocument().toObject(Question.class));
-                            CurrentFragment.setItems(mContext, mQuestions, mQuestionsIds, agendaID);
+                            CurrentFragment.updateItems();
                             break;
                         case REMOVED:
                             String removedId = dc.getDocument().getId();
