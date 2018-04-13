@@ -116,11 +116,6 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
                             CurrentFragment.setItems(mContext, mQuestions, mQuestionsIds, agendaID);
                             break;
                         case MODIFIED:
-//                            Question newQ = dc.getDocument().toObject(Question.class);
-//                            newQ.setInfo("info 3");
-//                            newQ.setQuestion("Question 3");
-//                            VotesHelper.getQuestions(FirebaseFirestore.getInstance(),"gVw7dUkuw3SSZSYRXe8s",
-//                                    CurrentFragment.mCurrentSessionId, "9c283f6a-d7a0-45c2-8762-6394efd68a51").document(UUID.randomUUID().toString()).set(newQ);
                             String modifiedId = dc.getDocument().getId();
                             mQuestions.remove(modifiedId);
                             mQuestions.put(modifiedId, dc.getDocument().toObject(Question.class));

@@ -309,6 +309,8 @@ public class CurrentFragment extends Fragment {
             }
         });
 
+
+        // THIS MAGIC PEACE OF CODE MAKE THE VIEW WORK AS IT SHOULD
         expandableListView.setDividerHeight(0);
 
         for (int i = 0; i < adapter.getGroupCount(); i++)

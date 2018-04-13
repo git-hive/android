@@ -166,7 +166,7 @@ public class HexagonView extends View{
                 mPercentage.add(i, (float) 25.0);
                // break;
             }else {
-                System.out.println(" BEYYYYYYYYYYYYYYYY  2 "+ scoreValues.get(i)+" " + scoreValues.get(i) / totalScores);
+                //System.out.println(" BEYYYYYYYYYYYYYYYY  2 "+ scoreValues.get(i)+" " + scoreValues.get(i) / totalScores);
                 mPercentage.add(i, Utils.round(scoreValues.get(i) / totalScores * 100, 2));
               //  break;
             }
