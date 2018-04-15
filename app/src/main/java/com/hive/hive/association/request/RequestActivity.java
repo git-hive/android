@@ -3,6 +3,7 @@ package com.hive.hive.association.request;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -16,9 +17,12 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 import com.hive.hive.model.association.AssociationHelper;
 import com.hive.hive.model.association.Request;
@@ -68,9 +72,14 @@ public class RequestActivity extends AppCompatActivity {
         }
 
         FloatingActionButton fab =  findViewById(R.id.fab);
-        fab.setOnClickListener(view -> startActivity(
-                new Intent(RequestActivity.this, NewRequestActivity.class)
-        ));
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RequestActivity.this.startActivity(
+                        new Intent(RequestActivity.this, NewRequestActivity.class)
+                );
+            }
+        });
 
         getAllRequestCategoriesAndCallGetAllRequests();
     }
@@ -97,22 +106,30 @@ public class RequestActivity extends AppCompatActivity {
                 mDB,
                 associationID
         )
-                .addOnSuccessListener(documentSnapshots -> {
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot documentSnapshots) {
 
-                    if (documentSnapshots.isEmpty()) {
-                        Toast.makeText(
-                                this,
-                                "Falha ao pegar categorias",
-                                Toast.LENGTH_SHORT
-                        ).show();
-                        return;
+                        if (documentSnapshots.isEmpty()) {
+                            Toast.makeText(
+                                    RequestActivity.this,
+                                    "Falha ao pegar categorias",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                            return;
+                        }
+
+                        ArrayList<DocumentSnapshot> categoryDocs =
+                                (ArrayList<DocumentSnapshot>) documentSnapshots.getDocuments();
+                        getAllRequestAndCallJoinRequestsCategories(categoryDocs);
                     }
-
-                    ArrayList<DocumentSnapshot> categoryDocs =
-                            (ArrayList<DocumentSnapshot>) documentSnapshots.getDocuments();
-                    getAllRequestAndCallJoinRequestsCategories(categoryDocs);
                 })
-                .addOnFailureListener(e -> Log.e(TAG, e.toString()));
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, e.toString());
+                    }
+                });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -120,22 +137,30 @@ public class RequestActivity extends AppCompatActivity {
             ArrayList<DocumentSnapshot>  categoryDocs
     ) {
         AssociationHelper.getAllRequests(mDB, associationID)
-                .addOnSuccessListener(documentSnapshots -> {
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot documentSnapshots) {
 
-                    if (documentSnapshots.isEmpty()) {
-                        Toast.makeText(
-                                this,
-                                "Falha ao pegar requisições",
-                                Toast.LENGTH_SHORT
-                        ).show();
-                        return;
+                        if (documentSnapshots.isEmpty()) {
+                            Toast.makeText(
+                                    RequestActivity.this,
+                                    "Falha ao pegar requisições",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                            return;
+                        }
+
+                        ArrayList<DocumentSnapshot> requestDocs =
+                                (ArrayList<DocumentSnapshot>) documentSnapshots.getDocuments();
+                        joinRequestsWithCategoriesAndCallSetupRecyclerView(categoryDocs, requestDocs);
                     }
-
-                    ArrayList<DocumentSnapshot> requestDocs =
-                            (ArrayList<DocumentSnapshot>) documentSnapshots.getDocuments();
-                    joinRequestsWithCategoriesAndCallSetupRecyclerView(categoryDocs, requestDocs);
                 })
-                .addOnFailureListener(e -> Log.e(TAG, e.toString()));
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, e.toString());
+                    }
+                });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -197,26 +222,23 @@ public class RequestActivity extends AppCompatActivity {
         mMenuRV = findViewById(R.id.recyclerMenu);
         mFilterTV = findViewById(R.id.menuFilterTV);
 
-        mMenuRV.setOnScrollChangeListener((
-                View v,
-                int scrollX,
-                int scrollY,
-                int oldScrollX,
-                int oladScrollY
-        ) -> {
-            TextView filterName = v.findViewById(R.id.menuItemCategorieTV);
-            if (filterName != null) {
-                String categoryName = mmap.get(filterName.getText()).toLowerCase();
-                // If the category has actually changed
-                if (!categoryName.equals(mCategoryName)) {
-                    mCategoryName = categoryName;
-                    mFilterTV.setText(mmap.get(filterName.getText()));
-                    if (categoriesRequests.containsKey(categoryName)) {
-                        mRecyclerAdapter.setRequests(categoriesRequests.get(categoryName));
-                    } else {
-                        mRecyclerAdapter.setRequests(new ArrayList<>());
+        mMenuRV.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oladScrollY) {
+                TextView filterName = v.findViewById(R.id.menuItemCategorieTV);
+                if (filterName != null) {
+                    String categoryName = mmap.get(filterName.getText()).toLowerCase();
+                    // If the category has actually changed
+                    if (!categoryName.equals(mCategoryName)) {
+                        mCategoryName = categoryName;
+                        mFilterTV.setText(mmap.get(filterName.getText()));
+                        if (categoriesRequests.containsKey(categoryName)) {
+                            mRecyclerAdapter.setRequests(categoriesRequests.get(categoryName));
+                        } else {
+                            mRecyclerAdapter.setRequests(new ArrayList<>());
+                        }
+                        mRecyclerAdapter.notifyDataSetChanged();
                     }
-                    mRecyclerAdapter.notifyDataSetChanged();
                 }
             }
         });
