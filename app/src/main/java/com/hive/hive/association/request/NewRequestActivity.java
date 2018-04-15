@@ -327,7 +327,6 @@ public class NewRequestActivity extends AppCompatActivity {
         categoriesRefs.add(selectedRequestCategoryPair.first);
 
         Request request = new Request(
-                requestUUID,
                 currentTimeMillis,
                 currentTimeMillis,
                 DocReferences.getUserRef(),

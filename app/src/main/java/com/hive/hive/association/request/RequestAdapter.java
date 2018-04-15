@@ -35,7 +35,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     private String TAG = RequestAdapter.class.getSimpleName();
 
     //-- Data
-    ArrayList<Request> requests;
+    ArrayList<DocumentSnapshot> requests;
     private ArrayList<SupportMutex> mLocks;
     private Context context;
 
@@ -46,9 +46,9 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     private String mAssociationID = "gVw7dUkuw3SSZSYRXe8s";
 
     public RequestAdapter(
-            ArrayList<Request> requests, Context context
+            ArrayList<DocumentSnapshot> requestSnaps, Context context
     ) {
-        this.requests = requests;
+        this.requests = requestSnaps;
         this.context = context;
         this.mLocks = new ArrayList<>();
     }
@@ -71,7 +71,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             mLocks.add(new SupportMutex(holder.mNumberOfSupportsTV, holder.mSupportsIV));
         }
 
-        final Request request = requests.get(position);
+        DocumentSnapshot requestSnap = requests.get(position);
+        final Request request = requestSnap.toObject(Request.class);
 
         holder.mItem = request;
 
@@ -90,7 +91,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         holder.mView.setOnClickListener(view ->
                 context.startActivity(
                         new Intent(context, CommentaryActivity.class)
-                                .putExtra(CommentaryActivity.REQUEST_ID ,request.getId())
+                                .putExtra(CommentaryActivity.REQUEST_ID ,requestSnap.getId())
                 )
         );
 
@@ -180,7 +181,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             DocumentSnapshot supportSnap,
             final SupportMutex mutex
     ) {
-        Request request = requests.get(requestPosition);
+        Request request = requests.get(requestPosition).toObject(Request.class);
         // Toggle request support
         if (supportSnap.exists()) {
             // Remove support
@@ -205,7 +206,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             // TODO: Add missing refs
             Long currentTimeInMillis = Calendar.getInstance().getTimeInMillis();
             AssociationSupport support = new AssociationSupport(
-                    supportId,
                     currentTimeInMillis,
                     currentTimeInMillis,
                     userRef,
@@ -230,7 +230,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         }
     }
 
-    public void setRequests(ArrayList<Request> requests) {
+    public void setRequests(ArrayList<DocumentSnapshot> requests) {
         this.requests = requests;
     }
 

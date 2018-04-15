@@ -39,7 +39,7 @@ public class Request extends AssociationAction {
             int numComments,
             ArrayList<DocumentReference> categoriesRefs
     ) {
-        super(id, createdAt, updatedAt, authorRef, pointsTransactionRef, associationRef);
+        super(createdAt, updatedAt, authorRef, pointsTransactionRef, associationRef);
         this.title = title;
         this.content = content;
         this.score = score;
