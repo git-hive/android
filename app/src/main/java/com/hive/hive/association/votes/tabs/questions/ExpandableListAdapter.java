@@ -26,6 +26,7 @@ import com.hive.hive.association.votes.voters.VotersListActivity;
 import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.QuestionOptions;
 import com.hive.hive.utils.DocReferences;
+import com.hive.hive.utils.Utils;
 import com.hive.hive.utils.hexagonsPercentBar.HexagonView;
 import com.hive.hive.utils.hexagonsPercentBar.HexagonalBarAdapter;
 
@@ -185,6 +186,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
             public void onClick(View view) {
                 Intent votersIntent = new Intent(mContext, VotersListActivity.class);
                 Log.d(TAG, "child " + groupPosition);
+                ArrayList<Integer> questionsIndex = new ArrayList<>();
+                int i = 0;
+                for(QuestionOptions questionOptions : question.getOptions()){
+                    questionsIndex.add(i);
+                    i++;
+                }
+                votersIntent.putExtra(VotersListActivity.QUESTIONS_IDS, questionsIndex);
                 votersIntent.putExtra(VotersListActivity.VOTERS_REF_STRING,
                         DocReferences.getVotersRef("gVw7dUkuw3SSZSYRXe8s", CurrentFragment.mCurrentSessionId,
                                 CurrentAdapter.mCurrentAgendaId, mQuestionsIds.get(groupPosition)+"").getPath());
