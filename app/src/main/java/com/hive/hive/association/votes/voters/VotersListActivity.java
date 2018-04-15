@@ -57,13 +57,12 @@ public class VotersListActivity extends AppCompatActivity {
         mQuestionOptions = this.getIntent().getIntegerArrayListExtra(QUESTIONS_IDS);
         mFilterOptions = new ArrayList<>();
         mFilterOptions.add("Todos");
-        for(int option : mQuestionOptions)
-            mFilterOptions.add(Utils.getCharForNumber(option));
+        for(int option : mQuestionOptions) {
+            //plus one to convert 0 too
+            mFilterOptions.add(Utils.getCharForNumber(option+1));
+            Log.d(TAG, Utils.getCharForNumber(option+1));
+        }
         mUsers = new ArrayList<>();
-
-        // Init Dummy content
-        initDataset();
-
 
         mSupportFilterRV = findViewById(R.id.superiorFilterRV);
         mSupportProfileRV = findViewById(R.id.supportProfileListRV);
@@ -100,11 +99,4 @@ public class VotersListActivity extends AppCompatActivity {
         GlideApp.with(getApplication()).pauseRequestsRecursive();
     }
 
-    private void initDataset(){
-        mAlphabet = new ArrayList<>();
-        mAlphabet.add(0, "Todos");
-        for(int i=1;i<27;i++){
-            mAlphabet.add(i, getCharForNumber(i).toLowerCase());
-        }
-    }
 }

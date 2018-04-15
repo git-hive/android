@@ -89,24 +89,24 @@ public class ProfileFilterAdapter extends RecyclerView.Adapter<ProfileFilterAdap
         else
             holder.name.setTextColor(Color.BLACK);
 
+        //filter
         View.OnClickListener filterOnclick = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mCurrentSelected = (String) holder.name.getText();
                 notifyDataSetChanged();
 //                to filter the users
-//                if(position != 0) {
-//                    ArrayList<User> filteredUsers = new ArrayList<>();
-//                    for (User user : mUsers) {
-//                        if (user.getName().startsWith(mCurrentSelected.toUpperCase()))
-//                            filteredUsers.add(user);
-//                    }
-//                    mProfileListAdapter.setUserList(filteredUsers);
-//                    mProfileListAdapter.notifyDataSetChanged();
-//                }else {
-//                    mProfileListAdapter.setUserList(mUsers);
-//                    mProfileListAdapter.notifyDataSetChanged();
-//                }
+                if(position != 0) {
+                    mUsers.clear();
+                    if(mVotersLR != null) mVotersLR.remove();
+                    Log.d(TAG, "index option " + mIndexOptions.get(position-1));
+                    mVotersLR = VotesHelper.getVoters(FirebaseFirestore.getInstance(), votersRef, mIndexOptions.get(position-1)).addSnapshotListener(mVotersEL);
+                    mProfileListAdapter.notifyDataSetChanged();
+                }else {
+                    mUsers.clear();
+                    if(mVotersLR != null) mVotersLR.remove();
+                    mVotersLR = VotesHelper.getVoters(FirebaseFirestore.getInstance(), votersRef, null).addSnapshotListener(mVotersEL);
+                }
             }
         };
         holder.name.setOnClickListener(filterOnclick);
