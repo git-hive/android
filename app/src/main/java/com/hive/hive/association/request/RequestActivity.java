@@ -99,20 +99,21 @@ public class RequestActivity extends AppCompatActivity {
                 .addOnSuccessListener(documentSnapshots -> {
 
                     if (documentSnapshots.isEmpty()) {
-                        Toast.makeText(
-                                this,
-                                "Falha ao pegar categorias",
-                                Toast.LENGTH_SHORT
-                        ).show();
+                        Toast.makeText(this, "Falha ao pegar categorias", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                     ArrayMap<DocumentReference, RequestCategory> categories = new ArrayMap<>();
+
                     for (DocumentSnapshot doc : documentSnapshots.getDocuments()) {
+
                         RequestCategory requestCategory = doc.toObject(RequestCategory.class);
                         categories.put(doc.getReference(), requestCategory);
+
                     }
+
                     getAllRequestAndCallJoinRequestsCategories(categories);
+
                 })
                 .addOnFailureListener(e -> Log.e(TAG, e.toString()));
     }
@@ -125,11 +126,7 @@ public class RequestActivity extends AppCompatActivity {
                 .addOnSuccessListener(documentSnapshots -> {
 
                     if (documentSnapshots.isEmpty()) {
-                        Toast.makeText(
-                                this,
-                                "Falha ao pegar requisições",
-                                Toast.LENGTH_SHORT
-                        ).show();
+                        Toast.makeText(this, "Falha ao pegar requisições", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -186,9 +183,6 @@ public class RequestActivity extends AppCompatActivity {
         mRequestRV.setAdapter(mRecyclerAdapter);
 
         mMenuRV = findViewById(R.id.recyclerMenu);
-//        mMenuRV.setHasFixedSize(true);
-//        mMenuRV.setItemViewCacheSize();
-
         mFilterTV = findViewById(R.id.menuFilterTV);
 
         mMenuRV.setOnScrollChangeListener((
@@ -203,22 +197,13 @@ public class RequestActivity extends AppCompatActivity {
 
             if(mMenuRV.getLayoutManager()!= null) {
                 View nodeInRV = mMenuRV.getChildAt(1);
-                if(nodeInRV != null) {
+                if (nodeInRV != null) {
                     TextView localFilterName = nodeInRV.findViewById(R.id.menuItemCategorieTV);
                     if (localFilterName != null) {
-                        if(mFilterTV != null) {
+                        if (mFilterTV != null) {
                             mFilterTV.setText(mmap.get(localFilterName.getText()));
-                            Log.d(TAG, mmap.get(localFilterName.getText()) + "**********************************************************"+ localFilterName.getText());
-
-                        } else
-                            Log.d(TAG, localFilterName.getText() + " /////////////////////////////////////////////// ");
-
-
-                        //Toast.makeText(v.getContext(), "clicked:" + localFilterName, Toast.LENGTH_SHORT).show();
-                    }else
-                        Log.d(TAG, localFilterName.getText() + "##################################################33");
-
-
+                        }
+                    }
                 }
             }
 

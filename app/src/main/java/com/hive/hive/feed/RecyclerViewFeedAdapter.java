@@ -4,10 +4,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.hive.hive.R;
 import com.hive.hive.model.association.Request;
+import com.hive.hive.model.forum.ForumPost;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,11 +19,11 @@ import java.util.List;
 
 public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
-    private List<Object> items;
+    private ArrayList<Object> mFeedPosts;
     private final int FEED = 0;
 
-    public RecyclerViewFeedAdapter(List<Object> items) {
-        this.items = items;
+    public RecyclerViewFeedAdapter(ArrayList<Object> items) {
+        mFeedPosts = items;
     }
 
     @Override
@@ -28,17 +31,18 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerView.V
         switch (viewHolder.getItemViewType()) {
             case FEED:
                 FeedViewHolderOld feedViewHolderOld = (FeedViewHolderOld) viewHolder;
+                feedViewHolderOld.title.setText(((ForumPost) mFeedPosts.get(position)).getTitle());
                 break;
         }
     }
 
     @Override
     public int getItemCount() {
-        return this.items.size();
+        return mFeedPosts.size();
     }
     @Override
     public int getItemViewType(int position) {
-        if(items.get(position) instanceof Request)
+        if(mFeedPosts.get(position) instanceof Request)
             return FEED;
         else
             return FEED;
@@ -60,9 +64,11 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerView.V
 
 
     public class FeedViewHolderOld extends RecyclerView.ViewHolder {
+        TextView title;
 
         public FeedViewHolderOld(View itemView) {
             super(itemView);
+            title = itemView.findViewById(R.id.forum_title_tv);
         }
     }
 

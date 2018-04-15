@@ -3,7 +3,7 @@ package com.hive.hive.feed;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.hive.hive.model.forum.Forum;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.model.forum.ForumPost;
 
 
@@ -27,6 +27,13 @@ public class FeedHelper {
     ){
         return db.collection(ASSOCIATION_COLLECTION).document(associationID).collection(FORUM_COLLECTION).document(forumID).set(forumPost);
     }
+
+    public static Task<QuerySnapshot> getAllForumPosts(FirebaseFirestore db,
+                                                       String associationID
+    ){
+        return db.collection(ASSOCIATION_COLLECTION).document(associationID).collection(FORUM_COLLECTION).get();
+    }
+
 
 
 
