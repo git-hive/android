@@ -24,7 +24,7 @@ public class ProfilePhotoHelper extends AppGlideModule{
         GlideApp
                 .with(context)
                 .load(url)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .apply(RequestOptions.circleCropTransform())
                 .placeholder(R.drawable.ic_profile_photo)
                 .fallback(R.drawable.ic_profile_photo)

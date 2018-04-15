@@ -56,7 +56,10 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
         holder.name.setText(user.getName());
         holder.hexagon.setHexagonColor(getColorByName(options.get(position)));
         holder.hexagon.setFirstLetter(options.get(position).charAt(0));
+       //call it two times, otherwise its not filling it correctly
         ProfilePhotoHelper.loadImage(mContext, holder.photo, user.getPhotoUrl());
+        ProfilePhotoHelper.loadImage(mContext, holder.photo, user.getPhotoUrl());
+
     }
  
     @Override

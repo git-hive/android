@@ -36,7 +36,7 @@ import java.util.List;
 public class ProfileFilterAdapter extends RecyclerView.Adapter<ProfileFilterAdapter.MyViewHolder> {
 
     private String TAG = ProfileFilterAdapter.class.getSimpleName();
-    private Context context;
+    private Context mContext;
     //filter stuff
     private List<String> mQuestionOptions;
     private ArrayList<Integer> mIndexOptions;
@@ -47,16 +47,16 @@ public class ProfileFilterAdapter extends RecyclerView.Adapter<ProfileFilterAdap
     private ArrayList<String> mUsersOptions;
     private ProfileListAdapter mProfileListAdapter;
 
-    RecyclerView mSupportProfileRV;
+    private RecyclerView mSupportProfileRV;
 
     private com.google.firebase.firestore.EventListener<QuerySnapshot> mVotersEL;
     private ListenerRegistration mVotersLR;
 
-    String votersRef;
+    private String votersRef;
 
-    public ProfileFilterAdapter(Context context, List<String> mQuestionOptions, ArrayList<Integer> mIndexOptions,
+    protected ProfileFilterAdapter(Context context, List<String> mQuestionOptions, ArrayList<Integer> mIndexOptions,
                                 RecyclerView mSupportProfileRV, String votersRef) {
-        this.context = context;
+        this.mContext = context;
         this.mQuestionOptions = mQuestionOptions;
         this.mIndexOptions = mIndexOptions;
         this.mCurrentSelected = "";
@@ -125,9 +125,9 @@ public class ProfileFilterAdapter extends RecyclerView.Adapter<ProfileFilterAdap
         // Setting profile list content
         mUsers = new ArrayList<>();
         mUsersOptions = new ArrayList<>();
-        mProfileListAdapter = new ProfileListAdapter(mUsers, mUsersOptions,context);
+        mProfileListAdapter = new ProfileListAdapter(mUsers, mUsersOptions, mContext);
         LinearLayoutManager vertcalLayoutManager
-                = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+                = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
 
         mSupportProfileRV.setHasFixedSize(true);
         mSupportProfileRV.setLayoutManager(vertcalLayoutManager);
