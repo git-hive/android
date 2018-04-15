@@ -2,6 +2,7 @@ package com.hive.hive.association.request;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,6 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -88,11 +93,15 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         // fill support if necessary
         shouldFillSupport(holder, getRequestID(position));
 
-        holder.mView.setOnClickListener(view ->
-                context.startActivity(
-                        new Intent(context, CommentaryActivity.class)
-                                .putExtra(CommentaryActivity.REQUEST_ID ,requestSnap.getId())
-                )
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    context.startActivity(
+                            new Intent(context, CommentaryActivity.class)
+                                    .putExtra(CommentaryActivity.REQUEST_ID, requestSnap.getId())
+                    );
+                }
+            }
         );
 
         holder.mSupportsIV.setOnClickListener(createToggleSupportOnClickListener(position));
@@ -105,27 +114,33 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     }
 
     private View.OnClickListener createToggleSupportOnClickListener(int position) {
-        return v -> {
-            // Lock the mutex as soon as the user clicks
-            SupportMutex mutex = mLocks.get(position);
-            mutex.lock();
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Lock the mutex as soon as the user clicks
+                SupportMutex mutex = mLocks.get(position);
+                mutex.lock();
 
-            getRequestSupportAndCallSupportActionHandler(
-                    position,
-                    getRequestID(position),
-                    mutex
-            );
+                getRequestSupportAndCallSupportActionHandler(
+                        position,
+                        getRequestID(position),
+                        mutex
+                );
+            }
         };
     }
 
     // TODO: FINISH
     private void fillUser(final RequestViewHolder holder, DocumentReference userRef){
-        userRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                Log.d(TAG, documentSnapshot.get("name").toString());
-                User user = documentSnapshot.toObject(User.class);
-                holder.mUserName.setText(user.getName());
-                ProfilePhotoHelper.loadImage(context, holder.mUserAvatar, user.getPhotoUrl());
+        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    Log.d(TAG, documentSnapshot.get("name").toString());
+                    User user = documentSnapshot.toObject(User.class);
+                    holder.mUserName.setText(user.getName());
+                    ProfilePhotoHelper.loadImage(context, holder.mUserAvatar, user.getPhotoUrl());
+                }
             }
         });
     }
@@ -142,15 +157,18 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                 requestId,
                 mUser.getUid()
         )
-                .addOnSuccessListener(documentSnapshot -> {
-                    if(documentSnapshot.exists())
-                        holder.mSupportsIV.setImageDrawable(
-                                context.getResources().getDrawable(R.drawable.ic_support_filled)
-                        );
-                    else
-                        holder.mSupportsIV.setImageDrawable(
-                                context.getResources().getDrawable(R.drawable.ic_support_borderline)
-                        );
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists())
+                            holder.mSupportsIV.setImageDrawable(
+                                    context.getResources().getDrawable(R.drawable.ic_support_filled)
+                            );
+                        else
+                            holder.mSupportsIV.setImageDrawable(
+                                    context.getResources().getDrawable(R.drawable.ic_support_borderline)
+                            );
+                    }
                 });
     }
 
@@ -166,12 +184,17 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                 mUser.getUid()
         )
                 .addOnSuccessListener(
-                        documentSnapshot -> supportActionHandler(
-                                requestPosition,
-                                requestID,
-                                documentSnapshot,
-                                mutex
-                        )
+                        new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                supportActionHandler(
+                                        requestPosition,
+                                        requestID,
+                                        documentSnapshot,
+                                        mutex
+                                );
+                            }
+                        }
                 );
     }
 
@@ -191,11 +214,24 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                     requestID,
                     supportSnap.getId()
             )
-                    .addOnCompleteListener(task -> mutex.unlock())
-                    .addOnFailureListener(e -> Log.e(TAG, e.toString()))
-                    .addOnSuccessListener(aVoid -> {
-                        request.decrementScore();
-                        RequestAdapter.this.notifyDataSetChanged();
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            mutex.unlock();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e(TAG, e.toString());
+                        }
+                    })
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            request.decrementScore();
+                            notifyDataSetChanged();
+                        }
                     });
         } else {
             // Create and save support
@@ -221,11 +257,24 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                     supportId,
                     support
             )
-                    .addOnCompleteListener(task -> mutex.unlock())
-                    .addOnFailureListener(e ->Log.e(TAG, e.toString()))
-                    .addOnSuccessListener(aVoid -> {
-                        request.incrementScore();
-                        RequestAdapter.this.notifyDataSetChanged();
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            mutex.unlock();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e(TAG, e.toString());
+                        }
+                    })
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            request.incrementScore();
+                            notifyDataSetChanged();
+                        }
                     });
         }
     }
