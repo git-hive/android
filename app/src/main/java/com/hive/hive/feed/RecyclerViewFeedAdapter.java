@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.hive.hive.R;
 import com.hive.hive.model.association.Request;
+import com.hive.hive.model.forum.Forum;
 import com.hive.hive.model.forum.ForumPost;
 
 import java.util.ArrayList;
@@ -30,8 +31,13 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         switch (viewHolder.getItemViewType()) {
             case FEED:
+                  //                  Get Current Item                       //
+                    ForumPost item = (ForumPost) mFeedPosts.get(position);  //
+                // _______________________________________________________ //
+
                 FeedViewHolderOld feedViewHolderOld = (FeedViewHolderOld) viewHolder;
-                feedViewHolderOld.title.setText(((ForumPost) mFeedPosts.get(position)).getTitle());
+                feedViewHolderOld.title.setText(item.getTitle());
+                feedViewHolderOld.description.setText(item.getContent());
                 break;
         }
     }
@@ -65,10 +71,12 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     public class FeedViewHolderOld extends RecyclerView.ViewHolder {
         TextView title;
+        TextView description;
 
         public FeedViewHolderOld(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.forum_title_tv);
+            description = itemView.findViewById(R.id.forum_content_tv);
         }
     }
 

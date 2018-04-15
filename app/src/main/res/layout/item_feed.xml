@@ -103,7 +103,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.9"
-                        android:text="@string/lore_ipsun"
+                        android:text="@string/request_cost_label"
                         android:textSize="@dimen/request_cost_font_size"
                         android:textColor="@color/gray_text"
                         android:textStyle="italic"
@@ -113,7 +113,7 @@
 
                 <!-- Content Text View -->
                 <TextView
-                    android:id="@+id/request_content_tv"
+                    android:id="@+id/forum_content_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/request_content_font_size" />

@@ -1,6 +1,7 @@
 package com.hive.hive.feed;
 
 import android.content.Context;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
@@ -30,6 +31,7 @@ public class NewPostActivity extends AppCompatActivity {
 
     // Views
     EditText mTitleED;
+    EditText mDescriptionED;
     Button mSendBT;
 
     @Override
@@ -50,12 +52,14 @@ public class NewPostActivity extends AppCompatActivity {
 
     public void setViewsReferences(){
         mTitleED = findViewById(R.id.postTitle);
+        mDescriptionED = findViewById(R.id.descriptionET);
         mSendBT = findViewById(R.id.sendButton);
     }
 
     public void setClickListeners(){
 
         mSendBT.setOnClickListener(v -> addNewForumPost());
+
     }
 
     public  void addNewForumPost(){
@@ -69,7 +73,7 @@ public class NewPostActivity extends AppCompatActivity {
                 null,
                 forumUUID,
                 mTitleED.getText().toString(),
-                null,
+                mDescriptionED.getText().toString(),
                 0,
                 null,
                 null,
@@ -77,6 +81,7 @@ public class NewPostActivity extends AppCompatActivity {
         );
 
         setForumPost(mDB,associationID, forumUUID, forumPost);
+        finish();
     }
 
 }
