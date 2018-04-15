@@ -151,7 +151,7 @@ public class VotesHelper {
 
     public static Query getVoters(FirebaseFirestore db, String votersPath, Integer questionOption){
         if(questionOption  == null)
-            return db.collection(votersPath);
+            return db.collection(votersPath).orderBy("votingOption");
         else
             return db.collection(votersPath).whereEqualTo("votingOption", questionOption);
     }

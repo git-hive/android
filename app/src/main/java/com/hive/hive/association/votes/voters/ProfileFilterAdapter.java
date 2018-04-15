@@ -28,6 +28,7 @@ import com.hive.hive.R;
 import com.hive.hive.association.votes.VotesHelper;
 import com.hive.hive.model.association.Vote;
 import com.hive.hive.model.user.User;
+import com.hive.hive.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +43,8 @@ public class ProfileFilterAdapter extends RecyclerView.Adapter<ProfileFilterAdap
     public String mCurrentSelected;
 
     //userList stuff
-    public ArrayList<User> mUsers;
-
+    private ArrayList<User> mUsers;
+    private ArrayList<String> mUsersOptions;
     private ProfileListAdapter mProfileListAdapter;
 
     RecyclerView mSupportProfileRV;
@@ -98,12 +99,14 @@ public class ProfileFilterAdapter extends RecyclerView.Adapter<ProfileFilterAdap
 //                to filter the users
                 if(position != 0) {
                     mUsers.clear();
+                    mUsersOptions.clear();
                     if(mVotersLR != null) mVotersLR.remove();
                     Log.d(TAG, "index option " + mIndexOptions.get(position-1));
                     mVotersLR = VotesHelper.getVoters(FirebaseFirestore.getInstance(), votersRef, mIndexOptions.get(position-1)).addSnapshotListener(mVotersEL);
                     mProfileListAdapter.notifyDataSetChanged();
                 }else {
                     mUsers.clear();
+                    mUsersOptions.clear();
                     if(mVotersLR != null) mVotersLR.remove();
                     mVotersLR = VotesHelper.getVoters(FirebaseFirestore.getInstance(), votersRef, null).addSnapshotListener(mVotersEL);
                 }
@@ -121,7 +124,8 @@ public class ProfileFilterAdapter extends RecyclerView.Adapter<ProfileFilterAdap
     private void getProfileData(){
         // Setting profile list content
         mUsers = new ArrayList<>();
-        mProfileListAdapter = new ProfileListAdapter(mUsers, context);
+        mUsersOptions = new ArrayList<>();
+        mProfileListAdapter = new ProfileListAdapter(mUsers, mUsersOptions,context);
         LinearLayoutManager vertcalLayoutManager
                 = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
 
@@ -141,11 +145,13 @@ public class ProfileFilterAdapter extends RecyclerView.Adapter<ProfileFilterAdap
                 for(DocumentChange dc : documentSnapshots.getDocumentChanges()) {
                     switch (dc.getType()) {
                         case ADDED:
-                            DocumentReference userRef = dc.getDocument().toObject(Vote.class).getAuthorRef();
+                            Vote vote = dc.getDocument().toObject(Vote.class);
+                            DocumentReference userRef = vote.getAuthorRef();
                             userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                 @Override
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                     User user = documentSnapshot.toObject(User.class);
+                                    mUsersOptions.add(Utils.getCharForNumber(vote.getVotingOption()+1));
                                     mUsers.add(user);
                                     mProfileListAdapter.notifyDataSetChanged();
 //                                    mFilterListAdapter.notifyDataSetChanged();

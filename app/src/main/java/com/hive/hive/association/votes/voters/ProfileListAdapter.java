@@ -22,13 +22,15 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
 
     private final String TAG = ProfileListAdapter.class.getSimpleName();
     private List<User> userList;
+    private List<String> options;
     private ArrayList<Integer> mColors;
     private Context mContext;
  
  
-    public ProfileListAdapter(List<User> userList, Context context) {
+    public ProfileListAdapter(List<User> userList, List<String> userOptions, Context context) {
         this.userList = userList;
         this.mContext = context;
+        this.options = userOptions;
         mColors = new ArrayList<>();
         mColors.add(0, Color.parseColor("#ff6347"));
         mColors.add(1, Color.parseColor("#82b3b3"));
@@ -52,8 +54,8 @@ public class ProfileListAdapter extends RecyclerView.Adapter<ProfileListAdapter.
     public void onBindViewHolder(MyViewHolder holder, int position) {
         User user = userList.get(position);
         holder.name.setText(user.getName());
-        holder.hexagon.setHexagonColor(getColorByName((String) holder.name.getText()));
-        holder.hexagon.setFirstLetter(user.getName().charAt(0));
+        holder.hexagon.setHexagonColor(getColorByName(options.get(position)));
+        holder.hexagon.setFirstLetter(options.get(position).charAt(0));
         ProfilePhotoHelper.loadImage(mContext, holder.photo, user.getPhotoUrl());
     }
  

@@ -43,7 +43,6 @@ public class VotersListActivity extends AppCompatActivity {
     ProfileFilterAdapter mFilterListAdapter;
 
     ArrayList<User> mUsers;
-    ArrayList<String> mAlphabet;
     ArrayList<Integer> mQuestionOptions;
     ArrayList<String> mFilterOptions;
     @Override
