@@ -149,7 +149,10 @@ public class VotesHelper {
         });
     }
 
-    public static CollectionReference getVoters(FirebaseFirestore db, String votersPath){
-        return db.collection(votersPath);
+    public static Query getVoters(FirebaseFirestore db, String votersPath, Integer questionOption){
+        if(questionOption  == null)
+            return db.collection(votersPath).orderBy("votingOption");
+        else
+            return db.collection(votersPath).whereEqualTo("votingOption", questionOption);
     }
 }

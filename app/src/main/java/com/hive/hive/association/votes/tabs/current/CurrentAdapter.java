@@ -138,13 +138,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
                     View.OnClickListener votersOnClickListener = new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            Intent votersIntent = new Intent(mContext, VotersListActivity.class);
-                            Log.d(TAG, DocReferences.getVotersRef("gVw7dUkuw3SSZSYRXe8s", CurrentFragment.mCurrentSessionId,
-                                    mCurrentAgendaId, mQuestionsIds.get(0)).getPath());
-                            votersIntent.putExtra(VotersListActivity.VOTERS_REF_STRING,
-                                    DocReferences.getVotersRef("gVw7dUkuw3SSZSYRXe8s", CurrentFragment.mCurrentSessionId,
-                                            mCurrentAgendaId, mQuestionsIds.get(0)).getPath());
-                            mContext.startActivity(votersIntent);
+
                         }
                     };
 
