@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/cardScroll"
+    android:id="@+id/expandable_cardScroll"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="20dp"
@@ -31,7 +31,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                         <ImageView
-                            android:id="@+id/topCardIV"
+                            android:id="@+id/expandable_topCardIV"
                             android:layout_width="match_parent"
                             android:layout_height="160dp"
                             android:background="@drawable/city_login" />
@@ -43,7 +43,7 @@
                             android:textSize="20sp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/titleContentTV"/>
+                            android:id="@+id/expandable_titleContentTV"/>
                 </RelativeLayout>
 
                 <LinearLayout
@@ -55,7 +55,7 @@
                         android:layout_height="wrap_content">
 
                         <LinearLayout
-                            android:id="@+id/supportLL"
+                            android:id="@+id/expandable_supportLL"
                             android:paddingRight="20dp"
                             android:layout_gravity="bottom"
                             android:gravity="bottom"
@@ -63,9 +63,9 @@
                             android:layout_height="wrap_content">
 
                                 <ImageView
-                                    android:id="@+id/supportIV"
+                                    android:id="@+id/expandable_supportIV"
                                     android:layout_gravity="left|bottom"
-                                    app:srcCompat="@drawable/ic_icones_support_orange"
+                                    app:srcCompat="@drawable/ic_support_filled"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content" />
 
@@ -76,7 +76,7 @@
                                     android:text="@string/zeroin3"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:id="@+id/supportTV"/>
+                                    android:id="@+id/expandable_supportTV"/>
 
 
                         </LinearLayout>
@@ -95,7 +95,7 @@
                                     android:layout_height="wrap_content" />
 
                                 <TextView
-                                    android:id="@+id/timerTV"
+                                    android:id="@+id/expandable_timerTV"
                                     android:textColor="@color/colorBlack"
                                     android:textSize="14sp"
                                     android:layout_gravity="right|center"
@@ -130,7 +130,7 @@
                         <TextView
                             android:paddingTop="5dp"
                             android:gravity="center"
-                            android:id="@+id/content_avatar_title"
+                            android:id="@+id/expandable_content_avatar_title"
                             style="@style/ContentMainBadgeTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -138,9 +138,9 @@
 
                         <ImageView
                             android:layout_marginLeft="35dp"
-                            android:id="@+id/suggestedByIV"
+                            android:id="@+id/expandable_suggestedByIV"
                             android:layout_width="wrap_content"
-                            android:layout_toRightOf="@id/content_avatar_title"
+                            android:layout_toRightOf="@id/expandable_content_avatar_title"
                             android:layout_height="35dp"
                             app:srcCompat="@drawable/ic_profile_photo" />
 
@@ -149,15 +149,15 @@
                             android:layout_marginLeft="10dp"
                             android:layout_marginBottom="5dp"
                             android:layout_centerVertical="true"
-                            android:id="@+id/suggestedByTV"
+                            android:id="@+id/expandable_suggestedByTV"
 
 
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
 
-                            android:layout_alignTop="@id/suggestedByIV"
-                            android:layout_toEndOf="@id/suggestedByIV"
-                            android:layout_toRightOf="@id/suggestedByIV"
+                            android:layout_alignTop="@id/expandable_suggestedByIV"
+                            android:layout_toEndOf="@id/expandable_suggestedByIV"
+                            android:layout_toRightOf="@id/expandable_suggestedByIV"
                             android:textColor="@color/mainTextColor"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -177,10 +177,10 @@
                 <TextView
                     android:paddingTop="10dp"
                     android:layout_centerVertical="true"
-                    android:id="@+id/contentTV"
+                    android:id="@+id/expandable_contentTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/suggestedByIV"
+                    android:layout_toEndOf="@id/expandable_suggestedByIV"
                     android:text="@string/lore_ipsun"
                     android:textColor="@color/mainTextColor"
                     android:textSize="16sp"
@@ -189,10 +189,10 @@
                 <TextView
                     android:paddingTop="10dp"
                     android:layout_centerVertical="true"
-                    android:id="@+id/partialResultsTV"
+                    android:id="@+id/expandable_partialResultsTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/suggestedByIV"
+                    android:layout_toEndOf="@id/expandable_suggestedByIV"
                     android:text="@string/partial_results"
                     android:textSize="16sp"
                     android:textStyle="italic" />
@@ -206,7 +206,7 @@
                      <!--<com.hive.hive.utils.hexagonsPercentBar.HexagonView-->
                          <!--android:layout_marginLeft="30dp"-->
                          <!--android:layout_gravity="center_horizontal"-->
-                         <!--android:id="@+id/percentageBar"-->
+                         <!--android:id="@+id/expandable_percentageBar"-->
                          <!--android:layout_width="wrap_content"-->
                          <!--android:layout_height="100dp"-->
 
@@ -219,7 +219,7 @@
 
 
             <ExpandableListView
-                android:id="@+id/questionExpandableLV"
+                android:id="@+id/expandable_questionExpandableLV"
                 android:gravity="left"
                 android:layoutDirection="ltr"
                 android:layout_height="wrap_content"
@@ -252,7 +252,7 @@
                 android:layout_height="wrap_content">
                     <ImageButton
                         android:layout_gravity="center_horizontal|bottom"
-                        android:id="@+id/choseVoteBT"
+                        android:id="@+id/expandable_choseVoteBT"
                         android:background="@drawable/ic_icones_double_like_orange"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
