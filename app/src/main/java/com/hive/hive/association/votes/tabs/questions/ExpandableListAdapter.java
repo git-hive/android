@@ -5,8 +5,10 @@ import java.util.HashMap;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +20,18 @@ import android.widget.TextView;
 import com.hive.hive.R;
 import com.hive.hive.association.transparency.tabs.staff.CustomGridView;
 import com.hive.hive.association.votes.QuestionGridAdapter;
+import com.hive.hive.association.votes.tabs.current.CurrentAdapter;
+import com.hive.hive.association.votes.tabs.current.CurrentFragment;
+import com.hive.hive.association.votes.voters.VotersListActivity;
 import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.QuestionOptions;
+import com.hive.hive.utils.DocReferences;
 import com.hive.hive.utils.hexagonsPercentBar.HexagonView;
 import com.hive.hive.utils.hexagonsPercentBar.HexagonalBarAdapter;
 
 public class ExpandableListAdapter extends BaseExpandableListAdapter{
+
+    private String TAG = ExpandableListAdapter.class.getSimpleName();
 
 	private Context mContext;
 	private HashMap<String, Question> mQuestions;
@@ -172,6 +180,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
         mPercentageRV.setLayoutManager(layoutManager);
         mPercentageRV.setAdapter(mHexBarAdapter);
 
+        mPercentageBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent votersIntent = new Intent(mContext, VotersListActivity.class);
+                Log.d(TAG, "child " + groupPosition);
+                votersIntent.putExtra(VotersListActivity.VOTERS_REF_STRING,
+                        DocReferences.getVotersRef("gVw7dUkuw3SSZSYRXe8s", CurrentFragment.mCurrentSessionId,
+                                CurrentAdapter.mCurrentAgendaId, mQuestionsIds.get(groupPosition)+"").getPath());
+                mContext.startActivity(votersIntent);
+            }
+        });
 		return convertView;
 	}
 
