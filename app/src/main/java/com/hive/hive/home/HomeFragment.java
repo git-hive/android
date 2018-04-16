@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +28,7 @@ public class HomeFragment extends Fragment {
 
     private RecyclerView mRecyclerViewHome;
     private RecyclerViewHomeAdapter mRecyclerViewHomeAdapter;
-
+    private String TAG = HomeFragment.class.getSimpleName();
     // Views
     ImageView mUserAvatar;
     TextView mGreetingsTV;
@@ -80,18 +81,21 @@ public class HomeFragment extends Fragment {
     public void setCurrentUserInfo(){
         mUserAvatar = mView.findViewById(R.id.userAvatar);
         mGreetingsTV = mView.findViewById(R.id.textViewGreetings);
+        try {
+            DocumentReference userRef = DocReferences.getUserRef();
+            userRef.get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    User user = documentSnapshot.toObject(User.class);
+                    //mUserScore.setText(user.getScore());
+                    String oldGreetings = mGreetingsTV.getText().toString().substring(0, 11);
+                    mGreetingsTV.setText(oldGreetings + user.getName());
+                    ProfilePhotoHelper.loadImage(mContext, mUserAvatar, user.getPhotoUrl());
 
-        DocumentReference userRef = DocReferences.getUserRef();
-        userRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                User user = documentSnapshot.toObject(User.class);
-                //mUserScore.setText(user.getScore());
-                String oldGreetings = mGreetingsTV.getText().toString().substring(0, 11);
-                mGreetingsTV.setText(oldGreetings + user.getName());
-                ProfilePhotoHelper.loadImage(mContext, mUserAvatar, user.getPhotoUrl());
-
-            }
-        });
+                }
+            });
+        }catch (NullPointerException e){
+            Log.e(TAG, e.getMessage());
+        }
 
     }
 

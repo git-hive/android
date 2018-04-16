@@ -158,7 +158,8 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
         holder.mTitle.setText(agenda.getTitle());
         //TODO:Change this line to get from server
         holder.mCategoryIcon.setImageResource(getDrawable("services"));
-        holder.mRequestScore.setText(mAgendaScore.get(mAgendaIds.get(position)).toString());
+        if(mAgendaScore != null && mAgendaIds.get(position) != null)
+            holder.mRequestScore.setText(mAgendaScore.get(mAgendaIds.get(position)).toString());
         //TODO USE RETURN FROM CLOCK TO STOP SHIT
         mTimers.add(TimeUtils.clock(holder.mTime, mCurrentSession, mContext));
         holder.mVote.setOnClickListener(new View.OnClickListener() {
