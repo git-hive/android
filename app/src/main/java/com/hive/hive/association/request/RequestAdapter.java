@@ -2,6 +2,7 @@ package com.hive.hive.association.request;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,7 +28,6 @@ import com.hive.hive.association.AssociationHelper;
 import com.hive.hive.association.request.comments.CommentaryActivity;
 import com.hive.hive.model.association.AssociationSupport;
 import com.hive.hive.model.association.Request;
-import com.hive.hive.model.association.RequestCategory;
 import com.hive.hive.model.user.User;
 import com.hive.hive.utils.DocReferences;
 import com.hive.hive.utils.ProfilePhotoHelper;
@@ -34,13 +35,13 @@ import com.hive.hive.utils.SupportMutex;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestViewHolder> {
     private String TAG = RequestAdapter.class.getSimpleName();
 
     //-- Data
     ArrayList<DocumentSnapshot> requests;
+    private boolean[] requestsSupport;
     private ArrayList<SupportMutex> mLocks;
     private Context context;
 
@@ -56,6 +57,11 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         this.requests = requestSnaps;
         this.context = context;
         this.mLocks = new ArrayList<>();
+        this.requestsSupport = new boolean[requestSnaps.size()];
+
+        for (int i = 0; i < requestSnaps.size(); i++) {
+            this.requestsSupport[i] = false;
+        }
     }
 
     @Override
@@ -91,7 +97,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         holder.mNumberOfCommentsTV.setText(String.valueOf(request.getNumComments()));
 
         // fill support if necessary
-        shouldFillSupport(holder, getRequestID(position));
+        shouldFillSupport(holder, getRequestID(position), position);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -104,8 +110,10 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             }
         );
 
-        holder.mSupportsIV.setOnClickListener(createToggleSupportOnClickListener(position));
-        holder.mNumberOfSupportsTV.setOnClickListener(createToggleSupportOnClickListener(position));
+        holder.mSupportsIV
+                .setOnClickListener(createToggleSupportOnClickListener(position, holder));
+        holder.mNumberOfSupportsTV
+                .setOnClickListener(createToggleSupportOnClickListener(position, holder));
     }
 
     @Override
@@ -113,10 +121,15 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         return requests.size();
     }
 
-    private View.OnClickListener createToggleSupportOnClickListener(int position) {
+    private View.OnClickListener createToggleSupportOnClickListener(
+            int position,
+            final RequestViewHolder holder
+    ) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                toggleRequestSupport(position, holder.mNumberOfSupportsTV, holder.mSupportsIV);
+
                 // Lock the mutex as soon as the user clicks
                 SupportMutex mutex = mLocks.get(position);
                 mutex.lock();
@@ -130,7 +143,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         };
     }
 
-    // TODO: FINISH
     private void fillUser(final RequestViewHolder holder, DocumentReference userRef){
         userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -149,7 +161,11 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         return requests.get(requestPosition).getId();
     }
 
-    private void shouldFillSupport(final RequestViewHolder holder, String requestId){
+    private void shouldFillSupport(
+            final RequestViewHolder holder,
+            String requestId,
+            final int position
+    ) {
         //if exists support, then should be IV filled
         AssociationHelper.getRequestSupport(
                 mDB,
@@ -160,14 +176,17 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists())
+                        if (documentSnapshot.exists()) {
+                            requestsSupport[position] = true;
                             holder.mSupportsIV.setImageDrawable(
                                     context.getResources().getDrawable(R.drawable.ic_support_filled)
                             );
-                        else
+                        } else {
+                            requestsSupport[position] = false;
                             holder.mSupportsIV.setImageDrawable(
                                     context.getResources().getDrawable(R.drawable.ic_support_borderline)
                             );
+                        }
                     }
                 });
     }
@@ -225,13 +244,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                         public void onFailure(@NonNull Exception e) {
                             Log.e(TAG, e.toString());
                         }
-                    })
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            request.decrementScore();
-                            notifyDataSetChanged();
-                        }
                     });
         } else {
             // Create and save support
@@ -268,15 +280,45 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                         public void onFailure(@NonNull Exception e) {
                             Log.e(TAG, e.toString());
                         }
-                    })
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            request.incrementScore();
-                            notifyDataSetChanged();
-                        }
                     });
         }
+    }
+
+    private void toggleRequestSupport(
+            int position,
+            TextView numberOfSupportsTV,
+            ImageView supportIV
+    ) {
+        Drawable filledSupportIC = context
+                .getResources()
+                .getDrawable(R.drawable.ic_support_filled);
+
+        Drawable borderlineSupportIC = context
+                .getResources()
+                .getDrawable(R.drawable.ic_support_borderline);
+
+        if (requestsSupport[position]) {
+            supportIV.setImageDrawable(borderlineSupportIC);
+            decrementSupports(numberOfSupportsTV);
+            Toast.makeText(context, "removing support", Toast.LENGTH_SHORT).show();
+        } else {
+            supportIV.setImageDrawable(filledSupportIC);
+            incrementSupports(numberOfSupportsTV);
+            Toast.makeText(context, "adding support", Toast.LENGTH_SHORT).show();
+        }
+        requestsSupport[position] = !requestsSupport[position];
+    }
+
+    private void decrementSupports(TextView numberOfSupportsTV) {
+        int numberOfSupports = Integer.valueOf(numberOfSupportsTV.getText().toString());
+        int newNumberOfSupports = numberOfSupports - 1;
+        numberOfSupportsTV.setText(String.valueOf(newNumberOfSupports));
+    }
+
+    private void incrementSupports(TextView numberOfSupportsTV) {
+        int numberOfSupports = Integer.valueOf(numberOfSupportsTV.getText().toString());
+        int newNumberOfSupports = numberOfSupports + 1;
+        numberOfSupportsTV.setText(String.valueOf(newNumberOfSupports));
     }
 
     public void setRequests(ArrayList<DocumentSnapshot> requests) {
