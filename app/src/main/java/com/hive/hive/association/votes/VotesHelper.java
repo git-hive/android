@@ -11,7 +11,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
@@ -22,7 +21,6 @@ import com.hive.hive.model.association.QuestionOptions;
 import com.hive.hive.model.association.Vote;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 /**
  * Created by vplentz on 22/03/18.
@@ -150,4 +148,19 @@ public class VotesHelper {
             }
         });
     }
+
+    public static Query getVoters(FirebaseFirestore db, String votersPath, Integer questionOption){
+        if(questionOption  == null)
+            return db.collection(votersPath).orderBy("votingOption");
+        else
+            return db.collection(votersPath).whereEqualTo("votingOption", questionOption);
+    }
+
+    public static DocumentReference getVote(FirebaseFirestore db, String associationID, String sessionID, String agendaID,
+                                            String questionID, String associateId){
+        return db.collection(ASSOCIATION_COLLECTION).document(associationID)
+                .collection(SESSIONS_COLLECTION).document(sessionID).collection(AGENDAS_COLLECTION).document(agendaID)
+                .collection(QUESTIONS_COLLECTION).document(questionID).collection(VOTES_COLLECTION).document(associateId);
+    }
+
 }

@@ -4,6 +4,7 @@ package com.hive.hive.association.votes.tabs.current;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,18 +21,22 @@ import android.widget.TextView;
 
 import com.alexvasilkov.foldablelayout.UnfoldableView;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.VotesHelper;
-import com.hive.hive.association.votes.tabs.SupportList.SupportListActivity;
 import com.hive.hive.association.votes.tabs.questions.QuestionForm;
 import com.hive.hive.association.votes.tabs.questions.ExpandableListAdapter;
 import com.hive.hive.model.association.Agenda;
 import com.hive.hive.model.association.Question;
+import com.hive.hive.model.association.Request;
 import com.hive.hive.model.association.Session;
 
 import java.util.ArrayList;
@@ -52,6 +57,8 @@ public class CurrentFragment extends Fragment {
 
     //Agendas
     private HashMap<String, Agenda> mAgendas;
+    private HashMap<String, Integer> mAgendasScores;
+
     private ArrayList<String> mAgendasIds;
     private com.google.firebase.firestore.EventListener<QuerySnapshot> mAgendasEL;
     private ListenerRegistration mAgendasLR;
@@ -73,11 +80,9 @@ public class CurrentFragment extends Fragment {
     private static ExpandableListView expandableListView;
     private static ExpandableListAdapter adapter;
 
-    // Views references
-    static ImageButton choseVoteBT;
-    ImageView supportsIV;
-    TextView supportsTV;
-
+    // Unfoldable Views references
+    private static ImageButton choseVoteBT;
+    private static TextView mHasVotedTV;
 
     public static CurrentFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -96,10 +101,10 @@ public class CurrentFragment extends Fragment {
 
         mView = view;
 
-        choseVoteBT = view.findViewById(R.id.choseVoteBT);
-
+        choseVoteBT = view.findViewById(R.id.expandable_choseVoteBT);
+        mHasVotedTV = view.findViewById(R.id.expandable_voteStatusTV);
         // Temporary solution to unfold card, TODO: Check with the @guys
-        mTopClickableCardIV = view.findViewById(R.id.topCardIV);
+        mTopClickableCardIV = view.findViewById(R.id.expandable_topCardIV);
         mTopClickableCardIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -193,7 +198,7 @@ public class CurrentFragment extends Fragment {
         //GET AGENDAS
         mAgendas = new HashMap<>();
         mAgendasIds = new ArrayList<>();
-
+        mAgendasScores = new HashMap<>();
         mAgendasEL = new com.google.firebase.firestore.EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
@@ -205,10 +210,18 @@ public class CurrentFragment extends Fragment {
                     switch (dc.getType()) {
                         case ADDED:
                             Agenda agenda = dc.getDocument().toObject(Agenda.class);
-                            mAgendas.put(dc.getDocument().getId(), agenda);
-                            mAgendasIds.add(dc.getDocument().getId());
-                            Log.d(TAG, mAgendas.toString());
-                            mRVAdapter.notifyDataSetChanged();
+                            String addedId = dc.getDocument().getId();
+                            mAgendas.put(addedId, agenda);
+                            mAgendasIds.add(addedId);
+                            mAgendas.get(addedId).getRequestRef().get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    Request request = documentSnapshot.toObject(Request.class);
+                                    mAgendasScores.put(addedId, request.getScore());
+//                                    Log.d(TAG, mAgendas.toString());
+                                    mRVAdapter.notifyDataSetChanged();
+                                }
+                            });
                             break;
                         case MODIFIED:
                             String modifiedId = dc.getDocument().getId();
@@ -221,6 +234,7 @@ public class CurrentFragment extends Fragment {
                             String removedId = dc.getDocument().getId();
                             mAgendas.remove(removedId);
                             mAgendasIds.remove(removedId);
+                            mAgendasScores.remove(removedId);
                             Log.d(TAG, mAgendas.toString());
                             mRVAdapter.notifyDataSetChanged();
                             break;
@@ -230,13 +244,13 @@ public class CurrentFragment extends Fragment {
             }
         };
 
-        mRVAdapter = new CurrentAdapter(this.getContext(), mCurrentSession, mAgendas, mAgendasIds , mUnfoldableView, mDetailsLayout, view);
+        mRVAdapter = new CurrentAdapter(this.getContext(), mCurrentSession, mAgendas, mAgendasIds, mAgendasScores, mUnfoldableView, mDetailsLayout, view);
         mRV = view.findViewById(R.id.cellRV);
         mRV.setAdapter(mRVAdapter);
 
         // TODO: Check this expandable element Height, since it has some workarounds, either than set it fixed;
 
-        expandableListView = view.findViewById(R.id.questionExpandableLV);
+        expandableListView = view.findViewById(R.id.expandable_questionExpandableLV);
         // Setting group indicator null for custom indicator
         expandableListView.setGroupIndicator(null);
 
@@ -251,7 +265,7 @@ public class CurrentFragment extends Fragment {
         });
 
         // Get scroll refence
-        detailsScrollView = view.findViewById(R.id.cardScroll);
+        detailsScrollView = view.findViewById(R.id.expandable_cardScroll);
 
         // Solution by: https://github.com/alexvasilkov/FoldableLayout/issues/38#issuecomment-192814520
         // Allows scroll
@@ -269,9 +283,6 @@ public class CurrentFragment extends Fragment {
                 return false;
             }
         });
-
-        // Start acitity with supports
-        setSupportListeners();
 
         return view;
     }
@@ -312,7 +323,27 @@ public class CurrentFragment extends Fragment {
                 context.startActivity(it);
             }
         });
+        VotesHelper.getVote(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mCurrentSessionId,
+                agendaID, questionsIds.get(0), FirebaseAuth.getInstance().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()) {
+                    mHasVotedTV.setText(context.getString(R.string.has_vote));
+                    mHasVotedTV.setTextColor(context.getResources().getColor(R.color.green_text));
+                }else {
+                    mHasVotedTV.setText(context.getString(R.string.hasn_vote));
+                    mHasVotedTV.setTextColor(context.getResources().getColor(R.color.red_text));
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                mHasVotedTV.setVisibility(View.GONE);
+                Log.e(TAG, e.getMessage());
+            }
+        });
 
+        // THIS MAGIC PEACE OF CODE MAKE THE VIEW WORK AS IT SHOULD
         expandableListView.setDividerHeight(0);
 
         for (int i = 0; i < adapter.getGroupCount(); i++)
@@ -330,8 +361,14 @@ public class CurrentFragment extends Fragment {
             expandableListView.collapseGroup(i);
         setListViewHeight(expandableListView);
 
-
     }
+
+
+    // Updating headers and childs to expandable listview
+    public static void updateItems(){
+        adapter.notifyDataSetChanged();
+    }
+
 
     // Workaround found in: https://thedeveloperworldisyours.com/android/expandable-listview-inside-scrollview/ to ExpandableListView
     // https://stackoverflow.com/questions/17696039/expandablelistview-inside-a-scrollview
@@ -391,27 +428,4 @@ public class CurrentFragment extends Fragment {
         listView.setLayoutParams(params);
         listView.requestLayout();
     }
-
-    public void setSupportListeners(){
-        // Start Questions activity stuff
-        supportsTV = mView.findViewById(R.id.supportTV);
-        supportsIV = mView.findViewById(R.id.supportIV);
-
-        supportsIV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(mView.getContext(), SupportListActivity.class));
-            }
-        });
-
-
-        supportsTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(mView.getContext(), SupportListActivity.class));
-            }
-        });
-
-    }
-
 }
