@@ -17,13 +17,13 @@
             android:layout_marginLeft="5dp"
             app:srcCompat="@drawable/ic_profile_photo"
             android:layout_gravity="top|left"
-            android:layout_width="85dp"
-            android:layout_height="75dp" />
+            android:layout_width="75dp"
+            android:layout_height="65dp" />
 
         <ImageView
             android:layout_marginLeft="150dp"
             android:layout_marginTop="30dp"
-            android:src="@drawable/coin"
+            app:srcCompat="@drawable/coin"
             android:layout_gravity="top|right"
             android:layout_width="45dp"
             android:layout_height="45dp" />
@@ -50,15 +50,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_alignParentBottom="true"
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_add"
-        android:tint="@color/colorWhite"
-        />
+
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_alignRight="@id/recyclerViewFeed"
+            android:layout_alignParentBottom="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/fab_margin"
+            android:tint="@color/colorWhite"
+            app:srcCompat="@drawable/ic_add" />
 
 </RelativeLayout>
