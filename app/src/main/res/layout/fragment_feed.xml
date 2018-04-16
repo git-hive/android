@@ -12,9 +12,10 @@
         android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/userAvatar"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="5dp"
-            android:src="@drawable/ic_profile_photo"
+            app:srcCompat="@drawable/ic_profile_photo"
             android:layout_gravity="top|left"
             android:layout_width="85dp"
             android:layout_height="75dp" />
@@ -29,14 +30,14 @@
 
 
         <TextView
-            android:id="@+id/coinNumber"
+            android:id="@+id/score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorBlack"
             android:textSize="20sp"
             android:text="0000"
             android:layout_marginTop="35dp"
-            android:src="@drawable/coin"
+            app:srcCompat="@drawable/coin"
             android:layout_gravity="top|right"
             />
 

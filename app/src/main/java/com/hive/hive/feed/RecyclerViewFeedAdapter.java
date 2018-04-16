@@ -24,7 +24,7 @@ import java.util.List;
 import static android.content.ContentValues.TAG;
 
 /**
- * Created by vplentz on 11/01/18.
+ * Created by Birck.
  */
 
 public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
