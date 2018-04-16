@@ -116,15 +116,18 @@ public class FeedFragment extends Fragment {
     }
 
     public void fillLoggedUserView(){
-
-        DocumentReference userRef = DocReferences.getUserRef();
-        userRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                User user = documentSnapshot.toObject(User.class);
-                //mUserScore.setText(user.getScore());
-                ProfilePhotoHelper.loadImage(mContext, mUserPhoto, user.getPhotoUrl());
-            }
-        });
+        try {
+            DocumentReference userRef = DocReferences.getUserRef();
+            userRef.get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    User user = documentSnapshot.toObject(User.class);
+                    //mUserScore.setText(user.getScore());
+                    ProfilePhotoHelper.loadImage(mContext, mUserPhoto, user.getPhotoUrl());
+                }
+            });
+        }catch(NullPointerException e){
+            Log.e(TAG, e.getMessage());
+        }
     }
 
 }

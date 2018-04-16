@@ -323,26 +323,29 @@ public class CurrentFragment extends Fragment {
                 context.startActivity(it);
             }
         });
-        VotesHelper.getVote(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mCurrentSessionId,
-                agendaID, questionsIds.get(0), FirebaseAuth.getInstance().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if(documentSnapshot.exists()) {
-                    mHasVotedTV.setText(context.getString(R.string.has_vote));
-                    mHasVotedTV.setTextColor(context.getResources().getColor(R.color.green_text));
-                }else {
-                    mHasVotedTV.setText(context.getString(R.string.hasn_vote));
-                    mHasVotedTV.setTextColor(context.getResources().getColor(R.color.red_text));
+        try {
+            VotesHelper.getVote(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mCurrentSessionId,
+                    agendaID, questionsIds.get(0), FirebaseAuth.getInstance().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if (documentSnapshot.exists()) {
+                        mHasVotedTV.setText(context.getString(R.string.has_vote));
+                        mHasVotedTV.setTextColor(context.getResources().getColor(R.color.green_text));
+                    } else {
+                        mHasVotedTV.setText(context.getString(R.string.hasn_vote));
+                        mHasVotedTV.setTextColor(context.getResources().getColor(R.color.red_text));
+                    }
                 }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                mHasVotedTV.setVisibility(View.GONE);
-                Log.e(TAG, e.getMessage());
-            }
-        });
-
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    mHasVotedTV.setVisibility(View.GONE);
+                    Log.e(TAG, e.getMessage());
+                }
+            });
+        }catch (NullPointerException e){
+            Log.e(TAG, e.getMessage());
+        }
         // THIS MAGIC PEACE OF CODE MAKE THE VIEW WORK AS IT SHOULD
         expandableListView.setDividerHeight(0);
 
