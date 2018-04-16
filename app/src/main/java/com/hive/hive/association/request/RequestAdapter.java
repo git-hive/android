@@ -35,13 +35,14 @@ import com.hive.hive.utils.SupportMutex;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestViewHolder> {
     private String TAG = RequestAdapter.class.getSimpleName();
 
     //-- Data
     ArrayList<DocumentSnapshot> requests;
-    private boolean[] requestsSupport;
+    private HashMap<Integer, Boolean> requestsSupport;
     private ArrayList<SupportMutex> mLocks;
     private Context context;
 
@@ -57,11 +58,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         this.requests = requestSnaps;
         this.context = context;
         this.mLocks = new ArrayList<>();
-        this.requestsSupport = new boolean[requestSnaps.size()];
-
-        for (int i = 0; i < requestSnaps.size(); i++) {
-            this.requestsSupport[i] = false;
-        }
+        this.requestsSupport = new HashMap<>();
     }
 
     @Override
@@ -177,12 +174,12 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
-                            requestsSupport[position] = true;
+                            requestsSupport.put(position, true);
                             holder.mSupportsIV.setImageDrawable(
                                     context.getResources().getDrawable(R.drawable.ic_support_filled)
                             );
                         } else {
-                            requestsSupport[position] = false;
+                            requestsSupport.put(position, false);
                             holder.mSupportsIV.setImageDrawable(
                                     context.getResources().getDrawable(R.drawable.ic_support_borderline)
                             );
@@ -297,7 +294,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                 .getResources()
                 .getDrawable(R.drawable.ic_support_borderline);
 
-        if (requestsSupport[position]) {
+        if (requestsSupport.get(position)) {
             supportIV.setImageDrawable(borderlineSupportIC);
             decrementSupports(numberOfSupportsTV);
             Toast.makeText(context, "removing support", Toast.LENGTH_SHORT).show();
@@ -306,7 +303,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             incrementSupports(numberOfSupportsTV);
             Toast.makeText(context, "adding support", Toast.LENGTH_SHORT).show();
         }
-        requestsSupport[position] = !requestsSupport[position];
+        requestsSupport.put(position, !requestsSupport.get(position));
     }
 
     private void decrementSupports(TextView numberOfSupportsTV) {

@@ -52,7 +52,6 @@ public class RequestActivity extends AppCompatActivity {
     private ArrayList<Request> allRequests;
     private String mCategoryName = "services";
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +99,6 @@ public class RequestActivity extends AppCompatActivity {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void getAllRequestCategoriesAndCallGetAllRequests() {
         AssociationHelper.getAllRequestCategories(
                 mDB,
@@ -132,7 +130,6 @@ public class RequestActivity extends AppCompatActivity {
                 });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void getAllRequestAndCallJoinRequestsCategories(
             ArrayList<DocumentSnapshot>  categoryDocs
     ) {
@@ -163,7 +160,6 @@ public class RequestActivity extends AppCompatActivity {
                 });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void joinRequestsWithCategoriesAndCallSetupRecyclerView(
             ArrayList<DocumentSnapshot> categoryDocs,
             ArrayList<DocumentSnapshot> requestDocs
@@ -203,7 +199,6 @@ public class RequestActivity extends AppCompatActivity {
         setupRecyclerView(categoriesRequests);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void setupRecyclerView(
             HashMap<String, ArrayList<DocumentSnapshot>> categoriesRequests
     ) {
@@ -222,10 +217,11 @@ public class RequestActivity extends AppCompatActivity {
         mMenuRV = findViewById(R.id.recyclerMenu);
         mFilterTV = findViewById(R.id.menuFilterTV);
 
-        mMenuRV.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+        mMenuRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oladScrollY) {
-                TextView filterName = v.findViewById(R.id.menuItemCategorieTV);
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                TextView filterName = recyclerView.findViewById(R.id.menuItemCategorieTV);
+                super.onScrollStateChanged(recyclerView, newState);
                 if (filterName != null) {
                     String categoryName = mmap.get(filterName.getText()).toLowerCase();
                     // If the category has actually changed
@@ -242,5 +238,6 @@ public class RequestActivity extends AppCompatActivity {
                 }
             }
         });
+        
     }
 }
