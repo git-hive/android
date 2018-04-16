@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@null"
@@ -11,31 +12,32 @@
         android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/userAvatar"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="5dp"
-            android:src="@drawable/ic_profile_photo"
+            app:srcCompat="@drawable/ic_profile_photo"
             android:layout_gravity="top|left"
-            android:layout_width="85dp"
-            android:layout_height="75dp" />
+            android:layout_width="75dp"
+            android:layout_height="65dp" />
 
         <ImageView
             android:layout_marginLeft="150dp"
             android:layout_marginTop="30dp"
-            android:src="@drawable/coin"
+            app:srcCompat="@drawable/coin"
             android:layout_gravity="top|right"
             android:layout_width="45dp"
             android:layout_height="45dp" />
 
 
         <TextView
-            android:id="@+id/coinNumber"
+            android:id="@+id/score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorBlack"
             android:textSize="20sp"
             android:text="0000"
             android:layout_marginTop="35dp"
-            android:src="@drawable/coin"
+            app:srcCompat="@drawable/coin"
             android:layout_gravity="top|right"
             />
 
@@ -47,5 +49,18 @@
         android:id="@+id/recyclerViewFeed"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_alignRight="@id/recyclerViewFeed"
+            android:layout_alignParentBottom="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/fab_margin"
+            android:tint="@color/colorWhite"
+            app:srcCompat="@drawable/ic_add" />
 
 </RelativeLayout>

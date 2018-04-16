@@ -44,7 +44,7 @@
                 android:gravity="center_horizontal|top">
 
                 <ImageView
-                    android:id="@+id/request_author_photo_iv"
+                    android:id="@+id/post_author_photo_iv"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     app:srcCompat="@drawable/ic_profile_photo"
@@ -53,7 +53,7 @@
                 <TextView
                     android:gravity="center"
                     android:text="@string/client_name_mock"
-                    android:id="@+id/request_author_name_tv"
+                    android:id="@+id/post_author_name_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/request_author_name_font_size"/>
@@ -81,7 +81,7 @@
 
                 <TextView
                     android:text="@string/title_activity_requests"
-                    android:id="@+id/request_title_tv"
+                    android:id="@+id/forum_title_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/request_title_font_size"
@@ -103,7 +103,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.9"
-                        android:text="@string/lore_ipsun"
+                        android:text="@string/request_cost_label"
                         android:textSize="@dimen/request_cost_font_size"
                         android:textColor="@color/gray_text"
                         android:textStyle="italic"
@@ -113,7 +113,7 @@
 
                 <!-- Content Text View -->
                 <TextView
-                    android:id="@+id/request_content_tv"
+                    android:id="@+id/forum_content_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/request_content_font_size" />

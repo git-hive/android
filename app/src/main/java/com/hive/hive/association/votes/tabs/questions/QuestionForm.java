@@ -2,14 +2,13 @@ package com.hive.hive.association.votes.tabs.questions;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
+
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
+
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,7 +20,6 @@ import com.hive.hive.association.votes.tabs.questions.model.OrderStatus;
 import com.hive.hive.association.votes.tabs.questions.model.Orientation;
 import com.hive.hive.association.votes.tabs.questions.model.TimeLineModel;
 import com.hive.hive.model.association.Question;
-import com.hive.hive.model.association.QuestionOptions;
 import com.hive.hive.model.association.Vote;
 
 import java.util.ArrayList;
