@@ -236,6 +236,7 @@
                          android:layout_width="wrap_content"
                          android:layout_height="wrap_content" />
                      <TextView
+                         android:id="@+id/expandable_voteStatusTV"
                          android:textColor="@color/red_text"
                          android:textStyle="italic"
                          android:text="Você ainda não votou!"

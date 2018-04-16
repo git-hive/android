@@ -4,6 +4,7 @@ package com.hive.hive.association.votes.tabs.current;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,7 +21,9 @@ import android.widget.TextView;
 
 import com.alexvasilkov.foldablelayout.UnfoldableView;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -77,11 +80,9 @@ public class CurrentFragment extends Fragment {
     private static ExpandableListView expandableListView;
     private static ExpandableListAdapter adapter;
 
-    // Views references
-    static ImageButton choseVoteBT;
-    ImageView supportsIV;
-    TextView supportsTV;
-
+    // Unfoldable Views references
+    private static ImageButton choseVoteBT;
+    private static TextView mHasVotedTV;
 
     public static CurrentFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -101,7 +102,7 @@ public class CurrentFragment extends Fragment {
         mView = view;
 
         choseVoteBT = view.findViewById(R.id.expandable_choseVoteBT);
-
+        mHasVotedTV = view.findViewById(R.id.expandable_voteStatusTV);
         // Temporary solution to unfold card, TODO: Check with the @guys
         mTopClickableCardIV = view.findViewById(R.id.expandable_topCardIV);
         mTopClickableCardIV.setOnClickListener(new View.OnClickListener() {
@@ -322,7 +323,25 @@ public class CurrentFragment extends Fragment {
                 context.startActivity(it);
             }
         });
-
+        VotesHelper.getVote(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mCurrentSessionId,
+                agendaID, questionsIds.get(0), FirebaseAuth.getInstance().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists()) {
+                    mHasVotedTV.setText(context.getString(R.string.has_vote));
+                    mHasVotedTV.setTextColor(context.getResources().getColor(R.color.green_text));
+                }else {
+                    mHasVotedTV.setText(context.getString(R.string.hasn_vote));
+                    mHasVotedTV.setTextColor(context.getResources().getColor(R.color.red_text));
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                mHasVotedTV.setVisibility(View.GONE);
+                Log.e(TAG, e.getMessage());
+            }
+        });
 
         // THIS MAGIC PEACE OF CODE MAKE THE VIEW WORK AS IT SHOULD
         expandableListView.setDividerHeight(0);

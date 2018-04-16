@@ -123,7 +123,8 @@
     <string name="suggested">Sugerida por:</string>
     <string name="lore_ipsun">Risus in hendrerit gravida rutrum quisque non. Porttitor leo a diam sollicitudin. Sem viverra aliquet eget sit. Purus in massa tempor nec feugiat. Id venenatis a condimentum vitae. Gravida rutrum quisque non tellus orci ac auctor augue mauris. Risus commodo viverra maecenas accumsan lacus vel. Arcu vitae elementum curabitur vitae nunc sed. Et netus et malesuada fames. Feugiat nisl pretium fusce id velit ut.  </string>
     <string name="partial_results">Resultados parciais:</string>
-
+    <string name="has_vote">Você já votou nesta pauta. :)</string>
+    <string name="hasn_vote">Você ainda não votou nesta pauta</string>
 
     <!-- Transparency Stuff -->
     <string name="hard_coded_i_do_like_pdfs_3"><![CDATA[HARD CODED. I DO LIKE PDFs <3]]></string>
