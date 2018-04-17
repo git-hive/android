@@ -297,28 +297,18 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                 .getResources()
                 .getDrawable(R.drawable.ic_support_borderline);
 
+        Request request = this.requests.get(position);
         if (requestsSupport.get(position)) {
             supportIV.setImageDrawable(borderlineSupportIC);
-            decrementSupports(numberOfSupportsTV);
+            request.decrementScore();
             Toast.makeText(context, "removing support", Toast.LENGTH_SHORT).show();
         } else {
             supportIV.setImageDrawable(filledSupportIC);
-            incrementSupports(numberOfSupportsTV);
+            request.incrementScore();
             Toast.makeText(context, "adding support", Toast.LENGTH_SHORT).show();
         }
+        notifyDataSetChanged();
         requestsSupport.put(position, !requestsSupport.get(position));
-    }
-
-    private void decrementSupports(TextView numberOfSupportsTV) {
-        int numberOfSupports = Integer.valueOf(numberOfSupportsTV.getText().toString());
-        int newNumberOfSupports = numberOfSupports - 1;
-        numberOfSupportsTV.setText(String.valueOf(newNumberOfSupports));
-    }
-
-    private void incrementSupports(TextView numberOfSupportsTV) {
-        int numberOfSupports = Integer.valueOf(numberOfSupportsTV.getText().toString());
-        int newNumberOfSupports = numberOfSupports + 1;
-        numberOfSupportsTV.setText(String.valueOf(newNumberOfSupports));
     }
 
     public void setData(ArrayList<Request> requests, ArrayList<String> requestIDs) {
