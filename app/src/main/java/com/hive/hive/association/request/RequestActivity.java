@@ -49,15 +49,31 @@ public class RequestActivity extends AppCompatActivity {
     //--- Association
     // TODO: Change hardcoded associationID
     private String associationID = "gVw7dUkuw3SSZSYRXe8s";
+
+    // DocumentReference -> RequestCategory
+    private HashMap<DocumentReference, RequestCategory> refCategory;
+
+    // [Request]
     private ArrayList<Request> allRequests;
-    private String mCategoryName = "services";
+
+    // Request -> requestID
+    private HashMap<Request, String> requestIds;
+
+    // "category name" -> [Request]
+    private HashMap<String, ArrayList<Request>> categoryRequests;
+
+    // Default category
+    private String mCategoryName = "all";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request);
 
-
+        this.refCategory = new HashMap<>();
+        this.allRequests = new ArrayList<>();
+        this.requestIds = new HashMap<>();
+        this.categoryRequests = new HashMap<>();
 
         // Find and set toolbar
         Toolbar toolbar = findViewById(R.id.requestTB);
@@ -117,9 +133,13 @@ public class RequestActivity extends AppCompatActivity {
                             return;
                         }
 
-                        ArrayList<DocumentSnapshot> categoryDocs =
-                                (ArrayList<DocumentSnapshot>) documentSnapshots.getDocuments();
-                        getAllRequestAndCallJoinRequestsCategories(categoryDocs);
+
+                        for (DocumentSnapshot snap : documentSnapshots) {
+                            RequestCategory requestCategory = snap.toObject(RequestCategory.class);
+                            refCategory.put(snap.getReference(), requestCategory);
+                        }
+
+                        getAllRequestAndCallJoinRequestsCategories();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -130,9 +150,7 @@ public class RequestActivity extends AppCompatActivity {
                 });
     }
 
-    private void getAllRequestAndCallJoinRequestsCategories(
-            ArrayList<DocumentSnapshot>  categoryDocs
-    ) {
+    private void getAllRequestAndCallJoinRequestsCategories() {
         AssociationHelper.getAllRequests(mDB, associationID)
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -147,9 +165,14 @@ public class RequestActivity extends AppCompatActivity {
                             return;
                         }
 
-                        ArrayList<DocumentSnapshot> requestDocs =
-                                (ArrayList<DocumentSnapshot>) documentSnapshots.getDocuments();
-                        joinRequestsWithCategoriesAndCallSetupRecyclerView(categoryDocs, requestDocs);
+
+                        for (DocumentSnapshot snap : documentSnapshots) {
+                            Request request = snap.toObject(Request.class);
+                            allRequests.add(request);
+                            requestIds.put(request, snap.getId());
+                        }
+
+                        joinRequestsWithCategoriesAndCallSetupRecyclerView();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -160,52 +183,52 @@ public class RequestActivity extends AppCompatActivity {
                 });
     }
 
-    private void joinRequestsWithCategoriesAndCallSetupRecyclerView(
-            ArrayList<DocumentSnapshot> categoryDocs,
-            ArrayList<DocumentSnapshot> requestDocs
-    ) {
-
-        HashMap<DocumentReference, DocumentSnapshot> categoryRefSnap = new HashMap<>();
-        for (DocumentSnapshot categoryDoc : categoryDocs) {
-            categoryRefSnap.put(categoryDoc.getReference(), categoryDoc);
-        }
-
-        // "category name" -> [DocumentSnapshot]
-        HashMap<String, ArrayList<DocumentSnapshot>> categoriesRequests = new HashMap<>();
-        categoriesRequests.put("all", new ArrayList<>());
+    private void joinRequestsWithCategoriesAndCallSetupRecyclerView() {
+        categoryRequests.put("all", new ArrayList<>());
 
         // For each request
-        for (DocumentSnapshot requestSnap : requestDocs) {
-            Request request = requestSnap.toObject(Request.class);
-            if (request.getCategoriesRefs() == null) break;
+        for (Request request : allRequests) {
+            // Add it to the "all" category
+            categoryRequests.get("all").add(request);
+            // If it doesn't have any category
+            if (request.getCategoriesRefs() == null) continue;
             // For each of it's categories
             for (DocumentReference categoryRef : request.getCategoriesRefs()) {
-                if (!categoryRefSnap.containsKey(categoryRef)) break;
+                // If the category doesn't exist
+                if (!refCategory.containsKey(categoryRef)) continue;
+
                 // Get category name
-                String requestCategoryName = categoryRefSnap
+                String requestCategoryName = refCategory
                         .get(categoryRef)
-                        .getString("name");
+                        .getName();
 
                 // If the ArrayList wasn't initialized, do so
-                if (!categoriesRequests.containsKey(requestCategoryName)) {
-                    categoriesRequests.put(requestCategoryName, new ArrayList<>());
+                if (!categoryRequests.containsKey(requestCategoryName)) {
+                    categoryRequests.put(requestCategoryName, new ArrayList<>());
                 }
 
-                categoriesRequests.get("all").add(requestSnap);
-                categoriesRequests.get(requestCategoryName).add(requestSnap);
+                categoryRequests.get(requestCategoryName).add(request);
             }
         }
 
-        setupRecyclerView(categoriesRequests);
+        setupRecyclerView();
     }
 
-    private void setupRecyclerView(
-            HashMap<String, ArrayList<DocumentSnapshot>> categoriesRequests
-    ) {
-        ArrayList<DocumentSnapshot> dataAdapter = categoriesRequests.get(mCategoryName);
+    private ArrayList<String> getRequestIDs(ArrayList<Request> requests) {
+        ArrayList<String> requestIDs = new ArrayList<>();
+        for (Request request : requests) {
+            requestIDs.add(this.requestIds.get(request));
+        }
+        return requestIDs;
+    }
+
+    private void setupRecyclerView() {
+        ArrayList<Request> requests = categoryRequests.get(mCategoryName);
+        ArrayList<String> categoryRequestIDs = getRequestIDs(requests);
 
         RequestAdapter mRecyclerAdapter = new RequestAdapter(
-                dataAdapter,
+                requests,
+                categoryRequestIDs,
                 this
         );
         mRecyclerAdapter.notifyDataSetChanged();
@@ -228,10 +251,12 @@ public class RequestActivity extends AppCompatActivity {
                     if (!categoryName.equals(mCategoryName)) {
                         mCategoryName = categoryName;
                         mFilterTV.setText(mmap.get(filterName.getText()));
-                        if (categoriesRequests.containsKey(categoryName)) {
-                            mRecyclerAdapter.setRequests(categoriesRequests.get(categoryName));
+                        if (categoryRequests.containsKey(categoryName)) {
+                            ArrayList<Request> requests = categoryRequests.get(mCategoryName);
+                            ArrayList<String> categoryRequestIDs = getRequestIDs(requests);
+                            mRecyclerAdapter.setData(requests, categoryRequestIDs);
                         } else {
-                            mRecyclerAdapter.setRequests(new ArrayList<>());
+                            mRecyclerAdapter.setData(new ArrayList<>(), new ArrayList<>());
                         }
                         mRecyclerAdapter.notifyDataSetChanged();
                     }
