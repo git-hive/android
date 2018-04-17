@@ -1,6 +1,7 @@
 package com.hive.hive.association.request;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,9 +16,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 import com.hive.hive.model.association.AssociationHelper;
 import com.hive.hive.model.association.Request;
@@ -174,9 +178,12 @@ public class NewRequestActivity extends AppCompatActivity {
 
 
         // OnClick Listeners
-        saveBT.setOnClickListener(view -> {
-            handleOnSaveButtonClick();
-            finish();
+        saveBT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleOnSaveButtonClick();
+                finish();
+            }
         });
 
         fetchAndSetRequestCategories();
@@ -190,81 +197,93 @@ public class NewRequestActivity extends AppCompatActivity {
                 mDB,
                 associationID
         )
-                .addOnSuccessListener(documentSnapshots -> {
-                    for (DocumentSnapshot categoryDoc : documentSnapshots) {
-                        RequestCategory requestCategory =
-                                categoryDoc.toObject(RequestCategory.class);
-                        Pair<DocumentReference, RequestCategory> newPair =
-                            Pair.create(categoryDoc.getReference(), requestCategory);
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot documentSnapshots) {
+                        for (DocumentSnapshot categoryDoc : documentSnapshots) {
+                            RequestCategory requestCategory =
+                                    categoryDoc.toObject(RequestCategory.class);
+                            Pair<DocumentReference, RequestCategory> newPair =
+                                    Pair.create(categoryDoc.getReference(), requestCategory);
 
-                        requestCategoriesPairs.add(newPair);
+                            requestCategoriesPairs.add(newPair);
+                        }
                     }
                 })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(
-                            this,
-                            "Failed to get categories",
-                            Toast.LENGTH_SHORT
-                    ).show();
-                    Log.e(TAG, "failed to get association categories: " + e.toString());
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(
+                                NewRequestActivity.this,
+                                "Failed to get categories",
+                                Toast.LENGTH_SHORT
+                        ).show();
+                        Log.e(TAG, "failed to get association categories: " + e.toString());
+                    }
                 });
     }
 
     private View.OnClickListener budgetCategoriesOnClickListener() {
-        return v -> {
-            resetSelectedBudgetCategory();
-            switch (v.getId()) {
-                case R.id.new_request_budget_category_ordinary_ll:
-                    selectedBudgetCategoryTV.setText(R.string.budget_category_ordinary);
-                    budgetCategoryOrdinaryIV.setImageResource(R.drawable.ic_budget_category_ordinary);
-                    budgetCategoryOrdinaryCB.setSelected(true);
-                    break;
-                case R.id.new_request_budget_category_savings_ll:
-                    selectedBudgetCategoryTV.setText(R.string.budget_category_savings);
-                    budgetCategorySavingsIV.setImageResource(R.drawable.ic_budget_category_savings);
-                    budgetCategorySavingsCB.setSelected(true);
-                    break;
-                case R.id.new_request_budget_category_extraordinary_ll:
-                    selectedBudgetCategoryTV.setText(R.string.budget_category_extraordinary);
-                    budgetCategoryExtraordinaryIV.setImageResource(R.drawable.ic_budget_category_extraordinary);
-                    budgetCategoryExtraordinaryCB.setSelected(true);
-                    break;
-                default:
-                    break;
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetSelectedBudgetCategory();
+                switch (v.getId()) {
+                    case R.id.new_request_budget_category_ordinary_ll:
+                        selectedBudgetCategoryTV.setText(R.string.budget_category_ordinary);
+                        budgetCategoryOrdinaryIV.setImageResource(R.drawable.ic_budget_category_ordinary);
+                        budgetCategoryOrdinaryCB.setSelected(true);
+                        break;
+                    case R.id.new_request_budget_category_savings_ll:
+                        selectedBudgetCategoryTV.setText(R.string.budget_category_savings);
+                        budgetCategorySavingsIV.setImageResource(R.drawable.ic_budget_category_savings);
+                        budgetCategorySavingsCB.setSelected(true);
+                        break;
+                    case R.id.new_request_budget_category_extraordinary_ll:
+                        selectedBudgetCategoryTV.setText(R.string.budget_category_extraordinary);
+                        budgetCategoryExtraordinaryIV.setImageResource(R.drawable.ic_budget_category_extraordinary);
+                        budgetCategoryExtraordinaryCB.setSelected(true);
+                        break;
+                    default:
+                        break;
+                }
             }
         };
     }
 
     private View.OnClickListener requestCategoriesOnClickListener() {
-        return v -> {
-            resetSelectedRequestCategory();
-            switch (v.getId()) {
-                case R.id.new_request_request_category_security_ll:
-                    selectedRequestCategoryTV.setText(R.string.request_category_security);
-                    requestCategorySecurityIV.setImageResource(R.drawable.ic_category_security);
-                    requestCategorySecurityCB.setSelected(true);
-                    searchAndSetRequestCategory("security");
-                    break;
-                case R.id.new_request_request_category_gardening_ll:
-                    selectedRequestCategoryTV.setText(R.string.request_category_gardening);
-                    requestCategoryGardeningIV.setImageResource(R.drawable.ic_category_gardening);
-                    requestCategoryGardeningIV.setSelected(true);
-                    searchAndSetRequestCategory("gardening");
-                    break;
-                case R.id.new_request_request_category_maintenance_ll:
-                    selectedRequestCategoryTV.setText(R.string.request_category_maintenance);
-                    requestCategoryServicesIV.setImageResource(R.drawable.ic_category_services);
-                    requestCategoryServicesIV.setSelected(true);
-                    searchAndSetRequestCategory("services");
-                    break;
-                case R.id.new_request_request_category_cleaning_ll:
-                    selectedRequestCategoryTV.setText(R.string.request_category_cleaning);
-                    requestCategoryCleaningIV.setImageResource(R.drawable.ic_category_cleaning);
-                    requestCategoryCleaningCB.setSelected(true);
-                    searchAndSetRequestCategory("cleaning");
-                    break;
-                default:
-                    break;
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetSelectedRequestCategory();
+                switch (v.getId()) {
+                    case R.id.new_request_request_category_security_ll:
+                        selectedRequestCategoryTV.setText(R.string.request_category_security);
+                        requestCategorySecurityIV.setImageResource(R.drawable.ic_category_security);
+                        requestCategorySecurityCB.setSelected(true);
+                        searchAndSetRequestCategory("security");
+                        break;
+                    case R.id.new_request_request_category_gardening_ll:
+                        selectedRequestCategoryTV.setText(R.string.request_category_gardening);
+                        requestCategoryGardeningIV.setImageResource(R.drawable.ic_category_gardening);
+                        requestCategoryGardeningIV.setSelected(true);
+                        searchAndSetRequestCategory("gardening");
+                        break;
+                    case R.id.new_request_request_category_maintenance_ll:
+                        selectedRequestCategoryTV.setText(R.string.request_category_maintenance);
+                        requestCategoryServicesIV.setImageResource(R.drawable.ic_category_services);
+                        requestCategoryServicesIV.setSelected(true);
+                        searchAndSetRequestCategory("services");
+                        break;
+                    case R.id.new_request_request_category_cleaning_ll:
+                        selectedRequestCategoryTV.setText(R.string.request_category_cleaning);
+                        requestCategoryCleaningIV.setImageResource(R.drawable.ic_category_cleaning);
+                        requestCategoryCleaningCB.setSelected(true);
+                        searchAndSetRequestCategory("cleaning");
+                        break;
+                    default:
+                        break;
+                }
             }
         };
     }
@@ -327,7 +346,6 @@ public class NewRequestActivity extends AppCompatActivity {
         categoriesRefs.add(selectedRequestCategoryPair.first);
 
         Request request = new Request(
-                requestUUID,
                 currentTimeMillis,
                 currentTimeMillis,
                 DocReferences.getUserRef(),
@@ -346,18 +364,26 @@ public class NewRequestActivity extends AppCompatActivity {
                 requestUUID,
                 request
         )
-                .addOnSuccessListener(aVoid -> Toast.makeText(
-                        this,
-                        "Request saved",
-                        Toast.LENGTH_SHORT
-                ).show())
-                .addOnFailureListener(e -> {
-                    Toast.makeText(
-                            this,
-                            "Failed to save request",
-                            Toast.LENGTH_SHORT
-                    ).show();
-                    Log.e(TAG, "[Request] failed to save: " + e.toString());
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(
+                                NewRequestActivity.this,
+                                "Request saved",
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(
+                                NewRequestActivity.this,
+                                "Failed to save request",
+                                Toast.LENGTH_SHORT
+                        ).show();
+                        Log.e(TAG, "[Request] failed to save: " + e.toString());
+                    }
                 });
     }
 }

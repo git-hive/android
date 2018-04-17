@@ -3,6 +3,7 @@ package com.hive.hive.association.request;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -16,9 +17,12 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 import com.hive.hive.model.association.AssociationHelper;
 import com.hive.hive.model.association.Request;
@@ -45,16 +49,31 @@ public class RequestActivity extends AppCompatActivity {
     //--- Association
     // TODO: Change hardcoded associationID
     private String associationID = "gVw7dUkuw3SSZSYRXe8s";
-    private ArrayList<Request> allRequests;
-    private String mCategoryName = "Services";
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    // DocumentReference -> RequestCategory
+    private HashMap<DocumentReference, RequestCategory> refCategory;
+
+    // [Request]
+    private ArrayList<Request> allRequests;
+
+    // Request -> requestID
+    private HashMap<Request, String> requestIds;
+
+    // "category name" -> [Request]
+    private HashMap<String, ArrayList<Request>> categoryRequests;
+
+    // Default category
+    private String mCategoryName = "all";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request);
 
-
+        this.refCategory = new HashMap<>();
+        this.allRequests = new ArrayList<>();
+        this.requestIds = new HashMap<>();
+        this.categoryRequests = new HashMap<>();
 
         // Find and set toolbar
         Toolbar toolbar = findViewById(R.id.requestTB);
@@ -68,9 +87,14 @@ public class RequestActivity extends AppCompatActivity {
         }
 
         FloatingActionButton fab =  findViewById(R.id.fab);
-        fab.setOnClickListener(view -> startActivity(
-                new Intent(RequestActivity.this, NewRequestActivity.class)
-        ));
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RequestActivity.this.startActivity(
+                        new Intent(RequestActivity.this, NewRequestActivity.class)
+                );
+            }
+        });
 
         getAllRequestCategoriesAndCallGetAllRequests();
     }
@@ -91,95 +115,122 @@ public class RequestActivity extends AppCompatActivity {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     private void getAllRequestCategoriesAndCallGetAllRequests() {
         AssociationHelper.getAllRequestCategories(
                 mDB,
                 associationID
         )
-                .addOnSuccessListener(documentSnapshots -> {
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot documentSnapshots) {
 
-                    if (documentSnapshots.isEmpty()) {
-                        Toast.makeText(
-                                this,
-                                "Falha ao pegar categorias",
-                                Toast.LENGTH_SHORT
-                        ).show();
-                        return;
-                    }
+                        if (documentSnapshots.isEmpty()) {
+                            Toast.makeText(
+                                    RequestActivity.this,
+                                    "Falha ao pegar categorias",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                            return;
+                        }
 
-                    ArrayMap<DocumentReference, RequestCategory> categories = new ArrayMap<>();
-                    for (DocumentSnapshot doc : documentSnapshots.getDocuments()) {
-                        RequestCategory requestCategory = doc.toObject(RequestCategory.class);
-                        categories.put(doc.getReference(), requestCategory);
+
+                        for (DocumentSnapshot snap : documentSnapshots) {
+                            RequestCategory requestCategory = snap.toObject(RequestCategory.class);
+                            refCategory.put(snap.getReference(), requestCategory);
+                        }
+
+                        getAllRequestAndCallJoinRequestsCategories();
                     }
-                    getAllRequestAndCallJoinRequestsCategories(categories);
                 })
-                .addOnFailureListener(e -> Log.e(TAG, e.toString()));
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, e.toString());
+                    }
+                });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void getAllRequestAndCallJoinRequestsCategories(
-            ArrayMap<DocumentReference, RequestCategory> categories
-    ) {
+    private void getAllRequestAndCallJoinRequestsCategories() {
         AssociationHelper.getAllRequests(mDB, associationID)
-                .addOnSuccessListener(documentSnapshots -> {
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot documentSnapshots) {
 
-                    if (documentSnapshots.isEmpty()) {
-                        Toast.makeText(
-                                this,
-                                "Falha ao pegar requisições",
-                                Toast.LENGTH_SHORT
-                        ).show();
-                        return;
-                    }
+                        if (documentSnapshots.isEmpty()) {
+                            Toast.makeText(
+                                    RequestActivity.this,
+                                    "Falha ao pegar requisições",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                            return;
+                        }
 
-                    ArrayList<Request> requests = new ArrayList<>();
-                    for (DocumentSnapshot doc : documentSnapshots) {
-                        requests.add(doc.toObject(Request.class));
+
+                        for (DocumentSnapshot snap : documentSnapshots) {
+                            Request request = snap.toObject(Request.class);
+                            if (request.getAuthorRef() == null) continue;
+                            allRequests.add(request);
+                            requestIds.put(request, snap.getId());
+                        }
+
+                        joinRequestsWithCategoriesAndCallSetupRecyclerView();
                     }
-                    joinRequestsWithCategoriesAndCallSetupRecyclerView(categories, requests);
                 })
-                .addOnFailureListener(e -> Log.e(TAG, e.toString()));
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, e.toString());
+                    }
+                });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void joinRequestsWithCategoriesAndCallSetupRecyclerView(
-            ArrayMap<DocumentReference, RequestCategory> categories,
-            ArrayList<Request> requests
-    ) {
-        // "category name" -> [RequestCategory]
-        HashMap<String, ArrayList<Request>> categoriesRequests = new HashMap<>();
-        categoriesRequests.put("all", new ArrayList<>());
+    private void joinRequestsWithCategoriesAndCallSetupRecyclerView() {
+        categoryRequests.put("all", new ArrayList<>());
+
         // For each request
-        for (Request request : requests) {
+        for (Request request : allRequests) {
+            // Add it to the "all" category
+            categoryRequests.get("all").add(request);
+            // If it doesn't have any category
+            if (request.getCategoriesRefs() == null) continue;
             // For each of it's categories
             for (DocumentReference categoryRef : request.getCategoriesRefs()) {
+                // If the category doesn't exist
+                if (!refCategory.containsKey(categoryRef)) continue;
+
                 // Get category name
-                String requestCategoryName = categories.get(categoryRef).getName();
+                String requestCategoryName = refCategory
+                        .get(categoryRef)
+                        .getName();
 
                 // If the ArrayList wasn't initialized, do so
-                if (!categoriesRequests.containsKey(requestCategoryName)) {
-                    categoriesRequests.put(requestCategoryName, new ArrayList<>());
+                if (!categoryRequests.containsKey(requestCategoryName)) {
+                    categoryRequests.put(requestCategoryName, new ArrayList<>());
                 }
 
-                categoriesRequests.get("all").add(request);
-                categoriesRequests.get(requestCategoryName).add(request);
+                categoryRequests.get(requestCategoryName).add(request);
             }
         }
 
-        setupRecyclerView(categoriesRequests);
+        setupRecyclerView();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void setupRecyclerView(HashMap<String, ArrayList<Request>> categoriesRequests) {
-        ArrayList<Request> dataAdapter = categoriesRequests.get(mCategoryName);
+    private ArrayList<String> getRequestIDs(ArrayList<Request> requests) {
+        ArrayList<String> requestIDs = new ArrayList<>();
+        for (Request request : requests) {
+            requestIDs.add(this.requestIds.get(request));
+        }
+        return requestIDs;
+    }
+
+    private void setupRecyclerView() {
+        ArrayList<Request> requests = categoryRequests.get(mCategoryName);
+        ArrayList<String> categoryRequestIDs = getRequestIDs(requests);
 
         RequestAdapter mRecyclerAdapter = new RequestAdapter(
-                dataAdapter,
-                this,
-                40,
-                150
+                requests,
+                categoryRequestIDs,
+                this
         );
         mRecyclerAdapter.notifyDataSetChanged();
 
@@ -192,53 +243,29 @@ public class RequestActivity extends AppCompatActivity {
 
         mFilterTV = findViewById(R.id.menuFilterTV);
 
-        mMenuRV.setOnScrollChangeListener((
-                View v,
-                int scrollX,
-                int scrollY,
-                int oldScrollX,
-                int oldScrollY
-        ) -> {
-
-            TextView filterName = v.findViewById(R.id.menuItemCategorieTV);
-
-            if(mMenuRV.getLayoutManager()!= null) {
-                View nodeInRV = mMenuRV.getChildAt(1);
-                if(nodeInRV != null) {
-                    TextView localFilterName = nodeInRV.findViewById(R.id.menuItemCategorieTV);
-                    if (localFilterName != null) {
-                        if(mFilterTV != null) {
-                            mFilterTV.setText(mmap.get(localFilterName.getText()));
-                            Log.d(TAG, mmap.get(localFilterName.getText()) + "**********************************************************"+ localFilterName.getText());
-
-                        } else
-                            Log.d(TAG, localFilterName.getText() + " /////////////////////////////////////////////// ");
-
-
-                        //Toast.makeText(v.getContext(), "clicked:" + localFilterName, Toast.LENGTH_SHORT).show();
-                    }else
-                        Log.d(TAG, localFilterName.getText() + "##################################################33");
-
-
-                }
-            }
-
-
-
-        if (filterName != null) {
-                String categoryName = mmap.get(filterName.getText()).toLowerCase();
-                // If the category has actually changed
-                if (!categoryName.equals(mCategoryName)) {
-                    mCategoryName = categoryName;
-                    mFilterTV.setText(mmap.get(filterName.getText()));
-                    if (categoriesRequests.containsKey(categoryName)) {
-                        mRecyclerAdapter.setRequests(categoriesRequests.get(categoryName));
-                    } else {
-                        mRecyclerAdapter.setRequests(new ArrayList<>());
+        mMenuRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                TextView filterName = recyclerView.findViewById(R.id.menuItemCategorieTV);
+                super.onScrollStateChanged(recyclerView, newState);
+                if (filterName != null) {
+                    String categoryName = mmap.get(filterName.getText()).toLowerCase();
+                    // If the category has actually changed
+                    if (!categoryName.equals(mCategoryName)) {
+                        mCategoryName = categoryName;
+                        mFilterTV.setText(mmap.get(filterName.getText()));
+                        if (categoryRequests.containsKey(categoryName)) {
+                            ArrayList<Request> requests = categoryRequests.get(mCategoryName);
+                            ArrayList<String> categoryRequestIDs = getRequestIDs(requests);
+                            mRecyclerAdapter.setData(requests, categoryRequestIDs);
+                        } else {
+                            mRecyclerAdapter.setData(new ArrayList<>(), new ArrayList<>());
+                        }
+                        mRecyclerAdapter.notifyDataSetChanged();
                     }
-                    mRecyclerAdapter.notifyDataSetChanged();
                 }
             }
         });
+        
     }
 }

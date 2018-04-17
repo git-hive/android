@@ -2,6 +2,8 @@ package com.hive.hive.association.request;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,7 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -28,17 +35,20 @@ import com.hive.hive.utils.SupportMutex;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestViewHolder> {
     private String TAG = RequestAdapter.class.getSimpleName();
 
-    private int MAX_TITLE_SIZE = 47;
-    private int MAX_CONTENT_SIZE = 147;
-
     //-- Data
     ArrayList<Request> requests;
+    ArrayList<String> requestIDs;
+    private HashMap<Integer, Boolean> requestsSupport;
     private ArrayList<SupportMutex> mLocks;
     private Context context;
+
+    private HashMap<DocumentReference, String> usernames;
+    private HashMap<DocumentReference, String> userProfilePictures;
 
     //--- Firestore
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -47,13 +57,17 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     private String mAssociationID = "gVw7dUkuw3SSZSYRXe8s";
 
     public RequestAdapter(
-            ArrayList<Request> requests, Context context, int max_title, int max_content
+            ArrayList<Request> requestSnaps,
+            ArrayList<String> requestIDs,
+            Context context
     ) {
-        this.requests = requests;
-        this.context = context;
+        this.requests = requestSnaps;
+        this.requestIDs = requestIDs;
         this.mLocks = new ArrayList<>();
-        MAX_TITLE_SIZE = max_title - 3;
-        MAX_CONTENT_SIZE = max_title - 3;
+        this.requestsSupport = new HashMap<>();
+        this.usernames = new HashMap<>();
+        this.userProfilePictures = new HashMap<>();
+        this.context = context;
     }
 
     @Override
@@ -74,7 +88,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             mLocks.add(new SupportMutex(holder.mNumberOfSupportsTV, holder.mSupportsIV));
         }
 
-        final Request request = requests.get(position);
+        Request request = requests.get(position);
 
         holder.mItem = request;
 
@@ -88,17 +102,23 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         holder.mNumberOfCommentsTV.setText(String.valueOf(request.getNumComments()));
 
         // fill support if necessary
-        shouldFillSupport(holder, getRequestID(position));
+        shouldFillSupport(holder, getRequestID(position), position);
 
-        holder.mView.setOnClickListener(view ->
-                context.startActivity(
-                        new Intent(context, CommentsActivity.class)
-                                .putExtra(CommentsActivity.REQUEST_ID ,request.getId())
-                )
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    context.startActivity(
+                            new Intent(context, CommentsActivity.class)
+                                    .putExtra(CommentsActivity.REQUEST_ID, getRequestID(position))
+                    );
+                }
+            }
         );
 
-        holder.mSupportsIV.setOnClickListener(createToggleSupportOnClickListener(position));
-        holder.mNumberOfSupportsTV.setOnClickListener(createToggleSupportOnClickListener(position));
+        holder.mSupportsIV
+                .setOnClickListener(createToggleSupportOnClickListener(position, holder));
+        holder.mNumberOfSupportsTV
+                .setOnClickListener(createToggleSupportOnClickListener(position, holder));
     }
 
     @Override
@@ -108,58 +128,109 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         return 0;
     }
 
-    private View.OnClickListener createToggleSupportOnClickListener(int position) {
-        return v -> {
-            // Lock the mutex as soon as the user clicks
-            SupportMutex mutex = mLocks.get(position);
-            mutex.lock();
+    private View.OnClickListener createToggleSupportOnClickListener(
+            int position,
+            final RequestViewHolder holder
+    ) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleRequestSupport(position, holder.mNumberOfSupportsTV, holder.mSupportsIV);
 
-            getRequestSupportAndCallSupportActionHandler(
-                    position,
-                    getRequestID(position),
-                    mutex
-            );
+                // Lock the mutex as soon as the user clicks
+                SupportMutex mutex = mLocks.get(position);
+                mutex.lock();
+
+                getRequestSupportAndCallSupportActionHandler(
+                        getRequestID(position),
+                        mutex
+                );
+            }
         };
     }
 
-    // TODO: FINISH
-    private void fillUser(final RequestViewHolder holder, DocumentReference userRef){
-        userRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                Log.d(TAG, documentSnapshot.get("name").toString());
-                User user = documentSnapshot.toObject(User.class);
-                holder.mUserName.setText(user.getName());
-                ProfilePhotoHelper.loadImage(context, holder.mUserAvatar, user.getPhotoUrl());
+    private void fillUser(final RequestViewHolder holder, DocumentReference userRef) {
+        // Check if it has on memory
+        if (usernames.containsKey(userRef) && userProfilePictures.containsKey(userRef)) {
+            String username = usernames.get(userRef);
+            String userPhoto = userProfilePictures.get(userRef);
+
+            holder.mUserName.setText(username);
+            ProfilePhotoHelper.loadImage(context, holder.mUserAvatar, userPhoto);
+
+            return;
+        }
+
+        // If it doesn't, fetch it
+        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    Log.d(TAG, documentSnapshot.get("name").toString());
+                    User user = documentSnapshot.toObject(User.class);
+                    String username = user.getName();
+                    String userPhoto = user.getPhotoUrl();
+
+                    // Save data to local "cache"
+                    usernames.put(userRef, username);
+                    userProfilePictures.put(userRef, userPhoto);
+
+                    holder.mUserName.setText(username);
+                    ProfilePhotoHelper.loadImage(context, holder.mUserAvatar, userPhoto);
+                }
             }
         });
     }
 
     private String getRequestID(int requestPosition) {
-        return requests.get(requestPosition).getId();
+        return requestIDs.get(requestPosition);
     }
 
-    private void shouldFillSupport(final RequestViewHolder holder, String requestId){
-        //if exists support, then should be IV filled
+    private void shouldFillSupport(
+            final RequestViewHolder holder,
+            String requestId,
+            final int position
+    ) {
+        // Check if it has on memory
+        if (requestsSupport.containsKey(position)) {
+            if (requestsSupport.get(position)) {
+                holder.mSupportsIV.setImageDrawable(
+                        context.getResources().getDrawable(R.drawable.ic_support_filled)
+                );
+            } else {
+                holder.mSupportsIV.setImageDrawable(
+                        context.getResources().getDrawable(R.drawable.ic_support_borderline)
+                );
+            }
+            return;
+        }
+        // If it doesn't, fetch it
+
         AssociationHelper.getRequestSupport(
                 mDB,
                 mAssociationID,
                 requestId,
                 mUser.getUid()
         )
-                .addOnSuccessListener(documentSnapshot -> {
-                    if(documentSnapshot.exists())
-                        holder.mSupportsIV.setImageDrawable(
-                                context.getResources().getDrawable(R.drawable.ic_support_filled)
-                        );
-                    else
-                        holder.mSupportsIV.setImageDrawable(
-                                context.getResources().getDrawable(R.drawable.ic_support_borderline)
-                        );
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            requestsSupport.put(position, true);
+                            holder.mSupportsIV.setImageDrawable(
+                                    context.getResources().getDrawable(R.drawable.ic_support_filled)
+                            );
+                        } else {
+                            requestsSupport.put(position, false);
+                            holder.mSupportsIV.setImageDrawable(
+                                    context.getResources().getDrawable(R.drawable.ic_support_borderline)
+                            );
+                        }
+                    }
                 });
     }
 
     private void getRequestSupportAndCallSupportActionHandler(
-            int requestPosition,
             String requestID,
             final SupportMutex mutex
     ) {
@@ -170,22 +241,24 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                 mUser.getUid()
         )
                 .addOnSuccessListener(
-                        documentSnapshot -> supportActionHandler(
-                                requestPosition,
-                                requestID,
-                                documentSnapshot,
-                                mutex
-                        )
+                        new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                supportActionHandler(
+                                        requestID,
+                                        documentSnapshot,
+                                        mutex
+                                );
+                            }
+                        }
                 );
     }
 
     private void supportActionHandler(
-            int requestPosition,
             String requestID,
             DocumentSnapshot supportSnap,
             final SupportMutex mutex
     ) {
-        Request request = requests.get(requestPosition);
         // Toggle request support
         if (supportSnap.exists()) {
             // Remove support
@@ -195,11 +268,17 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                     requestID,
                     supportSnap.getId()
             )
-                    .addOnCompleteListener(task -> mutex.unlock())
-                    .addOnFailureListener(e -> Log.e(TAG, e.toString()))
-                    .addOnSuccessListener(aVoid -> {
-                        request.decrementScore();
-                        RequestAdapter.this.notifyDataSetChanged();
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            mutex.unlock();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e(TAG, e.toString());
+                        }
                     });
         } else {
             // Create and save support
@@ -210,7 +289,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             // TODO: Add missing refs
             Long currentTimeInMillis = Calendar.getInstance().getTimeInMillis();
             AssociationSupport support = new AssociationSupport(
-                    supportId,
                     currentTimeInMillis,
                     currentTimeInMillis,
                     userRef,
@@ -226,17 +304,51 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                     supportId,
                     support
             )
-                    .addOnCompleteListener(task -> mutex.unlock())
-                    .addOnFailureListener(e ->Log.e(TAG, e.toString()))
-                    .addOnSuccessListener(aVoid -> {
-                        request.incrementScore();
-                        RequestAdapter.this.notifyDataSetChanged();
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            mutex.unlock();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e(TAG, e.toString());
+                        }
                     });
         }
     }
 
-    public void setRequests(ArrayList<Request> requests) {
+    private void toggleRequestSupport(
+            int position,
+            TextView numberOfSupportsTV,
+            ImageView supportIV
+    ) {
+        Drawable filledSupportIC = context
+                .getResources()
+                .getDrawable(R.drawable.ic_support_filled);
+
+        Drawable borderlineSupportIC = context
+                .getResources()
+                .getDrawable(R.drawable.ic_support_borderline);
+
+        Request request = this.requests.get(position);
+        if (requestsSupport.get(position)) {
+            supportIV.setImageDrawable(borderlineSupportIC);
+            request.decrementScore();
+            Toast.makeText(context, "removing support", Toast.LENGTH_SHORT).show();
+        } else {
+            supportIV.setImageDrawable(filledSupportIC);
+            request.incrementScore();
+            Toast.makeText(context, "adding support", Toast.LENGTH_SHORT).show();
+        }
+        notifyDataSetChanged();
+        requestsSupport.put(position, !requestsSupport.get(position));
+    }
+
+    public void setData(ArrayList<Request> requests, ArrayList<String> requestIDs) {
         this.requests = requests;
+        this.requestIDs = requestIDs;
     }
 
     /**
