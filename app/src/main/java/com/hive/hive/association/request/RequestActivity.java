@@ -168,6 +168,7 @@ public class RequestActivity extends AppCompatActivity {
 
                         for (DocumentSnapshot snap : documentSnapshots) {
                             Request request = snap.toObject(Request.class);
+                            if (request.getAuthorRef() == null) continue;
                             allRequests.add(request);
                             requestIds.put(request, snap.getId());
                         }
