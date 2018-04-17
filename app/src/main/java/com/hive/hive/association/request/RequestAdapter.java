@@ -47,6 +47,9 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     private ArrayList<SupportMutex> mLocks;
     private Context context;
 
+    private HashMap<DocumentReference, String> usernames;
+    private HashMap<DocumentReference, String> userProfilePictures;
+
     //--- Firestore
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser mUser = mAuth.getCurrentUser();
@@ -62,6 +65,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         this.requestIDs = requestIDs;
         this.mLocks = new ArrayList<>();
         this.requestsSupport = new HashMap<>();
+        this.usernames = new HashMap<>();
+        this.userProfilePictures = new HashMap<>();
         this.context = context;
     }
 
@@ -83,7 +88,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             mLocks.add(new SupportMutex(holder.mNumberOfSupportsTV, holder.mSupportsIV));
         }
 
-        final Request request = requests.get(position);
+        Request request = requests.get(position);
 
         holder.mItem = request;
 
@@ -135,7 +140,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                 mutex.lock();
 
                 getRequestSupportAndCallSupportActionHandler(
-                        position,
                         getRequestID(position),
                         mutex
                 );
@@ -143,15 +147,34 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         };
     }
 
-    private void fillUser(final RequestViewHolder holder, DocumentReference userRef){
+    private void fillUser(final RequestViewHolder holder, DocumentReference userRef) {
+        // Check if it has on memory
+        if (usernames.containsKey(userRef) && userProfilePictures.containsKey(userRef)) {
+            String username = usernames.get(userRef);
+            String userPhoto = userProfilePictures.get(userRef);
+
+            holder.mUserName.setText(username);
+            ProfilePhotoHelper.loadImage(context, holder.mUserAvatar, userPhoto);
+
+            return;
+        }
+
+        // If it doesn't, fetch it
         userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
                     Log.d(TAG, documentSnapshot.get("name").toString());
                     User user = documentSnapshot.toObject(User.class);
-                    holder.mUserName.setText(user.getName());
-                    ProfilePhotoHelper.loadImage(context, holder.mUserAvatar, user.getPhotoUrl());
+                    String username = user.getName();
+                    String userPhoto = user.getPhotoUrl();
+
+                    // Save data to local "cache"
+                    usernames.put(userRef, username);
+                    userProfilePictures.put(userRef, userPhoto);
+
+                    holder.mUserName.setText(username);
+                    ProfilePhotoHelper.loadImage(context, holder.mUserAvatar, userPhoto);
                 }
             }
         });
@@ -166,7 +189,21 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             String requestId,
             final int position
     ) {
-        //if exists support, then should be IV filled
+        // Check if it has on memory
+        if (requestsSupport.containsKey(position)) {
+            if (requestsSupport.get(position)) {
+                holder.mSupportsIV.setImageDrawable(
+                        context.getResources().getDrawable(R.drawable.ic_support_filled)
+                );
+            } else {
+                holder.mSupportsIV.setImageDrawable(
+                        context.getResources().getDrawable(R.drawable.ic_support_borderline)
+                );
+            }
+            return;
+        }
+        // If it doesn't, fetch it
+
         AssociationHelper.getRequestSupport(
                 mDB,
                 mAssociationID,
@@ -192,7 +229,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     }
 
     private void getRequestSupportAndCallSupportActionHandler(
-            int requestPosition,
             String requestID,
             final SupportMutex mutex
     ) {
@@ -207,7 +243,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                             @Override
                             public void onSuccess(DocumentSnapshot documentSnapshot) {
                                 supportActionHandler(
-                                        requestPosition,
                                         requestID,
                                         documentSnapshot,
                                         mutex
@@ -218,12 +253,10 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     }
 
     private void supportActionHandler(
-            int requestPosition,
             String requestID,
             DocumentSnapshot supportSnap,
             final SupportMutex mutex
     ) {
-        Request request = requests.get(requestPosition);
         // Toggle request support
         if (supportSnap.exists()) {
             // Remove support
