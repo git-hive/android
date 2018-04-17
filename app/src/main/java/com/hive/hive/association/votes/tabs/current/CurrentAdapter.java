@@ -2,6 +2,7 @@ package com.hive.hive.association.votes.tabs.current;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -25,19 +26,18 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.VotesHelper;
+import com.hive.hive.association.votes.voters.VotersListActivity;
 import com.hive.hive.model.association.Agenda;
 import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.Session;
 import com.hive.hive.model.user.User;
+import com.hive.hive.utils.DocReferences;
 import com.hive.hive.utils.ProfilePhotoHelper;
 import com.hive.hive.utils.TimeUtils;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.UUID;
 import java.util.List;
 
 public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestViewHolder> {
@@ -45,6 +45,8 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
     //-- Data
     private HashMap<String, Agenda> mAgendas;
     private ArrayList<String> mAgendaIds;
+    private HashMap<String, Integer> mAgendaScore;
+    public  static String mCurrentAgendaId;
     private Session mCurrentSession;
     //-- Timer
     ArrayList<CountDownTimer> mTimers;
@@ -66,12 +68,13 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
 
     //-- IDS TO PASS TO VOTE
     String agendaID;
-    public CurrentAdapter(Context context, Session session, HashMap<String, Agenda> agendas, ArrayList<String> agendasIds,
+    public CurrentAdapter(Context context, Session session, HashMap<String, Agenda> agendas, ArrayList<String> agendasIds, HashMap<String, Integer> agendaScore,
                           UnfoldableView unfoldableView, FrameLayout detailsLayout, View view){
         this.mContext = context;
         this.mCurrentSession = session;
         this.mAgendas = agendas;
         this.mAgendaIds = agendasIds;
+        this.mAgendaScore = agendaScore;
         this.mUnfoldableView = unfoldableView;
         this.mDetailsLayout = detailsLayout;
         this.mView = view;
@@ -115,15 +118,10 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
                             CurrentFragment.setItems(mContext, mQuestions, mQuestionsIds, agendaID);
                             break;
                         case MODIFIED:
-//                            Question newQ = dc.getDocument().toObject(Question.class);
-//                            newQ.setInfo("info 3");
-//                            newQ.setQuestion("Question 3");
-//                            VotesHelper.getQuestions(FirebaseFirestore.getInstance(),"gVw7dUkuw3SSZSYRXe8s",
-//                                    CurrentFragment.mCurrentSessionId, "9c283f6a-d7a0-45c2-8762-6394efd68a51").document(UUID.randomUUID().toString()).set(newQ);
                             String modifiedId = dc.getDocument().getId();
                             mQuestions.remove(modifiedId);
                             mQuestions.put(modifiedId, dc.getDocument().toObject(Question.class));
-                            CurrentFragment.setItems(mContext, mQuestions, mQuestionsIds, agendaID);
+                            CurrentFragment.updateItems();
                             break;
                         case REMOVED:
                             String removedId = dc.getDocument().getId();
@@ -132,6 +130,21 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
                             CurrentFragment.setItems(mContext, mQuestions, mQuestionsIds, agendaID);
                             break;
                     }
+                }
+                if(mQuestionsIds != null){
+                    TextView votersTV = mView.findViewById(R.id.expandable_supportTV);
+                    ImageView votersIV = mView.findViewById(R.id.expandable_supportIV);
+
+                    View.OnClickListener votersOnClickListener = new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                        }
+                    };
+
+                    votersIV.setOnClickListener(votersOnClickListener);
+                    votersTV.setOnClickListener(votersOnClickListener);
+
                 }
             }
         };
@@ -145,6 +158,8 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
         holder.mTitle.setText(agenda.getTitle());
         //TODO:Change this line to get from server
         holder.mCategoryIcon.setImageResource(getDrawable("services"));
+        if(mAgendaScore != null && mAgendaIds.get(position) != null)
+            holder.mRequestScore.setText(mAgendaScore.get(mAgendaIds.get(position)).toString());
         //TODO USE RETURN FROM CLOCK TO STOP SHIT
         mTimers.add(TimeUtils.clock(holder.mTime, mCurrentSession, mContext));
         holder.mVote.setOnClickListener(new View.OnClickListener() {
@@ -164,15 +179,20 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
     }
 
     private void changeUnfoldableContent(Agenda agenda, String agendaId){
-        TextView titleTV = mView.findViewById(R.id.titleContentTV);
-        TextView descriptionTV = mView.findViewById(R.id.contentTV);
-        TextView timeTV = mView.findViewById(R.id.timerTV);
-        Log.d(TAG, "title "+agenda.getTitle());
+        TextView titleTV = mView.findViewById(R.id.expandable_titleContentTV);
+        TextView descriptionTV = mView.findViewById(R.id.expandable_contentTV);
+        TextView timeTV = mView.findViewById(R.id.expandable_timerTV);
+        TextView requestScoreTV = mView.findViewById(R.id.expandable_supportTV);
+
         titleTV.setText(agenda.getTitle());
         descriptionTV.setText(agenda.getContent());
+        requestScoreTV.setText(mAgendaScore.get(agendaId).toString());
         fillUser(agenda.getSuggestedByRef());
+
         mUnfoldableTimer = TimeUtils.clock(timeTV, mCurrentSession, mContext);
 
+
+        mCurrentAgendaId = agendaId;
         //TODO CHECK LAST ITEM CLICKED BEFORE RELOADING DATA
         //IF CLICK IS DIFF
         if(mQuestionsLR != null) //catches the first run
@@ -182,14 +202,15 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
             mQuestionsLR = VotesHelper.getQuestions(FirebaseFirestore.getInstance(),"gVw7dUkuw3SSZSYRXe8s",
                     CurrentFragment.mCurrentSessionId, agendaId).addSnapshotListener(mQuestionsEL);
 
+
     }
     private void fillUser(DocumentReference userRef){
         userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if(documentSnapshot.exists()){
-                    TextView suggestedByTV = mView.findViewById(R.id.suggestedByTV);
-                    ImageView suggestedByIV = mView.findViewById(R.id.suggestedByIV);
+                    TextView suggestedByTV = mView.findViewById(R.id.expandable_suggestedByTV);
+                    ImageView suggestedByIV = mView.findViewById(R.id.expandable_suggestedByIV);
                     User user = documentSnapshot.toObject(User.class);
                     suggestedByTV.setText(user.getName());
                     ProfilePhotoHelper.loadImage(mView.getContext().getApplicationContext(), suggestedByIV, user.getPhotoUrl());
@@ -225,6 +246,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
         CardView mVote;
         TextView mTitle;
         TextView mTime;
+        TextView mRequestScore;
         ImageView mCategoryIcon;
 
 
@@ -233,6 +255,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
             mTitle = view.findViewById(R.id.titleTV);
             mTime = view.findViewById(R.id.timeTV);
             mVote =  view.findViewById(R.id.cardVote);
+            mRequestScore = view.findViewById(R.id.budgetTotalAppliedTV);
             mCategoryIcon = view.findViewById(R.id.category_IV);
         }
 

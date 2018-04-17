@@ -19,9 +19,9 @@
                     android:layout_centerHorizontal="true"
                     app:srcCompat="@drawable/ic_profile_photo"
                     android:gravity="center"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:id="@+id/titleContentTV"/>
+                    android:layout_width="85dp"
+                    android:layout_height="85dp"
+                    android:id="@+id/userAvatar"/>
 
         </RelativeLayout>
 
@@ -32,7 +32,8 @@
             android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Bem Vinda, Pessoa" />
+            android:text="Bem Vindo, Pessoa" />
+
         <android.support.v4.widget.Space
             android:layout_width="match_parent"
             android:layout_height="5dp" />

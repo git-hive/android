@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.ArrayMap;
 import android.util.Log;
-import android.util.Pair;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -238,9 +237,6 @@ public class RequestActivity extends AppCompatActivity {
         mRequestRV.setAdapter(mRecyclerAdapter);
 
         mMenuRV = findViewById(R.id.recyclerMenu);
-//        mMenuRV.setHasFixedSize(true);
-//        mMenuRV.setItemViewCacheSize();
-
         mFilterTV = findViewById(R.id.menuFilterTV);
 
         mMenuRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
