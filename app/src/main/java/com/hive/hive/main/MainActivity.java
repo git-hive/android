@@ -6,6 +6,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatDelegate;
 import android.view.MenuItem;
 
 import com.hive.hive.R;
@@ -17,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
     ViewPager mViewPager;
 
     private PagerAdapter mPagerAdapter;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

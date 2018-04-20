@@ -45,12 +45,11 @@ public class ScalePopUpWindow extends SettingPopUpWindow
     private SwitchCompat reverse;
     private CenterSnapHelper centerSnapHelper;
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     ScalePopUpWindow(ScaleLayoutActivity context, ScaleLayoutManager scaleLayoutManager, RecyclerView recyclerView) {
-        super(context.getContext());
+        super(context.getActivity().getApplicationContext());
         this.scaleLayoutManager = scaleLayoutManager;
         this.recyclerView = recyclerView;
-        View view = LayoutInflater.from(context.getContext()).inflate(R.layout.dialog_scale_setting, null);
+        View view = LayoutInflater.from(context.getActivity().getApplicationContext()).inflate(R.layout.dialog_scale_setting, null);
         setContentView(view);
 
         centerSnapHelper = new CenterSnapHelper();

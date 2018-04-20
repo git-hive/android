@@ -6,8 +6,7 @@ package com.hive.hive.utils.circularFilter.scale;
  */
 
 
-import android.os.Build;
-import android.support.annotation.RequiresApi;
+import android.content.Context;
 
 import com.hive.hive.utils.circularFilter.BaseFragment;
 import com.hive.hive.utils.circularFilter.CircularFilterUtils;
@@ -16,13 +15,11 @@ import com.leochuan.ScaleLayoutManager;
 
 public class ScaleLayoutActivity extends BaseFragment<ScaleLayoutManager, ScalePopUpWindow> {
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected ScaleLayoutManager createLayoutManager() {
-        return new ScaleLayoutManager(this.getContext(), CircularFilterUtils.Dp2px(this.getContext(), 30));
+        return new ScaleLayoutManager(this.getActivity().getApplicationContext(), CircularFilterUtils.Dp2px(this.getActivity().getApplicationContext(), 30));
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected ScalePopUpWindow createSettingPopUpWindow() {
         return new ScalePopUpWindow(this, getViewPagerLayoutManager(), getRecyclerView());

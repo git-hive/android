@@ -150,12 +150,13 @@ public class ProfileFilterAdapter extends RecyclerView.Adapter<ProfileFilterAdap
                             userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                 @Override
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                    User user = documentSnapshot.toObject(User.class);
-                                    mUsersOptions.add(Utils.getCharForNumber(vote.getVotingOption()+1));
-                                    mUsers.add(user);
-                                    mProfileListAdapter.notifyDataSetChanged();
-//                                    mFilterListAdapter.notifyDataSetChanged();
-                                    Log.d(TAG, user.getName());
+                                    if(documentSnapshot.exists()){
+                                        User user = documentSnapshot.toObject(User.class);
+                                        mUsersOptions.add(Utils.getCharForNumber(vote.getVotingOption()+1));
+                                        mUsers.add(user);
+                                        mProfileListAdapter.notifyDataSetChanged();
+    //                                    mFilterListAdapter.notifyDataSetChanged();
+                                    }
                                 }
                             });
                             break;

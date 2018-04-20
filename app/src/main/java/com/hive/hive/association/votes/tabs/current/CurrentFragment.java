@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -58,7 +59,7 @@ public class CurrentFragment extends Fragment {
     //Agendas
     private HashMap<String, Agenda> mAgendas;
     private HashMap<String, Integer> mAgendasScores;
-
+    public static ListenerRegistration mHasVotedLR;
     private ArrayList<String> mAgendasIds;
     private com.google.firebase.firestore.EventListener<QuerySnapshot> mAgendasEL;
     private ListenerRegistration mAgendasLR;
@@ -324,23 +325,19 @@ public class CurrentFragment extends Fragment {
             }
         });
         try {
-            VotesHelper.getVote(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mCurrentSessionId,
-                    agendaID, questionsIds.get(0), FirebaseAuth.getInstance().getUid()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            mHasVotedLR = VotesHelper.getVote(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mCurrentSessionId,
+                    agendaID, questionsIds.get(0), FirebaseAuth.getInstance().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    if (documentSnapshot.exists()) {
+                public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+                    if(e != null)
+                        Log.e(TAG, e.getMessage());
+                    if(documentSnapshot.exists()){
                         mHasVotedTV.setText(context.getString(R.string.has_vote));
                         mHasVotedTV.setTextColor(context.getResources().getColor(R.color.green_text));
-                    } else {
+                    }else{
                         mHasVotedTV.setText(context.getString(R.string.hasn_vote));
                         mHasVotedTV.setTextColor(context.getResources().getColor(R.color.red_text));
                     }
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    mHasVotedTV.setVisibility(View.GONE);
-                    Log.e(TAG, e.getMessage());
                 }
             });
         }catch (NullPointerException e){

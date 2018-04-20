@@ -48,6 +48,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
     private HashMap<String, Integer> mAgendaScore;
     public  static String mCurrentAgendaId;
     private Session mCurrentSession;
+    public static boolean  mHasVoted = false;
     //-- Timer
     ArrayList<CountDownTimer> mTimers;
     CountDownTimer mUnfoldableTimer;
@@ -193,6 +194,8 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
 
 
         mCurrentAgendaId = agendaId;
+        //remove hasVoted if necessary
+        if(CurrentFragment.mHasVotedLR != null) CurrentFragment.mHasVotedLR.remove();
         //TODO CHECK LAST ITEM CLICKED BEFORE RELOADING DATA
         //IF CLICK IS DIFF
         if(mQuestionsLR != null) //catches the first run
@@ -264,5 +267,6 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
             return "";
         }
     }
+
 
 }

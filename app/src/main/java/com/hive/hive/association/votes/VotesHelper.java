@@ -16,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.Transaction;
 import com.hive.hive.R;
+import com.hive.hive.association.votes.tabs.current.CurrentFragment;
 import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.QuestionOptions;
 import com.hive.hive.model.association.Vote;
