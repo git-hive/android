@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Queue;
 
 /**
  * Created by vplentz on 15/02/18.
@@ -199,43 +198,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
             });
         }
     }
-//    private void scoreClick(final CommentaryViewHolder holder, final String commentId, final SupportMutex mutex){
-//        mutex.lock();
-//        AssociationHelper.getRequestCommentSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s",
-//                mRequestId, commentId, FirebaseAuth.getInstance().getUid())
-//                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                        //if support already exists, should delete it
-//                        if(documentSnapshot.exists()) {
-//                            AssociationHelper.deleteRequestCommentSupport(FirebaseFirestore.getInstance(),
-//                                    "gVw7dUkuw3SSZSYRXe8s", mRequestId, commentId, FirebaseAuth.getInstance().getUid())
-//                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                @Override
-//                                public void onSuccess(Void aVoid) {
-//                                    mutex.unlock();
-//                                }
-//                            });
-//                        }else {// else should add it
-//                            DocumentReference userRef = DocReferences.getUserRef();
-//                            DocumentReference assocRef = DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s");
-//                            String supportId = FirebaseAuth.getInstance().getUid();
-//                            //TODO review refs
-//
-//                            AssociationSupport support = new AssociationSupport( Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
-//                                    userRef, null, assocRef, null);
-//                           AssociationHelper.setRequestCommentSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s",
-//                                   mRequestId, commentId, supportId, support).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                               @Override
-//                               public void onSuccess(Void aVoid) {
-//                                   mutex.unlock();
-//                               }
-//                           });
-//                        }
-//                        CommentsAdapter.this.notifyDataSetChanged();
-//                    }
-//                });
-//    }
     public class CommentaryViewHolder extends RecyclerView.ViewHolder{
         //ImageViews
         final ImageView avatarIV;
