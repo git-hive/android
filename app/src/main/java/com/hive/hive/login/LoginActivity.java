@@ -172,6 +172,8 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 if((!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pwd))) {
+                    progressUser();
+                    hideEmailFields();
                     email = mEditTextUser.getText().toString().trim();
                     pwd = mEditTextPassword.getText().toString().trim();
                   //  System.out.println(email+pwd);
@@ -179,15 +181,17 @@ public class LoginActivity extends AppCompatActivity {
                     mAuth.createUserWithEmailAndPassword(email, pwd).addOnSuccessListener(new OnSuccessListener<AuthResult>(){
                         @Override
                         public void onSuccess(AuthResult authResult) {
-                            startActivity(new Intent(LoginActivity.this, SignupActivity.class));
+                           emailLogin();
                             //finish();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         // Getting failures related to login and password
                         @Override
                         public void onFailure(@NonNull Exception e) {
+                            Log.e(TAG, e.getMessage());
                             Toast.makeText(LoginActivity.this, "Authentication failed." + e.getMessage(),
                                     Toast.LENGTH_SHORT).show();
+                            returnFromProgress();
                         }
                     });
                 }
@@ -197,59 +201,7 @@ public class LoginActivity extends AppCompatActivity {
         mButtonSignIn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mEditTextUser.getText().equals(null)){
-                    mEditTextUser.requestFocus();
-                    return;
-                }
-                if(mEditTextPassword.getText().equals(null)){
-                    mEditTextPassword.requestFocus();
-                    return;
-                }
-                String email = mEditTextUser.getText().toString().trim();
-                String pwd = mEditTextPassword.getText().toString().trim();
-
-                // Checking if fields are empty or wrong
-                if( mEditTextUser.getText().toString().trim().equals("")){
-
-                    mEditTextUser.setError( "Username name is required!" );
-                    mEditTextUser.setHint("please enter a username");
-
-                }else if(mEditTextPassword.getText().toString().trim().equals("")) {
-
-                    mEditTextPassword.setError( "Password is required!" );
-                    mEditTextPassword.setHint("please enter a password");
-
-                }else{
-
-                    mAuth.signInWithEmailAndPassword(email, pwd).addOnSuccessListener(new OnSuccessListener<AuthResult>(){
-                        @Override
-                        public void onSuccess(AuthResult authResult) {
-                                checkUserAndSwitchActivity();
-
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        // Getting failures related to login and password
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            if (e instanceof FirebaseAuthInvalidUserException) {
-                                mEditTextUser.requestFocus();
-                                mEditTextUser.setError( "A valid User is required!" );
-                                mEditTextUser.setHint("please enter a user");
-                            }else if(e instanceof FirebaseAuthInvalidCredentialsException){
-                                mEditTextPassword.requestFocus();
-                                mEditTextPassword.setError( "A valid password is required!" );
-                                mEditTextPassword.setHint("please enter a password");
-                                Toast.makeText(LoginActivity.this, "Authentication failed." + e.getMessage(),
-                                        Toast.LENGTH_SHORT).show();
-
-
-                            }else{
-                                Toast.makeText(LoginActivity.this, "Authentication failed." + e.getMessage(),
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                }
+                emailLogin();
             }
         });
         // google sign-in options
@@ -338,6 +290,61 @@ public class LoginActivity extends AppCompatActivity {
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
+    private void emailLogin(){
+        if(mEditTextUser.getText().equals(null)){
+            mEditTextUser.requestFocus();
+            return;
+        }
+        if(mEditTextPassword.getText().equals(null)){
+            mEditTextPassword.requestFocus();
+            return;
+        }
+        String email = mEditTextUser.getText().toString().trim();
+        String pwd = mEditTextPassword.getText().toString().trim();
+
+        // Checking if fields are empty or wrong
+        if( mEditTextUser.getText().toString().trim().equals("")){
+
+            mEditTextUser.setError( "Username name is required!" );
+            mEditTextUser.setHint("please enter a username");
+
+        }else if(mEditTextPassword.getText().toString().trim().equals("")) {
+
+            mEditTextPassword.setError( "Password is required!" );
+            mEditTextPassword.setHint("please enter a password");
+
+        }else{
+
+            mAuth.signInWithEmailAndPassword(email, pwd).addOnSuccessListener(new OnSuccessListener<AuthResult>(){
+                @Override
+                public void onSuccess(AuthResult authResult) {
+                    checkUserAndSwitchActivity();
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                // Getting failures related to login and password
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    if (e instanceof FirebaseAuthInvalidUserException) {
+                        mEditTextUser.requestFocus();
+                        mEditTextUser.setError( "A valid User is required!" );
+                        mEditTextUser.setHint("please enter a user");
+                    }else if(e instanceof FirebaseAuthInvalidCredentialsException){
+                        mEditTextPassword.requestFocus();
+                        mEditTextPassword.setError( "A valid password is required!" );
+                        mEditTextPassword.setHint("please enter a password");
+                        Toast.makeText(LoginActivity.this, "Authentication failed." + e.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+
+
+                    }else{
+                        Toast.makeText(LoginActivity.this, "Authentication failed." + e.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+    }
     /**
      * Authenticates in Firebase with Google Account
      *
@@ -404,6 +411,17 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
         }
+    }
+    private void hideEmailFields(){
+        mTextViewUser.setVisibility(View.GONE);
+        mTextViewPassword.setVisibility(View.GONE);
+        mTextViewForgotPass.setVisibility(View.GONE);
+        mTextViewSignUp.setVisibility(View.GONE);
+        mEditTextUser.setVisibility(View.GONE);
+        mEditTextPassword.setVisibility(View.GONE);
+        mButtonSignIn.setVisibility(View.GONE);;
+        mButtonEmailLogin.setText(R.string.email_login);
+
     }
     //used to show login progress
     private void progressUser(){

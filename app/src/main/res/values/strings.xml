@@ -46,6 +46,7 @@
     <string name="h_password_conf_again"><i>Confirme a Senha:</i></string>
     <string name="today">O que você deseja fazer hoje?</string>
     <string name='hello'>Olá mundo</string>
+    <string name="signup_problem">Houve algum problema para enviar os seus dados, por favor faça o login novamente</string>
 
     <!-- Association Strings -->
     <string name="req">Propostas</string>

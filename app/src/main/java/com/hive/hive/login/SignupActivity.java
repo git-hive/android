@@ -255,7 +255,8 @@ public class SignupActivity extends AppCompatActivity {
 //
 //            return false;
 //        }
-        newUser.setEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        if(FirebaseAuth.getInstance().getCurrentUser() != null)
+            newUser.setEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail());
 
         // Check if user agreed with the terms
         if (!mTermsAgreementRB.isChecked()) {
@@ -273,25 +274,30 @@ public class SignupActivity extends AppCompatActivity {
      */
     private void updateUser() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user.getPhotoUrl() != null)
-            newUser.setPhotoUrl(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString());
-        db
-                .collection("users")
-                .document(mAuth.getUid())
-                .set(newUser)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        startHome();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // TODO: handle firestore failure properly
-                        Toast.makeText(SignupActivity.this, "Failed to insert user", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        if (user != null) {
+            if(user.getPhotoUrl() != null)
+                newUser.setPhotoUrl(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString());
+            db
+                    .collection("users")
+                    .document(mAuth.getUid())
+                    .set(newUser)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            startHome();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // TODO: handle firestore failure properly
+                            Toast.makeText(SignupActivity.this, "Failed to insert user", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }else{
+            Toast.makeText(this, getString(R.string.signup_problem), Toast.LENGTH_SHORT).show();
+            startLogin();
+        }
     }
 
     private void startHome() {
@@ -302,6 +308,13 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
+    private void startLogin() {
+        Context ctx = SignupActivity.this.getApplicationContext();
+        Intent startMainActivity = new Intent(ctx, LoginActivity.class);
+        startActivity(startMainActivity);
+        finish();
+
+    }
     /**
      * Extracts a trimmed string from a TextView element
      *
