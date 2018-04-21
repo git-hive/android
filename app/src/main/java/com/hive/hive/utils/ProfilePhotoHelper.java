@@ -32,6 +32,9 @@ public class ProfilePhotoHelper extends AppGlideModule{
     }
     public static void updateProfileUrl(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        FirebaseFirestore.getInstance().collection("users").document(user.getUid()).update("photoUrl", user.getPhotoUrl().toString());
+        if(user.getPhotoUrl() != null)
+            FirebaseFirestore.getInstance().collection("users").document(user.getUid()).update("photoUrl", user.getPhotoUrl().toString());
+        else
+            FirebaseFirestore.getInstance().collection("users").document(user.getUid()).update("photoUrl", null);
     }
 }

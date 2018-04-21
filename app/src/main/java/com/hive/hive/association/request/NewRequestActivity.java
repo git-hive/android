@@ -182,7 +182,6 @@ public class NewRequestActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 handleOnSaveButtonClick();
-                finish();
             }
         });
 
@@ -343,8 +342,12 @@ public class NewRequestActivity extends AppCompatActivity {
         long currentTimeMillis = System.currentTimeMillis();
 
         ArrayList<DocumentReference> categoriesRefs = new ArrayList<>();
-        categoriesRefs.add(selectedRequestCategoryPair.first);
-
+        if(selectedRequestCategoryPair != null)
+            categoriesRefs.add(selectedRequestCategoryPair.first);
+        else {
+            Toast.makeText(NewRequestActivity.this, getString(R.string.new_request_should_have_category), Toast.LENGTH_SHORT).show();
+            return;
+        }
         Request request = new Request(
                 currentTimeMillis,
                 currentTimeMillis,
@@ -385,5 +388,6 @@ public class NewRequestActivity extends AppCompatActivity {
                         Log.e(TAG, "[Request] failed to save: " + e.toString());
                     }
                 });
+        finish();
     }
 }
