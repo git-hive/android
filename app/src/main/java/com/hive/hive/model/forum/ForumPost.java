@@ -13,6 +13,8 @@ public class ForumPost extends ForumAction {
     private String title;
     private String content;
     private int supportScore;
+    private int numComments;
+
 
     private HashMap<String, ForumCategory> categories;
     private HashMap<String, ForumComment> comments;
@@ -34,6 +36,7 @@ public class ForumPost extends ForumAction {
         this.title = title;
         this.content = content;
         this.supportScore = supportScore;
+        this.numComments = 0; //TODO:Verify constructor
         this.categories = categories;
         this.comments = comments;
         this.supports = supports;
@@ -53,6 +56,8 @@ public class ForumPost extends ForumAction {
     public int getSupportScore() {
         return supportScore;
     }
+
+    public int getNumComments() { return numComments;}
 
     public HashMap<String, ForumCategory> getCategories() {
         return categories;
@@ -80,6 +85,16 @@ public class ForumPost extends ForumAction {
     public void setSupportScore(int supportScore) {
         this.supportScore = supportScore;
     }
+
+    public void incrementScore() {
+        this.setSupportScore(this.supportScore + 1);
+    }
+
+    public void decrementScore() {
+        this.setSupportScore(this.supportScore - 1);
+    }
+
+    public void setNumComments(int numComments) { this.numComments = numComments; }
 
     public void setCategories(HashMap<String, ForumCategory> categories) {
         this.categories = categories;
