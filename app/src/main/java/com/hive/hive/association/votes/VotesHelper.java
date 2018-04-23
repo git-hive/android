@@ -16,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.Transaction;
 import com.hive.hive.R;
+import com.hive.hive.association.votes.tabs.current.CurrentFragment;
 import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.QuestionOptions;
 import com.hive.hive.model.association.Vote;
@@ -157,7 +158,7 @@ public class VotesHelper {
     }
 
     public static DocumentReference getVote(FirebaseFirestore db, String associationID, String sessionID, String agendaID,
-                                            String questionID, String associateId){
+                                            String questionID, String associateId) throws NullPointerException{
         return db.collection(ASSOCIATION_COLLECTION).document(associationID)
                 .collection(SESSIONS_COLLECTION).document(sessionID).collection(AGENDAS_COLLECTION).document(agendaID)
                 .collection(QUESTIONS_COLLECTION).document(questionID).collection(VOTES_COLLECTION).document(associateId);

@@ -48,6 +48,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
     private HashMap<String, Integer> mAgendaScore;
     public  static String mCurrentAgendaId;
     private Session mCurrentSession;
+    public static boolean  mHasVoted = false;
     //-- Timer
     ArrayList<CountDownTimer> mTimers;
     CountDownTimer mUnfoldableTimer;
@@ -158,7 +159,8 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
         holder.mTitle.setText(agenda.getTitle());
         //TODO:Change this line to get from server
         holder.mCategoryIcon.setImageResource(getDrawable("services"));
-        holder.mRequestScore.setText(mAgendaScore.get(mAgendaIds.get(position)).toString());
+        if(mAgendaScore != null && mAgendaIds.get(position) != null)
+            holder.mRequestScore.setText(mAgendaScore.get(mAgendaIds.get(position)).toString());
         //TODO USE RETURN FROM CLOCK TO STOP SHIT
         mTimers.add(TimeUtils.clock(holder.mTime, mCurrentSession, mContext));
         holder.mVote.setOnClickListener(new View.OnClickListener() {
@@ -192,6 +194,8 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
 
 
         mCurrentAgendaId = agendaId;
+        //remove hasVoted if necessary
+        if(CurrentFragment.mHasVotedLR != null) CurrentFragment.mHasVotedLR.remove();
         //TODO CHECK LAST ITEM CLICKED BEFORE RELOADING DATA
         //IF CLICK IS DIFF
         if(mQuestionsLR != null) //catches the first run
@@ -263,5 +267,6 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
             return "";
         }
     }
+
 
 }

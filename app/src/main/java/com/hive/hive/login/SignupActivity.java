@@ -105,7 +105,6 @@ public class SignupActivity extends AppCompatActivity {
         }
 
 
-
         // Setting CPF listener to format
         cpfMask = Mask.insert("###.###.###-##", (EditText) mCPF);
         mCPF.addTextChangedListener(cpfMask);
@@ -169,7 +168,7 @@ public class SignupActivity extends AppCompatActivity {
                 }
             }
         });
-   }
+    }
 
     @Override
     protected void onDestroy() {
@@ -240,7 +239,7 @@ public class SignupActivity extends AppCompatActivity {
 
         // TODO: proper CPF validation
         String cpf = getText(mCPF);
-        if (TextUtils.isEmpty(cpf) ||  !Utils.isValid(cpf)) {
+        if (TextUtils.isEmpty(cpf) || !Utils.isValid(cpf)) {
             mCPF.setError("A valid CPF is required");
             mCPF.requestFocus();
             return false;
@@ -256,7 +255,8 @@ public class SignupActivity extends AppCompatActivity {
 //
 //            return false;
 //        }
-        newUser.setEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail());
+        if(FirebaseAuth.getInstance().getCurrentUser() != null)
+            newUser.setEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail());
 
         // Check if user agreed with the terms
         if (!mTermsAgreementRB.isChecked()) {
@@ -273,29 +273,48 @@ public class SignupActivity extends AppCompatActivity {
      * Stores field data into firestore
      */
     private void updateUser() {
-        newUser.setPhotoUrl(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString());
-        db
-                .collection("users")
-                .document(mAuth.getUid())
-                .set(newUser)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Context ctx = SignupActivity.this.getApplicationContext();
-                        Intent startMainActivity = new Intent(ctx, MainActivity.class);
-                        startActivity(startMainActivity);
-                        finish();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // TODO: handle firestore failure properly
-                        Toast.makeText(SignupActivity.this, "Failed to insert user", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            if(user.getPhotoUrl() != null)
+                newUser.setPhotoUrl(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString());
+            db
+                    .collection("users")
+                    .document(mAuth.getUid())
+                    .set(newUser)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            startHome();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // TODO: handle firestore failure properly
+                            Toast.makeText(SignupActivity.this, "Failed to insert user", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }else{
+            Toast.makeText(this, getString(R.string.signup_problem), Toast.LENGTH_SHORT).show();
+            startLogin();
+        }
     }
 
+    private void startHome() {
+        Context ctx = SignupActivity.this.getApplicationContext();
+        Intent startMainActivity = new Intent(ctx, MainActivity.class);
+        startActivity(startMainActivity);
+        finish();
+
+    }
+
+    private void startLogin() {
+        Context ctx = SignupActivity.this.getApplicationContext();
+        Intent startMainActivity = new Intent(ctx, LoginActivity.class);
+        startActivity(startMainActivity);
+        finish();
+
+    }
     /**
      * Extracts a trimmed string from a TextView element
      *
@@ -306,7 +325,7 @@ public class SignupActivity extends AppCompatActivity {
         return v.getText().toString().trim();
     }
 
-    private void progressUser(){
+    private void progressUser() {
         //progressBar
         mSignupPB.setVisibility(View.VISIBLE);
 
@@ -328,7 +347,7 @@ public class SignupActivity extends AppCompatActivity {
         mTermAgrementsTV.setVisibility(View.GONE);
     }
 
-    private void returnFromProgressUser(){
+    private void returnFromProgressUser() {
         //progressBar
         mSignupPB.setVisibility(View.GONE);
 

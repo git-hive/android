@@ -46,6 +46,7 @@
     <string name="h_password_conf_again"><i>Confirme a Senha:</i></string>
     <string name="today">O que você deseja fazer hoje?</string>
     <string name='hello'>Olá mundo</string>
+    <string name="signup_problem">Houve algum problema para enviar os seus dados, por favor faça o login novamente</string>
 
     <!-- Association Strings -->
     <string name="req">Propostas</string>
@@ -68,7 +69,7 @@
     <string name="new_request_current_budget_ordinary_string">\u0020 para despesas ordinárias. </string>
     <string name="new_request_current_budget_savings_string">\u0020 no fundo de reserva. </string>
     <string name="new_request_current_budget_extraordinary_string">\u0020 para despesas extraordinárias. </string>
-
+    <string name="new_request_should_have_category">Classifique a sua proposta em uma das categorias.</string>
 
     <!-- Request Comments strings -->
     <string name="should_text">Qual é o seu comentário?</string>

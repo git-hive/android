@@ -1,6 +1,7 @@
 package com.hive.hive.association.request.comments;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -27,6 +29,7 @@ import com.hive.hive.utils.SupportMutex;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * Created by vplentz on 15/02/18.
@@ -38,6 +41,8 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
     private Context mContext;
     private String mRequestId;
     private ArrayList<SupportMutex> mLocks;
+    private ArrayList<LinkedList<Boolean>> mSupportQueues;
+    private ArrayList<Boolean> mLastSupports;
 
     public CommentsAdapter(Context context, HashMap<String, AssociationComment> comments, ArrayList<String> ids, String requestId){
         this.mContext = context;
@@ -45,6 +50,8 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         this.mIds = ids;
         this.mRequestId = requestId;
         this.mLocks = new ArrayList<>();
+        this.mSupportQueues = new ArrayList<>();
+        this.mLastSupports = new ArrayList<>();
     }
     @Override
     public CommentsAdapter.CommentaryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -63,7 +70,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         }
 
         final AssociationComment comment = mComments.get(mIds.get(position));
-        shouldFillSupport(holder, mRequestId, mIds.get(position));
+        try {
+            mLastSupports.get(position); //if it exists then do nothing
+        }catch (IndexOutOfBoundsException e){
+            shouldFillSupport(holder, mRequestId, mIds.get(position), position);// if doesnt should be verified
+        }
         fillUser(holder, comment.getAuthorRef());
         holder.contentTV.setText(comment.getContent());
         holder.supportTV.setText(comment.getScore()+"");
@@ -71,14 +82,14 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         holder.supportIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                scoreClick(holder, mIds.get(position), mLocks.get(position));
+                scoreClick(holder, mIds.get(position), position);
             }
         });
 
         holder.supportTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                scoreClick(holder, mIds.get(position), mLocks.get(position));
+                scoreClick(holder, mIds.get(position), position);
             }
         });
     }
@@ -100,56 +111,92 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
             }
         });
     }
-    private void shouldFillSupport(final CommentaryViewHolder holder, String requestId, String commentId){
+    private void shouldFillSupport(final CommentaryViewHolder holder, String requestId, String commentId, int position){
         //if exists support, then should be IV filled
         AssociationHelper.getRequestCommentSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s",
                 requestId, commentId, FirebaseAuth.getInstance().getUid() )
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if(documentSnapshot.exists())
+                        if(documentSnapshot.exists()) {
                             holder.supportIV.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_support_filled));
-                        else
+                            try {
+                                mLastSupports.set(position, true);
+                                mSupportQueues.set(position, new LinkedList<>());
+                            }catch (IndexOutOfBoundsException e){
+                                mLastSupports.add(true);
+                                mSupportQueues.add(new LinkedList<>());
+                            }
+                        }else {
                             holder.supportIV.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_support_borderline));
+                            try {
+                                mLastSupports.set(position, false);
+                                mSupportQueues.set(position, new LinkedList<>());
+                            }catch (IndexOutOfBoundsException e){
+                                mLastSupports.add(false);
+                                mSupportQueues.add(new LinkedList<>());
+                            }
+                        }
                     }
                 });
     }
-    private void scoreClick(final CommentaryViewHolder holder, final String commentId, final SupportMutex mutex){
-        mutex.lock();
-        AssociationHelper.getRequestCommentSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s",
-                mRequestId, commentId, FirebaseAuth.getInstance().getUid())
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        //if support already exists, should delete it
-                        if(documentSnapshot.exists()) {
-                            AssociationHelper.deleteRequestCommentSupport(FirebaseFirestore.getInstance(),
-                                    "gVw7dUkuw3SSZSYRXe8s", mRequestId, commentId, FirebaseAuth.getInstance().getUid())
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    mutex.unlock();
-                                }
-                            });
-                        }else {// else should add it
-                            DocumentReference userRef = DocReferences.getUserRef();
-                            DocumentReference assocRef = DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s");
-                            String supportId = FirebaseAuth.getInstance().getUid();
-                            //TODO review refs
+    private void scoreClick(final CommentaryViewHolder holder, final String commentId,  int position){
+        if(mLastSupports.get(position)){//support already filled, decrease it then
+            holder.supportIV.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_support_borderline));
+            holder.supportTV.setText(mComments.get(commentId).getScore()-1 +"");
+            mSupportQueues.get(position).add(false);
+            mLastSupports.set(position,  false);
+            score(commentId, position);
+        }else{
+            holder.supportIV.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_support_filled));
+            holder.supportTV.setText(mComments.get(commentId).getScore()+1 +"");
+            mSupportQueues.get(position).add(true);
+            mLastSupports.set(position, true);
+            score(commentId, position);
+        }
 
-                            AssociationSupport support = new AssociationSupport( Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
-                                    userRef, null, assocRef, null);
-                           AssociationHelper.setRequestCommentSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s",
-                                   mRequestId, commentId, supportId, support).addOnSuccessListener(new OnSuccessListener<Void>() {
-                               @Override
-                               public void onSuccess(Void aVoid) {
-                                   mutex.unlock();
-                               }
-                           });
+    }
+    private void score(final String commentId,  int position){
+        mLocks.get(position).lock();
+        if(!mSupportQueues.get(position).getFirst()){//decrease score
+            AssociationHelper.deleteRequestCommentSupport(FirebaseFirestore.getInstance(),
+                    "gVw7dUkuw3SSZSYRXe8s", mRequestId, commentId, FirebaseAuth.getInstance().getUid())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            mSupportQueues.get(position).removeFirst();
+                            mLocks.get(position).unlock();
+                            if(!mSupportQueues.get(position).isEmpty()) score(commentId, position);
                         }
-                        CommentsAdapter.this.notifyDataSetChanged();
-                    }
-                });
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {// try again
+                    if(!mSupportQueues.get(position).isEmpty()) score(commentId, position);
+                }
+            });
+
+        }else{//increase score
+            DocumentReference userRef = DocReferences.getUserRef();
+            DocumentReference assocRef = DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s");
+            String supportId = FirebaseAuth.getInstance().getUid();
+
+            AssociationSupport support = new AssociationSupport( Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
+                    userRef, null, assocRef, null);
+            AssociationHelper.setRequestCommentSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s",
+                    mRequestId, commentId, supportId, support).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    mSupportQueues.get(position).removeFirst();
+                    mLocks.get(position).unlock();
+                    if(!mSupportQueues.get(position).isEmpty()) score(commentId, position);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    if(!mSupportQueues.get(position).isEmpty()) score(commentId, position);
+                }
+            });
+        }
     }
     public class CommentaryViewHolder extends RecyclerView.ViewHolder{
         //ImageViews

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.VotesHelper;
+import com.hive.hive.association.votes.tabs.current.CurrentFragment;
 import com.hive.hive.association.votes.tabs.questions.model.OrderStatus;
 import com.hive.hive.association.votes.tabs.questions.model.Orientation;
 import com.hive.hive.association.votes.tabs.questions.model.TimeLineModel;
@@ -162,25 +163,6 @@ public class QuestionForm extends AppCompatActivity {
             }
         });
 
-
-        findViewById(R.id.questionNextTV).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Next Question
-                Vote vote = formAdapter.getSelectedVote();
-                if(vote != null) {
-                    mVotes.add(formAdapter.getSelectedVote());
-                    if(formAdapter.nextQuestion()){
-                        VotesHelper.setVote(FirebaseFirestore.getInstance(), mAssociationID, mSessionID, mAgendaID, mQuestionsIds
-                                , mTimeLineAdapter.mStatusListValue, mVotes, context);
-                        finish();
-                    }
-                }else{
-                    Toast.makeText(QuestionForm.this, getString(R.string.should_answer), Toast.LENGTH_SHORT).show();
-                }
-                //   QuestionOptions currentOptions = mQuestions.get(mQuestionsIds.get())
-            }
-        });
 
         findViewById(R.id.backArrow).setOnClickListener(new View.OnClickListener() {
             @Override

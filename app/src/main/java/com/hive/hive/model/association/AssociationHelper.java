@@ -197,14 +197,18 @@ public class AssociationHelper {
                 .document(supportID);
 
         // Set the request support and increment request score
-        return db.runTransaction(transaction -> {
-            setRequestSupportWithinTransaction(
-                    transaction,
-                    requestRef,
-                    supportRef,
-                    support
-            );
-            return null;
+        return db.runTransaction(new Transaction.Function<Void>() {
+            @Nullable
+            @Override
+            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                setRequestSupportWithinTransaction(
+                        transaction,
+                        requestRef,
+                        supportRef,
+                        support
+                );
+                return null;
+            }
         });
     }
 
@@ -234,13 +238,17 @@ public class AssociationHelper {
                 .document(supportID);
 
         // Delete request support and decrement request score
-        return db.runTransaction(transaction -> {
-            removeRequestSupportWithinTransaction(
-                    transaction,
-                    requestRef,
-                    supportRef
-            );
-            return null;
+        return db.runTransaction(new Transaction.Function<Void>() {
+            @Nullable
+            @Override
+            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
+                removeRequestSupportWithinTransaction(
+                        transaction,
+                        requestRef,
+                        supportRef
+                );
+                return null;
+            }
         });
     }
 
