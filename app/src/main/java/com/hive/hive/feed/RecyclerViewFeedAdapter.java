@@ -92,7 +92,7 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerView.V
                 feedViewHolderOld.mView.setOnClickListener(view ->
                         mContext.startActivity(
                                 new Intent(mContext, CommentsActivity.class)
-                                        .putExtra(CommentsActivity.REQUEST_ID ,item.getId())
+                                        .putExtra(CommentsActivity.REQUEST_ID ,item.getForumId())
                         )
                 );
 
@@ -273,7 +273,6 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerView.V
             // TODO: Add missing refs
             Long currentTimeInMillis = Calendar.getInstance().getTimeInMillis();
             AssociationSupport support = new AssociationSupport(
-                    supportId,
                     currentTimeInMillis,
                     currentTimeInMillis,
                     userRef,
@@ -299,6 +298,6 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     private String getForumPostsID(int requestPosition) {
-        return ((ForumPost)mFeedPosts.get(requestPosition)).getId();
+        return ((ForumPost)mFeedPosts.get(requestPosition)).getForumId();
     }
 }
