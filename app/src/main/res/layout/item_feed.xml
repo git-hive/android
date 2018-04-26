@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/requestCV"
+        android:id="@+id/postCV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -34,7 +34,7 @@
 
             <!-- Avatar Layout -->
             <LinearLayout
-                android:id="@+id/request_avatar_ll"
+                android:id="@+id/post_avatar_ll"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.3"
@@ -59,7 +59,7 @@
                     android:textSize="@dimen/request_author_name_font_size"/>
 
                 <TextView
-                    android:id="@+id/request_leaderboard_position_tv"
+                    android:id="@+id/post_leaderboard_position_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2º lugar no ranking"
@@ -70,7 +70,7 @@
 
             <!-- Info Layout -->
             <LinearLayout
-                android:id="@+id/request_info_ll"
+                android:id="@+id/post_info_ll"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.7"
@@ -99,7 +99,7 @@
                     <TextView
                         android:paddingTop="10dp"
                         android:maxLength="100"
-                        android:id="@+id/request_cost_tv"
+                        android:id="@+id/post_cost_tv"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.9"
@@ -120,7 +120,7 @@
 
                 <!-- Comments and Supports Layout -->
                 <LinearLayout
-                    android:id="@+id/request_stats_ll"
+                    android:id="@+id/post_stats_ll"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -135,11 +135,12 @@
                         android:contentDescription="@string/ic_comment"/>
 
                     <TextView
-                        android:id="@+id/request_number_of_comments_tv"
+                        android:id="@+id/post_number_of_comments_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorBlack"
                         android:textSize="@dimen/request_author_leaderboard_position_font_size"
+                        android:text="0"
                         android:paddingBottom="12dp"
                         />
 
@@ -155,6 +156,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorBlack"
+                        android:text="0"
                         android:textSize="@dimen/request_author_leaderboard_position_font_size"
                         android:paddingBottom="12dp"
                         />

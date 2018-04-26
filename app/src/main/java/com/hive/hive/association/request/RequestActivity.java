@@ -242,7 +242,7 @@ public class RequestActivity extends AppCompatActivity {
         mMenuRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                TextView filterName = recyclerView.findViewById(R.id.menuItemCategorieTV);
+                TextView filterName = recyclerView.getLayoutManager().getChildAt(1).findViewById(R.id.menuItemCategorieTV);
                 super.onScrollStateChanged(recyclerView, newState);
                 if (filterName != null) {
                     String categoryName = mmap.get(filterName.getText()).toLowerCase();
