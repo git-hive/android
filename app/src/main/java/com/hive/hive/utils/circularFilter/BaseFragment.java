@@ -44,7 +44,6 @@ public abstract class BaseFragment<V extends ViewPagerLayoutManager, S extends S
         View view = inflater.inflate(R.layout.activity_fragment, container, false);
 
 
-        //setTitle(getIntent().getCharSequenceExtra(MainFragment.INTENT_TITLE));
         recyclerView = view.findViewById(R.id.recyclerMenu);
         viewPagerLayoutManager = createLayoutManager();
         //Set to scroll Infinitely
@@ -58,16 +57,6 @@ public abstract class BaseFragment<V extends ViewPagerLayoutManager, S extends S
 
         return view;
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.settings, menu);
-//        MenuItem settings = menu.findItem(R.id.setting);
-//        VectorDrawableCompat settingIcon =
-//                VectorDrawableCompat.create(getResources(), R.drawable.ic_settings_white_48px, null);
-//        settings.setIcon(settingIcon);
-//        return super.onCreateOptionsMenu(menu);
-//    }
 
 
     @Override
