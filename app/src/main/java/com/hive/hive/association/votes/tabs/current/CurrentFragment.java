@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -217,10 +218,12 @@ public class CurrentFragment extends Fragment {
                             mAgendas.get(addedId).getRequestRef().get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                 @Override
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                    Request request = documentSnapshot.toObject(Request.class);
-                                    mAgendasScores.put(addedId, request.getScore());
+                                    if(documentSnapshot.exists()) {
+                                        Request request = documentSnapshot.toObject(Request.class);
+                                        mAgendasScores.put(addedId, request.getScore());
 //                                    Log.d(TAG, mAgendas.toString());
-                                    mRVAdapter.notifyDataSetChanged();
+                                        mRVAdapter.notifyDataSetChanged();
+                                    }
                                 }
                             });
                             break;
@@ -247,6 +250,7 @@ public class CurrentFragment extends Fragment {
 
         mRVAdapter = new CurrentAdapter(this.getContext(), mCurrentSession, mAgendas, mAgendasIds, mAgendasScores, mUnfoldableView, mDetailsLayout, view);
         mRV = view.findViewById(R.id.cellRV);
+        mRV.setLayoutManager(new LinearLayoutManager(getContext()   ));
         mRV.setAdapter(mRVAdapter);
 
         // TODO: Check this expandable element Height, since it has some workarounds, either than set it fixed;

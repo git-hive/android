@@ -48,7 +48,7 @@ public class VotesHelper {
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
                 .collection(SESSIONS_COLLECTION)
-                .whereEqualTo("status", "Current");
+                .whereEqualTo("status", "current");
     }
 
     //--- Agendas
