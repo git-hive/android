@@ -1,22 +1,14 @@
 package com.hive.hive.utils.hexagonsPercentBar;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hive.hive.R;
-import com.hive.hive.association.votes.QuestionGridAdapter;
-import com.hive.hive.association.votes.tabs.current.CurrentAdapter;
-import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.QuestionOptions;
 import com.hive.hive.utils.Utils;
 

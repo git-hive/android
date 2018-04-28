@@ -352,7 +352,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     }
 
     /**
-     * Class to serve as ViewHolder for a Request model in this adapter
+     * Class to serve as ViewHolder for a Request model in this mExpandableQuestionsAdapter
      */
     public class RequestViewHolder extends RecyclerView.ViewHolder{
 

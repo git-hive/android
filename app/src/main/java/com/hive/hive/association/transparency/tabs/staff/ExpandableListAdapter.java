@@ -101,7 +101,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                 .findViewById(R.id.GridView_toolbar);
 
         gridView.setNumColumns(3);// gridView.setGravity(Gravity.CENTER);//
-        gridView.setHorizontalSpacing(10);// SimpleAdapter adapter =
+        gridView.setHorizontalSpacing(10);// SimpleAdapter mExpandableQuestionsAdapter =
         GridAdapter adapter = new GridAdapter(mContext, MOBILE_OS);
         gridView.setAdapter(adapter);// Adapter
 

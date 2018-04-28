@@ -16,7 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.Transaction;
 import com.hive.hive.R;
-import com.hive.hive.association.votes.tabs.current.CurrentFragment;
+import com.hive.hive.model.association.Agenda;
 import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.QuestionOptions;
 import com.hive.hive.model.association.Vote;
@@ -61,6 +61,17 @@ public class VotesHelper {
                 .collection(AGENDAS_COLLECTION);
     }
 
+    //--- Agendas
+    public static void setAgendas(FirebaseFirestore db, String associationID, String sessionID, Agenda agenda){
+        db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(SESSIONS_COLLECTION)
+                .document(sessionID)
+                .collection(AGENDAS_COLLECTION)
+                .add(agenda);
+    }
+
     //--- Questions
     public static CollectionReference getQuestions(FirebaseFirestore db, String associationID, String sessionID, String agendaID){
         return db
@@ -72,6 +83,19 @@ public class VotesHelper {
                 .document(agendaID)
                 .collection((QUESTIONS_COLLECTION));
     }
+
+    public static void setQuestions(FirebaseFirestore db, String associationID, String sessionID, String agendaID, Question question){
+         db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(SESSIONS_COLLECTION)
+                .document(sessionID)
+                .collection(AGENDAS_COLLECTION)
+                .document(agendaID)
+                .collection((QUESTIONS_COLLECTION))
+         .add(question);
+    }
+
 
     //--- Vote
     public static void setVote(FirebaseFirestore db, String associationID, String sessionID, String agendaID, ArrayList<String> questionsIDs,

@@ -1,4 +1,4 @@
-package com.hive.hive.association.votes;
+package com.hive.hive.association.votes.questions.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
