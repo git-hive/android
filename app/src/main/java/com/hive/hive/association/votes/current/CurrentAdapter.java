@@ -177,11 +177,15 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
 
     private void clearQuestions(){
         //solves questions mExpandableQuestionsAdapter bug
-        if(CurrentFragment.mExpandableQuestionsAdapter != null )
-            for (int i = 0; i < CurrentFragment.mExpandableQuestionsAdapter.getGroupCount(); i++)
-                CurrentFragment.expandableListView.collapseGroup(i);
-        mQuestions.clear();
-        mQuestionsIds.clear();
+        try {
+            if (CurrentFragment.mExpandableQuestionsAdapter != null)
+                for (int i = 0; i < CurrentFragment.mExpandableQuestionsAdapter.getGroupCount(); i++)
+                    CurrentFragment.expandableListView.collapseGroup(i);
+            mQuestions.clear();
+            mQuestionsIds.clear();
+        }catch (NullPointerException e){
+            Log.e(TAG, e.getMessage());
+        }
     }
 
     private void changeUnfoldableContent(Agenda agenda, String agendaId){

@@ -294,6 +294,7 @@ public class CurrentFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        first = true;
         Glide.with(getContext().getApplicationContext()).resumeRequestsRecursive();
     }
 
