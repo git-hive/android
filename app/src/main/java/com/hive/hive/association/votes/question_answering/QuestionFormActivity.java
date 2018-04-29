@@ -1,4 +1,4 @@
-package com.hive.hive.association.votes.questions;
+package com.hive.hive.association.votes.question_answering;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -16,9 +17,12 @@ import android.widget.Toast;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.VotesHelper;
-import com.hive.hive.association.votes.questions.header_model.OrderStatus;
-import com.hive.hive.association.votes.questions.header_model.Orientation;
-import com.hive.hive.association.votes.questions.header_model.TimeLineModel;
+import com.hive.hive.association.votes.question_answering.adapters.GridListAdapter;
+import com.hive.hive.association.votes.question_answering.adapters.TimeLineAdapter;
+import com.hive.hive.association.votes.question_answering.firebase_handlers.QuestionAnsweringHandle;
+import com.hive.hive.association.votes.question_answering.header_model.OrderStatus;
+import com.hive.hive.association.votes.question_answering.header_model.Orientation;
+import com.hive.hive.association.votes.question_answering.header_model.TimeLineModel;
 import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.Vote;
 
@@ -26,7 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class QuestionForm extends AppCompatActivity {
+public class QuestionFormActivity extends AppCompatActivity {
     private TextView mQuestionTV;
     // Timeline stuff
     private RecyclerView mRecyclerView;
@@ -59,9 +63,9 @@ public class QuestionForm extends AppCompatActivity {
 
         mQuestionTV = findViewById(R.id.questionTV);
 
-        //Getting the Questions from the previusly activity
-        mQuestionsIds = (ArrayList<String>) getIntent().getSerializableExtra("questionsIds");
-        mQuestions = (HashMap<String, Question>) getIntent().getSerializableExtra("questions");
+//        //Getting the Questions from the previusly activity
+//        mQuestionsIds = (ArrayList<String>) getIntent().getSerializableExtra("questionsIds");
+//        mQuestions = (HashMap<String, Question>) getIntent().getSerializableExtra("questions");
 
         //Getting ids to send vote
         mAssociationID = getIntent().getStringExtra("associationID");
@@ -69,6 +73,16 @@ public class QuestionForm extends AppCompatActivity {
         mAgendaID = getIntent().getStringExtra("agendaID");
         //Create  Votes
         mVotes = new ArrayList<>();
+
+        //gets questions
+        QuestionAnsweringHandle.getQuestions(mAssociationID, mSessionID, mAgendaID, this);
+
+    }
+
+    //called after getting questions with success
+    public void updateQuestions(Pair<ArrayList<String>, HashMap<String, Question>> questionsPair){
+        mQuestionsIds = questionsPair.first;
+        mQuestions = questionsPair.second;
 
         loadListView();
 
@@ -85,6 +99,11 @@ public class QuestionForm extends AppCompatActivity {
         formAdapter.setStorylineAdapter(mTimeLineAdapter);
 
         mQuestionTV.setText(mQuestions.get(mQuestionsIds.get(0)).getQuestion());
+
+    }
+    //called after getting questions with failure
+    public void finishWithError(){
+        finish();
     }
 
     private LinearLayoutManager getLinearLayoutManager() {
@@ -98,7 +117,7 @@ public class QuestionForm extends AppCompatActivity {
     private void initView() {
         //setDataListItems();
 
-        mTimeLineAdapter = new TimeLineAdapter(mQuestions, mQuestionStatus, mQuestionStatusValue, QuestionForm.this);
+        mTimeLineAdapter = new TimeLineAdapter(mQuestions, mQuestionStatus, mQuestionStatusValue, QuestionFormActivity.this);
         mRecyclerView.setAdapter(mTimeLineAdapter);
     }
 
@@ -156,7 +175,7 @@ public class QuestionForm extends AppCompatActivity {
                         finish();
                     }
                 }else{
-                Toast.makeText(QuestionForm.this, getString(R.string.should_answer), Toast.LENGTH_SHORT).show();
+                Toast.makeText(QuestionFormActivity.this, getString(R.string.should_answer), Toast.LENGTH_SHORT).show();
                 }
              //   QuestionOptions currentOptions = mQuestions.get(mQuestionsIds.get())
             }

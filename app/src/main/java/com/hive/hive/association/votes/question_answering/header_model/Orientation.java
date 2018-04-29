@@ -1,4 +1,4 @@
-package com.hive.hive.association.votes.questions.header_model;
+package com.hive.hive.association.votes.question_answering.header_model;
 
 /**
  * Created by HP-HP on 07-06-2016.

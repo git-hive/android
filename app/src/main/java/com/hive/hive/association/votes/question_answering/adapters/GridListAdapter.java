@@ -1,4 +1,4 @@
-package com.hive.hive.association.votes.questions;
+package com.hive.hive.association.votes.question_answering.adapters;
  
 import android.content.Context;
 

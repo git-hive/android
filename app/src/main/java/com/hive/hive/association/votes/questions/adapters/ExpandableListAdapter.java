@@ -1,4 +1,4 @@
-package com.hive.hive.association.votes.questions;
+package com.hive.hive.association.votes.questions.adapters;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.hive.hive.R;
 import com.hive.hive.association.transparency.tabs.staff.CustomGridView;
-import com.hive.hive.association.votes.questions.adapters.QuestionGridAdapter;
 import com.hive.hive.association.votes.current.CurrentAdapter;
 import com.hive.hive.association.votes.current.CurrentFragment;
 import com.hive.hive.association.votes.voters_list.VotersListActivity;

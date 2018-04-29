@@ -22,16 +22,18 @@ import android.widget.TextView;
 import com.alexvasilkov.foldablelayout.UnfoldableView;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.VotesHelper;
-import com.hive.hive.association.votes.questions.QuestionForm;
-import com.hive.hive.association.votes.questions.ExpandableListAdapter;
+import com.hive.hive.association.votes.question_answering.QuestionFormActivity;
+import com.hive.hive.association.votes.questions.adapters.ExpandableListAdapter;
 import com.hive.hive.model.association.Agenda;
 import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.Request;
@@ -91,7 +93,6 @@ public class CurrentFragment extends Fragment {
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -118,7 +119,6 @@ public class CurrentFragment extends Fragment {
 
         mDetailsLayout = view.findViewById(R.id.details_layout);
         mDetailsLayout.setVisibility(View.INVISIBLE);
-
 
 
         // Call set config to set percentage
@@ -158,7 +158,7 @@ public class CurrentFragment extends Fragment {
         mSessionEL = new com.google.firebase.firestore.EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                if(e != null){
+                if (e != null) {
                     Log.e(TAG, e.getMessage());
                     return;
                 }
@@ -173,7 +173,7 @@ public class CurrentFragment extends Fragment {
                             mRVAdapter.notifyDataSetChanged();
                             mCurrentSession = null;
                             break;
-                            //TODO MAY show message... there is no Session
+                        //TODO MAY show message... there is no Session
                         case ADDED:
                             mCurrentSession = dc.getDocument().toObject(Session.class);
                             mCurrentSessionId = dc.getDocument().getId();
@@ -200,7 +200,7 @@ public class CurrentFragment extends Fragment {
         mAgendasEL = new com.google.firebase.firestore.EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                if(e != null){
+                if (e != null) {
                     Log.e(TAG, e.getMessage());
                     return;
                 }
@@ -216,7 +216,7 @@ public class CurrentFragment extends Fragment {
                             mAgendas.get(addedId).getRequestRef().get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                 @Override
                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                    if(documentSnapshot.exists()) {
+                                    if (documentSnapshot.exists()) {
                                         Request request = documentSnapshot.toObject(Request.class);
                                         mAgendasScores.put(addedId, request.getScore());
 //                                    Log.d(TAG, mAgendas.toString());
@@ -249,7 +249,7 @@ public class CurrentFragment extends Fragment {
 
         mRVAdapter = new CurrentAdapter(this.getContext(), mCurrentSession, mAgendas, mAgendasIds, mAgendasScores, mUnfoldableView, mDetailsLayout, view);
         mRV = view.findViewById(R.id.cellRV);
-        mRV.setLayoutManager(new LinearLayoutManager(getContext()   ));
+        mRV.setLayoutManager(new LinearLayoutManager(getContext()));
         mRV.setAdapter(mRVAdapter);
 
         // TODO: Check this expandable element Height, since it has some workarounds, either than set it fixed;
@@ -263,7 +263,7 @@ public class CurrentFragment extends Fragment {
         choseVoteBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(view.getContext(), QuestionForm.class));
+                startActivity(new Intent(view.getContext(), QuestionFormActivity.class));
 
             }
         });
@@ -290,76 +290,73 @@ public class CurrentFragment extends Fragment {
 
         return view;
     }
+
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         Glide.with(getContext().getApplicationContext()).resumeRequestsRecursive();
     }
+
     @Override
-    public void onStop(){
+    public void onStop() {
         super.onStop();
         Glide.with(getContext().getApplicationContext()).pauseRequestsRecursive();
     }
+
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
         mSessionLR.remove();
         mAgendasLR.remove();
     }
+
     // Setting headers and childs to expandable listview
     static boolean first = true;
-    public static void setGridQuestionsItems(final Context context, final HashMap<String, Question> questions, final ArrayList<String> questionsIds, final String agendaID ){
-//        for(String questionId : questionsIds) {
-//            Log.d(TAG, "question id " + questionId);
-//            Log.d(TAG, "question :" + questions.get(questionId).getInfo());
-//        }
-//        if(mExpandableQuestionsAdapter != null )
-//            for (int i = 0; i < mExpandableQuestionsAdapter.getGroupCount(); i++)
-//                expandableListView.collapseGroup(i);
 
-                if(first) {
-                    mExpandableQuestionsAdapter = new ExpandableListAdapter(context, questions, questionsIds);
+    public static void setGridQuestionsItems(final Context context, final HashMap<String, Question> questions, final ArrayList<String> questionsIds, final String agendaID) {
+        if (first) {
+            mExpandableQuestionsAdapter = new ExpandableListAdapter(context, questions, questionsIds);
 
-                    // Setting adpater over expandablelistview
-                    expandableListView.setAdapter(mExpandableQuestionsAdapter);
-                    first = false;
-                }else mExpandableQuestionsAdapter.notifyDataSetChanged();
-//            choseVoteBT.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    Intent it = new Intent(context, QuestionForm.class);
-//                    it.putExtra("questions", questions);
-//                    it.putExtra("questionsIds", questionsIds);
-//                    //TODO STATIC ASSOCIATION ID
-//                    it.putExtra("associationID", "gVw7dUkuw3SSZSYRXe8s");
-//                    it.putExtra("sessionID", mCurrentSessionId);
-//                    it.putExtra("agendaID", agendaID);
-//
-//                    context.startActivity(it);
-//                }
-//            });
-//            first = false;
-//        }else mExpandableQuestionsAdapter.notifyDataSetChanged();
-//
-//        try {
-//            mHasVotedLR = VotesHelper.getVote(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mCurrentSessionId,
-//                    agendaID, questionsIds.get(0), FirebaseAuth.getInstance().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-//                @Override
-//                public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
-//                    if(e != null)
-//                        Log.e(TAG, e.getMessage());
-//                    if(documentSnapshot.exists()){
-//                        mHasVotedTV.setText(context.getString(R.string.has_vote));
-//                        mHasVotedTV.setTextColor(context.getResources().getColor(R.color.green_text));
-//                    }else{
-//                        mHasVotedTV.setText(context.getString(R.string.hasn_vote));
-//                        mHasVotedTV.setTextColor(context.getResources().getColor(R.color.red_text));
-//                    }
-//                }
-//            });
-//        }catch (NullPointerException e){
-//            Log.e(TAG, e.getMessage());
-//        }
+            // Setting adpater over expandablelistview
+            expandableListView.setAdapter(mExpandableQuestionsAdapter);
+            first = false;
+        } else mExpandableQuestionsAdapter.notifyDataSetChanged();
+        choseVoteBT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent it = new Intent(context, QuestionFormActivity.class);
+//                it.putExtra("questions", questions);
+//                it.putExtra("questionsIds", questionsIds);
+                //TODO STATIC ASSOCIATION ID
+                it.putExtra("associationID", "gVw7dUkuw3SSZSYRXe8s");
+                it.putExtra("sessionID", mCurrentSessionId);
+                it.putExtra("agendaID", agendaID);
+
+                context.startActivity(it);
+            }
+        });
+
+        //Verifing if user has already voted
+        try {
+            mHasVotedLR = VotesHelper.getVote(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mCurrentSessionId,
+                    agendaID, questionsIds.get(0), FirebaseAuth.getInstance().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+                    if (e != null)
+                        Log.e(TAG, e.getMessage());
+                    if (documentSnapshot.exists()) {
+                        mHasVotedTV.setText(context.getString(R.string.has_vote));
+                        mHasVotedTV.setTextColor(context.getResources().getColor(R.color.green_text));
+                    } else {
+                        mHasVotedTV.setText(context.getString(R.string.hasn_vote));
+                        mHasVotedTV.setTextColor(context.getResources().getColor(R.color.red_text));
+                    }
+                }
+            });
+        } catch (NullPointerException e) {
+            Log.e(TAG, e.getMessage());
+        }
+
         // THIS MAGIC PEACE OF CODE MAKE THE VIEW WORK AS IT SHOULD
         expandableListView.setDividerHeight(0);
 
@@ -382,7 +379,7 @@ public class CurrentFragment extends Fragment {
 
 
     // Updating headers and childs to expandable listview
-    public static void updateItems(){
+    public static void updateItems() {
         mExpandableQuestionsAdapter.notifyDataSetChanged();
     }
 
@@ -398,8 +395,8 @@ public class CurrentFragment extends Fragment {
             groupView.measure(0, View.MeasureSpec.UNSPECIFIED);
             totalHeight += groupView.getMeasuredHeight();
 
-            if (listView.isGroupExpanded(i)){
-                for(int j = 0; j < listAdapter.getChildrenCount(i); j++){
+            if (listView.isGroupExpanded(i)) {
+                for (int j = 0; j < listAdapter.getChildrenCount(i); j++) {
                     View listItem = listAdapter.getChildView(i, j, false, null, listView);
                     listItem.measure(0, View.MeasureSpec.UNSPECIFIED);
                     totalHeight += listItem.getMeasuredHeight();
