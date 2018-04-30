@@ -32,6 +32,7 @@ import com.hive.hive.model.association.Session;
 import com.hive.hive.model.user.User;
 import com.hive.hive.utils.ProfilePhotoHelper;
 import com.hive.hive.utils.TimeUtils;
+import com.hive.hive.utils.VotingUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,6 +79,8 @@ public class CurrentAdapter extends RecyclerView.Adapter<AgendasViewHolder> {
         this.mDetailsLayout = detailsLayout;
         this.mView = view;
         this.mTimers = new ArrayList<>();
+        mIconsDrawable= new HashMap<>();
+        mIconsDrawablePaths = new HashMap<>();
 
     }
 
@@ -94,7 +97,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<AgendasViewHolder> {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.vote_cell, parent, false);
 
         // Init locally
-        initPossibleCategoryIcons();
+        VotingUtils.initPossibleCategoryIcons(mContext, mIconsDrawablePaths, mIconsDrawable);
 
         mQuestionsIds = new ArrayList<>();
 
@@ -147,7 +150,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<AgendasViewHolder> {
         //populate views
         holder.getmTitle().setText(agenda.getTitle());
         //TODO:Change this line to get from server
-        holder.getmCategoryIcon().setImageResource(getDrawable("services"));
+        holder.getmCategoryIcon().setImageResource(VotingUtils.getDrawable("services", mIconsDrawable));
 
         //sets Agenda Score
         if(mAgendaScore != null && mAgendaIds.get(position) != null)
@@ -200,7 +203,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<AgendasViewHolder> {
         titleTV.setText(agenda.getTitle());
         descriptionTV.setText(agenda.getContent());
         requestScoreTV.setText(mAgendaScore.get(agendaId).toString());
-        fillUser(agenda.getSuggestedByRef());
+        VotingUtils.fillUnfoldableUser(agenda.getSuggestedByRef(), mView);
 
         //sets time
         mUnfoldableTimer = TimeUtils.clock(timeTV, mCurrentSession, mContext);
@@ -221,41 +224,5 @@ public class CurrentAdapter extends RecyclerView.Adapter<AgendasViewHolder> {
 
 
     }
-
-    //loads user data, and fill some views
-    private void fillUser(DocumentReference userRef){
-        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if(documentSnapshot.exists()){
-                    TextView suggestedByTV = mView.findViewById(R.id.expandable_suggestedByTV);
-                    ImageView suggestedByIV = mView.findViewById(R.id.expandable_suggestedByIV);
-                    User user = documentSnapshot.toObject(User.class);
-                    suggestedByTV.setText(user.getName());
-                    ProfilePhotoHelper.loadImage(mView.getContext().getApplicationContext(), suggestedByIV, user.getPhotoUrl());
-                    //Log.d(RequestAdapter.class.getSimpleName(), user.getPhotoUrl());
-                }
-            }
-        });
-    }
-
-    // Use to get the drawables programmatically
-    public void initPossibleCategoryIcons(){
-        List<String> iconsList = Arrays.asList("services", "cleaning", "gardening", "security");
-        mIconsDrawable = new HashMap<>();
-        mIconsDrawablePaths = new HashMap<>();
-
-        for (String icon: iconsList) {
-            mIconsDrawablePaths.put(icon, "ic_icones_"+icon+"_white");
-            int imageResource = mContext.getResources()
-                                        .getIdentifier(mIconsDrawablePaths.get(icon), "drawable", mContext.getPackageName());
-            mIconsDrawable.put(icon, imageResource);
-        }
-    }
-
-    public int getDrawable(String icon){
-        return mIconsDrawable.get(icon);
-    }
-
 
 }
