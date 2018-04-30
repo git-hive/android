@@ -1,8 +1,7 @@
-package com.hive.hive.association.votes.tabs.current;
+package com.hive.hive.association.votes.current;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -26,12 +25,10 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.VotesHelper;
-import com.hive.hive.association.votes.voters.VotersListActivity;
 import com.hive.hive.model.association.Agenda;
 import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.Session;
 import com.hive.hive.model.user.User;
-import com.hive.hive.utils.DocReferences;
 import com.hive.hive.utils.ProfilePhotoHelper;
 import com.hive.hive.utils.TimeUtils;
 
@@ -96,7 +93,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.vote_cell, parent, false);
 
         // Init locally
-        initStuff();
+        initPossibleCategoryIcons();
 
         mQuestionsIds = new ArrayList<>();
 
@@ -112,11 +109,13 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
                 for(DocumentChange dc : documentSnapshots.getDocumentChanges()){
                     switch (dc.getType()){
                         case ADDED:
+                            Log.d(TAG, "added questions");
                             String questionId = dc.getDocument().getId();
                             Question question = dc.getDocument().toObject(Question.class);
+                            Log.d(TAG, "question "+  question.getInfo());
                             mQuestions.put(questionId, question);
                             mQuestionsIds.add(questionId);
-                            CurrentFragment.setItems(mContext, mQuestions, mQuestionsIds, agendaID);
+                            CurrentFragment.setGridQuestionsItems(mContext, mQuestions, mQuestionsIds, agendaID);
                             break;
                         case MODIFIED:
                             String modifiedId = dc.getDocument().getId();
@@ -128,24 +127,9 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
                             String removedId = dc.getDocument().getId();
                             mQuestions.remove(removedId);
                             mQuestionsIds.remove(removedId);
-                            CurrentFragment.setItems(mContext, mQuestions, mQuestionsIds, agendaID);
+                            CurrentFragment.setGridQuestionsItems(mContext, mQuestions, mQuestionsIds, agendaID);
                             break;
                     }
-                }
-                if(mQuestionsIds != null){
-                    TextView votersTV = mView.findViewById(R.id.expandable_supportTV);
-                    ImageView votersIV = mView.findViewById(R.id.expandable_supportIV);
-
-                    View.OnClickListener votersOnClickListener = new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                        }
-                    };
-
-                    votersIV.setOnClickListener(votersOnClickListener);
-                    votersTV.setOnClickListener(votersOnClickListener);
-
                 }
             }
         };
@@ -154,18 +138,30 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
 
     @Override
     public void onBindViewHolder(final RequestViewHolder holder, int position) {
+        //get current agenda
         agendaID = mAgendaIds.get(position);
+
         final Agenda agenda = mAgendas.get(agendaID);
+
+        //populate views
         holder.mTitle.setText(agenda.getTitle());
         //TODO:Change this line to get from server
         holder.mCategoryIcon.setImageResource(getDrawable("services"));
+
+        //sets Agenda Score
         if(mAgendaScore != null && mAgendaIds.get(position) != null)
             holder.mRequestScore.setText(mAgendaScore.get(mAgendaIds.get(position)).toString());
+
         //TODO USE RETURN FROM CLOCK TO STOP SHIT
+        //loads agenda remaining time
         mTimers.add(TimeUtils.clock(holder.mTime, mCurrentSession, mContext));
+
+
         holder.mVote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                clearQuestions();
+                agendaID = mAgendaIds.get(position);
                 changeUnfoldableContent(agenda, agendaID);
                 mUnfoldableView.unfold(view, mDetailsLayout);
 
@@ -179,22 +175,39 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
         return mAgendaIds.size();
     }
 
+    private void clearQuestions(){
+        //solves questions mExpandableQuestionsAdapter bug
+        try {
+            if (CurrentFragment.mExpandableQuestionsAdapter != null)
+                for (int i = 0; i < CurrentFragment.mExpandableQuestionsAdapter.getGroupCount(); i++)
+                    CurrentFragment.expandableListView.collapseGroup(i);
+            mQuestions.clear();
+            mQuestionsIds.clear();
+        }catch (NullPointerException e){
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
     private void changeUnfoldableContent(Agenda agenda, String agendaId){
+        //load views
         TextView titleTV = mView.findViewById(R.id.expandable_titleContentTV);
         TextView descriptionTV = mView.findViewById(R.id.expandable_contentTV);
         TextView timeTV = mView.findViewById(R.id.expandable_timerTV);
         TextView requestScoreTV = mView.findViewById(R.id.expandable_supportTV);
 
+        //set agenda texts
         titleTV.setText(agenda.getTitle());
         descriptionTV.setText(agenda.getContent());
         requestScoreTV.setText(mAgendaScore.get(agendaId).toString());
         fillUser(agenda.getSuggestedByRef());
 
+        //sets time
         mUnfoldableTimer = TimeUtils.clock(timeTV, mCurrentSession, mContext);
 
-
+        //sets the current agenda, ExpandableListAdapter depends on it
         mCurrentAgendaId = agendaId;
-        //remove hasVoted if necessary
+
+        //check Listeners  Registration, removes if necessary
         if(CurrentFragment.mHasVotedLR != null) CurrentFragment.mHasVotedLR.remove();
         //TODO CHECK LAST ITEM CLICKED BEFORE RELOADING DATA
         //IF CLICK IS DIFF
@@ -207,6 +220,8 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
 
 
     }
+
+    //loads user data, and fill some views
     private void fillUser(DocumentReference userRef){
         userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -224,13 +239,12 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
     }
 
     // Use to get the drawables programmatically
-    public void initStuff(){
+    public void initPossibleCategoryIcons(){
         List<String> iconsList = Arrays.asList("services", "cleaning", "gardening", "security");
         mIconsDrawable = new HashMap<>();
         mIconsDrawablePaths = new HashMap<>();
 
-        for (String icon:
-             iconsList) {
+        for (String icon: iconsList) {
             mIconsDrawablePaths.put(icon, "ic_icones_"+icon+"_white");
             int imageResource = mContext.getResources()
                                         .getIdentifier(mIconsDrawablePaths.get(icon), "drawable", mContext.getPackageName());
@@ -243,7 +257,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
     }
 
     /**
-     * Class to serve as ViewHolder for a Request model in this adapter
+     * Class to serve as ViewHolder for a Request model in this mExpandableQuestionsAdapter
      */
     class RequestViewHolder extends RecyclerView.ViewHolder{
         CardView mVote;

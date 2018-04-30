@@ -1,4 +1,4 @@
-package com.hive.hive.association.votes.tabs.questions.model;
+package com.hive.hive.association.votes.question_answering.header_model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

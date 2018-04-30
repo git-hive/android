@@ -1,9 +1,8 @@
-package com.hive.hive.association.votes.voters;
+package com.hive.hive.association.votes.voters_list;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

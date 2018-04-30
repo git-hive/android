@@ -7,7 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".association.votes.tabs.questions.QuestionForm"
+    tools:context=".association.votes.question_answering.QuestionFormActivity"
     android:orientation="vertical">
 
 
@@ -74,7 +74,7 @@
     <ListView
         android:paddingBottom="40dp"
         android:layout_centerHorizontal="true"
-        android:layout_above="@id/footer"
+        android:layout_below="@id/questionTV"
         android:id="@+id/list_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

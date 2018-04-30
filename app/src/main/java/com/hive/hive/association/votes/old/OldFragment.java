@@ -1,4 +1,4 @@
-package com.hive.hive.association.votes.tabs.future;
+package com.hive.hive.association.votes.old;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,13 +9,14 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.hive.hive.R;
-import com.hive.hive.association.votes.tabs.current.CurrentAdapter;
+import com.hive.hive.association.votes.future.FutureFragment;
+import com.hive.hive.association.votes.current.CurrentAdapter;
 import com.hive.hive.model.association.Vote;
 
 import java.util.ArrayList;
 
 // In this case, the fragment displays simple text based on the page
-public class FutureFragment extends Fragment {
+public class OldFragment extends Fragment {
     private static final int NUM_LIST_ITEMS= 6;
 
     public static final String ARG_PAGE = "Passadas";
@@ -37,11 +38,6 @@ public class FutureFragment extends Fragment {
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mPage = getArguments().getInt(ARG_PAGE);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -84,8 +80,8 @@ public class FutureFragment extends Fragment {
 //        });
 //
 //        mCurrentVotesListRV.setAdapter(mCurrentAdapter);
-//
-//
+
+
 
         return view;
     }

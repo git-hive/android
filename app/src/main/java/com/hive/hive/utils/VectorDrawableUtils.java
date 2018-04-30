@@ -1,4 +1,4 @@
-package com.hive.hive.association.votes.tabs.questions.utils;
+package com.hive.hive.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;

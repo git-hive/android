@@ -1,6 +1,5 @@
-package com.hive.hive.association.votes.tabs.questions;
+package com.hive.hive.association.votes.question_answering.adapters;
  
-import android.app.Activity;
 import android.content.Context;
 
 import android.graphics.Color;
@@ -19,7 +18,6 @@ import com.hive.hive.model.association.QuestionOptions;
 import com.hive.hive.model.association.Vote;
 import com.hive.hive.utils.DocReferences;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 

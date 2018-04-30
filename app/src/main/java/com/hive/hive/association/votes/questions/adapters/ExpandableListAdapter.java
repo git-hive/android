@@ -1,4 +1,4 @@
-package com.hive.hive.association.votes.tabs.questions;
+package com.hive.hive.association.votes.questions.adapters;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,14 +19,12 @@ import android.widget.TextView;
 
 import com.hive.hive.R;
 import com.hive.hive.association.transparency.tabs.staff.CustomGridView;
-import com.hive.hive.association.votes.QuestionGridAdapter;
-import com.hive.hive.association.votes.tabs.current.CurrentAdapter;
-import com.hive.hive.association.votes.tabs.current.CurrentFragment;
-import com.hive.hive.association.votes.voters.VotersListActivity;
+import com.hive.hive.association.votes.current.CurrentAdapter;
+import com.hive.hive.association.votes.current.CurrentFragment;
+import com.hive.hive.association.votes.voters_list.VotersListActivity;
 import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.QuestionOptions;
 import com.hive.hive.utils.DocReferences;
-import com.hive.hive.utils.Utils;
 import com.hive.hive.utils.hexagonsPercentBar.HexagonView;
 import com.hive.hive.utils.hexagonsPercentBar.HexagonalBarAdapter;
 
@@ -140,28 +138,32 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
 			LayoutInflater infalInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = infalInflater.inflate(R.layout.question_grid_view, null);
 		}
+        String questionId = mQuestionsIds.get(groupPosition);
+        Question question = mQuestions.get(questionId);
+
+        TextView questionTV = convertView.findViewById(R.id.questionTV);
+		questionTV.setText( question.getQuestion());
 
 		CustomGridView gridView = (CustomGridView) convertView
 				.findViewById(R.id.questionGV);
 
 		gridView.setNumColumns(2);// gridView.setGravity(Gravity.CENTER);//
-		gridView.setHorizontalSpacing(10);// SimpleAdapter adapter =
+		gridView.setHorizontalSpacing(10);// SimpleAdapter mExpandableQuestionsAdapter =
 
-        String questionId = mQuestionsIds.get(groupPosition);
-        Question question = mQuestions.get(questionId);
-		QuestionGridAdapter adapter = new QuestionGridAdapter(mContext, question.getOptions());
+        QuestionGridAdapter adapter = new QuestionGridAdapter(mContext, question.getOptions());
 		gridView.setAdapter(adapter);// Adapter
 
 		int totalHeight = 0;
 		for (int size = 0; size < adapter.getCount(); size++) {
 			RelativeLayout relativeLayout = (RelativeLayout) adapter.getView(
 					size, null, gridView);
-			TextView questionTV = (TextView) relativeLayout.getChildAt(0);
-			questionTV.measure(0, 0);
-			totalHeight += questionTV.getMeasuredHeight();
+			TextView answerTV = (TextView) relativeLayout.getChildAt(0);
+			answerTV.measure(0, 0);
+			totalHeight += answerTV.getMeasuredHeight();
 		}
 		gridView.SetHeight(totalHeight);
 
+		//HEXAGON PERCENTAGE STUFF
 		// TODO: Take care you should call autoInit always
 		mPercentageBar =  convertView.findViewById(R.id.percentageBar);
 		mPercentageBar.autoInit();
@@ -199,7 +201,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
                 mContext.startActivity(votersIntent);
             }
         });
-		return convertView;
+
+
+        return convertView;
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package com.hive.hive.association.votes.voters;
+package com.hive.hive.association.votes.voters_list;
 
 /**
  * Created by birck on 05/04/18.
