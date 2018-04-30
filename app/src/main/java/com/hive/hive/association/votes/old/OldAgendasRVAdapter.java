@@ -11,18 +11,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alexvasilkov.foldablelayout.UnfoldableView;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.AgendasViewHolder;
 import com.hive.hive.model.association.Agenda;
+import com.hive.hive.utils.VotingUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.HashMap;
-import java.util.List;
+
 
 public class OldAgendasRVAdapter extends RecyclerView.Adapter<AgendasViewHolder>{
-    private Pair<ArrayList<String>, HashMap<String, Agenda>> mAgendas;
-
+    private Pair<ArrayList<DocumentSnapshot>, HashMap<String, Agenda>> mAgendas;
+    private HashMap<String, String> mAgendaAndSessionIds;
     private Context mContext;
 
     // Local for now
@@ -34,13 +37,16 @@ public class OldAgendasRVAdapter extends RecyclerView.Adapter<AgendasViewHolder>
     private FrameLayout mDetailsLayout;
     private View mView;
 
-    public OldAgendasRVAdapter(Pair<ArrayList<String>, HashMap<String, Agenda>> mAgendas,
+    public OldAgendasRVAdapter(Pair<ArrayList<DocumentSnapshot>, HashMap<String, Agenda>> mAgendas, HashMap<String, String> agendaAndSessionIds,
                                Context mContext, UnfoldableView mUnfoldableView, FrameLayout mDetailsLayout, View mView) {
         this.mAgendas = mAgendas;
+        this.mAgendaAndSessionIds = agendaAndSessionIds;
         this.mContext = mContext;
         this.mUnfoldableView = mUnfoldableView;
         this.mDetailsLayout = mDetailsLayout;
         this.mView = mView;
+        mIconsDrawable= new HashMap<>();
+        mIconsDrawablePaths = new HashMap<>();
     }
 
     @Override
@@ -48,7 +54,7 @@ public class OldAgendasRVAdapter extends RecyclerView.Adapter<AgendasViewHolder>
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.vote_cell, parent, false);
 
         // Init locally
-        initPossibleCategoryIcons();
+        VotingUtils.initPossibleCategoryIcons(mContext, mIconsDrawablePaths, mIconsDrawable);
 
 
         return new AgendasViewHolder(itemView);
@@ -56,14 +62,14 @@ public class OldAgendasRVAdapter extends RecyclerView.Adapter<AgendasViewHolder>
 
     @Override
     public void onBindViewHolder(AgendasViewHolder holder, int position) {
-        final String[] agendaID = {mAgendas.first.get(position)};
+        final String[] agendaID = {mAgendas.first.get(position).getId()};
 
         final Agenda agenda = mAgendas.second.get(agendaID[0]);
 
         //populate views
         holder.getmTitle().setText(agenda.getTitle());
         //TODO:Change this line to get from server
-        holder.getmCategoryIcon().setImageResource(getDrawable("services"));
+        holder.getmCategoryIcon().setImageResource(VotingUtils.getDrawable("services", mIconsDrawable));
 
         holder.getmTime().setVisibility(View.GONE);
         holder.getmTimeIV().setVisibility(View.GONE);
@@ -72,7 +78,6 @@ public class OldAgendasRVAdapter extends RecyclerView.Adapter<AgendasViewHolder>
             @Override
             public void onClick(View view) {
 //                clearQuestions();
-                agendaID[0] = mAgendas.first.get(position);
                 changeUnfoldableContent(agenda, agendaID[0]);
                 mUnfoldableView.unfold(view, mDetailsLayout);
 
@@ -101,35 +106,15 @@ public class OldAgendasRVAdapter extends RecyclerView.Adapter<AgendasViewHolder>
         //set agenda texts
         titleTV.setText(agenda.getTitle());
         descriptionTV.setText(agenda.getContent());
-        //requestScoreTV.setText(mAgendaScore.get(agendaId).toString());
-        //fillUser(agenda.getSuggestedByRef());
 
+        //load suggested by info
+        VotingUtils.fillUnfoldableUser(agenda.getSuggestedByRef(), mView);
 
-        //sets the current agenda, ExpandableListAdapter depends on it
-        //mCurrentAgendaId = agendaId;
+        //TODO REMOVE STATIC ASSOCIATION REFERENCE
 
-//        //TODO REMOVE STATIC ASSOCIATION REFERENCE
-//        if(CurrentFragment.mCurrentSessionId != null)// should'nt happen, but just to be sure
-//            mQuestionsLR = VotesHelper.getQuestions(FirebaseFirestore.getInstance(),"gVw7dUkuw3SSZSYRXe8s",
-//                    CurrentFragment.mCurrentSessionId, agendaId).addSnapshotListener(mQuestionsEL);
-
+        OldAgendasFirebaseHandle.getPastQuestions("gVw7dUkuw3SSZSYRXe8s", mAgendaAndSessionIds.get(agendaId), agendaId);
 
     }
 
-    // Use to get the drawables programmatically
-    public void initPossibleCategoryIcons(){
-        List<String> iconsList = Arrays.asList("services", "cleaning", "gardening", "security");
-        mIconsDrawable = new HashMap<>();
-        mIconsDrawablePaths = new HashMap<>();
 
-        for (String icon: iconsList) {
-            mIconsDrawablePaths.put(icon, "ic_icones_"+icon+"_white");
-            int imageResource = mContext.getResources()
-                    .getIdentifier(mIconsDrawablePaths.get(icon), "drawable", mContext.getPackageName());
-            mIconsDrawable.put(icon, imageResource);
-        }
-    }
-    public int getDrawable(String icon){
-        return mIconsDrawable.get(icon);
-    }
 }

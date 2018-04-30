@@ -181,7 +181,6 @@
                     android:id="@+id/expandable_contentTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/expandable_suggestedByIV"
                     android:text="@string/lore_ipsun"
                     android:textColor="@color/mainTextColor"
                     android:textSize="16sp"
@@ -193,7 +192,6 @@
                     android:id="@+id/expandable_partialResultsTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/expandable_suggestedByIV"
                     android:text="@string/partial_results"
                     android:textSize="16sp"
                     android:textStyle="italic" />
@@ -231,6 +229,7 @@
                  android:layout_width="match_parent"
                  android:layout_height="wrap_content">
                      <TextView
+                         android:id="@+id/expandable_statusHeaderTV"
                          android:textColor="@color/colorBlack"
                          android:textStyle="italic"
                          android:text="Status: "
@@ -260,6 +259,7 @@
                         android:layout_height="100dp"
                         />
                     <TextView
+                        android:id="@+id/expandable_voteTV"
                         android:layout_marginBottom="15dp"
                         android:gravity="center"
                         android:layout_gravity="center_horizontal"

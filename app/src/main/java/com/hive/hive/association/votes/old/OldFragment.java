@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alexvasilkov.foldablelayout.UnfoldableView;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.future.FutureFragment;
 import com.hive.hive.association.votes.current.CurrentAdapter;
@@ -36,8 +37,8 @@ public class OldFragment extends Fragment {
     public static final String ARG_PAGE = "Passadas";
     private final static String TAG = OldFragment.class.getSimpleName();
     //Agendas
-    private Pair<ArrayList<String>, HashMap<String, Agenda>> mAgendasPair;
-
+    private Pair<ArrayList<DocumentSnapshot>, HashMap<String, Agenda>> mAgendasPair;
+    private HashMap<String,String> mAgendaAndSessionIds;
 
     //Recycler Things
     private RecyclerView mRV;
@@ -49,10 +50,6 @@ public class OldFragment extends Fragment {
     private FrameLayout mDetailsLayout;
     private UnfoldableView mUnfoldableView;
     private ScrollView detailsScrollView;
-
-    // Unfoldable Views references
-    private static ImageButton choseVoteBT;
-    private static TextView mHasVotedTV;
 
     // Expandable List View
     public static ExpandableListView expandableListView;
@@ -78,7 +75,7 @@ public class OldFragment extends Fragment {
                              Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_current, container, false);
 
-        initUI();
+        initUnfoldable();
 
         unfoldableListener();
 
@@ -89,12 +86,16 @@ public class OldFragment extends Fragment {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void initUI(){
-        choseVoteBT = mView.findViewById(R.id.expandable_choseVoteBT);
-        choseVoteBT.setVisibility(View.GONE);
+    private void initUnfoldable() {
 
-        mHasVotedTV = mView.findViewById(R.id.expandable_voteStatusTV);
-        mHasVotedTV.setVisibility(View.GONE);
+        //removing unnused views
+        mView.findViewById(R.id.expandable_choseVoteBT).setVisibility(View.GONE);
+        mView.findViewById(R.id.expandable_voteStatusTV).setVisibility(View.GONE);
+        mView.findViewById(R.id.expandable_voteTV).setVisibility(View.GONE);
+        mView.findViewById(R.id.expandable_statusHeaderTV).setVisibility(View.GONE);
+
+        //setting to right text
+        ((TextView) mView.findViewById(R.id.expandable_partialResultsTV)).setText(getText(R.string.final_result));
 
         // Temporary solution to unfold card, TODO: Check with the @guys
         mTopClickableCardIV = mView.findViewById(R.id.expandable_topCardIV);
@@ -111,10 +112,12 @@ public class OldFragment extends Fragment {
         mListTouchInterceptor = mView.findViewById(R.id.touch_interceptor_view);
         mListTouchInterceptor.setClickable(false);
 
+        //used to fold and unfold
         mDetailsLayout = mView.findViewById(R.id.details_layout);
         mDetailsLayout.setVisibility(View.INVISIBLE);
 
-        mUnfoldableView = (UnfoldableView) mView.findViewById(R.id.unfoldable_view);
+
+        mUnfoldableView = mView.findViewById(R.id.unfoldable_view);
 
         // Get scroll refence
         detailsScrollView = mView.findViewById(R.id.expandable_cardScroll);
@@ -129,7 +132,6 @@ public class OldFragment extends Fragment {
             }
         });
 
-
         expandableListView = mView.findViewById(R.id.expandable_questionExpandableLV);
         // Setting group indicator null for custom indicator
         expandableListView.setGroupIndicator(null);
@@ -141,11 +143,9 @@ public class OldFragment extends Fragment {
                 return false;
             }
         });
-
-
     }
 
-    private void unfoldableListener(){
+    private void unfoldableListener() {
         mUnfoldableView.setOnFoldingListener(new UnfoldableView.SimpleFoldingListener() {
             @Override
             public void onUnfolding(UnfoldableView unfoldableView) {
@@ -174,16 +174,19 @@ public class OldFragment extends Fragment {
         });
     }
 
-    private void initRecycler(){
+    private void initRecycler() {
 
-        mRVAdapter = new OldAgendasRVAdapter(mAgendasPair, this.getContext().getApplicationContext(), mUnfoldableView, mDetailsLayout, mView);
+        mRVAdapter = new OldAgendasRVAdapter(mAgendasPair, mAgendaAndSessionIds, this.getContext().getApplicationContext(), mUnfoldableView, mDetailsLayout, mView);
         mRV = mView.findViewById(R.id.cellRV);
         mRV.setLayoutManager(new LinearLayoutManager(getContext()));
         mRV.setAdapter(mRVAdapter);
 
     }
-    public void updateAgendas(Pair<ArrayList<String>, HashMap<String, Agenda>> agendasPair){
+
+    public void updateAgendas(Pair<ArrayList<DocumentSnapshot>, HashMap<String, Agenda>> agendasPair,
+                              HashMap<String, String> agendaAndSessionIds) {
         mAgendasPair = agendasPair;
+        mAgendaAndSessionIds = agendaAndSessionIds;
         initRecycler();
     }
 
