@@ -92,7 +92,8 @@
                                 <ImageView
                                     app:srcCompat="@drawable/ic_icones_clock"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/expandable_timerIV"/>
 
                                 <TextView
                                     android:id="@+id/expandable_timerTV"
