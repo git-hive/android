@@ -41,14 +41,19 @@ public class VotesHelper {
 
     //--- Sessions
 
-    //TODO ADD WHERE CLAUSE
-
     public static Query getCurrentSession(FirebaseFirestore db, String associationID) {
         return db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
                 .collection(SESSIONS_COLLECTION)
                 .whereEqualTo("status", "current");
+    }
+    public static Query getPastSessions(FirebaseFirestore db, String associationID){
+        return db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(SESSIONS_COLLECTION)
+                .whereEqualTo("status", "past");
     }
 
     //--- Agendas

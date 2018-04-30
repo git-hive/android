@@ -24,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
+import com.hive.hive.association.votes.AgendasViewHolder;
 import com.hive.hive.association.votes.VotesHelper;
 import com.hive.hive.model.association.Agenda;
 import com.hive.hive.model.association.Question;
@@ -37,7 +38,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestViewHolder> {
+public class CurrentAdapter extends RecyclerView.Adapter<AgendasViewHolder> {
     private String TAG = CurrentAdapter.class.getSimpleName();
     //-- Data
     private HashMap<String, Agenda> mAgendas;
@@ -89,7 +90,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
     }
 
     @Override
-    public RequestViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AgendasViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.vote_cell, parent, false);
 
         // Init locally
@@ -133,31 +134,31 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
                 }
             }
         };
-        return new RequestViewHolder(itemView);
+        return new AgendasViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(final RequestViewHolder holder, int position) {
+    public void onBindViewHolder(final AgendasViewHolder holder, int position) {
         //get current agenda
         agendaID = mAgendaIds.get(position);
 
         final Agenda agenda = mAgendas.get(agendaID);
 
         //populate views
-        holder.mTitle.setText(agenda.getTitle());
+        holder.getmTitle().setText(agenda.getTitle());
         //TODO:Change this line to get from server
-        holder.mCategoryIcon.setImageResource(getDrawable("services"));
+        holder.getmCategoryIcon().setImageResource(getDrawable("services"));
 
         //sets Agenda Score
         if(mAgendaScore != null && mAgendaIds.get(position) != null)
-            holder.mRequestScore.setText(mAgendaScore.get(mAgendaIds.get(position)).toString());
+            holder.getmRequestScore().setText(mAgendaScore.get(mAgendaIds.get(position)).toString());
 
         //TODO USE RETURN FROM CLOCK TO STOP SHIT
         //loads agenda remaining time
-        mTimers.add(TimeUtils.clock(holder.mTime, mCurrentSession, mContext));
+        mTimers.add(TimeUtils.clock(holder.getmTime(), mCurrentSession, mContext));
 
 
-        holder.mVote.setOnClickListener(new View.OnClickListener() {
+        holder.getmVote().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 clearQuestions();
@@ -254,32 +255,6 @@ public class CurrentAdapter extends RecyclerView.Adapter<CurrentAdapter.RequestV
 
     public int getDrawable(String icon){
         return mIconsDrawable.get(icon);
-    }
-
-    /**
-     * Class to serve as ViewHolder for a Request model in this mExpandableQuestionsAdapter
-     */
-    class RequestViewHolder extends RecyclerView.ViewHolder{
-        CardView mVote;
-        TextView mTitle;
-        TextView mTime;
-        TextView mRequestScore;
-        ImageView mCategoryIcon;
-
-
-        RequestViewHolder(View view){
-            super(view);
-            mTitle = view.findViewById(R.id.titleTV);
-            mTime = view.findViewById(R.id.timeTV);
-            mVote =  view.findViewById(R.id.cardVote);
-            mRequestScore = view.findViewById(R.id.budgetTotalAppliedTV);
-            mCategoryIcon = view.findViewById(R.id.category_IV);
-        }
-
-        @Override
-        public String toString(){
-            return "";
-        }
     }
 
 
