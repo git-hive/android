@@ -26,6 +26,7 @@ import com.hive.hive.association.votes.future.FutureFragment;
 import com.hive.hive.association.votes.current.CurrentAdapter;
 import com.hive.hive.association.votes.questions.adapters.ExpandableListAdapter;
 import com.hive.hive.model.association.Agenda;
+import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.Vote;
 
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class OldFragment extends Fragment {
 
     // Expandable List View
     public static ExpandableListView expandableListView;
-    public static ExpandableListAdapter mExpandableQuestionsAdapter;
+    public static OldQuestionsExpandableAdapter mExpandableQuestionsAdapter;
 
     // Temporary solution to unfold card, TODO: Check with the @guys
     ImageView mTopClickableCardIV;
@@ -176,7 +177,7 @@ public class OldFragment extends Fragment {
 
     private void initRecycler() {
 
-        mRVAdapter = new OldAgendasRVAdapter(mAgendasPair, mAgendaAndSessionIds, this.getContext().getApplicationContext(), mUnfoldableView, mDetailsLayout, mView);
+        mRVAdapter = new OldAgendasRVAdapter(mAgendasPair, mAgendaAndSessionIds, this.getContext().getApplicationContext(), this, mUnfoldableView, mDetailsLayout, mView);
         mRV = mView.findViewById(R.id.cellRV);
         mRV.setLayoutManager(new LinearLayoutManager(getContext()));
         mRV.setAdapter(mRVAdapter);
@@ -189,5 +190,89 @@ public class OldFragment extends Fragment {
         mAgendaAndSessionIds = agendaAndSessionIds;
         initRecycler();
     }
+    public void updateQuestionsUI(ArrayList<Question> questions){
+        mExpandableQuestionsAdapter = new OldQuestionsExpandableAdapter(this.getContext(), questions);
 
+        // Setting adpater over expandablelistview
+        expandableListView.setAdapter(mExpandableQuestionsAdapter);
+
+        unfoldableMagic();
+    }
+    private void unfoldableMagic(){
+        // THIS MAGIC PEACE OF CODE MAKE THE VIEW WORK AS IT SHOULD
+        expandableListView.setDividerHeight(0);
+
+        for (int i = 0; i < mExpandableQuestionsAdapter.getGroupCount(); i++)
+            expandableListView.expandGroup(i);
+        setListViewHeight(expandableListView);
+        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                setListViewHeight(parent, groupPosition);
+                return false;
+            }
+        });
+
+        for (int i = 0; i < mExpandableQuestionsAdapter.getGroupCount(); i++)
+            expandableListView.collapseGroup(i);
+        setListViewHeight(expandableListView);
+    }
+
+    // Workaround found in: https://thedeveloperworldisyours.com/android/expandable-listview-inside-scrollview/ to ExpandableListView
+    // https://stackoverflow.com/questions/17696039/expandablelistview-inside-a-scrollview
+
+    private static void setListViewHeight(ExpandableListView listView) {
+        OldQuestionsExpandableAdapter listAdapter = (OldQuestionsExpandableAdapter) listView.getExpandableListAdapter();
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getGroupCount(); i++) {
+            View groupView = listAdapter.getGroupView(i, true, null, listView);
+            groupView.measure(0, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += groupView.getMeasuredHeight();
+
+            if (listView.isGroupExpanded(i)) {
+                for (int j = 0; j < listAdapter.getChildrenCount(i); j++) {
+                    View listItem = listAdapter.getChildView(i, j, false, null, listView);
+                    listItem.measure(0, View.MeasureSpec.UNSPECIFIED);
+                    totalHeight += listItem.getMeasuredHeight();
+                }
+            }
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight
+                + (listView.getDividerHeight() * (listAdapter.getGroupCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
+    private static void setListViewHeight(ExpandableListView listView,
+                                          int group) {
+        OldQuestionsExpandableAdapter listAdapter = (OldQuestionsExpandableAdapter) listView.getExpandableListAdapter();
+        int totalHeight = 0;
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(),
+                View.MeasureSpec.EXACTLY);
+        for (int i = 0; i < listAdapter.getGroupCount(); i++) {
+            View groupItem = listAdapter.getGroupView(i, false, null, listView);
+            groupItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += groupItem.getMeasuredHeight();
+
+            if (((listView.isGroupExpanded(i)) && (i != group))
+                    || ((!listView.isGroupExpanded(i)) && (i == group))) {
+                for (int j = 0; j < listAdapter.getChildrenCount(i); j++) {
+                    View listItem = listAdapter.getChildView(i, j, false, null,
+                            listView);
+                    listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+                    totalHeight += listItem.getMeasuredHeight();
+                }
+            }
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        int height = totalHeight
+                + (listView.getDividerHeight() * (listAdapter.getGroupCount() - 1));
+        if (height < 10)
+            height = 200;
+        params.height = height;
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
 }
