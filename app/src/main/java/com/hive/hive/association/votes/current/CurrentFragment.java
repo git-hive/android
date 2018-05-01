@@ -220,6 +220,7 @@ public class CurrentFragment extends Fragment {
                                         Request request = documentSnapshot.toObject(Request.class);
                                         mAgendasScores.put(addedId, request.getScore());
 //                                    Log.d(TAG, mAgendas.toString());
+                                        mView.findViewById(R.id.agendasPB).setVisibility(View.GONE);
                                         mRVAdapter.notifyDataSetChanged();
 
                                     }
