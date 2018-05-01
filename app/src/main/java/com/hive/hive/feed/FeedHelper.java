@@ -3,6 +3,7 @@ package com.hive.hive.feed;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -13,6 +14,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
 import com.hive.hive.model.association.AssociationSupport;
 import com.hive.hive.model.forum.ForumPost;
+import com.hive.hive.model.forum.ForumSupport;
+
+import static android.content.ContentValues.TAG;
 
 
 /**
@@ -33,13 +37,22 @@ public class FeedHelper {
                                           String forumID,
                                           ForumPost forumPost
     ){
-        return db.collection(ASSOCIATION_COLLECTION).document(associationID).collection(FORUM_COLLECTION).document(forumID).set(forumPost);
+        return db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(FORUM_COLLECTION)
+                .document(forumID)
+                .set(forumPost);
     }
 
     public static Task<QuerySnapshot> getAllForumPosts(FirebaseFirestore db,
                                                        String associationID
     ){
-        return db.collection(ASSOCIATION_COLLECTION).document(associationID).collection(FORUM_COLLECTION).get();
+        return db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(FORUM_COLLECTION)
+                .get();
     }
 
     //--- Support Request
@@ -47,14 +60,16 @@ public class FeedHelper {
     public static Task<DocumentSnapshot> getForumPostSupport(
             FirebaseFirestore db,
             String associationID,
-            String requestID,
+            String forumID,
             String supportID
     ) {
+        Log.d(TAG, String.valueOf(forumID)+"((((((())))))))) &&&& ***** ¨¨¨¨ %%%%% $$$$ #### @@@@ !!!!");
+
         return db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
                 .collection(FORUM_COLLECTION)
-                .document(requestID)
+                .document(forumID)
                 .collection(SUPPORTS_COLLECTION)
                 .document(supportID)
                 .get();
@@ -63,17 +78,17 @@ public class FeedHelper {
     public static Task<Void> setForumPostSupport(
             FirebaseFirestore db,
             String associationID,
-            String requestID,
+            String forumPostID,
             String supportID,
-            final AssociationSupport support
+            final ForumSupport support
     ) {
-        final DocumentReference requestRef = db
+        final DocumentReference forumPostRef = db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
                 .collection(FORUM_COLLECTION)
-                .document(requestID);
+                .document(forumPostID);
 
-        final DocumentReference supportRef = requestRef
+        final DocumentReference supportRef = forumPostRef
                 .collection(SUPPORTS_COLLECTION)
                 .document(supportID);
 
@@ -81,10 +96,10 @@ public class FeedHelper {
             @Nullable
             @Override
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                // Update request score
-                DocumentSnapshot requestSnap = transaction.get(requestRef);
-                Double newScore = requestSnap.getDouble("score") + 1;
-                transaction.update(requestRef, "score", newScore);
+                // Update forumPost score
+                DocumentSnapshot forumPostSnap = transaction.get(forumPostRef);
+                Double newScore = forumPostSnap.getDouble("score") + 1;
+                transaction.update(forumPostRef, "score", newScore);
 
                 // Create the actual support
                 transaction.set(supportRef, support);
@@ -125,6 +140,8 @@ public class FeedHelper {
             }
         });
     }
+
+
 
 
 }

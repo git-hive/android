@@ -42,7 +42,7 @@ import java.util.UUID;
 
 public class CommentsActivity extends AppCompatActivity {
     private final String TAG = CommentsActivity.class.getSimpleName();
-    public final static String REQUEST_ID = "request_id";
+    public final static String FORUM_POST_ID = "forum_post_id";
 
 
     //--- Views
@@ -90,7 +90,7 @@ public class CommentsActivity extends AppCompatActivity {
             Log.e(TAG, "Home as Up not setted. Action Bar not found.");
 
         //getting extra info from Request
-        mRequestId = getIntent().getExtras().getString(REQUEST_ID);
+        mRequestId = getIntent().getExtras().getString(FORUM_POST_ID);
         Toast.makeText(this, mRequestId, Toast.LENGTH_SHORT).show();
 
         //finding views
@@ -156,8 +156,6 @@ public class CommentsActivity extends AppCompatActivity {
                     updateRequestUI();
                     shouldFillSupport();
                     fillUser(mRequest.getAuthorRef());
-                }else{
-                    finish();
                 }
             }
         };
