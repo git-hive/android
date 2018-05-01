@@ -19,6 +19,7 @@ import com.hive.hive.association.request.RequestAdapter;
 import com.hive.hive.model.association.AssociationComment;
 import com.hive.hive.model.association.AssociationHelper;
 import com.hive.hive.model.association.AssociationSupport;
+import com.hive.hive.model.forum.ForumComment;
 import com.hive.hive.model.user.User;
 import com.hive.hive.utils.DocReferences;
 import com.hive.hive.utils.ProfilePhotoHelper;
@@ -33,13 +34,13 @@ import java.util.HashMap;
  */
 
 public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.CommentaryViewHolder>  {
-    private HashMap<String,  AssociationComment> mComments;
+    private HashMap<String,  ForumComment> mComments;
     private ArrayList<String> mIds;
     private Context mContext;
     private String mRequestId;
     private ArrayList<SupportMutex> mLocks;
 
-    public CommentsAdapter(Context context, HashMap<String, AssociationComment> comments, ArrayList<String> ids, String requestId){
+    public CommentsAdapter(Context context, HashMap<String, ForumComment> comments, ArrayList<String> ids, String requestId){
         this.mContext = context;
         this.mComments = comments;
         this.mIds = ids;
@@ -62,11 +63,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
             mLocks.add(new SupportMutex(holder.supportTV, holder.supportIV));
         }
 
-        final AssociationComment comment = mComments.get(mIds.get(position));
+        final ForumComment comment = mComments.get(mIds.get(position));
         shouldFillSupport(holder, mRequestId, mIds.get(position));
         fillUser(holder, comment.getAuthorRef());
         holder.contentTV.setText(comment.getContent());
-        holder.supportTV.setText(comment.getScore()+"");
+        holder.supportTV.setText(comment.getSupportScore()+"");
 
         holder.supportIV.setOnClickListener(new View.OnClickListener() {
             @Override
