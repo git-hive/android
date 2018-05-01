@@ -320,6 +320,8 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerView.V
             String forumPostID,
             final SupportMutex mutex
     ) {
+        if(forumPostID == null)
+            return;
         FeedHelper.getForumPostSupport(
                 mDB,
                 mAssociationID,
@@ -419,6 +421,10 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerView.V
                 .getDrawable(R.drawable.ic_support_borderline);
 
         ForumPost post = (ForumPost) mFeedPosts.get(position);
+        Log.d(TAG, String.valueOf(mFeedPostSupport.size()));
+        if(mFeedPostSupport.size() == 0)
+            return;
+
         if (mFeedPostSupport.get(position)) {
             supportIV.setImageDrawable(borderlineSupportIC);
             post.decrementScore();
