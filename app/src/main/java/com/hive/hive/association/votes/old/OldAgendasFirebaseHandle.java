@@ -85,7 +85,7 @@ public class OldAgendasFirebaseHandle {
         }
     }
     public static void getPastQuestions(String associationId, String sessionId, String agendaId, OldFragment fragment){
-        Log.d(TAG, "called");
+//        Log.d(TAG, "called");
 
         VotesHelper.getQuestions(FirebaseFirestore.getInstance(), associationId, sessionId, agendaId).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -93,10 +93,10 @@ public class OldAgendasFirebaseHandle {
                     public void onSuccess(QuerySnapshot documentSnapshots) {
                         ArrayList<Question> questions = new ArrayList<>();
                         for(DocumentSnapshot dc : documentSnapshots){
-                            Log.d(TAG, "success");
+//                            Log.d(TAG, "success");
                             if(dc.exists()){
                                 questions.add(dc.toObject(Question.class));
-                                Log.d(TAG, dc.toObject(Question.class).getQuestion());
+//                                Log.d(TAG, dc.toObject(Question.class).getQuestion());
                             }
                         }
 //                        FirebaseFirestore.getInstance().collection("associations").document(associationId).collection("sessions").document("HgVkNiAVqA4JA3JXQbmO").collection("agendas").document("cvi6bxu01BjZ183KgFKI")

@@ -113,10 +113,10 @@ public class CurrentAdapter extends RecyclerView.Adapter<AgendasViewHolder> {
                 for(DocumentChange dc : documentSnapshots.getDocumentChanges()){
                     switch (dc.getType()){
                         case ADDED:
-                            Log.d(TAG, "added questions");
+//                            Log.d(TAG, "added questions");
                             String questionId = dc.getDocument().getId();
                             Question question = dc.getDocument().toObject(Question.class);
-                            Log.d(TAG, "question "+  question.getInfo());
+//                            Log.d(TAG, "question "+  question.getInfo());
                             mQuestions.put(questionId, question);
                             mQuestionsIds.add(questionId);
                             CurrentFragment.setGridQuestionsItems(mContext, mQuestions, mQuestionsIds, agendaID);

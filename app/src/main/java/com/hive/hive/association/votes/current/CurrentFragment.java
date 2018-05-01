@@ -177,7 +177,7 @@ public class CurrentFragment extends Fragment {
                         case ADDED:
                             mCurrentSession = dc.getDocument().toObject(Session.class);
                             mCurrentSessionId = dc.getDocument().getId();
-                            Log.d(TAG, "ADDED current sesh " + dc.getDocument().toObject(Session.class).getStatus());
+//                            Log.d(TAG, "ADDED current sesh " + dc.getDocument().toObject(Session.class).getStatus());
                             mAgendasLR =
                                     VotesHelper.getAgendas(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mCurrentSessionId)
                                             .addSnapshotListener(mAgendasEL);
@@ -231,7 +231,7 @@ public class CurrentFragment extends Fragment {
                             String modifiedId = dc.getDocument().getId();
                             mAgendas.remove(modifiedId);
                             mAgendas.put(modifiedId, dc.getDocument().toObject(Agenda.class));
-                            Log.d(TAG, mAgendas.toString());
+                          //  Log.d(TAG, mAgendas.toString());
                             mRVAdapter.notifyDataSetChanged();
                             break;
                         case REMOVED:
@@ -239,7 +239,7 @@ public class CurrentFragment extends Fragment {
                             mAgendas.remove(removedId);
                             mAgendasIds.remove(removedId);
                             mAgendasScores.remove(removedId);
-                            Log.d(TAG, mAgendas.toString());
+//                            Log.d(TAG, mAgendas.toString());
                             mRVAdapter.notifyDataSetChanged();
                             break;
                     }

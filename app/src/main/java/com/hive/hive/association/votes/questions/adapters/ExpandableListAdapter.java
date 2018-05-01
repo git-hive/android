@@ -187,7 +187,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter{
             @Override
             public void onClick(View view) {
                 Intent votersIntent = new Intent(mContext, VotersListActivity.class);
-                Log.d(TAG, "child " + groupPosition);
+//                Log.d(TAG, "child " + groupPosition);
                 ArrayList<Integer> questionsIndex = new ArrayList<>();
                 int i = 0;
                 for(QuestionOptions questionOptions : question.getOptions()){
