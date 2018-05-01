@@ -176,6 +176,7 @@ public class OldFragment extends Fragment {
     }
 
     private void initRecycler() {
+        mView.findViewById(R.id.agendasPB).setVisibility(View.GONE);
 
         mRVAdapter = new OldAgendasRVAdapter(mAgendasPair, mAgendaAndSessionIds, this.getContext().getApplicationContext(), this, mUnfoldableView, mDetailsLayout, mView);
         mRV = mView.findViewById(R.id.cellRV);
