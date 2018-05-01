@@ -1,5 +1,6 @@
 package com.hive.hive.association.votes.old;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
@@ -11,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alexvasilkov.foldablelayout.UnfoldableView;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.AgendasViewHolder;
@@ -26,7 +26,9 @@ import java.util.HashMap;
 public class OldAgendasRVAdapter extends RecyclerView.Adapter<AgendasViewHolder>{
     private Pair<ArrayList<DocumentSnapshot>, HashMap<String, Agenda>> mAgendas;
     private HashMap<String, String> mAgendaAndSessionIds;
+    //context and fragment
     private Context mContext;
+    private OldFragment mFragment;
 
     // Local for now
     private HashMap<String, String> mIconsDrawablePaths;
@@ -38,10 +40,11 @@ public class OldAgendasRVAdapter extends RecyclerView.Adapter<AgendasViewHolder>
     private View mView;
 
     public OldAgendasRVAdapter(Pair<ArrayList<DocumentSnapshot>, HashMap<String, Agenda>> mAgendas, HashMap<String, String> agendaAndSessionIds,
-                               Context mContext, UnfoldableView mUnfoldableView, FrameLayout mDetailsLayout, View mView) {
+                               Context mContext, OldFragment fragment, UnfoldableView mUnfoldableView, FrameLayout mDetailsLayout, View mView) {
         this.mAgendas = mAgendas;
         this.mAgendaAndSessionIds = agendaAndSessionIds;
         this.mContext = mContext;
+        this.mFragment = fragment;
         this.mUnfoldableView = mUnfoldableView;
         this.mDetailsLayout = mDetailsLayout;
         this.mView = mView;
@@ -112,7 +115,7 @@ public class OldAgendasRVAdapter extends RecyclerView.Adapter<AgendasViewHolder>
 
         //TODO REMOVE STATIC ASSOCIATION REFERENCE
 
-        OldAgendasFirebaseHandle.getPastQuestions("gVw7dUkuw3SSZSYRXe8s", mAgendaAndSessionIds.get(agendaId), agendaId);
+        OldAgendasFirebaseHandle.getPastQuestions("gVw7dUkuw3SSZSYRXe8s", mAgendaAndSessionIds.get(agendaId), agendaId, mFragment);
 
     }
 

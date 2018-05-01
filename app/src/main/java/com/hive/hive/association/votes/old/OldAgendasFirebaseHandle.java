@@ -84,7 +84,7 @@ public class OldAgendasFirebaseHandle {
                     });
         }
     }
-    public static void getPastQuestions(String associationId, String sessionId, String agendaId){
+    public static void getPastQuestions(String associationId, String sessionId, String agendaId, OldFragment fragment){
         Log.d(TAG, "called");
 
         VotesHelper.getQuestions(FirebaseFirestore.getInstance(), associationId, sessionId, agendaId).get()
@@ -105,6 +105,7 @@ public class OldAgendasFirebaseHandle {
 //                                .collection("questions").add(questions.get(1));
 
                         //TODO update ui
+                        fragment.updateQuestionsUI(questions);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
