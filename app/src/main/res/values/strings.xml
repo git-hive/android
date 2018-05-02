@@ -205,6 +205,9 @@
 
     <string name="get_it_now">Adquirir agora</string>
     <string name="store_value"><b>Valor:</b></string>
+    <string name="category">Categorias</string>
+    <string name="highlights">Destaques</string>
+
 
 
 </resources>
