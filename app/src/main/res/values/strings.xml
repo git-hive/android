@@ -194,4 +194,17 @@
     <string name="all_questions">Por favor dê sua opinião em todas questões.</string>
     <string name="vote_ok">Seu voto foi contabilizado.</string>
     <string name="vote_not_ok">Houve algum problema com a contabilização do seu voto, por favor vote novamente.</string>
+
+    <!-- Store stuff-->
+
+    <string name="all">Todos</string>
+    <string name="food">Alimentação</string>
+    <string name="beauty">Beleza</string>
+    <string name="sport">Esporte</string>
+    <string name="services">Serviços</string>
+
+    <string name="get_it_now">Adquirir agora</string>
+    <string name="store_value"><b>Valor:</b></string>
+
+
 </resources>
