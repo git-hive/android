@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -176,7 +175,6 @@ public class OldQuestionsExpandableAdapter extends BaseExpandableListAdapter {
                     questionsIndex.add(i);
                     i++;
                 }
-                Log.d(TAG, "QUESTION SELECTED: "+ i);
                 votersIntent.putExtra(VotersListActivity.QUESTIONS_IDS, questionsIndex);
                 votersIntent.putExtra(VotersListActivity.VOTERS_REF_STRING,
                         question.getAgendaRef().collection("questions").document(questionId).collection("votes").getPath());

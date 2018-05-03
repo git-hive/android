@@ -2,7 +2,6 @@ package com.hive.hive.association.votes.old;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,7 +67,6 @@ public class OldAgendasRVAdapter extends RecyclerView.Adapter<AgendasViewHolder>
         //populate views
         holder.getmTitle().setText(agenda.getTitle());
         holder.getmRequestScore().setText(mScores.get(agendaID[0]));
-        Log.d("score ", "score "+ mScores.get(agendaID[0]));
         //TODO:Change this line to get from server
         holder.getmCategoryIcon().setImageResource(VotingUtils.getDrawable("services", mIconsDrawable));
 
