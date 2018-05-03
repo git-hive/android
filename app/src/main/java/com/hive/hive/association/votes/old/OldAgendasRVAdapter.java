@@ -2,6 +2,7 @@ package com.hive.hive.association.votes.old;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import java.util.HashMap;
 
 public class OldAgendasRVAdapter extends RecyclerView.Adapter<AgendasViewHolder>{
     private Pair<ArrayList<String>, HashMap<String, Agenda>> mAgendas;
+    private HashMap<String, String> mScores;
     //context and fragment
     private Context mContext;
     private OldFragment mFragment;
@@ -33,9 +35,10 @@ public class OldAgendasRVAdapter extends RecyclerView.Adapter<AgendasViewHolder>
     private FrameLayout mDetailsLayout;
     private View mView;
 
-    public OldAgendasRVAdapter(Pair<ArrayList<String>, HashMap<String, Agenda>> mAgendas, Context mContext, OldFragment fragment,
+    public OldAgendasRVAdapter(Pair<ArrayList<String>, HashMap<String, Agenda>> mAgendas, HashMap<String, String> scores, Context mContext, OldFragment fragment,
                                UnfoldableView mUnfoldableView, FrameLayout mDetailsLayout, View mView) {
         this.mAgendas = mAgendas;
+        this.mScores = scores;
         this.mContext = mContext;
         this.mFragment = fragment;
         this.mUnfoldableView = mUnfoldableView;
@@ -64,12 +67,16 @@ public class OldAgendasRVAdapter extends RecyclerView.Adapter<AgendasViewHolder>
 
         //populate views
         holder.getmTitle().setText(agenda.getTitle());
+        holder.getmRequestScore().setText(mScores.get(agendaID[0]));
+        Log.d("score ", "score "+ mScores.get(agendaID[0]));
         //TODO:Change this line to get from server
         holder.getmCategoryIcon().setImageResource(VotingUtils.getDrawable("services", mIconsDrawable));
 
+        //remove unnused views
         holder.getmTime().setVisibility(View.GONE);
         holder.getmTimeIV().setVisibility(View.GONE);
 
+        //set onclicks
         holder.getmVote().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,7 +109,7 @@ public class OldAgendasRVAdapter extends RecyclerView.Adapter<AgendasViewHolder>
         //set agenda texts
         titleTV.setText(agenda.getTitle());
         descriptionTV.setText(agenda.getContent());
-
+        requestScoreTV.setText(mScores.get(agendaId));
         //load suggested by info
         VotingUtils.fillUnfoldableUser(agenda.getSuggestedByRef(), mView);
 

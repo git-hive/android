@@ -1,6 +1,5 @@
 package com.hive.hive.association.votes.old;
 
-import android.app.Fragment;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.util.Pair;
@@ -68,7 +67,7 @@ public class OldAgendasFirebaseHandle {
 //                                FirebaseFirestore.getInstance().collection("associations").document(associationId).collection("sessions").document("HgVkNiAVqA4JA3JXQbmO")
 //                                    .collection("agendas").add(agenda);
 
-                            fragment.updateAgendas(agendasPair);
+                            getRequestScore(agendasPair, fragment);
                             //TODO SHOULD UPDATE UI
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -111,8 +110,27 @@ public class OldAgendasFirebaseHandle {
                 });
     }
 
-    public static void getRequestScore(Pair<ArrayList<DocumentSnapshot>, HashMap<String, Agenda>> agendasPair){
-
-
+    //@param are a list of agendas ids and a mapping of ids into agendas
+    public static void getRequestScore(Pair<ArrayList<String>, HashMap<String, Agenda>> agendasPair, OldFragment fragment){
+        HashMap<String, String> scoreMap = new HashMap<>(); //maps a request score into an agendaId
+        for(String agendaId : agendasPair.first){
+            Agenda agenda = agendasPair.second.get(agendaId);
+            agenda.getRequestRef().get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if(documentSnapshot.exists()) {
+                        scoreMap.put(agendaId, documentSnapshot.getLong("score").toString());
+                        fragment.updateAgendas();
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e(TAG, e.getMessage());
+                    //TODO should do something else?!
+                }
+            });
+        }
+        fragment.setAgendas(agendasPair, scoreMap);
     }
 }

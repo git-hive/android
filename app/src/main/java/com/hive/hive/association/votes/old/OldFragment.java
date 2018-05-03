@@ -28,8 +28,8 @@ public class OldFragment extends Fragment {
     public static final String ARG_PAGE = "Passadas";
     private final static String TAG = OldFragment.class.getSimpleName();
     //Agendas
-    private Pair<ArrayList<String>, HashMap<String, Agenda>> mAgendasPair;
-
+    private Pair<ArrayList<String>, HashMap<String, Agenda>> mAgendasPair;// arraylist of agendaIds and mapping of agenda into agendaID
+    private HashMap<String, String> mScoreMap; //maps a requestScore into a agendaId
     //Recycler Things
     private RecyclerView mRV;
     private OldAgendasRVAdapter mRVAdapter;
@@ -167,16 +167,20 @@ public class OldFragment extends Fragment {
     private void initRecycler() {
         mView.findViewById(R.id.agendasPB).setVisibility(View.GONE);
 
-        mRVAdapter = new OldAgendasRVAdapter(mAgendasPair, this.getContext().getApplicationContext(), this, mUnfoldableView, mDetailsLayout, mView);
+        mRVAdapter = new OldAgendasRVAdapter(mAgendasPair, mScoreMap, this.getContext().getApplicationContext(), this, mUnfoldableView, mDetailsLayout, mView);
         mRV = mView.findViewById(R.id.cellRV);
         mRV.setLayoutManager(new LinearLayoutManager(getContext()));
         mRV.setAdapter(mRVAdapter);
 
     }
 
-    public void updateAgendas(Pair<ArrayList<String>, HashMap<String, Agenda>> agendasPair) {
+    public void setAgendas(Pair<ArrayList<String>, HashMap<String, Agenda>> agendasPair, HashMap<String, String> scoreMap) {
         mAgendasPair = agendasPair;
+        mScoreMap = scoreMap;
         initRecycler();
+    }
+    public void updateAgendas(){
+        mRVAdapter.notifyDataSetChanged();
     }
     public void updateQuestionsUI(ArrayList<Pair<String, Question>> questions){
         mExpandableQuestionsAdapter = new OldQuestionsExpandableAdapter(this.getContext(), questions);
