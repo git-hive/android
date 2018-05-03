@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -13,22 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.alexvasilkov.foldablelayout.UnfoldableView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.hive.hive.R;
-import com.hive.hive.association.votes.future.FutureFragment;
-import com.hive.hive.association.votes.current.CurrentAdapter;
-import com.hive.hive.association.votes.questions.adapters.ExpandableListAdapter;
 import com.hive.hive.model.association.Agenda;
 import com.hive.hive.model.association.Question;
-import com.hive.hive.model.association.Vote;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -191,8 +182,8 @@ public class OldFragment extends Fragment {
         mAgendaAndSessionIds = agendaAndSessionIds;
         initRecycler();
     }
-    public void updateQuestionsUI(ArrayList<Question> questions){
-        mExpandableQuestionsAdapter = new OldQuestionsExpandableAdapter(this.getContext(), questions);
+    public void updateQuestionsUI(ArrayList<Pair<String, Question>> questions, HashMap<String, Pair<String, String>> ids){
+        mExpandableQuestionsAdapter = new OldQuestionsExpandableAdapter(this.getContext(), questions, ids);
 
         // Setting adpater over expandablelistview
         expandableListView.setAdapter(mExpandableQuestionsAdapter);

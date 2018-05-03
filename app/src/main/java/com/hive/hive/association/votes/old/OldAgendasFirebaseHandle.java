@@ -85,18 +85,18 @@ public class OldAgendasFirebaseHandle {
         }
     }
     public static void getPastQuestions(String associationId, String sessionId, String agendaId, OldFragment fragment){
-//        Log.d(TAG, "called");
+//       map question id to agenda and session
+        HashMap<String, Pair<String, String>> sessionAndAgendaIds = new HashMap<>();
+        ArrayList<Pair<String, Question>> questions = new ArrayList<>();
 
         VotesHelper.getQuestions(FirebaseFirestore.getInstance(), associationId, sessionId, agendaId).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot documentSnapshots) {
-                        ArrayList<Question> questions = new ArrayList<>();
                         for(DocumentSnapshot dc : documentSnapshots){
-//                            Log.d(TAG, "success");
                             if(dc.exists()){
-                                questions.add(dc.toObject(Question.class));
-//                                Log.d(TAG, dc.toObject(Question.class).getQuestion());
+                                questions.add(new Pair<>(dc.getId(), dc.toObject(Question.class)));
+                                sessionAndAgendaIds.put(dc.getId(), new Pair<>(sessionId, agendaId));
                             }
                         }
 //                        FirebaseFirestore.getInstance().collection("associations").document(associationId).collection("sessions").document("HgVkNiAVqA4JA3JXQbmO").collection("agendas").document("cvi6bxu01BjZ183KgFKI")
@@ -105,7 +105,7 @@ public class OldAgendasFirebaseHandle {
 //                                .collection("questions").add(questions.get(1));
 
                         //TODO update ui
-                        fragment.updateQuestionsUI(questions);
+                        fragment.updateQuestionsUI(questions, sessionAndAgendaIds);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
