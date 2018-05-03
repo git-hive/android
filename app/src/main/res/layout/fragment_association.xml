@@ -5,12 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <ImageView
+        android:id="@+id/userAvatar"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="5dp"
         app:srcCompat="@drawable/ic_profile_photo"
         android:layout_gravity="top|left"
-        android:layout_width="85dp"
-        android:layout_height="75dp" />
+        android:layout_width="75dp"
+        android:layout_height="65dp" />
 
     <ImageView
         android:layout_marginTop="30dp"
