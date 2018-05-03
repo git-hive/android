@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,26 +13,21 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.hive.hive.R;
 import com.hive.hive.association.transparency.tabs.staff.CustomGridView;
 import com.hive.hive.association.votes.questions.adapters.QuestionGridAdapter;
 import com.hive.hive.association.votes.voters_list.VotersListActivity;
 import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.QuestionOptions;
-import com.hive.hive.utils.DocReferences;
 import com.hive.hive.utils.hexagonsPercentBar.HexagonView;
 import com.hive.hive.utils.hexagonsPercentBar.HexagonalBarAdapter;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class OldQuestionsExpandableAdapter extends BaseExpandableListAdapter {
     private String TAG = OldQuestionsExpandableAdapter.class.getSimpleName();
 
     private Context mContext;
 
-    private  HashMap<String, Pair<String, String>> mSessionAndAgendaIds; //agenda id and questions ids
     private ArrayList<Pair<String, Question>>  mQuestions;
     // Percentage bar
     HexagonView mPercentageBar;
@@ -43,11 +37,9 @@ public class OldQuestionsExpandableAdapter extends BaseExpandableListAdapter {
     // List of percentages
     ArrayList<Float> mPercentages;
 
-    public OldQuestionsExpandableAdapter(Context context, ArrayList<Pair<String, Question>> questions,
-                                         HashMap<String, Pair<String, String>> sessionAndAgendaIds) {
+    public OldQuestionsExpandableAdapter(Context context, ArrayList<Pair<String, Question>> questions) {
         mContext = context;
         this.mQuestions = questions;
-        this.mSessionAndAgendaIds = sessionAndAgendaIds;
     }
 
 
@@ -128,8 +120,7 @@ public class OldQuestionsExpandableAdapter extends BaseExpandableListAdapter {
         //Question Data
         Question question = mQuestions.get(i).second;
         String questionId = mQuestions.get(i).first;
-        String questionAgendaId = mSessionAndAgendaIds.get(questionId).second;
-        String questionSessionId = mSessionAndAgendaIds.get(questionId).first;
+
 
 
         TextView questionTV = view.findViewById(R.id.questionTV);
@@ -184,13 +175,9 @@ public class OldQuestionsExpandableAdapter extends BaseExpandableListAdapter {
                     questionsIndex.add(i);
                     i++;
                 }
-                Log.d(TAG, "QUESTION SELECTED: "+ i);
                 votersIntent.putExtra(VotersListActivity.QUESTIONS_IDS, questionsIndex);
                 votersIntent.putExtra(VotersListActivity.VOTERS_REF_STRING,
-                        DocReferences.getVotersRef("gVw7dUkuw3SSZSYRXe8s", questionSessionId,
-                                questionAgendaId, questionId).getPath());
-                Log.d("PATH", "path :" + DocReferences.getVotersRef("gVw7dUkuw3SSZSYRXe8s", questionSessionId,
-                        questionAgendaId, questionId).getPath());
+                        question.getAgendaRef().collection("questions").document(questionId).collection("votes").getPath());
                 mContext.startActivity(votersIntent);
             }
         });

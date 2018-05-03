@@ -1,6 +1,5 @@
 package com.hive.hive.association.votes.old;
 
-import android.app.Fragment;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.util.Pair;
@@ -50,8 +49,7 @@ public class OldAgendasFirebaseHandle {
     }
 
     public static void getPastAgendas(String associationId, ArrayList<String> pastSessionsIds, OldFragment fragment){
-        Pair<ArrayList<DocumentSnapshot>, HashMap<String, Agenda>> agendasPair= new Pair<>(new ArrayList<>(), new HashMap<>());
-        HashMap<String, String> agendaAndSessionIds = new HashMap<>();
+        Pair<ArrayList<String>, HashMap<String, Agenda>> agendasPair= new Pair<>(new ArrayList<>(), new HashMap<>());
         for(String sessionId : pastSessionsIds){
             VotesHelper.getAgendas(FirebaseFirestore.getInstance(), associationId, sessionId).get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -61,18 +59,15 @@ public class OldAgendasFirebaseHandle {
                                 if(dc.exists()){
                                     String id = dc.getId();
                                     Agenda agenda = dc.toObject(Agenda.class);
-                                    agendasPair.first.add(dc);
+                                    agendasPair.first.add(id);
                                     agendasPair.second.put(id, agenda);
-
-                                    //puts ids
-                                    agendaAndSessionIds.put(id, sessionId);
                                 }
                             }
 //                            for(Agenda agenda : agendasPair.second.values())
 //                                FirebaseFirestore.getInstance().collection("associations").document(associationId).collection("sessions").document("HgVkNiAVqA4JA3JXQbmO")
 //                                    .collection("agendas").add(agenda);
 
-                            fragment.updateAgendas(agendasPair, agendaAndSessionIds);
+                            getRequestScore(agendasPair, fragment);
                             //TODO SHOULD UPDATE UI
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -84,19 +79,17 @@ public class OldAgendasFirebaseHandle {
                     });
         }
     }
-    public static void getPastQuestions(String associationId, String sessionId, String agendaId, OldFragment fragment){
+    public static void getPastQuestions(DocumentReference sessionRef, String agendaId, OldFragment fragment){
 //       map question id to agenda and session
-        HashMap<String, Pair<String, String>> sessionAndAgendaIds = new HashMap<>();
         ArrayList<Pair<String, Question>> questions = new ArrayList<>();
 
-        VotesHelper.getQuestions(FirebaseFirestore.getInstance(), associationId, sessionId, agendaId).get()
+        sessionRef.collection("agendas").document(agendaId).collection("questions").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot documentSnapshots) {
                         for(DocumentSnapshot dc : documentSnapshots){
                             if(dc.exists()){
                                 questions.add(new Pair<>(dc.getId(), dc.toObject(Question.class)));
-                                sessionAndAgendaIds.put(dc.getId(), new Pair<>(sessionId, agendaId));
                             }
                         }
 //                        FirebaseFirestore.getInstance().collection("associations").document(associationId).collection("sessions").document("HgVkNiAVqA4JA3JXQbmO").collection("agendas").document("cvi6bxu01BjZ183KgFKI")
@@ -105,7 +98,7 @@ public class OldAgendasFirebaseHandle {
 //                                .collection("questions").add(questions.get(1));
 
                         //TODO update ui
-                        fragment.updateQuestionsUI(questions, sessionAndAgendaIds);
+                        fragment.updateQuestionsUI(questions);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -115,5 +108,29 @@ public class OldAgendasFirebaseHandle {
                         //TODO SHOULD FAIL
                     }
                 });
+    }
+
+    //@param are a list of agendas ids and a mapping of ids into agendas
+    public static void getRequestScore(Pair<ArrayList<String>, HashMap<String, Agenda>> agendasPair, OldFragment fragment){
+        HashMap<String, String> scoreMap = new HashMap<>(); //maps a request score into an agendaId
+        for(String agendaId : agendasPair.first){
+            Agenda agenda = agendasPair.second.get(agendaId);
+            agenda.getRequestRef().get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if(documentSnapshot.exists()) {
+                        scoreMap.put(agendaId, documentSnapshot.getLong("score").toString());
+                        fragment.updateAgendas();
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e(TAG, e.getMessage());
+                    //TODO should do something else?!
+                }
+            });
+        }
+        fragment.setAgendas(agendasPair, scoreMap);
     }
 }
