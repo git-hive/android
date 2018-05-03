@@ -231,7 +231,7 @@ public class CurrentFragment extends Fragment {
                             String modifiedId = dc.getDocument().getId();
                             mAgendas.remove(modifiedId);
                             mAgendas.put(modifiedId, dc.getDocument().toObject(Agenda.class));
-                          //  Log.d(TAG, mAgendas.toString());
+                            //  Log.d(TAG, mAgendas.toString());
                             mRVAdapter.notifyDataSetChanged();
                             break;
                         case REMOVED:
@@ -308,8 +308,10 @@ public class CurrentFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mSessionLR.remove();
-        mAgendasLR.remove();
+        if (mSessionEL != null)
+            mSessionLR.remove();
+        if (mAgendasLR != null)
+            mAgendasLR.remove();
     }
 
     // Setting headers and childs to expandable listview
