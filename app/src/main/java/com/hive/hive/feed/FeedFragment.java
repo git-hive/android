@@ -58,6 +58,7 @@ public class FeedFragment extends Fragment {
     // Views
     ImageView mUserPhoto;
     TextView mUserScore;
+    View mView;
 
     //Settings
     Context mContext;
@@ -82,6 +83,8 @@ public class FeedFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_feed, container, false);
 
+        mView = v;
+
         mContext = getContext();
 
         // User Views references
@@ -91,15 +94,7 @@ public class FeedFragment extends Fragment {
 
         fillLoggedUserView();
         getAllFeedPostsAndCallJoinFeedPostsCategories();
-        mFeedPostIds = getFeedPostIDs(mFeedPosts);
 
-
-        mRecyclerViewFeed = v.findViewById(R.id.recyclerViewFeed);
-
-        mRecyclerViewFeedAdapter = new RecyclerViewFeedAdapter(mFeedPosts, mFeedPostIds, mContext);
-
-        mRecyclerViewFeed.setAdapter(mRecyclerViewFeedAdapter);
-        mRecyclerViewFeed.setLayoutManager(new LinearLayoutManager(v.getContext()));
 
         feedFab = v.findViewById(R.id.fab);
 
@@ -140,7 +135,7 @@ public class FeedFragment extends Fragment {
                             Log.d(TAG, snap.getId()+"+++++++++++++++++++++++++");
 
                         }
-
+                        setupRecyclerView();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -189,6 +184,18 @@ public class FeedFragment extends Fragment {
 
         }
         return newFeedPostIDs;
+    }
+
+    private void setupRecyclerView(){
+        mFeedPostIds = getFeedPostIDs(mFeedPosts);
+
+        mRecyclerViewFeed = mView.findViewById(R.id.recyclerViewFeed);
+
+        mRecyclerViewFeedAdapter = new RecyclerViewFeedAdapter(mFeedPosts, mFeedPostIds, mContext);
+
+        mRecyclerViewFeed.setAdapter(mRecyclerViewFeedAdapter);
+        mRecyclerViewFeed.setLayoutManager(new LinearLayoutManager(mView.getContext()));
+
     }
 
 
