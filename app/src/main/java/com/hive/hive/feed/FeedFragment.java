@@ -107,6 +107,8 @@ public class FeedFragment extends Fragment {
                 new Intent(view.getContext(), NewPostActivity.class)
         ));
 
+
+
         return v;
     }
 
