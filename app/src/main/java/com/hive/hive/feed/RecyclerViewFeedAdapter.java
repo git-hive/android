@@ -256,10 +256,7 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     private String getForumPostsID(int forumPostPosition) {
-        Log.d(TAG, mFeedPostsIDs.size()+" THIS MUST BE SOMETHING"+forumPostPosition);
-        if(!mFeedPostsIDs.isEmpty())
-            return mFeedPostsIDs.get(forumPostPosition);
-        return null;
+        return mFeedPostsIDs.get(forumPostPosition);
     }
 
     private void shouldFillSupport(
@@ -268,10 +265,7 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerView.V
             final int position
     ) {
 
-        if(feedPostID == null)
-            return;
-
-        // Check if it has on memory
+                // Check if it has on memory
         if (mFeedPostSupport.containsKey(position)) {
             if (mFeedPostSupport.get(position)) {
                 holder.mSupportsIV.setImageDrawable(
@@ -322,6 +316,8 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerView.V
     ) {
         if(forumPostID == null)
             return;
+
+
         FeedHelper.getForumPostSupport(
                 mDB,
                 mAssociationID,
