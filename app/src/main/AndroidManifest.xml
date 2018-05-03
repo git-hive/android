@@ -65,6 +65,8 @@
         <activity android:name=".association.votes.VotesActivity" />
         <activity android:name=".association.transparency.TransparencyActivity" />
         <activity android:name=".association.request.comments.CommentsActivity" />
+        <activity android:name=".feed.comments.CommentsActivity" />
+
         <activity android:name=".association.votes.question_answering.QuestionFormActivity" />
         <activity android:name=".association.votes.voters_list.VotersListActivity"></activity>
         <activity android:name=".feed.NewPostActivity"></activity>

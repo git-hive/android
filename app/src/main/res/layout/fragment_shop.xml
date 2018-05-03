@@ -13,12 +13,13 @@
         android:layout_height="wrap_content">
 
     <ImageView
+        android:id="@+id/userAvatar"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="5dp"
         app:srcCompat="@drawable/ic_profile_photo"
         android:layout_gravity="top|left"
-        android:layout_width="85dp"
-        android:layout_height="75dp" />
+        android:layout_width="75dp"
+        android:layout_height="65dp" />
 
     <ImageView
         android:layout_marginLeft="150dp"
@@ -41,6 +42,133 @@
         android:layout_gravity="top|right"
         />
     </LinearLayout>
+
+    <TextView
+        android:background="@drawable/only_one_bottom_line"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
+        android:textSize="24sp"
+        android:textColor="@color/colorBlack"
+        android:text="@string/category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <!-- ALL -->
+        <LinearLayout
+            android:padding="5dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:background="@drawable/ic_category_all"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+            <TextView
+                android:text="@string/all"
+                android:textSize="14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <!-- FOOD -->
+        <LinearLayout
+
+            android:padding="5dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:background="@drawable/ic_icones_foods"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+            <TextView
+                android:text="@string/food"
+                android:textSize="14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <!-- Beauty -->
+        <LinearLayout
+
+            android:padding="5dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:background="@drawable/ic_icones_beauty"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+            <TextView
+                android:text="@string/beauty"
+                android:textSize="14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <!-- Sport -->
+        <LinearLayout
+
+            android:padding="5dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:background="@drawable/ic_icones_sport"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+            <TextView
+                android:text="@string/sport"
+                android:textSize="14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <!-- Services -->
+        <LinearLayout
+
+            android:padding="5dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:background="@drawable/ic_category_services"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+            <TextView
+                android:text="@string/services"
+                android:textSize="14sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <TextView
+        android:background="@drawable/only_one_bottom_line"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
+        android:textSize="24sp"
+        android:textColor="@color/colorBlack"
+        android:text="@string/highlights"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 
     <android.support.v7.widget.RecyclerView
         android:orientation="vertical"

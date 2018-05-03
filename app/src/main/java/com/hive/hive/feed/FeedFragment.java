@@ -17,10 +17,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
+
 import com.hive.hive.model.forum.ForumPost;
 
 import static android.content.ContentValues.TAG;
@@ -32,6 +36,7 @@ import com.hive.hive.utils.ProfilePhotoHelper;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class FeedFragment extends Fragment {
 
@@ -42,10 +47,12 @@ public class FeedFragment extends Fragment {
     final String associationID = "gVw7dUkuw3SSZSYRXe8s";
 
 
+    // Data
     private RecyclerView mRecyclerViewFeed;
     private RecyclerViewFeedAdapter mRecyclerViewFeedAdapter;
-    ArrayList<Object> mFeedPosts;
-
+    private ArrayList<Object> mFeedPosts;
+    private HashMap<ForumPost, String> mFeedPostHashIDs;
+    private ArrayList<String> mFeedPostIds;
     private FloatingActionButton feedFab;
 
     // Views
@@ -57,6 +64,9 @@ public class FeedFragment extends Fragment {
 
     public FeedFragment() {
         // Required empty public constructor
+        mFeedPosts = new ArrayList<>();
+        mFeedPostIds = new ArrayList<>();
+        mFeedPostHashIDs = new HashMap<>();
     }
 
     public static FeedFragment newInstance() {
@@ -80,12 +90,13 @@ public class FeedFragment extends Fragment {
         mUserPhoto = v.findViewById(R.id.userAvatar);
 
         fillLoggedUserView();
-        getRequests();
+        getAllFeedPostsAndCallJoinFeedPostsCategories();
+        mFeedPostIds = getFeedPostIDs(mFeedPosts);
 
 
         mRecyclerViewFeed = v.findViewById(R.id.recyclerViewFeed);
 
-        mRecyclerViewFeedAdapter = new RecyclerViewFeedAdapter(mFeedPosts);
+        mRecyclerViewFeedAdapter = new RecyclerViewFeedAdapter(mFeedPosts, mFeedPostIds, mContext);
 
         mRecyclerViewFeed.setAdapter(mRecyclerViewFeedAdapter);
         mRecyclerViewFeed.setLayoutManager(new LinearLayoutManager(v.getContext()));
@@ -96,12 +107,51 @@ public class FeedFragment extends Fragment {
                 new Intent(view.getContext(), NewPostActivity.class)
         ));
 
+
+
         return v;
     }
 
+    private void getAllFeedPostsAndCallJoinFeedPostsCategories() {
+        FeedHelper.getAllForumPosts(mDB, associationID)
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot documentSnapshots) {
 
-    public void getRequests(){
-        mFeedPosts = new ArrayList<>();
+                        if (documentSnapshots.isEmpty()) {
+                            Toast.makeText(
+                                    mContext,
+                                    "Falha ao pegar requisições",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                            return;
+                        }
+
+
+                        for (DocumentSnapshot snap : documentSnapshots) {
+                            ForumPost post = snap.toObject(ForumPost.class);
+                            Log.d(TAG, post.getAuthorRef().toString()+"???????????????BEFORE CONTINUE?????????????????"+post.getForumId());
+                            if (post.getAuthorRef() == null) continue;
+                            Log.d(TAG, post.getAuthorRef().toString()+"???????????????AFTER CONTINUE?????????????????"+post.getForumId());
+
+                            mFeedPosts.add(post);
+                            mFeedPostHashIDs.put(post, snap.getId());
+
+                            Log.d(TAG, snap.getId()+"+++++++++++++++++++++++++");
+
+                        }
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, e.toString());
+                    }
+                });
+    }
+
+    public void getFeedPosts(){
 
         getAllForumPosts(mDB, associationID).addOnSuccessListener(documentSnapshots -> {
             if (documentSnapshots.isEmpty()) {
@@ -129,5 +179,18 @@ public class FeedFragment extends Fragment {
             Log.e(TAG, e.getMessage());
         }
     }
+
+    private ArrayList<String> getFeedPostIDs(ArrayList<Object> feedPosts) {
+        ArrayList<String> newFeedPostIDs = new ArrayList<>();
+        Log.d(TAG, mFeedPostHashIDs.size()+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        for (Object post : feedPosts) {
+            newFeedPostIDs.add(mFeedPostHashIDs.get((ForumPost) post));
+            Log.d(TAG, mFeedPostHashIDs.get(post).toString()+"????????????????????????????????");
+
+        }
+        return newFeedPostIDs;
+    }
+
+
 
 }

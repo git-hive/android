@@ -24,11 +24,12 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
-import com.hive.hive.association.AssociationHelper;
-import com.hive.hive.association.request.RequestAdapter;
-import com.hive.hive.model.association.AssociationComment;
-import com.hive.hive.model.association.AssociationSupport;
-import com.hive.hive.model.association.Request;
+
+import com.hive.hive.feed.FeedHelper;
+import com.hive.hive.feed.RecyclerViewFeedAdapter;
+import com.hive.hive.model.forum.ForumComment;
+import com.hive.hive.model.forum.ForumPost;
+import com.hive.hive.model.forum.ForumSupport;
 import com.hive.hive.model.user.User;
 import com.hive.hive.utils.DocReferences;
 import com.hive.hive.utils.GlideApp;
@@ -42,7 +43,7 @@ import java.util.UUID;
 
 public class CommentsActivity extends AppCompatActivity {
     private final String TAG = CommentsActivity.class.getSimpleName();
-    public final static String REQUEST_ID = "request_id";
+    public final static String FORUM_POST_ID = "forum_post_id";
 
 
     //--- Views
@@ -63,8 +64,8 @@ public class CommentsActivity extends AppCompatActivity {
     private ImageView mRequestSupportsIV;
     //--- Data
     private ArrayList<String> mIds;
-    private HashMap<String, AssociationComment> mComments;
-    private Request mRequest;
+    private HashMap<String, ForumComment> mComments;
+    private ForumPost mRequest;
     private SupportMutex mSupportMutex;
     //--- Listeners
     private EventListener<QuerySnapshot> mCommentEL;
@@ -90,7 +91,7 @@ public class CommentsActivity extends AppCompatActivity {
             Log.e(TAG, "Home as Up not setted. Action Bar not found.");
 
         //getting extra info from Request
-        mRequestId = getIntent().getExtras().getString(REQUEST_ID);
+        mRequestId = getIntent().getExtras().getString(FORUM_POST_ID);
         Toast.makeText(this, mRequestId, Toast.LENGTH_SHORT).show();
 
         //finding views
@@ -118,12 +119,12 @@ public class CommentsActivity extends AppCompatActivity {
                 }
                 String commentID = UUID.randomUUID().toString();
                 String commentText = mCommentET.getText().toString();
-                AssociationComment comment = new AssociationComment( Calendar.getInstance().getTimeInMillis(),
+                ForumComment comment = new ForumComment( Calendar.getInstance().getTimeInMillis(),
                         Calendar.getInstance().getTimeInMillis(),
-                        DocReferences.getUserRef(), null, DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s"),
-                        commentText, 0, DocReferences.getRequestRef("gVw7dUkuw3SSZSYRXe8s", mRequestId));
+                        DocReferences.getUserRef(), null, DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s").getId(),
+                        commentText, 0, DocReferences.getRequestRef("gVw7dUkuw3SSZSYRXe8s", mRequestId).getId(), null);
                 //TODO static associationId
-                AssociationHelper.setRequestComment(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mRequestId,
+                FeedHelper.setForumPostComment(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mRequestId,
                        commentID,  comment);
                 mCommentET.setText(null);
                 mCommentET.clearFocus();
@@ -152,16 +153,14 @@ public class CommentsActivity extends AppCompatActivity {
                     return;
                 }
                 if(documentSnapshot.exists()) {
-                    mRequest = documentSnapshot.toObject(Request.class);
+                    mRequest = documentSnapshot.toObject(ForumPost.class);
                     updateRequestUI();
                     shouldFillSupport();
                     fillUser(mRequest.getAuthorRef());
-                }else{
-                    finish();
                 }
             }
         };
-        mRequestLR = AssociationHelper.getRequest(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mRequestId)
+        mRequestLR = FeedHelper.getForumPost(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mRequestId)
                 .addSnapshotListener(mRequestEL);
 
         //GETTING ALL Comments
@@ -177,7 +176,7 @@ public class CommentsActivity extends AppCompatActivity {
                 for (DocumentChange dc : documentSnapshots.getDocumentChanges()) {
                     switch (dc.getType()) {
                         case ADDED:
-                            AssociationComment comment = dc.getDocument().toObject(AssociationComment.class);
+                            ForumComment comment = dc.getDocument().toObject(ForumComment.class);
                             mComments.put(dc.getDocument().getId(), comment);
                             mIds.add(dc.getDocument().getId());
                             mRecyclerAdapter.notifyDataSetChanged();
@@ -188,7 +187,7 @@ public class CommentsActivity extends AppCompatActivity {
                             String modifiedId = dc.getDocument().getId();
                             mComments.get(modifiedId).setUpdatedAt(dc.getDocument().getLong("updatedAt"));
                             mComments.remove(modifiedId);
-                            mComments.put(modifiedId, dc.getDocument().toObject(AssociationComment.class));
+                            mComments.put(modifiedId, dc.getDocument().toObject(ForumComment.class));
                             mRecyclerAdapter.notifyDataSetChanged();
                             break;
                         case REMOVED:
@@ -205,7 +204,7 @@ public class CommentsActivity extends AppCompatActivity {
 
         //TODO change associationID and LIMIT
         //getting the 10 newest comments
-        mCommentLR = AssociationHelper.getAllRequestComments(FirebaseFirestore.getInstance(),
+        mCommentLR = FeedHelper.getAllForumPostComments(FirebaseFirestore.getInstance(),
                 "gVw7dUkuw3SSZSYRXe8s", mRequestId).orderBy("createdAt", Query.Direction.ASCENDING).limit(10)
                 .addSnapshotListener(mCommentEL);
 
@@ -246,7 +245,7 @@ public class CommentsActivity extends AppCompatActivity {
         //mRequestAuthorTV.setText(mRequest.get);
         mRequestTitleTV.setText(mRequest.getTitle());
         //mRequestCommentsCountTV.setText(mRequest.get);
-        mRequestSupportsCountTV.setText(mRequest.getScore()+"");
+        mRequestSupportsCountTV.setText(mRequest.getSupportScore()+"");
         mRequestContentTV.setText(mRequest.getContent());
 
         //private ImageView mRequestAuthorIV;
@@ -254,14 +253,14 @@ public class CommentsActivity extends AppCompatActivity {
     }
     private void scoreClick(){
         mSupportMutex.lock();
-        AssociationHelper.getRequestSupport(FirebaseFirestore.getInstance(),
+        FeedHelper.getForumPostSupport(FirebaseFirestore.getInstance(),
                 "gVw7dUkuw3SSZSYRXe8s", mRequestId, FirebaseAuth.getInstance().getUid())
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         //if support already exists, should delete it
                         if(documentSnapshot.exists()) {
-                            AssociationHelper.removeRequestSupport(FirebaseFirestore.getInstance(),
+                            FeedHelper.removeForumPostSupport(FirebaseFirestore.getInstance(),
                                     "gVw7dUkuw3SSZSYRXe8s", mRequestId, FirebaseAuth.getInstance().getUid())
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -275,9 +274,9 @@ public class CommentsActivity extends AppCompatActivity {
                             String supportId = FirebaseAuth.getInstance().getUid();
                             //TODO review refs
 
-                            AssociationSupport support = new AssociationSupport( Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
-                                    userRef, null, assocRef, null);
-                            AssociationHelper.setRequestSupport(FirebaseFirestore.getInstance(),
+                            ForumSupport support = new ForumSupport( Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
+                                    userRef, null, assocRef.getId(), null);
+                            FeedHelper.setForumPostSupport(FirebaseFirestore.getInstance(),
                                     "gVw7dUkuw3SSZSYRXe8s", mRequestId, supportId, support).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -290,7 +289,7 @@ public class CommentsActivity extends AppCompatActivity {
     }
     private void shouldFillSupport(){
         //if exists support, then should be IV filled
-        AssociationHelper.getRequestSupport(FirebaseFirestore.getInstance(),
+        FeedHelper.getForumPostSupport(FirebaseFirestore.getInstance(),
                 "gVw7dUkuw3SSZSYRXe8s", mRequestId, FirebaseAuth.getInstance().getUid())
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -307,7 +306,7 @@ public class CommentsActivity extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if(documentSnapshot.exists()){
-                    Log.d(RequestAdapter.class.getSimpleName(), documentSnapshot.get("name").toString());
+                    Log.d(RecyclerViewFeedAdapter.class.getSimpleName(), documentSnapshot.get("name").toString());
                     User user = documentSnapshot.toObject(User.class);
                     mRequestAuthorTV.setText(user.getName());
                     ProfilePhotoHelper.loadImage(getApplicationContext(), mRequestAuthorIV, user.getPhotoUrl());
