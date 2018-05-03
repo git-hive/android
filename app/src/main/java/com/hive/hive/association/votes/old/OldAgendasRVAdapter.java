@@ -1,6 +1,5 @@
 package com.hive.hive.association.votes.old;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
@@ -10,22 +9,17 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.alexvasilkov.foldablelayout.UnfoldableView;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.AgendasViewHolder;
 import com.hive.hive.model.association.Agenda;
 import com.hive.hive.utils.VotingUtils;
-
 import java.util.ArrayList;
-
 import java.util.HashMap;
 
 
 public class OldAgendasRVAdapter extends RecyclerView.Adapter<AgendasViewHolder>{
-    private Pair<ArrayList<DocumentSnapshot>, HashMap<String, Agenda>> mAgendas;
-    private HashMap<String, String> mAgendaAndSessionIds;
+    private Pair<ArrayList<String>, HashMap<String, Agenda>> mAgendas;
     //context and fragment
     private Context mContext;
     private OldFragment mFragment;
@@ -39,10 +33,9 @@ public class OldAgendasRVAdapter extends RecyclerView.Adapter<AgendasViewHolder>
     private FrameLayout mDetailsLayout;
     private View mView;
 
-    public OldAgendasRVAdapter(Pair<ArrayList<DocumentSnapshot>, HashMap<String, Agenda>> mAgendas, HashMap<String, String> agendaAndSessionIds,
-                               Context mContext, OldFragment fragment, UnfoldableView mUnfoldableView, FrameLayout mDetailsLayout, View mView) {
+    public OldAgendasRVAdapter(Pair<ArrayList<String>, HashMap<String, Agenda>> mAgendas, Context mContext, OldFragment fragment,
+                               UnfoldableView mUnfoldableView, FrameLayout mDetailsLayout, View mView) {
         this.mAgendas = mAgendas;
-        this.mAgendaAndSessionIds = agendaAndSessionIds;
         this.mContext = mContext;
         this.mFragment = fragment;
         this.mUnfoldableView = mUnfoldableView;
@@ -65,7 +58,7 @@ public class OldAgendasRVAdapter extends RecyclerView.Adapter<AgendasViewHolder>
 
     @Override
     public void onBindViewHolder(AgendasViewHolder holder, int position) {
-        final String[] agendaID = {mAgendas.first.get(position).getId()};
+        final String[] agendaID = {mAgendas.first.get(position)};
 
         final Agenda agenda = mAgendas.second.get(agendaID[0]);
 
@@ -115,7 +108,7 @@ public class OldAgendasRVAdapter extends RecyclerView.Adapter<AgendasViewHolder>
 
         //TODO REMOVE STATIC ASSOCIATION REFERENCE
 
-        OldAgendasFirebaseHandle.getPastQuestions("gVw7dUkuw3SSZSYRXe8s", mAgendaAndSessionIds.get(agendaId), agendaId, mFragment);
+        OldAgendasFirebaseHandle.getPastQuestions(agenda.getSessionRef(), agendaId, mFragment);
 
     }
 

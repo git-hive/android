@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import com.alexvasilkov.foldablelayout.UnfoldableView;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.hive.hive.R;
 import com.hive.hive.model.association.Agenda;
 import com.hive.hive.model.association.Question;
@@ -29,8 +28,7 @@ public class OldFragment extends Fragment {
     public static final String ARG_PAGE = "Passadas";
     private final static String TAG = OldFragment.class.getSimpleName();
     //Agendas
-    private Pair<ArrayList<DocumentSnapshot>, HashMap<String, Agenda>> mAgendasPair;
-    private HashMap<String,String> mAgendaAndSessionIds;
+    private Pair<ArrayList<String>, HashMap<String, Agenda>> mAgendasPair;
 
     //Recycler Things
     private RecyclerView mRV;
@@ -169,21 +167,19 @@ public class OldFragment extends Fragment {
     private void initRecycler() {
         mView.findViewById(R.id.agendasPB).setVisibility(View.GONE);
 
-        mRVAdapter = new OldAgendasRVAdapter(mAgendasPair, mAgendaAndSessionIds, this.getContext().getApplicationContext(), this, mUnfoldableView, mDetailsLayout, mView);
+        mRVAdapter = new OldAgendasRVAdapter(mAgendasPair, this.getContext().getApplicationContext(), this, mUnfoldableView, mDetailsLayout, mView);
         mRV = mView.findViewById(R.id.cellRV);
         mRV.setLayoutManager(new LinearLayoutManager(getContext()));
         mRV.setAdapter(mRVAdapter);
 
     }
 
-    public void updateAgendas(Pair<ArrayList<DocumentSnapshot>, HashMap<String, Agenda>> agendasPair,
-                              HashMap<String, String> agendaAndSessionIds) {
+    public void updateAgendas(Pair<ArrayList<String>, HashMap<String, Agenda>> agendasPair) {
         mAgendasPair = agendasPair;
-        mAgendaAndSessionIds = agendaAndSessionIds;
         initRecycler();
     }
-    public void updateQuestionsUI(ArrayList<Pair<String, Question>> questions, HashMap<String, Pair<String, String>> ids){
-        mExpandableQuestionsAdapter = new OldQuestionsExpandableAdapter(this.getContext(), questions, ids);
+    public void updateQuestionsUI(ArrayList<Pair<String, Question>> questions){
+        mExpandableQuestionsAdapter = new OldQuestionsExpandableAdapter(this.getContext(), questions);
 
         // Setting adpater over expandablelistview
         expandableListView.setAdapter(mExpandableQuestionsAdapter);
