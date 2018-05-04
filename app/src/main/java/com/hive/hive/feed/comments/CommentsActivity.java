@@ -1,8 +1,9 @@
 package com.hive.hive.feed.comments;
 
-import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentChange;
@@ -27,11 +29,13 @@ import com.hive.hive.R;
 
 import com.hive.hive.feed.FeedHelper;
 import com.hive.hive.feed.RecyclerViewFeedAdapter;
+import com.hive.hive.feed.comments.CommentsAdapter;
 import com.hive.hive.model.forum.ForumComment;
 import com.hive.hive.model.forum.ForumPost;
 import com.hive.hive.model.forum.ForumSupport;
 import com.hive.hive.model.user.User;
 import com.hive.hive.utils.DocReferences;
+
 import com.hive.hive.utils.GlideApp;
 import com.hive.hive.utils.ProfilePhotoHelper;
 import com.hive.hive.utils.SupportMutex;
@@ -39,6 +43,8 @@ import com.hive.hive.utils.SupportMutex;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.UUID;
 
 public class CommentsActivity extends AppCompatActivity {
@@ -67,13 +73,15 @@ public class CommentsActivity extends AppCompatActivity {
     private HashMap<String, ForumComment> mComments;
     private ForumPost mRequest;
     private SupportMutex mSupportMutex;
+    private LinkedList<Boolean> mSupportQueue;
+    private boolean mLastSupport;
     //--- Listeners
     private EventListener<QuerySnapshot> mCommentEL;
     private EventListener<DocumentSnapshot> mRequestEL;
     private ListenerRegistration mCommentLR;
     private ListenerRegistration mRequestLR;
 
-
+    //--
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,6 +116,7 @@ public class CommentsActivity extends AppCompatActivity {
         mRequestSupportsIV = findViewById(R.id.supportsIV);
         //creating support mutex
         mSupportMutex = new SupportMutex(mRequestSupportsCountTV, mRequestSupportsIV);
+        mSupportQueue =  new LinkedList<>();
         //onclick to save comment
         mCommentIV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,11 +130,11 @@ public class CommentsActivity extends AppCompatActivity {
                 String commentText = mCommentET.getText().toString();
                 ForumComment comment = new ForumComment( Calendar.getInstance().getTimeInMillis(),
                         Calendar.getInstance().getTimeInMillis(),
-                        DocReferences.getUserRef(), null, DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s").getId(),
-                        commentText, 0, DocReferences.getRequestRef("gVw7dUkuw3SSZSYRXe8s", mRequestId).getId(), null);
+                        DocReferences.getUserRef(), null, DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s").toString(),
+                        commentText, 0, DocReferences.getRequestRef("gVw7dUkuw3SSZSYRXe8s", mRequestId).toString(), null);
                 //TODO static associationId
                 FeedHelper.setForumPostComment(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mRequestId,
-                       commentID,  comment);
+                        commentID,  comment);
                 mCommentET.setText(null);
                 mCommentET.clearFocus();
             }
@@ -155,11 +164,14 @@ public class CommentsActivity extends AppCompatActivity {
                 if(documentSnapshot.exists()) {
                     mRequest = documentSnapshot.toObject(ForumPost.class);
                     updateRequestUI();
-                    shouldFillSupport();
                     fillUser(mRequest.getAuthorRef());
+                }else{
+                    finish();
                 }
             }
         };
+        shouldFillSupport();
+
         mRequestLR = FeedHelper.getForumPost(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mRequestId)
                 .addSnapshotListener(mRequestEL);
 
@@ -252,40 +264,64 @@ public class CommentsActivity extends AppCompatActivity {
         //private ImageView mRequestSupportsIV;
     }
     private void scoreClick(){
-        mSupportMutex.lock();
-        FeedHelper.getForumPostSupport(FirebaseFirestore.getInstance(),
-                "gVw7dUkuw3SSZSYRXe8s", mRequestId, FirebaseAuth.getInstance().getUid())
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        //if support already exists, should delete it
-                        if(documentSnapshot.exists()) {
-                            FeedHelper.removeForumPostSupport(FirebaseFirestore.getInstance(),
-                                    "gVw7dUkuw3SSZSYRXe8s", mRequestId, FirebaseAuth.getInstance().getUid())
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    mSupportMutex.unlock();
-                                }
-                            });
-                        }else {// else should add it
-                            DocumentReference userRef = DocReferences.getUserRef();
-                            DocumentReference assocRef = DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s");
-                            String supportId = FirebaseAuth.getInstance().getUid();
-                            //TODO review refs
+        if(mLastSupport){//support already filled, decrease it then
+            Log.d(TAG, "add support");
+            mRequestSupportsIV.setImageDrawable(getResources().getDrawable(R.drawable.ic_support_borderline));
+            mRequestSupportsCountTV.setText(mRequest.getSupportScore()-1 +"");
+            mSupportQueue.add(false);
+            mLastSupport = false;
+            score();
+        }else{
+            Log.d(TAG, "remove support");
+            mRequestSupportsIV.setImageDrawable(getResources().getDrawable(R.drawable.ic_support_filled));
+            mRequestSupportsCountTV.setText(mRequest.getSupportScore()+1 +"");
+            mSupportQueue.add(true);
+            mLastSupport = true;
+            score();
+        }
 
-                            ForumSupport support = new ForumSupport( Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
-                                    userRef, null, assocRef.getId(), null);
-                            FeedHelper.setForumPostSupport(FirebaseFirestore.getInstance(),
-                                    "gVw7dUkuw3SSZSYRXe8s", mRequestId, supportId, support).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    mSupportMutex.unlock();
-                                }
-                            });
+    }
+    private void score(){
+        mSupportMutex.lock();
+        if(!mSupportQueue.getFirst()){//decrease score
+            FeedHelper.removeForumPostSupport(FirebaseFirestore.getInstance(),
+                    "gVw7dUkuw3SSZSYRXe8s", mRequestId, FirebaseAuth.getInstance().getUid())
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            mSupportQueue.removeFirst();
+                            mSupportMutex.unlock();
+                            if(!mSupportQueue.isEmpty()) score();
                         }
-                    }
-                });
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {// try again
+                    if(!mSupportQueue.isEmpty()) score();
+                }
+            });
+
+        }else{//increase score
+            DocumentReference userRef = DocReferences.getUserRef();
+            DocumentReference assocRef = DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s");
+            String supportId = FirebaseAuth.getInstance().getUid();
+
+            ForumSupport support = new ForumSupport( Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
+                    userRef, null, assocRef.toString(), null);
+            FeedHelper.setForumPostSupport(FirebaseFirestore.getInstance(),
+                    "gVw7dUkuw3SSZSYRXe8s", mRequestId, supportId, support).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    mSupportQueue.removeFirst();
+                    mSupportMutex.unlock();
+                    if(!mSupportQueue.isEmpty()) score();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    if(!mSupportQueue.isEmpty()) score();
+                }
+            });
+        }
     }
     private void shouldFillSupport(){
         //if exists support, then should be IV filled
@@ -294,10 +330,13 @@ public class CommentsActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if(documentSnapshot.exists())
+                        if(documentSnapshot.exists()) {
                             mRequestSupportsIV.setImageDrawable(CommentsActivity.this.getResources().getDrawable(R.drawable.ic_support_filled));
-                        else
+                            mLastSupport = true;
+                        }else {
                             mRequestSupportsIV.setImageDrawable(CommentsActivity.this.getResources().getDrawable(R.drawable.ic_support_borderline));
+                            mLastSupport = false;
+                        }
                     }
                 });
     }
