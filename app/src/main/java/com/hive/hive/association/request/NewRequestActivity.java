@@ -361,6 +361,8 @@ public class NewRequestActivity extends AppCompatActivity {
                 categoriesRefs
         );
 
+        request.setCategoryName(selectedRequestCategoryPair.second.getName().toLowerCase());
+
         AssociationHelper.setRequest(
                 mDB,
                 associationID,
