@@ -41,8 +41,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     private String TAG = RequestAdapter.class.getSimpleName();
 
     //-- Data
-    ArrayList<Request> requests;
-    ArrayList<String> requestIDs;
+    ArrayList<DocumentSnapshot> requestSnaps;
     private HashMap<Integer, Boolean> requestsSupport;
     private ArrayList<SupportMutex> mLocks;
     private Context context;
@@ -57,12 +56,10 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     private String mAssociationID = "gVw7dUkuw3SSZSYRXe8s";
 
     public RequestAdapter(
-            ArrayList<Request> requestSnaps,
-            ArrayList<String> requestIDs,
+            ArrayList<DocumentSnapshot> requestSnaps,
             Context context
     ) {
-        this.requests = requestSnaps;
-        this.requestIDs = requestIDs;
+        this.requestSnaps = requestSnaps;
         this.mLocks = new ArrayList<>();
         this.requestsSupport = new HashMap<>();
         this.usernames = new HashMap<>();
@@ -88,7 +85,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             mLocks.add(new SupportMutex(holder.mNumberOfSupportsTV, holder.mSupportsIV));
         }
 
-        Request request = requests.get(position);
+        Request request = requestSnaps.get(position).toObject(Request.class);
 
         holder.mItem = request;
 
@@ -123,8 +120,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
     @Override
     public int getItemCount() {
-        if(requests != null)
-            return requests.size();
+        if(requestSnaps != null)
+            return requestSnaps.size();
         return 0;
     }
 
@@ -183,7 +180,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     }
 
     private String getRequestID(int requestPosition) {
-        return requestIDs.get(requestPosition);
+        return requestSnaps.get(requestPosition).getId();
     }
 
     private void shouldFillSupport(
@@ -332,7 +329,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                 .getResources()
                 .getDrawable(R.drawable.ic_support_borderline);
 
-        Request request = this.requests.get(position);
+        Request request = this.requestSnaps.get(position).toObject(Request.class);
         if (requestsSupport.get(position)) {
             supportIV.setImageDrawable(borderlineSupportIC);
             request.decrementScore();
@@ -346,9 +343,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         requestsSupport.put(position, !requestsSupport.get(position));
     }
 
-    public void setData(ArrayList<Request> requests, ArrayList<String> requestIDs) {
-        this.requests = requests;
-        this.requestIDs = requestIDs;
+    public void setData(ArrayList<DocumentSnapshot> requestSnaps) {
+        this.requestSnaps = requestSnaps;
     }
 
     /**
