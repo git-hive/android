@@ -208,6 +208,8 @@
     <string name="category">Categorias</string>
     <string name="highlights">Destaques</string>
 
-
-
+    <!-- User Profile-->
+    <string name="role">Função: </string>
+    <string name="lote">Lote: </string>
+    <string name="logout">Logout</string>
 </resources>

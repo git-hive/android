@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center|top">
+
+    <include layout="@layout/user_header" />
+
+    <ProgressBar
+        android:id="@+id/loadedUserPB"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/nameTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24dp"
+        android:text="Nome"
+        android:paddingBottom="20dp"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/associationLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingBottom="20dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/associationTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Associação" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/roleLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingBottom="10dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:text="@string/role" />
+
+        <TextView
+            android:id="@+id/roleTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:text="FUNÇÃO X" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/lotLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingBottom="20dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:text="@string/lote" />
+
+        <TextView
+            android:id="@+id/loteTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:text="LOTE X" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/logoutBT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/com_facebook_loginview_log_out_action"
+        android:visibility="gone"/>
+</LinearLayout>

@@ -4,26 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:orientation="vertical">
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-                <ImageView
-                    android:id="@+id/topCardIV"
-                    android:layout_width="match_parent"
-                    android:layout_height="160dp"
-                    android:background="@drawable/city_login" />
-
-                <ImageView
-                    android:translationY="20dp"
-                    android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true"
-                    app:srcCompat="@drawable/ic_profile_photo"
-                    android:gravity="center"
-                    android:layout_width="85dp"
-                    android:layout_height="85dp"
-                    android:id="@+id/userAvatar"/>
-
-        </RelativeLayout>
+        <include layout="@layout/user_header"/>
 
         <TextView
             android:textSize="20dp"

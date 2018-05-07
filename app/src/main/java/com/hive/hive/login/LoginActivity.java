@@ -400,7 +400,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             DocumentSnapshot snap = task.getResult();
                             if (snap.exists()) {
-                                // If user data exists on Firestore switch to MainActivity
+                                // If user data exists on Firestore switch to UserProfileActivity
                                 intent = new Intent(LoginActivity.this, MainActivity.class);
                             }
                         }

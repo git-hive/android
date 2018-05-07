@@ -1,6 +1,7 @@
 package com.hive.hive.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ import com.hive.hive.R;
 import com.hive.hive.model.association.Request;
 import com.hive.hive.model.forum.ForumPost;
 import com.hive.hive.model.user.User;
+import com.hive.hive.profiles.UserProfileActivity;
 import com.hive.hive.utils.DocReferences;
 import com.hive.hive.utils.ProfilePhotoHelper;
 
@@ -75,6 +77,13 @@ public class HomeFragment extends Fragment {
         mRecyclerViewHomeAdapter = new RecyclerViewHomeAdapter(DUMMYARRAY);
         mRecyclerViewHome.setAdapter(mRecyclerViewHomeAdapter);
         mRecyclerViewHome.setLayoutManager(new LinearLayoutManager(v.getContext()));
+
+        mUserAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(mContext, UserProfileActivity.class));
+            }
+        });
         return v;
     }
 
