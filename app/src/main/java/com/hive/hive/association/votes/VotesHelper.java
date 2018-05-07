@@ -53,9 +53,16 @@ public class VotesHelper {
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
                 .collection(SESSIONS_COLLECTION)
-                .whereEqualTo("status", "past");
+                .whereEqualTo("status", "ended");
     }
 
+    public static Query getFutureSessions(FirebaseFirestore db, String associationID){
+        return db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(SESSIONS_COLLECTION)
+                .whereEqualTo("status", "future");
+    }
     //--- Agendas
     public static CollectionReference getAgendas(FirebaseFirestore db, String associationID, String sessionID){
         return db

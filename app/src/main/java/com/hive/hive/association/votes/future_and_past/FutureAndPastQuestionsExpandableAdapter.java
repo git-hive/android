@@ -1,4 +1,4 @@
-package com.hive.hive.association.votes.old;
+package com.hive.hive.association.votes.future_and_past;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,6 +13,8 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.hive.hive.R;
 import com.hive.hive.association.transparency.tabs.staff.CustomGridView;
 import com.hive.hive.association.votes.questions.adapters.QuestionGridAdapter;
@@ -23,23 +25,26 @@ import com.hive.hive.utils.hexagonsPercentBar.HexagonView;
 import com.hive.hive.utils.hexagonsPercentBar.HexagonalBarAdapter;
 import java.util.ArrayList;
 
-public class OldQuestionsExpandableAdapter extends BaseExpandableListAdapter {
-    private String TAG = OldQuestionsExpandableAdapter.class.getSimpleName();
+public class FutureAndPastQuestionsExpandableAdapter extends BaseExpandableListAdapter {
+    private String TAG = FutureAndPastQuestionsExpandableAdapter.class.getSimpleName();
 
     private Context mContext;
 
     private ArrayList<Pair<String, Question>>  mQuestions;
+
+    private boolean mIsFuture; //true if future false if past
     // Percentage bar
-    HexagonView mPercentageBar;
-    RecyclerView mPercentageRV;
-    HexagonalBarAdapter mHexBarAdapter;
+    private HexagonView mPercentageBar;
+    private RecyclerView mPercentageRV;
+    private HexagonalBarAdapter mHexBarAdapter;
 
     // List of percentages
-    ArrayList<Float> mPercentages;
+    private ArrayList<Float> mPercentages;
 
-    public OldQuestionsExpandableAdapter(Context context, ArrayList<Pair<String, Question>> questions) {
+    public FutureAndPastQuestionsExpandableAdapter(Context context, ArrayList<Pair<String, Question>> questions, boolean isFuture) {
         mContext = context;
         this.mQuestions = questions;
+        this.mIsFuture = isFuture;
     }
 
 
@@ -165,24 +170,31 @@ public class OldQuestionsExpandableAdapter extends BaseExpandableListAdapter {
         mPercentageRV.setLayoutManager(layoutManager);
         mPercentageRV.setAdapter(mHexBarAdapter);
 
-        mPercentageBar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent votersIntent = new Intent(mContext, VotersListActivity.class);
-                ArrayList<Integer> questionsIndex = new ArrayList<>();
-                int i = 0;
-                for(QuestionOptions questionOptions : question.getOptions()){
-                    questionsIndex.add(i);
-                    i++;
+        //if is future then there isn any vote, no need to show
+        if(!mIsFuture)
+            mPercentageBar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent votersIntent = new Intent(mContext, VotersListActivity.class);
+                    ArrayList<Integer> questionsIndex = new ArrayList<>();
+                    int i = 0;
+                    for(QuestionOptions questionOptions : question.getOptions()){
+                        questionsIndex.add(i);
+                        i++;
+                    }
+                    votersIntent.putExtra(VotersListActivity.QUESTIONS_IDS, questionsIndex);
+                    votersIntent.putExtra(VotersListActivity.VOTERS_REF_STRING,
+                            question.getAgendaRef().collection("questions").document(questionId).collection("votes").getPath());
+                    mContext.startActivity(votersIntent);
                 }
-                votersIntent.putExtra(VotersListActivity.QUESTIONS_IDS, questionsIndex);
-                votersIntent.putExtra(VotersListActivity.VOTERS_REF_STRING,
-                        question.getAgendaRef().collection("questions").document(questionId).collection("votes").getPath());
-                mContext.startActivity(votersIntent);
-            }
-        });
-
-
+            });
+        else
+            mPercentageBar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(mContext, mContext.getResources().getString(R.string.no_voters), Toast.LENGTH_SHORT).show();
+                }
+            });
         return view;
     }
 

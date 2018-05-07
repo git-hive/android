@@ -1,4 +1,4 @@
-package com.hive.hive.association.votes.old;
+package com.hive.hive.association.votes.future_and_past.future;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -18,13 +18,13 @@ import com.hive.hive.model.association.Session;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class OldAgendasFirebaseHandle {
-    private final static String  TAG = OldAgendasFirebaseHandle.class.getSimpleName();
+public class FutureAgendasFirebaseHandle{
+    private final static String  TAG = FutureAgendasFirebaseHandle.class.getSimpleName();
 
-    public static void getPastSessions(String associationId, OldFragment fragment){
+    public static void getFutureSessions(String associationId, FutureFragment fragment){
         ArrayList<String> sessionsIds = new ArrayList<>();
         final Session[] session = new Session[1];
-        VotesHelper.getPastSessions(FirebaseFirestore.getInstance(), associationId).get()
+        VotesHelper.getFutureSessions(FirebaseFirestore.getInstance(), associationId).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot documentSnapshots) {
@@ -35,8 +35,8 @@ public class OldAgendasFirebaseHandle {
                                 sessionsIds.add(id);
                             }
                         }
-                       // FirebaseFirestore.getInstance().collection("associations").document(associationId).collection("sessions").add(session[0]);
-                        getPastAgendas(associationId, sessionsIds, fragment);
+                        // FirebaseFirestore.getInstance().collection("associations").document(associationId).collection("sessions").add(session[0]);
+                        getFutureAgendas(associationId, sessionsIds, fragment);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -48,7 +48,7 @@ public class OldAgendasFirebaseHandle {
                 });
     }
 
-    public static void getPastAgendas(String associationId, ArrayList<String> pastSessionsIds, OldFragment fragment){
+    public static void getFutureAgendas(String associationId, ArrayList<String> pastSessionsIds, FutureFragment fragment){
         Pair<ArrayList<String>, HashMap<String, Agenda>> agendasPair= new Pair<>(new ArrayList<>(), new HashMap<>());
         for(String sessionId : pastSessionsIds){
             VotesHelper.getAgendas(FirebaseFirestore.getInstance(), associationId, sessionId).get()
@@ -71,15 +71,15 @@ public class OldAgendasFirebaseHandle {
                             //TODO SHOULD UPDATE UI
                         }
                     }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.e(TAG, e.getMessage());
-                            //TODO SHOULD FAIL
-                        }
-                    });
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e(TAG, e.getMessage());
+                    //TODO SHOULD FAIL
+                }
+            });
         }
     }
-    public static void getPastQuestions(DocumentReference sessionRef, String agendaId, OldFragment fragment){
+    public static void getFutureQuestions(DocumentReference sessionRef, String agendaId, FutureFragment fragment){
 //       map question id to agenda and session
         ArrayList<Pair<String, Question>> questions = new ArrayList<>();
 
@@ -111,7 +111,7 @@ public class OldAgendasFirebaseHandle {
     }
 
     //@param are a list of agendas ids and a mapping of ids into agendas
-    public static void getRequestScore(Pair<ArrayList<String>, HashMap<String, Agenda>> agendasPair, OldFragment fragment){
+    public static void getRequestScore(Pair<ArrayList<String>, HashMap<String, Agenda>> agendasPair, FutureFragment fragment){
         HashMap<String, String> scoreMap = new HashMap<>(); //maps a request score into an agendaId
         for(String agendaId : agendasPair.first){
             Agenda agenda = agendasPair.second.get(agendaId);

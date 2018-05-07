@@ -127,6 +127,7 @@
     <string name="has_vote">Você já votou nesta pauta. :)</string>
     <string name="hasn_vote">Você ainda não votou nesta pauta</string>
     <string name="final_result">Resultados finais: </string>
+    <string name="no_voters"> Esta pauta ainda não foi levada para votação. </string>
     <!-- Transparency Stuff -->
     <string name="hard_coded_i_do_like_pdfs_3"><![CDATA[HARD CODED. I DO LIKE PDFs <3]]></string>
     <string name="total_applied"><i>Total investido:</i></string>

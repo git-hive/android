@@ -1,4 +1,4 @@
-package com.hive.hive.association.votes.old;
+package com.hive.hive.association.votes.future_and_past.old;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -17,6 +17,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import com.alexvasilkov.foldablelayout.UnfoldableView;
 import com.hive.hive.R;
+import com.hive.hive.association.votes.future_and_past.FutureAndPastAgendasRVAdapter;
+import com.hive.hive.association.votes.future_and_past.FutureAndPastQuestionsExpandableAdapter;
 import com.hive.hive.model.association.Agenda;
 import com.hive.hive.model.association.Question;
 import java.util.ArrayList;
@@ -32,7 +34,7 @@ public class OldFragment extends Fragment {
     private HashMap<String, String> mScoreMap; //maps a requestScore into a agendaId
     //Recycler Things
     private RecyclerView mRV;
-    private OldAgendasRVAdapter mRVAdapter;
+    private FutureAndPastAgendasRVAdapter mRVAdapter;
 
     //Views
     private View mView;
@@ -43,7 +45,7 @@ public class OldFragment extends Fragment {
 
     // Expandable List View
     public static ExpandableListView expandableListView;
-    public static OldQuestionsExpandableAdapter mExpandableQuestionsAdapter;
+    public static FutureAndPastQuestionsExpandableAdapter mExpandableQuestionsAdapter;
 
     // Temporary solution to unfold card, TODO: Check with the @guys
     ImageView mTopClickableCardIV;
@@ -167,7 +169,7 @@ public class OldFragment extends Fragment {
     private void initRecycler() {
         mView.findViewById(R.id.agendasPB).setVisibility(View.GONE);
 
-        mRVAdapter = new OldAgendasRVAdapter(mAgendasPair, mScoreMap, this.getContext().getApplicationContext(), this, mUnfoldableView, mDetailsLayout, mView);
+        mRVAdapter = new FutureAndPastAgendasRVAdapter(mAgendasPair, mScoreMap, this.getContext().getApplicationContext(), this, mUnfoldableView, mDetailsLayout, mView);
         mRV = mView.findViewById(R.id.cellRV);
         mRV.setLayoutManager(new LinearLayoutManager(getContext()));
         mRV.setAdapter(mRVAdapter);
@@ -183,7 +185,7 @@ public class OldFragment extends Fragment {
         mRVAdapter.notifyDataSetChanged();
     }
     public void updateQuestionsUI(ArrayList<Pair<String, Question>> questions){
-        mExpandableQuestionsAdapter = new OldQuestionsExpandableAdapter(this.getContext(), questions);
+        mExpandableQuestionsAdapter = new FutureAndPastQuestionsExpandableAdapter(this.getContext(), questions, false);
 
         // Setting adpater over expandablelistview
         expandableListView.setAdapter(mExpandableQuestionsAdapter);
@@ -214,7 +216,7 @@ public class OldFragment extends Fragment {
     // https://stackoverflow.com/questions/17696039/expandablelistview-inside-a-scrollview
 
     private static void setListViewHeight(ExpandableListView listView) {
-        OldQuestionsExpandableAdapter listAdapter = (OldQuestionsExpandableAdapter) listView.getExpandableListAdapter();
+        FutureAndPastQuestionsExpandableAdapter listAdapter = (FutureAndPastQuestionsExpandableAdapter) listView.getExpandableListAdapter();
         int totalHeight = 0;
         for (int i = 0; i < listAdapter.getGroupCount(); i++) {
             View groupView = listAdapter.getGroupView(i, true, null, listView);
@@ -238,7 +240,7 @@ public class OldFragment extends Fragment {
     }
     private static void setListViewHeight(ExpandableListView listView,
                                           int group) {
-        OldQuestionsExpandableAdapter listAdapter = (OldQuestionsExpandableAdapter) listView.getExpandableListAdapter();
+        FutureAndPastQuestionsExpandableAdapter listAdapter = (FutureAndPastQuestionsExpandableAdapter) listView.getExpandableListAdapter();
         int totalHeight = 0;
         int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(),
                 View.MeasureSpec.EXACTLY);

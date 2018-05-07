@@ -1,4 +1,4 @@
-package com.hive.hive.association.votes.old;
+package com.hive.hive.association.votes.future_and_past;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -12,19 +12,23 @@ import android.widget.TextView;
 import com.alexvasilkov.foldablelayout.UnfoldableView;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.AgendasViewHolder;
+import com.hive.hive.association.votes.future_and_past.future.FutureAgendasFirebaseHandle;
+import com.hive.hive.association.votes.future_and_past.future.FutureFragment;
+import com.hive.hive.association.votes.future_and_past.old.OldAgendasFirebaseHandle;
+import com.hive.hive.association.votes.future_and_past.old.OldFragment;
 import com.hive.hive.model.association.Agenda;
 import com.hive.hive.utils.VotingUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 
-public class OldAgendasRVAdapter extends RecyclerView.Adapter<AgendasViewHolder>{
+public class FutureAndPastAgendasRVAdapter extends RecyclerView.Adapter<AgendasViewHolder>{
     private Pair<ArrayList<String>, HashMap<String, Agenda>> mAgendas;
     private HashMap<String, String> mScores;
     //context and fragment
     private Context mContext;
-    private OldFragment mFragment;
-
+    private OldFragment mOldFragment;
+    private FutureFragment mFutureFragment;
     // Local for now
     private HashMap<String, String> mIconsDrawablePaths;
     private HashMap<String, Integer> mIconsDrawable;
@@ -34,12 +38,25 @@ public class OldAgendasRVAdapter extends RecyclerView.Adapter<AgendasViewHolder>
     private FrameLayout mDetailsLayout;
     private View mView;
 
-    public OldAgendasRVAdapter(Pair<ArrayList<String>, HashMap<String, Agenda>> mAgendas, HashMap<String, String> scores, Context mContext, OldFragment fragment,
-                               UnfoldableView mUnfoldableView, FrameLayout mDetailsLayout, View mView) {
+    public FutureAndPastAgendasRVAdapter(Pair<ArrayList<String>, HashMap<String, Agenda>> mAgendas, HashMap<String, String> scores, Context mContext, OldFragment fragment,
+                                         UnfoldableView mUnfoldableView, FrameLayout mDetailsLayout, View mView) {
         this.mAgendas = mAgendas;
         this.mScores = scores;
         this.mContext = mContext;
-        this.mFragment = fragment;
+        this.mOldFragment = fragment;
+        this.mUnfoldableView = mUnfoldableView;
+        this.mDetailsLayout = mDetailsLayout;
+        this.mView = mView;
+        mIconsDrawable= new HashMap<>();
+        mIconsDrawablePaths = new HashMap<>();
+    }
+
+    public FutureAndPastAgendasRVAdapter(Pair<ArrayList<String>, HashMap<String, Agenda>> mAgendas, HashMap<String, String> mScores, Context mContext, FutureFragment mFutureFragment,
+                                         UnfoldableView mUnfoldableView, FrameLayout mDetailsLayout, View mView) {
+        this.mAgendas = mAgendas;
+        this.mScores = mScores;
+        this.mContext = mContext;
+        this.mFutureFragment = mFutureFragment;
         this.mUnfoldableView = mUnfoldableView;
         this.mDetailsLayout = mDetailsLayout;
         this.mView = mView;
@@ -112,9 +129,10 @@ public class OldAgendasRVAdapter extends RecyclerView.Adapter<AgendasViewHolder>
         VotingUtils.fillUnfoldableUser(agenda.getSuggestedByRef(), mView);
 
         //TODO REMOVE STATIC ASSOCIATION REFERENCE
-
-        OldAgendasFirebaseHandle.getPastQuestions(agenda.getSessionRef(), agendaId, mFragment);
-
+        if(mOldFragment != null)
+            OldAgendasFirebaseHandle.getPastQuestions(agenda.getSessionRef(), agendaId, mOldFragment);
+        else
+            FutureAgendasFirebaseHandle.getFutureQuestions(agenda.getSessionRef(), agendaId, mFutureFragment);
     }
 
 
