@@ -23,6 +23,8 @@ import com.hive.hive.R;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -168,11 +170,39 @@ public class RequestActivity extends AppCompatActivity {
         return filteredRequests;
     }
 
+    /**
+     * Sort requestsSnaps by rank (greater rank first)
+     * @param requestDocs
+     */
+    private ArrayList<DocumentSnapshot> sortRequestSnapsByRank(
+            ArrayList<DocumentSnapshot> requestDocs
+    ) {
+        ArrayList<DocumentSnapshot> sortedRequests = new ArrayList<>(requestDocs);
+        Collections.sort(sortedRequests, new Comparator<DocumentSnapshot>() {
+            @Override
+            public int compare(DocumentSnapshot snap1, DocumentSnapshot snap2) {
+                Double request1Rank = snap1.getDouble("rank");
+                Double request2Rank = snap2.getDouble("rank");
+                if (request1Rank == null && request2Rank == null) return 0;
+
+                if (request1Rank == null) return 1;
+                if (request2Rank == null) return -1;
+
+                if (request1Rank < request2Rank) return 1;
+                if (request1Rank > request2Rank) return -1;
+
+                return 0;
+            }
+        });
+
+        return sortedRequests;
+    }
+
     private void setupRecyclerView() {
         ArrayList<DocumentSnapshot> requests = new ArrayList<>(requestDocs.values());
 
         RequestAdapter mRecyclerAdapter = new RequestAdapter(
-                filterRequestDocsByCategory(requests, mCategoryName),
+                sortRequestSnapsByRank(filterRequestDocsByCategory(requests, mCategoryName)),
                 this
         );
         mRecyclerAdapter.notifyDataSetChanged();
@@ -199,7 +229,11 @@ public class RequestActivity extends AppCompatActivity {
                         mCategoryName = categoryName;
                         mFilterTV.setText(mmap.get(filterName.getText()));
 
-                        mRecyclerAdapter.setData(filterRequestDocsByCategory(requests, categoryName));
+                        mRecyclerAdapter.setData(
+                                sortRequestSnapsByRank(
+                                        filterRequestDocsByCategory(requests, mCategoryName)
+                                )
+                        );
                         mRecyclerAdapter.notifyDataSetChanged();
                     }
                 }
