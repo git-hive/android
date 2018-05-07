@@ -19,6 +19,7 @@ import com.hive.hive.association.request.RequestActivity;
 import com.hive.hive.association.transparency.TransparencyActivity;
 import com.hive.hive.association.votes.VotesActivity;
 import com.hive.hive.model.user.User;
+import com.hive.hive.profiles.UserProfileActivity;
 import com.hive.hive.utils.DocReferences;
 import com.hive.hive.utils.ProfilePhotoHelper;
 
@@ -90,6 +91,13 @@ public class AssociationFragment extends Fragment {
 
         fillLoggedUserView();
 
+        mUserPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(mContext, UserProfileActivity.class));
+
+            }
+        });
         return v;
     }
 

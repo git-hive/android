@@ -31,6 +31,7 @@ import static android.content.ContentValues.TAG;
 import static com.hive.hive.feed.FeedHelper.getAllForumPosts;
 
 import com.hive.hive.model.user.User;
+import com.hive.hive.profiles.UserProfileActivity;
 import com.hive.hive.utils.DocReferences;
 import com.hive.hive.utils.ProfilePhotoHelper;
 
@@ -102,7 +103,13 @@ public class FeedFragment extends Fragment {
                 new Intent(view.getContext(), NewPostActivity.class)
         ));
 
+        mUserPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(mContext, UserProfileActivity.class));
 
+            }
+        });
 
         return v;
     }

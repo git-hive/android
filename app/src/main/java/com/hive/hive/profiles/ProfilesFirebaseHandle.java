@@ -22,6 +22,7 @@ public class ProfilesFirebaseHandle {
                     User user = documentSnapshot.toObject(User.class);
                     ((UserProfileActivity) activity).updateUI(user);
                 }
+                //TODO should do something in case it doesnt find user
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

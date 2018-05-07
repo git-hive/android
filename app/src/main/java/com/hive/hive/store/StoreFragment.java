@@ -1,6 +1,7 @@
 package com.hive.hive.store;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ import com.hive.hive.R;
 import com.hive.hive.model.association.Request;
 import com.hive.hive.model.forum.ForumPost;
 import com.hive.hive.model.user.User;
+import com.hive.hive.profiles.UserProfileActivity;
 import com.hive.hive.utils.DocReferences;
 import com.hive.hive.utils.ProfilePhotoHelper;
 
@@ -80,6 +82,12 @@ public class StoreFragment extends Fragment {
 
         mUserPhoto = v.findViewById(R.id.userAvatar);
         fillLoggedUserView();
+        mUserPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(mContext, UserProfileActivity.class));
+            }
+        });
         return v;
     }
 
