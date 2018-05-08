@@ -182,7 +182,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
 
             ForumSupport support = new ForumSupport( Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
                     userRef, null, assocRef.toString(), null);
-            FeedHelper.setRequestCommentSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s",
+            FeedHelper.setSupportForumPostComment(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s",
                     mRequestId, commentId, supportId, support).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
