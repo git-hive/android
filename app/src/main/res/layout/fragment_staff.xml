@@ -207,70 +207,70 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Staff Group 4 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <LinearLayout
-                android:id="@+id/staff_group_4_LL"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:layout_margin="10dp"
-                    android:orientation="horizontal"
-                    android:background="@color/colorWhite">
+        <!--&lt;!&ndash; Staff Group 4 &ndash;&gt;-->
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical">-->
+            <!--<LinearLayout-->
+                <!--android:id="@+id/staff_group_4_LL"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="vertical">-->
+                <!--<LinearLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:layout_margin="10dp"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:background="@color/colorWhite">-->
 
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="64dp"
-                        android:layout_weight="0.2"
-                        android:src="@drawable/ic_staff_category_gatekeeper"/>
+                    <!--<ImageView-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="64dp"-->
+                        <!--android:layout_weight="0.2"-->
+                        <!--android:src="@drawable/ic_staff_category_gatekeeper"/>-->
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.6"
-                        android:text="Portaria"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:layout_margin="10dp"/>
+                    <!--<TextView-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_weight="0.6"-->
+                        <!--android:text="Portaria"-->
+                        <!--android:textSize="20sp"-->
+                        <!--android:textStyle="bold"-->
+                        <!--android:layout_margin="10dp"/>-->
 
-                    <ImageView
-                        android:layout_weight="0.2"
-                        android:layout_width="0dp"
-                        android:layout_height="64dp"
-                        android:id="@+id/staff_group_4_arrow_iv"
-                        android:src="@drawable/ic_down_arrow_yellow"
-                        android:layout_gravity="center_vertical|end"/>
+                    <!--<ImageView-->
+                        <!--android:layout_weight="0.2"-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="64dp"-->
+                        <!--android:id="@+id/staff_group_4_arrow_iv"-->
+                        <!--android:src="@drawable/ic_down_arrow_yellow"-->
+                        <!--android:layout_gravity="center_vertical|end"/>-->
 
 
-                </LinearLayout>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/staff_group_4_expanded_LL"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:background="@color/colorWhite">
+                <!--</LinearLayout>-->
+            <!--</LinearLayout>-->
+            <!--<LinearLayout-->
+                <!--android:id="@+id/staff_group_4_expanded_LL"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:background="@color/colorWhite">-->
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/staff_group_4_RV"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:visibility="gone"
-                    android:animateLayoutChanges="true"
-                    android:nestedScrollingEnabled="false"
-                    />
+                <!--<android.support.v7.widget.RecyclerView-->
+                    <!--android:id="@+id/staff_group_4_RV"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_margin="10dp"-->
+                    <!--android:visibility="gone"-->
+                    <!--android:animateLayoutChanges="true"-->
+                    <!--android:nestedScrollingEnabled="false"-->
+                    <!--/>-->
 
-            </LinearLayout>
-        </LinearLayout>
+            <!--</LinearLayout>-->
+        <!--</LinearLayout>-->
 
 
         <!-- Staff Group 5 -->

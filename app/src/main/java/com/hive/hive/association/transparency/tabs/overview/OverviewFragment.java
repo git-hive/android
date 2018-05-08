@@ -307,10 +307,14 @@ public class OverviewFragment extends Fragment {
                                 put(categories.get(aux%5).getId(), categories.get(aux*3%5));
 
                             }},
-                            100000 + (10000 * rand.nextInt(5))
+                            100000 + (260000)
                     );
             incomes.add(budgetTransaction);
         }
+
+        float revenues[] = {
+                372010,340600,343020,350000,330250,312070,
+                320024,310312,330020,315060,342000,380250};
 
         //Create dummy expenses with random values
         for (int i = 0; i < 12; i++){
@@ -330,8 +334,7 @@ public class OverviewFragment extends Fragment {
                                 put(categories.get(aux%5).getId(), categories.get(aux*3%5));
 
                             }},
-                            100000 + (10000 * rand.nextInt(5))
-                    );
+                            revenues[i]);
             expenses.add(budgetTransaction);
         }
 

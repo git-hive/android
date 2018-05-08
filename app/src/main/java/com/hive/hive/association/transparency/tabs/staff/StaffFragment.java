@@ -36,9 +36,12 @@ public class StaffFragment extends Fragment {
     private ArrayList<Staff> mStaffMembers;
     private ArrayList<StaffAdapter> mAdapters;
 
-    //Group Lists
-    private ArrayList<RecyclerView> staffGroups;
 
+    private ArrayList<Staff> mStaffAdmin;
+    private ArrayList<Staff> mStaffGardeners;
+    private ArrayList<Staff> mStaffCleaning;
+    private ArrayList<Staff> mStaffSecurity;
+    private ArrayList<Staff> mStaffServices;
 
     //-- Context
     private TransparencyActivity mActivity;
@@ -60,6 +63,11 @@ public class StaffFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mAdapters = new ArrayList<>();
         mStaffMembers = new ArrayList<>();
+        mStaffAdmin = new ArrayList<>();
+        mStaffGardeners = new ArrayList<>();
+        mStaffCleaning = new ArrayList<>();
+        mStaffSecurity = new ArrayList<>();
+        mStaffServices = new ArrayList<>();
         prepareMockData();
     }
 
@@ -69,12 +77,12 @@ public class StaffFragment extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_staff, container, false);
 
-        mAdapters.add(setAdapters(view, R.id.staff_group_1_RV, mStaffMembers));
-        mAdapters.add(setAdapters(view, R.id.staff_group_2_RV, mStaffMembers));
-        mAdapters.add(setAdapters(view, R.id.staff_group_3_RV, mStaffMembers));
-        mAdapters.add(setAdapters(view, R.id.staff_group_4_RV, mStaffMembers));
-        mAdapters.add(setAdapters(view, R.id.staff_group_5_RV, mStaffMembers));
-        mAdapters.add(setAdapters(view, R.id.staff_group_6_RV, mStaffMembers));
+        mAdapters.add(setAdapters(view, R.id.staff_group_1_RV, mStaffAdmin));
+        mAdapters.add(setAdapters(view, R.id.staff_group_2_RV, mStaffGardeners));
+        mAdapters.add(setAdapters(view, R.id.staff_group_3_RV, mStaffCleaning));
+//        mAdapters.add(setAdapters(view, R.id.staff_group_4_RV, mStaffMembers));
+        mAdapters.add(setAdapters(view, R.id.staff_group_5_RV, mStaffSecurity));
+        mAdapters.add(setAdapters(view, R.id.staff_group_6_RV, mStaffServices));
 
 
         //--- Group Views
@@ -86,9 +94,9 @@ public class StaffFragment extends Fragment {
 
         linearLayout = view.findViewById(R.id.staff_group_3_LL);
         linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_3_RV, R.id.staff_group_3_arrow_iv));
-
-        linearLayout = view.findViewById(R.id.staff_group_4_LL);
-        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_4_RV, R.id.staff_group_4_arrow_iv));
+//
+//        linearLayout = view.findViewById(R.id.staff_group_4_LL);
+//        linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_4_RV, R.id.staff_group_4_arrow_iv));
 
         linearLayout = view.findViewById(R.id.staff_group_5_LL);
         linearLayout.setOnClickListener(getGroupOnClickListener(R.id.staff_group_5_RV, R.id.staff_group_5_arrow_iv));
@@ -157,6 +165,39 @@ public class StaffFragment extends Fragment {
         mStaffMembers.add(new Staff("Master Yoda",  R.drawable.avatar_yoda));
         mStaffMembers.add(new Staff("Princess Leia",  R.drawable.avatar_leia));
         mStaffMembers.add(new Staff("Stormtrooper",  R.drawable.avatar_trooper));
+
+        //--- Admin
+        mStaffAdmin.add(new Staff("Diretor 1", R.drawable.diretor2));
+        mStaffAdmin.add(new Staff("Diretor 2",  R.drawable.diretor3));
+        mStaffAdmin.add(new Staff("Diretor 3",  R.drawable.diretor4));
+        //mStaffAdmin.add(new Staff("Diretor 4",  R.drawable.diretor5));
+
+        //--- Gardening
+        mStaffGardeners.add(new Staff("Jardineiro 1", R.drawable.gardener1));
+        mStaffGardeners.add(new Staff("Jardineiro 2",  R.drawable.gardener2));
+        mStaffGardeners.add(new Staff("Jardineiro 3",  R.drawable.gardener3));
+
+        //--- Cleaning
+        mStaffCleaning.add(new Staff("Zelador 1", R.drawable.janitor1));
+        mStaffCleaning.add(new Staff("Zelador 2",  R.drawable.janitor2));
+        mStaffCleaning.add(new Staff("Zelador 3",  R.drawable.janitor3));
+
+        //--- Security
+        mStaffSecurity.add(new Staff("Segurança 1", R.drawable.safety1));
+        mStaffSecurity.add(new Staff("Segurança 2",  R.drawable.safety2));
+        mStaffSecurity.add(new Staff("Segurança 3",  R.drawable.safety3));
+        mStaffSecurity.add(new Staff("Segurança 4", R.drawable.safety4));
+        mStaffSecurity.add(new Staff("Segurança 5",  R.drawable.safety5));
+        mStaffSecurity.add(new Staff("Segurança 6",  R.drawable.safety6));
+
+
+        //--- Services
+        mStaffServices.add(new Staff("Serviços 1", R.drawable.service1));
+        mStaffServices.add(new Staff("Serviços 2",  R.drawable.service2));
+        mStaffServices.add(new Staff("Serviços 3",  R.drawable.service3));
+        //mStaffServices.add(new Staff("Serviços 4",  R.drawable.service4));
+
+
     }
 
     private View.OnClickListener getGroupOnClickListener(final int targetViewId, final int arrowId){
