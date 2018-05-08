@@ -290,6 +290,10 @@ public class LoginActivity extends AppCompatActivity {
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public void onBackPressed(){
+
+    }
     private void emailLogin(){
         if(mEditTextUser.getText().equals(null)){
             mEditTextUser.requestFocus();
