@@ -10,6 +10,12 @@ import java.util.HashMap;
 
 public class ForumComment extends ForumAction {
 
+    //--- SubCollections
+    public static String SUPPORTS_COLLECTION = "supports";
+
+    //--- Fields
+    public static String SCORE_FIELD = "score";
+
     private String content;
     private int supportScore;
 

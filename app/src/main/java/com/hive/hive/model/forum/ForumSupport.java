@@ -8,6 +8,9 @@ import com.google.firebase.firestore.DocumentReference;
 
 public class ForumSupport extends ForumAction {
 
+    public static int SUPPORT_ACTION_VALUE = 1;
+
+
     private ForumAction targetAction;
 
     //--- Constructor

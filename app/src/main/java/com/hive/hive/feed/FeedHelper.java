@@ -14,10 +14,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
 
-import com.hive.hive.model.association.Association;
-import com.hive.hive.model.association.AssociationComment;
-import com.hive.hive.model.association.AssociationSupport;
-import com.hive.hive.model.association.Request;
 import com.hive.hive.model.forum.ForumComment;
 import com.hive.hive.model.forum.ForumPost;
 import com.hive.hive.model.forum.ForumSupport;
@@ -362,9 +358,9 @@ public class FeedHelper {
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                 // Get and update comment score
                 DocumentSnapshot commentSnap = transaction.get(commentRef);
-                Double newScore = commentSnap.getDouble(AssociationComment.SCORE_FIELD);
-                newScore -= AssociationSupport.SUPPORT_ACTION_VALUE;
-                transaction.update(commentRef, AssociationComment.SCORE_FIELD, newScore);
+                Double newScore = commentSnap.getDouble(ForumComment.SCORE_FIELD);
+                newScore -= ForumSupport.SUPPORT_ACTION_VALUE;
+                transaction.update(commentRef, ForumComment.SCORE_FIELD, newScore);
 
                 // Remove request comment support
                 transaction.delete(supportRef);
@@ -375,41 +371,6 @@ public class FeedHelper {
     }
 
 
-    public static Task<Void> setRequestCommentSupport(
-            FirebaseFirestore db,
-            String associationID,
-            String requestID,
-            String commentID,
-            String supportID,
-            final ForumSupport support
-    ) {
-        final DocumentReference commentRef = db
-                .collection(ASSOCIATION_COLLECTION)
-                .document(associationID)
-                .collection(FORUM_COLLECTION)
-                .document(requestID)
-                .collection(Request.COMMENTS_COLLECTION)
-                .document(commentID);
-        final DocumentReference supportRef = commentRef
-                .collection(AssociationComment.SUPPORTS_COLLECTION)
-                .document(supportID);
 
-        // Set the comment support and increment the comment score
-        return db.runTransaction(new Transaction.Function<Void>() {
-            @Nullable
-            @Override
-            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                // Get and update comment score
-                DocumentSnapshot commentSnap = transaction.get(commentRef);
-                Double newScore = commentSnap.getDouble(AssociationComment.SCORE_FIELD);
-                newScore += AssociationSupport.SUPPORT_ACTION_VALUE;
-                transaction.update(commentRef, AssociationComment.SCORE_FIELD, newScore);
 
-                // Set comment support
-                transaction.set(supportRef, support);
-
-                return null;
-            }
-        });
-    }
 }
