@@ -61,11 +61,14 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".association.request.NewRequestActivity"
+            android:windowSoftInputMode="adjustPan"
             android:parentActivityName=".main.MainActivity" />
         <activity android:name=".association.votes.VotesActivity" />
         <activity android:name=".association.transparency.TransparencyActivity" />
-        <activity android:name=".association.request.comments.CommentsActivity" />
-        <activity android:name=".feed.comments.CommentsActivity" />
+        <activity android:name=".association.request.comments.CommentsActivity"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".feed.comments.CommentsActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".association.votes.question_answering.QuestionFormActivity" />
         <activity android:name=".association.votes.voters_list.VotersListActivity" />
         <activity android:name=".feed.NewPostActivity" />
