@@ -36,6 +36,8 @@ public class ForumComment extends ForumAction {
         this.supports = supports;
     }
 
+    public ForumComment() {
+    }
 
     //--- Getters
 

@@ -112,6 +112,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         });
     }
     private void shouldFillSupport(final CommentaryViewHolder holder, String requestId, String commentId, int position){
+
         //if exists support, then should be IV filled
         FeedHelper.getForumPostCommentSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s",
                 requestId, commentId, FirebaseAuth.getInstance().getUid() )
