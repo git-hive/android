@@ -17,6 +17,7 @@ public class Request extends AssociationAction {
 
     private String title;
     private String content;
+    private String categoryName;
     private int score;
     private int numComments;
 
@@ -67,6 +68,10 @@ public class Request extends AssociationAction {
         return categoriesRefs;
     }
 
+    public String getCategoryName() {
+        return categoryName;
+    }
+
     //--- Setters
 
     public void setTitle(String title) {
@@ -95,4 +100,7 @@ public class Request extends AssociationAction {
         this.categoriesRefs = categoriesRefs;
     }
 
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
 }
