@@ -363,7 +363,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
             request.incrementScore();
             Toast.makeText(context, "adding support", Toast.LENGTH_SHORT).show();
         }
-        notifyDataSetChanged();
+        numberOfSupportsTV.setText(String.valueOf(request.getScore()));
         requestsSupport.put(position, !requestsSupport.get(position));
     }
 

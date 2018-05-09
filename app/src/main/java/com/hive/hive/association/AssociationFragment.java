@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.firebase.firestore.DocumentReference;
 import com.hive.hive.R;
@@ -23,6 +24,8 @@ import com.hive.hive.profiles.UserProfileActivity;
 import com.hive.hive.utils.DocReferences;
 import com.hive.hive.utils.ProfilePhotoHelper;
 
+import org.w3c.dom.Text;
+
 import static android.content.ContentValues.TAG;
 
 
@@ -33,6 +36,7 @@ public class AssociationFragment extends Fragment {
 
     // Views
     ImageView mUserPhoto;
+    TextView mUserName;
 
     // Menu Buttons
     ImageButton requestBT;
@@ -65,8 +69,8 @@ public class AssociationFragment extends Fragment {
         votesBT = v.findViewById(R.id.voteBT);
         transparencyBT = v.findViewById(R.id.trasnparencyBT);
 
-        mUserPhoto = v.findViewById(R.id.userAvatar);
-
+        mUserPhoto = v.findViewById(R.id.toolbar_profile_pic);
+        mUserName = v.findViewById(R.id.toolbar_profile_name);
 
         requestBT.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,6 +113,10 @@ public class AssociationFragment extends Fragment {
                     User user = documentSnapshot.toObject(User.class);
                     //mUserScore.setText(user.getScore());
                     ProfilePhotoHelper.loadImage(mContext, mUserPhoto, user.getPhotoUrl());
+                    String aux = user.getName().trim();
+                    if (aux.length() > 25)
+                        aux = aux.substring(0, 22) + "...";
+                    mUserName.setText(aux);
                 }
             });
         }catch(NullPointerException e){

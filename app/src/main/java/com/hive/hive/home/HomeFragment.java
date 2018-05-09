@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,9 +32,13 @@ public class HomeFragment extends Fragment {
     private RecyclerView mRecyclerViewHome;
     private RecyclerViewHomeAdapter mRecyclerViewHomeAdapter;
     private String TAG = HomeFragment.class.getSimpleName();
+
     // Views
-    ImageView mUserAvatar;
-    TextView mGreetingsTV;
+    private ImageView mUserAvatar;
+    private TextView mGreetingsTV;
+    private TextView mTodayTV;
+    private TextView mUserNameTV;
+    private ImageView mToolbarAvatar;
 
     // Settings
     View mView;
@@ -78,12 +83,41 @@ public class HomeFragment extends Fragment {
         mRecyclerViewHome.setAdapter(mRecyclerViewHomeAdapter);
         mRecyclerViewHome.setLayoutManager(new LinearLayoutManager(v.getContext()));
 
-        mUserAvatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(mContext, UserProfileActivity.class));
+
+        mGreetingsTV = v.findViewById(R.id.textViewGreetings);
+        mTodayTV = v.findViewById(R.id.textViewToday);
+
+        AppBarLayout appBarLayout = v.findViewById(R.id.home_app_bar);
+        appBarLayout.addOnOffsetChangedListener((appBarLayout1, verticalOffset) -> {
+            if (Math.abs(verticalOffset) == appBarLayout1.getTotalScrollRange()) {
+                // If collapsed, then do
+                mGreetingsTV.setVisibility(View.GONE);
+                mTodayTV.setVisibility(View.GONE);
+                mUserAvatar.setVisibility(View.GONE);
+                v.findViewById(R.id.toolbar).setVisibility(View.VISIBLE);
+
+            } else if (verticalOffset == 0) {
+                mGreetingsTV.setVisibility(View.VISIBLE);
+                mTodayTV.setVisibility(View.VISIBLE);
+                mUserAvatar.setVisibility(View.VISIBLE);
+                v.findViewById(R.id.toolbar).setVisibility(View.GONE);
+            } else {
+                mGreetingsTV.setVisibility(View.VISIBLE);
+                mTodayTV.setVisibility(View.VISIBLE);
+                mUserAvatar.setVisibility(View.VISIBLE);
+                v.findViewById(R.id.toolbar).setVisibility(View.GONE);
+                // Somewhere in between
+                // Do according to your requirement
             }
         });
+
+
+        mUserAvatar.setOnClickListener(view -> startActivity(new Intent(mContext, UserProfileActivity.class)));
+        mToolbarAvatar = v.findViewById(R.id.toolbar_profile_pic);
+        mToolbarAvatar.setOnClickListener(view -> startActivity(new Intent(mContext, UserProfileActivity.class)));
+        mUserNameTV = v.findViewById(R.id.toolbar_profile_name);
+
+
         return v;
     }
 
@@ -99,6 +133,11 @@ public class HomeFragment extends Fragment {
                     String oldGreetings = mGreetingsTV.getText().toString().substring(0, 11);
                     mGreetingsTV.setText(oldGreetings + user.getName());
                     ProfilePhotoHelper.loadImage(mContext, mUserAvatar, user.getPhotoUrl());
+                    String aux = user.getName().trim();
+                    if (aux.length() > 25)
+                        aux = aux.substring(0, 22) + "...";
+                    mUserNameTV.setText(aux);
+                    ProfilePhotoHelper.loadImage(mContext, mToolbarAvatar, user.getPhotoUrl());
 
                 }
             });
