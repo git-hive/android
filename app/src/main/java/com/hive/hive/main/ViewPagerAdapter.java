@@ -32,11 +32,13 @@ private static int NUM_ITEMS = 3;
     public Fragment getItem(int position) {
         switch (position) {
             case 0: // Fragment # 0 - This will show FirstFragment
-                return HomeFragment.newInstance();
-            case 1: // Fragment # 0 - This will show FirstFragment different title
-                return FeedFragment.newInstance();
-            case 2: // Fragment # 1 - This will show SecondFragment
                 return AssociationFragment.newInstance();
+            case 1: // Fragment # 0 - This will show FirstFragment different title
+                return HomeFragment.newInstance();
+
+            case 2: // Fragment # 1 - This will show SecondFragment
+                return FeedFragment.newInstance();
+
 //            case 3: // Fragment # 1 - This will show SecondFragment
 //                return StoreFragment.newInstance();
 //            case 4: // Fragment # 1 - This will show SecondFragment
