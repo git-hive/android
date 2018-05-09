@@ -8,7 +8,6 @@
     <dimen name="fab_margin">16dp</dimen>
 
 
-
     <!-- Toolbar -->
     <dimen name="toolbar_title_font_size">20sp</dimen>
 
@@ -33,6 +32,8 @@
 
     <!-- Hexagonal bar-->
     <dimen name="square_size">100dp</dimen>
+    <dimen name="app_bar_height">220dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 
 
 </resources>
