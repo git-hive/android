@@ -70,6 +70,7 @@
     <string name="new_request_current_budget_savings_string">\u0020 no fundo de reserva. </string>
     <string name="new_request_current_budget_extraordinary_string">\u0020 para despesas extraordinárias. </string>
     <string name="new_request_should_have_category">Classifique a sua proposta em uma das categorias.</string>
+    <string name="new_request_should_have_budget_category">Classifique a sua proposta em uma das categorias de custo.</string>
 
     <!-- Request Comments strings -->
     <string name="should_text">Qual é o seu comentário?</string>
