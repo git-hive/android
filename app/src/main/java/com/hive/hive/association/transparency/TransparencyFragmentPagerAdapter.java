@@ -25,8 +25,8 @@ public class TransparencyFragmentPagerAdapter extends FragmentPagerAdapter {
     private static final String TAG = TransparencyFragmentPagerAdapter.class.getSimpleName();
 
     //--- Parameters
-    final int PAGE_COUNT = 4;
-    private String tabTitles[] = new String[] { "Resumo", "Documentos", "Orçamentos", "Funcionários" };
+    final int PAGE_COUNT = 3;
+    private String tabTitles[] = new String[] { "Resumo", "Documentos", "Funcionários" };
 
     //--- Views
     private FloatingActionButton FAB;
@@ -55,8 +55,6 @@ public class TransparencyFragmentPagerAdapter extends FragmentPagerAdapter {
             case 1: // Fragment # 0 - This will show SecondFragment different title
                 return DocumentFragment.newInstance(position+1);
             case 2: // Fragment # 1 - This will show ThirdFragment
-                return BudgetFragment.newInstance(position+1);
-            case 3: // Fragment # 1 - This will show FourthFragment
                 return StaffFragment.newInstance(position+1);
             default:
                 return null;
@@ -93,16 +91,6 @@ public class TransparencyFragmentPagerAdapter extends FragmentPagerAdapter {
                 FAB.setVisibility(View.GONE);
                 break;
             case 2:
-                FAB.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(context, "On Click Orçamentos", Toast.LENGTH_SHORT).show();
-                        FileUtils.uploadFile(context, "big_file", "pdf");
-                    }
-                });
-                FAB.setVisibility(View.GONE);
-                break;
-            case 3:
                 FAB.setVisibility(View.GONE);
                 break;
             default:
