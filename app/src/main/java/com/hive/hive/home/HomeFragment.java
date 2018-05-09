@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,9 +32,11 @@ public class HomeFragment extends Fragment {
     private RecyclerView mRecyclerViewHome;
     private RecyclerViewHomeAdapter mRecyclerViewHomeAdapter;
     private String TAG = HomeFragment.class.getSimpleName();
+
     // Views
     ImageView mUserAvatar;
     TextView mGreetingsTV;
+    TextView mTodayTV;
 
     // Settings
     View mView;
@@ -77,6 +80,29 @@ public class HomeFragment extends Fragment {
         mRecyclerViewHomeAdapter = new RecyclerViewHomeAdapter(DUMMYARRAY);
         mRecyclerViewHome.setAdapter(mRecyclerViewHomeAdapter);
         mRecyclerViewHome.setLayoutManager(new LinearLayoutManager(v.getContext()));
+
+
+        mGreetingsTV = v.findViewById(R.id.textViewGreetings);
+        mTodayTV = v.findViewById(R.id.textViewToday);
+
+        AppBarLayout appBarLayout = v.findViewById(R.id.home_app_bar);
+        appBarLayout.addOnOffsetChangedListener((appBarLayout1, verticalOffset) -> {
+            if (Math.abs(verticalOffset) == appBarLayout1.getTotalScrollRange()) {
+                // If collapsed, then do
+                mGreetingsTV.setVisibility(View.GONE);
+                mTodayTV.setVisibility(View.GONE);
+                mUserAvatar.setVisibility(View.GONE);
+
+            } else if (verticalOffset == 0) {
+                mGreetingsTV.setVisibility(View.VISIBLE);
+                mTodayTV.setVisibility(View.VISIBLE);
+                mUserAvatar.setVisibility(View.VISIBLE);
+            } else {
+                // Somewhere in between
+                // Do according to your requirement
+            }
+        });
+
 
         mUserAvatar.setOnClickListener(new View.OnClickListener() {
             @Override

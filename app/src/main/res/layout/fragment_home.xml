@@ -1,37 +1,85 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
-    android:orientation="vertical">
-        <include layout="@layout/user_header"/>
+    android:fitsSystemWindows="true"
+    tools:context="com.hive.hive.main.MainActivity">
 
-        <TextView
-            android:textSize="20dp"
-            android:textColor="@color/colorBlack"
-            android:id="@+id/textViewGreetings"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Bem Vindo, Pessoa" />
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/home_app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/app_bar_height"
+        android:fitsSystemWindows="true"
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v4.widget.Space
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
-            android:layout_height="5dp" />
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:toolbarId="@+id/toolbar"
+            android:background="@drawable/city_login">
 
-        <TextView
-            android:textSize="18dp"
-            android:textColor="@color/colorBlack"
-            android:id="@+id/textViewToday"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/today" />
-        <android.support.v4.widget.Space
-            android:layout_width="match_parent"
-            android:layout_height="20dp" />
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerViewFeed"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-</LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:translationY="2dp"
+                    android:layout_above="@id/textViewGreetings"
+                    android:layout_centerHorizontal="true"
+                    app:srcCompat="@drawable/ic_profile_photo"
+                    android:gravity="center"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:id="@+id/userAvatar"
+                    />
+
+                <TextView
+                    android:translationY="5dp"
+                    android:layout_above="@id/textViewToday"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorBlack"
+                    android:id="@+id/textViewGreetings"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Bem Vindo, Pessoa"/>
+
+                <TextView
+                    android:translationY="5dp"
+                    android:layout_above="@id/spaceHome"
+                    android:textSize="15sp"
+                    android:textColor="@color/colorBlack"
+                    android:id="@+id/textViewToday"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/today"/>
+
+                <android.support.v4.widget.Space
+                    android:id="@+id/spaceHome"
+                    android:layout_alignParentBottom="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp" />
+            </RelativeLayout>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_home" />
+
+</android.support.design.widget.CoordinatorLayout>
