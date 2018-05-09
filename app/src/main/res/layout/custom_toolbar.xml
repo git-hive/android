@@ -31,7 +31,7 @@
             android:layout_height="match_parent"
             android:layout_toEndOf="@+id/toolbar_profile_pic"
             android:layout_toRightOf="@+id/toolbar_profile_pic"
-            android:text="Nícolas de Araujo"
+            android:text="Nome do Usuário"
             android:textColor="@color/colorOrange"
             android:textSize="16sp"
             android:gravity="start|center_vertical"
