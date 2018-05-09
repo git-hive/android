@@ -15,8 +15,8 @@ import com.hive.hive.store.StoreFragment;
  */
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
-    private static int NUM_ITEMS = 5;
-
+//    private static int NUM_ITEMS = 5;
+private static int NUM_ITEMS = 3;
     public ViewPagerAdapter(FragmentManager fragmentManager) {
         super(fragmentManager);
     }
@@ -37,10 +37,10 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
                 return FeedFragment.newInstance();
             case 2: // Fragment # 1 - This will show SecondFragment
                 return AssociationFragment.newInstance();
-            case 3: // Fragment # 1 - This will show SecondFragment
-                return StoreFragment.newInstance();
-            case 4: // Fragment # 1 - This will show SecondFragment
-                return MapFragment.newInstance();
+//            case 3: // Fragment # 1 - This will show SecondFragment
+//                return StoreFragment.newInstance();
+//            case 4: // Fragment # 1 - This will show SecondFragment
+//                return MapFragment.newInstance();
             default:
                 return null;
         }

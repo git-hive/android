@@ -12,12 +12,12 @@
         android:id="@+id/action_association"
         android:title="@string/associationRef"
         />
-    <item
-        android:id="@+id/action_shop"
-        android:title="@string/shop"
-        />
-    <item
-        android:id="@+id/action_map"
-        android:title="@string/map"
-        />
+    <!--<item-->
+        <!--android:id="@+id/action_shop"-->
+        <!--android:title="@string/shop"-->
+        <!--/>-->
+    <!--<item-->
+        <!--android:id="@+id/action_map"-->
+        <!--android:title="@string/map"-->
+        <!--/>-->
 </menu>
