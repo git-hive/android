@@ -14,10 +14,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
 
-import com.hive.hive.model.association.Association;
-import com.hive.hive.model.association.AssociationComment;
-import com.hive.hive.model.association.AssociationSupport;
-import com.hive.hive.model.association.Request;
 import com.hive.hive.model.forum.ForumComment;
 import com.hive.hive.model.forum.ForumPost;
 import com.hive.hive.model.forum.ForumSupport;
@@ -245,6 +241,18 @@ public class FeedHelper {
 
     //--- Support ForumPost Comment
 
+
+
+    /**
+     * Gets a support from a request comment
+     *
+     * @param db            Database reference
+     * @param associationID Association document ID where to get the request from
+     * @param requestID     Request document ID where to get the comment from
+     * @param commentID     Comment document ID where to get the supports from
+     * @param supportID     Support document ID where to get the document
+     * @return Task that resolves in all support documents from a request comment
+     */
     public static Task<DocumentSnapshot> getForumPostCommentSupport(
             FirebaseFirestore db,
             String associationID,
@@ -266,10 +274,21 @@ public class FeedHelper {
 
 
 
+    /**
+     * Sets a support on a request comment
+     *
+     * @param db            Database reference
+     * @param associationID Association document ID where to get the request from
+     * @param requestID     Request document ID where to get the comment from
+     * @param commentID     Comment document ID where to set the support to
+     * @param supportID     Support document ID to be set
+     * @param support       Document to be set under the provided support ID
+     * @return Empty task that resolves successfully if document was set
+     */
     public static Task<Void> setSupportForumPostComment(
             FirebaseFirestore db,
             String associationID,
-            String forumPostID,
+            String requestID,
             String commentID,
             String supportID,
             final ForumSupport support
@@ -278,29 +297,32 @@ public class FeedHelper {
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
                 .collection(FORUM_COLLECTION)
-                .document(forumPostID)
+                .document(requestID)
                 .collection(COMMENTS_COLLECTION)
                 .document(commentID);
         final DocumentReference supportRef = commentRef
                 .collection(SUPPORTS_COLLECTION)
                 .document(supportID);
 
+        // Set the comment support and increment the comment score
         return db.runTransaction(new Transaction.Function<Void>() {
             @Nullable
             @Override
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                // Get and update score
+                // Get and update comment score
                 DocumentSnapshot commentSnap = transaction.get(commentRef);
-                Double newScore = commentSnap.getDouble("score") + 1;
-                transaction.update(commentRef, "score", newScore);
+                Double newScore = commentSnap.getDouble(ForumComment.SCORE_FIELD);
+                newScore += ForumSupport.SUPPORT_ACTION_VALUE;
+                transaction.update(commentRef, ForumComment.SCORE_FIELD, newScore);
 
-                // Set the actual comment support
+                // Set comment support
                 transaction.set(supportRef, support);
 
                 return null;
             }
         });
     }
+
 
     public static Task<Void> removeSupportForumPostComment(
             FirebaseFirestore db,
@@ -362,9 +384,9 @@ public class FeedHelper {
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                 // Get and update comment score
                 DocumentSnapshot commentSnap = transaction.get(commentRef);
-                Double newScore = commentSnap.getDouble(AssociationComment.SCORE_FIELD);
-                newScore -= AssociationSupport.SUPPORT_ACTION_VALUE;
-                transaction.update(commentRef, AssociationComment.SCORE_FIELD, newScore);
+                Double newScore = commentSnap.getDouble(ForumComment.SCORE_FIELD);
+                newScore -= ForumSupport.SUPPORT_ACTION_VALUE;
+                transaction.update(commentRef, ForumComment.SCORE_FIELD, newScore);
 
                 // Remove request comment support
                 transaction.delete(supportRef);
@@ -375,41 +397,6 @@ public class FeedHelper {
     }
 
 
-    public static Task<Void> setRequestCommentSupport(
-            FirebaseFirestore db,
-            String associationID,
-            String requestID,
-            String commentID,
-            String supportID,
-            final ForumSupport support
-    ) {
-        final DocumentReference commentRef = db
-                .collection(ASSOCIATION_COLLECTION)
-                .document(associationID)
-                .collection(FORUM_COLLECTION)
-                .document(requestID)
-                .collection(Request.COMMENTS_COLLECTION)
-                .document(commentID);
-        final DocumentReference supportRef = commentRef
-                .collection(AssociationComment.SUPPORTS_COLLECTION)
-                .document(supportID);
 
-        // Set the comment support and increment the comment score
-        return db.runTransaction(new Transaction.Function<Void>() {
-            @Nullable
-            @Override
-            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                // Get and update comment score
-                DocumentSnapshot commentSnap = transaction.get(commentRef);
-                Double newScore = commentSnap.getDouble(AssociationComment.SCORE_FIELD);
-                newScore += AssociationSupport.SUPPORT_ACTION_VALUE;
-                transaction.update(commentRef, AssociationComment.SCORE_FIELD, newScore);
 
-                // Set comment support
-                transaction.set(supportRef, support);
-
-                return null;
-            }
-        });
-    }
 }

@@ -12,6 +12,7 @@ public class Association {
     public static String SESSIONS_COLLECTION = "sessions";
     public static String REQUESTS_COLLECTION = "requests";
     public static String REQUEST_CATEGORIES_COLLECTION = "requestCategories";
+    public static String BUDGET_CATEGORIES_COLLECTION = "budgetCategories";
     public static String LOCATIONS_COLLECTION = "locations";
 
     //--- Base attributes

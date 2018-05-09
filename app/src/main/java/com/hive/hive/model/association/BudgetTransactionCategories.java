@@ -5,11 +5,18 @@ package com.hive.hive.model.association;
  */
 
 public class BudgetTransactionCategories {
+    public static String ORDINARY = "ordinary";
+    public static String EXTRAORDINARY = "extraordinary";
+    public static String SAVINGS = "savings";
 
     private String id;
     private String name;
 
     //--- Constructor
+
+
+    public BudgetTransactionCategories() {
+    }
 
     public BudgetTransactionCategories(String id, String name) {
         this.id = id;

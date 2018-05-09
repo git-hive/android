@@ -155,15 +155,15 @@ public class HexagonView extends View{
         float totalScores = 0;
         for (Float score:
              scoreValues) {
-            //System.out.println(" HAAYAYAHAHYAAHAYAYA"+score);
+            //System.out.println(" HAAYAYAHAHYAAHAYAYA"+score+ " "+totalScores);
             totalScores +=  score;
         }
 
         //System.out.println(" Total scores "+ totalScores);
         for(int i = 0;i<scoreValues.size();i++){
             if(totalScores == 0) {
-                //System.out.println(" BEYYYYYYYYYYYYYYYY 1 "+ scoreValues.get(i)+" " + scoreValues.get(i) / totalScores);
-                mPercentage.add(i, (float) 25.0);
+                //System.out.println(" BEYYYYYYYYYYYYYYYY 1 "+ scoreValues.get(i)+" " + ((1.0 / scoreValues.size()) * 100));
+                mPercentage.add(i, Utils.round((float) ((1.0 / scoreValues.size()) * 100), 2));
                // break;
             }else {
                 //System.out.println(" BEYYYYYYYYYYYYYYYY  2 "+ scoreValues.get(i)+" " + scoreValues.get(i) / totalScores);
@@ -184,6 +184,10 @@ public class HexagonView extends View{
         mBarColors.add(1, Color.parseColor("#82b3b3"));
         mBarColors.add(2, Color.parseColor("#ffbb3f"));
         mBarColors.add(3, Color.parseColor("#90ee90"));
+        mBarColors.add(4, Color.parseColor("#ff6347"));
+        mBarColors.add(5, Color.parseColor("#82b3b3"));
+        mBarColors.add(6, Color.parseColor("#ffbb3f"));
+        mBarColors.add(7, Color.parseColor("#90ee90"));
 
     }
 
