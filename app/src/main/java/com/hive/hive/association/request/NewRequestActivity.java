@@ -24,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 import com.hive.hive.model.association.AssociationHelper;
+import com.hive.hive.model.association.BudgetTransactionCategories;
 import com.hive.hive.model.association.Request;
 import com.hive.hive.model.association.RequestCategory;
 import com.hive.hive.utils.DocReferences;
@@ -79,6 +80,8 @@ public class NewRequestActivity extends AppCompatActivity {
     private Pair<DocumentReference, RequestCategory> selectedRequestCategoryPair;
     private ArrayList<Pair<DocumentReference, RequestCategory>> requestCategoriesPairs;
 
+    private Pair<DocumentReference, BudgetTransactionCategories> selectedbudgetCategoriesPair;
+    private ArrayList<Pair<DocumentReference, BudgetTransactionCategories>> budgetCategoriesPairs;
 
     // Buttons
     private Button saveBT;
@@ -100,6 +103,7 @@ public class NewRequestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_request);
 
         requestCategoriesPairs = new ArrayList<>();
+        budgetCategoriesPairs = new ArrayList<>();
 
         // Toolbar
         Toolbar toolbar = findViewById(R.id.newRequestTB);
@@ -186,6 +190,7 @@ public class NewRequestActivity extends AppCompatActivity {
         });
 
         fetchAndSetRequestCategories();
+        fetchAndSetBudgetTransactionCategories();
     }
 
     /**
@@ -222,6 +227,37 @@ public class NewRequestActivity extends AppCompatActivity {
                 });
     }
 
+    private void fetchAndSetBudgetTransactionCategories() {
+        AssociationHelper.getAllBudgetTransactionCategories(
+                mDB,
+                associationID
+        )
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot documentSnapshots) {
+                        for (DocumentSnapshot budgetCategoryDoc : documentSnapshots) {
+                            BudgetTransactionCategories budgetCategory =
+                                    budgetCategoryDoc.toObject(BudgetTransactionCategories.class);
+                            Pair<DocumentReference, BudgetTransactionCategories> newPair =
+                                    Pair.create(budgetCategoryDoc.getReference(), budgetCategory);
+
+                            budgetCategoriesPairs.add(newPair);
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(
+                                NewRequestActivity.this,
+                                "Failed to get budget cateogires",
+                                Toast.LENGTH_SHORT
+                        ).show();
+                        Log.e(TAG, "failed to get association categories");
+                    }
+                });
+    }
+
     private View.OnClickListener budgetCategoriesOnClickListener() {
         return new View.OnClickListener() {
             @Override
@@ -232,16 +268,19 @@ public class NewRequestActivity extends AppCompatActivity {
                         selectedBudgetCategoryTV.setText(R.string.budget_category_ordinary);
                         budgetCategoryOrdinaryIV.setImageResource(R.drawable.ic_budget_category_ordinary);
                         budgetCategoryOrdinaryCB.setSelected(true);
+                        searchAndSetBudgetCategory("ordinary");
                         break;
                     case R.id.new_request_budget_category_savings_ll:
                         selectedBudgetCategoryTV.setText(R.string.budget_category_savings);
                         budgetCategorySavingsIV.setImageResource(R.drawable.ic_budget_category_savings);
                         budgetCategorySavingsCB.setSelected(true);
+                        searchAndSetBudgetCategory("savings");
                         break;
                     case R.id.new_request_budget_category_extraordinary_ll:
                         selectedBudgetCategoryTV.setText(R.string.budget_category_extraordinary);
                         budgetCategoryExtraordinaryIV.setImageResource(R.drawable.ic_budget_category_extraordinary);
                         budgetCategoryExtraordinaryCB.setSelected(true);
+                        searchAndSetBudgetCategory("extraordinary");
                         break;
                     default:
                         break;
@@ -337,17 +376,47 @@ public class NewRequestActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Search for a budget category by name in budgetCategoriesPairs, if found,
+     * set as selectedbudgetCategoriesPair
+     *
+     * @param categoryName
+     */
+    private void searchAndSetBudgetCategory(String categoryName) {
+        for (Pair<DocumentReference, BudgetTransactionCategories> pair : budgetCategoriesPairs) {
+            if (pair.second.getName().equals(categoryName)) {
+                selectedbudgetCategoriesPair = pair;
+                break;
+            }
+        }
+    }
+
     private void handleOnSaveButtonClick() {
         String requestUUID = UUID.randomUUID().toString();
         long currentTimeMillis = System.currentTimeMillis();
 
         ArrayList<DocumentReference> categoriesRefs = new ArrayList<>();
-        if(selectedRequestCategoryPair != null)
-            categoriesRefs.add(selectedRequestCategoryPair.first);
-        else {
-            Toast.makeText(NewRequestActivity.this, getString(R.string.new_request_should_have_category), Toast.LENGTH_SHORT).show();
+        if (selectedRequestCategoryPair == null) {
+            Toast.makeText(
+                    NewRequestActivity.this,
+                    getString(R.string.new_request_should_have_category),
+                    Toast.LENGTH_SHORT
+            ).show();
             return;
         }
+        categoriesRefs.add(selectedRequestCategoryPair.first);
+
+        ArrayList<DocumentReference> budgetCategoriesRefs = new ArrayList<>();
+        if (selectedbudgetCategoriesPair == null) {
+            Toast.makeText(
+                    NewRequestActivity.this,
+                    getString(R.string.new_request_should_have_budget_category),
+                    Toast.LENGTH_SHORT
+            ).show();
+            return;
+        }
+        budgetCategoriesRefs.add(selectedRequestCategoryPair.first);
+
         Request request = new Request(
                 currentTimeMillis,
                 currentTimeMillis,
@@ -360,6 +429,11 @@ public class NewRequestActivity extends AppCompatActivity {
                 0,
                 categoriesRefs
         );
+
+        request.setCategoryName(selectedRequestCategoryPair.second.getName().toLowerCase());
+        request.setBudgetCategoryName(selectedbudgetCategoriesPair.second.getName().toLowerCase());
+
+        request.setBudgetCategoriesRefs(budgetCategoriesRefs);
 
         AssociationHelper.setRequest(
                 mDB,
