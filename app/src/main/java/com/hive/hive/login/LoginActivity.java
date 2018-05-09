@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // Layout Elements
     private SignInButton mGoogleSignInBT;
-    private LoginButton mFacebookSignInBtn;
+//    private LoginButton mFacebookSignInBtn;
     private EditText mEditTextPassword;
     private EditText mEditTextUser;
     private TextView mTextViewPassword;
@@ -136,7 +136,7 @@ public class LoginActivity extends AppCompatActivity {
                     mEditTextPassword.setVisibility(View.VISIBLE);
                     mButtonSignIn.setVisibility(View.VISIBLE);
                     mButtonEmailLogin.setText(R.string.other_login_methods);
-                    mFacebookSignInBtn.setVisibility(View.GONE);
+//                    mFacebookSignInBtn.setVisibility(View.GONE);
                     mGoogleSignInBT.setVisibility(View.GONE);
                 }else{
                     mTextViewUser.setVisibility(View.GONE);
@@ -147,7 +147,7 @@ public class LoginActivity extends AppCompatActivity {
                     mEditTextPassword.setVisibility(View.GONE);
                     mButtonSignIn.setVisibility(View.GONE);
                     mButtonEmailLogin.setVisibility(View.VISIBLE);
-                    mFacebookSignInBtn.setVisibility(View.VISIBLE);
+//                    mFacebookSignInBtn.setVisibility(View.VISIBLE);
                     mGoogleSignInBT.setVisibility(View.VISIBLE);
                     mButtonEmailLogin.setText(R.string.email_login);
 
@@ -228,33 +228,33 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         // get facebook login button
-        mFacebookSignInBtn = findViewById(R.id.text_facebook_sign_in_button);
+//        mFacebookSignInBtn = findViewById(R.id.text_facebook_sign_in_button);
 
         // set facebook login request permissions
-        mFacebookSignInBtn.setReadPermissions("email", "public_profile");
+//        mFacebookSignInBtn.setReadPermissions("email", "public_profile");
 
         // create facebook login callback manager
         mCallbackManager = CallbackManager.Factory.create();
 
         // register fb login button callback
 
-        mFacebookSignInBtn.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                handleFacebookAccessToken(loginResult.getAccessToken());
-            }
-
-            @Override
-            public void onCancel() {
-                Toast.makeText(LoginActivity.this, "Facebook login canceled", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Toast.makeText(LoginActivity.this, "Facebook login failed", Toast.LENGTH_SHORT).show();
-                Log.e(TAG, error.getMessage());
-            }
-        });
+//        mFacebookSignInBtn.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+//            @Override
+//            public void onSuccess(LoginResult loginResult) {
+//                handleFacebookAccessToken(loginResult.getAccessToken());
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//                Toast.makeText(LoginActivity.this, "Facebook login canceled", Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onError(FacebookException error) {
+//                Toast.makeText(LoginActivity.this, "Facebook login failed", Toast.LENGTH_SHORT).show();
+//                Log.e(TAG, error.getMessage());
+//            }
+//        });
         checkUserAndSwitchActivity();
     }
 
@@ -432,7 +432,7 @@ public class LoginActivity extends AppCompatActivity {
         //progressBar
         mPBLogin.setVisibility(View.VISIBLE);
         //buttons
-        mFacebookSignInBtn.setVisibility(View.GONE);
+//        mFacebookSignInBtn.setVisibility(View.GONE);
         mGoogleSignInBT.setVisibility(View.GONE);
         mButtonSignIn.setVisibility(View.GONE);
         mButtonEmailLogin.setVisibility(View.GONE);
@@ -447,7 +447,7 @@ public class LoginActivity extends AppCompatActivity {
     }
     //reshow buttons
     private void returnFromProgress(){
-        mFacebookSignInBtn.setVisibility(View.VISIBLE);
+//        mFacebookSignInBtn.setVisibility(View.VISIBLE);
         mGoogleSignInBT.setVisibility(View.VISIBLE);
         mButtonEmailLogin.setVisibility(View.VISIBLE);
         mPBLogin.setVisibility(View.GONE);
