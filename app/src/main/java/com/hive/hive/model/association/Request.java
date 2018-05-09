@@ -17,11 +17,14 @@ public class Request extends AssociationAction {
 
     private String title;
     private String content;
-    private String categoryName;
     private int score;
     private int numComments;
 
+    private String categoryName;
     private ArrayList<DocumentReference> categoriesRefs;
+
+    private ArrayList<DocumentReference> budgetCategoriesRefs;
+    private String budgetCategoryName;
 
 //--- Constructors
 
@@ -72,6 +75,14 @@ public class Request extends AssociationAction {
         return categoryName;
     }
 
+    public ArrayList<DocumentReference> getBudgetCategoriesRefs() {
+        return budgetCategoriesRefs;
+    }
+
+    public String getBudgetCategoryName() {
+        return budgetCategoryName;
+    }
+
     //--- Setters
 
     public void setTitle(String title) {
@@ -102,5 +113,13 @@ public class Request extends AssociationAction {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    public void setBudgetCategoriesRefs(ArrayList<DocumentReference> budgetCategoriesRefs) {
+        this.budgetCategoriesRefs = budgetCategoriesRefs;
+    }
+
+    public void setBudgetCategoryName(String budgetCategoryName) {
+        this.budgetCategoryName = budgetCategoryName;
     }
 }
