@@ -63,6 +63,10 @@ public class HexagonalBarAdapter  extends RecyclerView.Adapter<HexagonalBarAdapt
             mColors.add(1, Color.parseColor("#82b3b3"));
             mColors.add(2, Color.parseColor("#ffbb3f"));
             mColors.add(3, Color.parseColor("#90ee90"));
+            mColors.add(4, Color.parseColor("#ff6347"));
+            mColors.add(5, Color.parseColor("#82b3b3"));
+            mColors.add(6, Color.parseColor("#ffbb3f"));
+            mColors.add(7, Color.parseColor("#90ee90"));
 
             mPercentages = new ArrayList<>();
             mPercentagesString = new ArrayList<>();
@@ -127,7 +131,7 @@ public class HexagonalBarAdapter  extends RecyclerView.Adapter<HexagonalBarAdapt
         for(int i = 0;i<mPercentages.size();i++){
             if(totalScores == 0) {
 //                System.out.println(" BEYYYYYYYYYYYYYYYY 1 "+ mPercentages.get(i)+" " + mPercentages.get(i) / totalScores);
-                mPercentagesString.add(i, "25.0 %");
+                mPercentagesString.add(i, String.valueOf(Utils.round((float) ((1.0/ mPercentages.size()) * 100), 2)));
                 // break;
             }else {
 //                System.out.println(" BEYYYYYYYYYYYYYYYY  2 "+ mPercentages.get(i)+" " + mPercentages.get(i) / totalScores);
