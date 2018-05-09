@@ -57,10 +57,9 @@ public class FeedFragment extends Fragment {
     private FloatingActionButton feedFab;
 
     // Views
-    private TextView mUserName;
-    private ImageView mUserPhoto;
-    private TextView mUserScore;
-    private View mView;
+    ImageView mUserPhoto;
+    TextView mUserScore;
+    View mView;
 
     //Settings
     Context mContext;
@@ -91,10 +90,8 @@ public class FeedFragment extends Fragment {
 
         // User Views references
 
-        mUserName = v.findViewById(R.id.toolbar_profile_name);
         mUserScore = v.findViewById(R.id.score);
-        mUserPhoto = v.findViewById(R.id.toolbar_profile_pic);
-
+        mUserPhoto = v.findViewById(R.id.userAvatar);
 
         fillLoggedUserView();
         getAllFeedPostsAndCallJoinFeedPostsCategories();
@@ -178,10 +175,6 @@ public class FeedFragment extends Fragment {
                     User user = documentSnapshot.toObject(User.class);
                     //mUserScore.setText(user.getScore());
                     ProfilePhotoHelper.loadImage(mContext, mUserPhoto, user.getPhotoUrl());
-                    String aux = user.getName().trim();
-                    if (aux.length() > 25)
-                        aux = aux.substring(0, 22) + "...";
-                    mUserName.setText(aux);
                 }
             });
         }catch(NullPointerException e){

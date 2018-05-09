@@ -4,8 +4,35 @@
     android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/userAvatar"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        app:srcCompat="@drawable/ic_profile_photo"
+        android:layout_gravity="top|left"
+        android:layout_width="75dp"
+        android:layout_height="65dp" />
 
-    <include layout="@layout/custom_toolbar" />
+    <ImageView
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="60dp"
+        app:srcCompat="@drawable/coin"
+        android:layout_gravity="top|right"
+        android:layout_width="45dp"
+        android:layout_height="45dp" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorBlack"
+        android:textSize="20sp"
+        android:text="0000"
+        android:layout_marginTop="35dp"
+        android:layout_marginRight="15dp"
+        app:srcCompat="@drawable/coin"
+        android:layout_gravity="top|right"
+         />
 
     <FrameLayout
         android:layout_width="300dp"
