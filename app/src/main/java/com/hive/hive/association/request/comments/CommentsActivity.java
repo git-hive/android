@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -98,7 +99,6 @@ public class CommentsActivity extends AppCompatActivity {
 
         //getting extra info from Request
         mRequestId = getIntent().getExtras().getString(REQUEST_ID);
-        Toast.makeText(this, mRequestId, Toast.LENGTH_SHORT).show();
 
         //finding views
         mCommentIV = findViewById(R.id.commentIV);
@@ -225,7 +225,7 @@ public class CommentsActivity extends AppCompatActivity {
 
         //Set Size
         mCommentRV.setHasFixedSize(true);
-
+        mCommentRV.setLayoutManager(new LinearLayoutManager(this));
         //Set Adapter
         mRecyclerAdapter = new CommentsAdapter(this, mComments, mIds, mRequestId);
         mCommentRV.setAdapter(mRecyclerAdapter);
