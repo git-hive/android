@@ -27,6 +27,7 @@ import com.hive.hive.R;
 import com.hive.hive.association.AssociationHelper;
 import com.hive.hive.association.request.comments.CommentsActivity;
 import com.hive.hive.model.association.AssociationSupport;
+import com.hive.hive.model.association.BudgetTransactionCategories;
 import com.hive.hive.model.association.Request;
 import com.hive.hive.model.user.User;
 import com.hive.hive.utils.DocReferences;
@@ -45,6 +46,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     private HashMap<Integer, Boolean> requestsSupport;
     private ArrayList<SupportMutex> mLocks;
     private Context context;
+    private HashMap<String, Integer> budgetCategoryNameResource;
 
     private HashMap<DocumentReference, String> usernames;
     private HashMap<DocumentReference, String> userProfilePictures;
@@ -65,6 +67,20 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         this.usernames = new HashMap<>();
         this.userProfilePictures = new HashMap<>();
         this.context = context;
+
+        budgetCategoryNameResource = new HashMap<>();
+        budgetCategoryNameResource.put(
+                BudgetTransactionCategories.EXTRAORDINARY,
+                R.drawable.ic_budget_category_extraordinary
+        );
+        budgetCategoryNameResource.put(
+                BudgetTransactionCategories.ORDINARY,
+                R.drawable.ic_budget_category_ordinary
+        );
+        budgetCategoryNameResource.put(
+                BudgetTransactionCategories.SAVINGS,
+                R.drawable.ic_budget_category_savings
+        );
     }
 
     @Override
@@ -79,9 +95,10 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     public void onBindViewHolder(final RequestViewHolder holder, final int position) {
 
         try {
-            if (mLocks.get(position) == null)
+            if (mLocks.get(position) == null) {
                 mLocks.add(new SupportMutex(holder.mNumberOfSupportsTV, holder.mSupportsIV));
-        } catch (java.lang.IndexOutOfBoundsException e) {
+            }
+        } catch (IndexOutOfBoundsException e) {
             mLocks.add(new SupportMutex(holder.mNumberOfSupportsTV, holder.mSupportsIV));
         }
 
@@ -97,6 +114,13 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         holder.mRequestContent.setText(request.getContent());
         holder.mNumberOfSupportsTV.setText(String.valueOf(request.getScore()));
         holder.mNumberOfCommentsTV.setText(String.valueOf(request.getNumComments()));
+
+        String budgetCategoryName = request.getBudgetCategoryName();
+        if (budgetCategoryNameResource.containsKey(budgetCategoryName)) {
+            holder
+                    .mRequestCategory
+                    .setImageResource(budgetCategoryNameResource.get(budgetCategoryName));
+        }
 
         // fill support if necessary
         shouldFillSupport(holder, getRequestID(position), position);
