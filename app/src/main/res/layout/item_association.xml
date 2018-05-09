@@ -11,9 +11,10 @@
         android:layout_marginHorizontal="20dp"
         android:layout_marginVertical="10dp"
         app:cardBackgroundColor="@color/colorWhite"
-        app:cardElevation="12dp"
-        android:padding="10dp"
-        app:cardCornerRadius="10dp"
+        app:cardElevation="4dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        app:cardCornerRadius="4dp"
         >
 
         <LinearLayout

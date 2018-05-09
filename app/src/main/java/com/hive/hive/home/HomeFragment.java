@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.google.firebase.firestore.DocumentReference;
 import com.hive.hive.R;
 import com.hive.hive.model.association.Request;
+import com.hive.hive.model.forum.Forum;
 import com.hive.hive.model.forum.ForumPost;
 import com.hive.hive.model.user.User;
 import com.hive.hive.profiles.UserProfileActivity;
@@ -64,13 +65,13 @@ public class HomeFragment extends Fragment {
         setCurrentUserInfo();
 
         DUMMYARRAY = new ArrayList<>();
-        DUMMYARRAY.add(new ForumPost());
-        DUMMYARRAY.add(new Request());
-        DUMMYARRAY.add(new ForumPost());
-        DUMMYARRAY.add(new Request());
-        DUMMYARRAY.add(new ForumPost());
-        DUMMYARRAY.add(new Request());
-        DUMMYARRAY.add(new ForumPost());
+
+        ForumPost post = new ForumPost();
+        post.setTitle("Evento Beneficiente para o Inverno");
+        post.setContent("Estava pensando em fazermo um evento beneficiente interno...");
+        post.setNumComments(2);
+        post.setSupportScore(5);
+        DUMMYARRAY.add(post);
         DUMMYARRAY.add(new Request());
 
         mRecyclerViewHome = v.findViewById(R.id.recyclerViewFeed);
