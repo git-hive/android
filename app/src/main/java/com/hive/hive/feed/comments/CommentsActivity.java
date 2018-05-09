@@ -29,7 +29,6 @@ import com.hive.hive.R;
 
 import com.hive.hive.feed.FeedHelper;
 import com.hive.hive.feed.RecyclerViewFeedAdapter;
-import com.hive.hive.feed.comments.CommentsAdapter;
 import com.hive.hive.model.forum.ForumComment;
 import com.hive.hive.model.forum.ForumPost;
 import com.hive.hive.model.forum.ForumSupport;

@@ -112,6 +112,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         });
     }
     private void shouldFillSupport(final CommentaryViewHolder holder, String requestId, String commentId, int position){
+
         //if exists support, then should be IV filled
         FeedHelper.getForumPostCommentSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s",
                 requestId, commentId, FirebaseAuth.getInstance().getUid() )
@@ -182,7 +183,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
 
             ForumSupport support = new ForumSupport( Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
                     userRef, null, assocRef.toString(), null);
-            FeedHelper.setRequestCommentSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s",
+            FeedHelper.setSupportForumPostComment(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s",
                     mRequestId, commentId, supportId, support).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
