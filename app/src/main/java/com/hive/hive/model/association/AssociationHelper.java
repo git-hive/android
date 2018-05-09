@@ -15,7 +15,8 @@ import com.google.firebase.firestore.Transaction;
 
 import java.util.ArrayList;
 
-public class AssociationHelper {
+public class
+AssociationHelper {
     public static String ASSOCIATION_COLLECTION = "associations";
 
     //--- Request
@@ -105,7 +106,7 @@ public class AssociationHelper {
     /**
      * Fetches all request categories from an association
      *
-     * @param db Database reference
+     * @param db            Database reference
      * @param associationID Association document ID where to set the categories from
      * @return Task that resolves in all request categories documents
      */
@@ -256,9 +257,9 @@ public class AssociationHelper {
      * Sets a request support document using the provided transaction
      *
      * @param transaction Transaction used to set the support
-     * @param requestRef Request being supported
-     * @param supportRef New support reference
-     * @param support Support document to be set under the provided support ID
+     * @param requestRef  Request being supported
+     * @param supportRef  New support reference
+     * @param support     Support document to be set under the provided support ID
      * @throws FirebaseFirestoreException Thrown when the request document doesn't exist
      */
     public static void setRequestSupportWithinTransaction(
@@ -281,8 +282,8 @@ public class AssociationHelper {
      * Deletes a request support using the provided transaction
      *
      * @param transaction Transaction used to set the support
-     * @param requestRef Request being unsupported
-     * @param supportRef Support to be removed
+     * @param requestRef  Request being unsupported
+     * @param supportRef  Support to be removed
      * @throws FirebaseFirestoreException Thrown when the request document doesn't exist
      */
     public static void removeRequestSupportWithinTransaction(
@@ -924,5 +925,23 @@ public class AssociationHelper {
                 .collection(Agenda.QUESTIONS_COLLECTION)
                 .document(questionID)
                 .delete();
+    }
+
+    /**
+     * Fetches all association budget transaction categories
+     *
+     * @param db            Database reference
+     * @param associationID Association document ID where to get the categories from
+     * @return Task that resolves in all budget transaction categories documents
+     */
+    public static Task<QuerySnapshot> getAllBudgetTransactionCategories(
+            FirebaseFirestore db,
+            String associationID
+    ) {
+        return db
+                .collection(ASSOCIATION_COLLECTION)
+                .document(associationID)
+                .collection(Association.BUDGET_CATEGORIES_COLLECTION)
+                .get();
     }
 }
