@@ -68,12 +68,7 @@
                     android:layout_height="2dp" />
             </RelativeLayout>
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+          <include layout="@layout/custom_toolbar" />
 
 
         </android.support.design.widget.CollapsingToolbarLayout>
