@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -357,11 +356,9 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         if (requestsSupport.get(position)) {
             supportIV.setImageDrawable(borderlineSupportIC);
             request.decrementScore();
-            Toast.makeText(context, "removing support", Toast.LENGTH_SHORT).show();
         } else {
             supportIV.setImageDrawable(filledSupportIC);
             request.incrementScore();
-            Toast.makeText(context, "adding support", Toast.LENGTH_SHORT).show();
         }
         numberOfSupportsTV.setText(String.valueOf(request.getScore()));
         requestsSupport.put(position, !requestsSupport.get(position));
