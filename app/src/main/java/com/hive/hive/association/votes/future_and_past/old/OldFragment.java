@@ -71,8 +71,6 @@ public class OldFragment extends Fragment {
 
         initUnfoldable();
 
-        UnfoldableSharedMethods.unfoldableListener(mUnfoldableView, mListTouchInterceptor, mDetailsLayout);
-
         //TODO change ASSOCIATIONID
         OldAgendasFirebaseHandle.getPastSessions("gVw7dUkuw3SSZSYRXe8s", this);
 
@@ -137,6 +135,9 @@ public class OldFragment extends Fragment {
                 return false;
             }
         });
+
+        UnfoldableSharedMethods.unfoldableListener(mUnfoldableView, mListTouchInterceptor, mDetailsLayout);
+
     }
 
     private void initRecycler() {

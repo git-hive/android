@@ -63,10 +63,6 @@ public class QuestionFormActivity extends AppCompatActivity {
 
         mQuestionTV = findViewById(R.id.questionTV);
 
-//        //Getting the Questions from the previusly activity
-//        mQuestionsIds = (ArrayList<String>) getIntent().getSerializableExtra("questionsIds");
-//        mQuestions = (HashMap<String, Question>) getIntent().getSerializableExtra("questions");
-
         //Getting ids to send vote
         mAssociationID = getIntent().getStringExtra("associationID");
         mSessionID = getIntent().getStringExtra("sessionID");

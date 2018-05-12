@@ -92,7 +92,7 @@ public class FutureAndPastAgendasRVAdapter extends RecyclerView.Adapter<AgendasV
         holder.getmTimeIV().setVisibility(View.GONE);
 
         //set onclicks
-        holder.getmVote().setOnClickListener(new View.OnClickListener() {
+        holder.getmAgendaCV().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                clearQuestions();

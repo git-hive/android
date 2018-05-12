@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.hive.hive.R;
 
 public class AgendasViewHolder extends RecyclerView.ViewHolder{
-    CardView mVote;
+    CardView mAgendaCV;
     TextView mTitle;
     TextView mTime;
     TextView mRequestScore;
@@ -22,14 +22,14 @@ public class AgendasViewHolder extends RecyclerView.ViewHolder{
         super(view);
         mTitle = view.findViewById(R.id.titleTV);
         mTime = view.findViewById(R.id.timeTV);
-        mVote =  view.findViewById(R.id.cardVote);
+        mAgendaCV =  view.findViewById(R.id.cardVote);
         mRequestScore = view.findViewById(R.id.budgetTotalAppliedTV);
         mCategoryIcon = view.findViewById(R.id.category_IV);
         mTimeIV = view.findViewById(R.id.timeIV);
     }
 
-    public CardView getmVote() {
-        return mVote;
+    public CardView getmAgendaCV() {
+        return mAgendaCV;
     }
 
     public TextView getmTitle() {

@@ -1,6 +1,7 @@
 package com.hive.hive.association.votes.current;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -46,9 +48,8 @@ import java.util.HashMap;
 // In this case, the fragment displays simple text based on the page
 public class CurrentFragment extends Fragment {
 
-    public static final String ARG_PAGE = "Passadas";
+    public static final String ARG_PAGE = "Atual";
     private static final String TAG = CurrentFragment.class.getSimpleName();
-    View mView;
 
     //Session
     private Session mCurrentSession;
@@ -64,6 +65,13 @@ public class CurrentFragment extends Fragment {
     private com.google.firebase.firestore.EventListener<QuerySnapshot> mAgendasEL;
     private ListenerRegistration mAgendasLR;
 
+
+    //Questions
+    private com.google.firebase.firestore.EventListener<QuerySnapshot> mQuestionsEL;
+    private ListenerRegistration mQuestionsLR;
+    private HashMap<String, Question> mQuestions; //FROM CURRENT AGENDA
+    private ArrayList<String> mQuestionsIds; // FROM CURRENT AGENDA
+
     //Recycler Things
     RecyclerView mRV;
     CurrentAdapter mRVAdapter;
@@ -73,7 +81,7 @@ public class CurrentFragment extends Fragment {
     FrameLayout mDetailsLayout;
     UnfoldableView mUnfoldableView;
     ScrollView detailsScrollView;
-
+    ProgressBar mAgendaPB;
     // Temporary solution to unfold card, TODO: Check with the @guys
     ImageView mTopClickableCardIV;
 
@@ -99,196 +107,25 @@ public class CurrentFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_current, container, false);
 
-        mView = view;
+        initViews(view);
 
-        choseVoteBT = view.findViewById(R.id.expandable_choseVoteBT);
-        mHasVotedTV = view.findViewById(R.id.expandable_voteStatusTV);
-        // Temporary solution to unfold card, TODO: Check with the @guys
-        mTopClickableCardIV = view.findViewById(R.id.expandable_topCardIV);
-        mTopClickableCardIV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mUnfoldableView != null && (mUnfoldableView.isUnfolded() || mUnfoldableView.isUnfolding())) {
-                    mUnfoldableView.foldBack();
-                }
+        initExpandableViews(view);
 
-            }
-        });
+        initUnfoldable(view);
 
-        mListTouchInterceptor = view.findViewById(R.id.touch_interceptor_view);
-        mListTouchInterceptor.setClickable(false);
+        initStructures();
 
-        mDetailsLayout = view.findViewById(R.id.details_layout);
-        mDetailsLayout.setVisibility(View.INVISIBLE);
+        initRecycler(view);
 
+        initOnClicks(view);
 
-        // Call set config to set percentage
-        // mPercentageBar.setConfig();
+        initEventListeners();
 
-        mUnfoldableView = (UnfoldableView) view.findViewById(R.id.unfoldable_view);
-
-        mUnfoldableView.setOnFoldingListener(new UnfoldableView.SimpleFoldingListener() {
-            @Override
-            public void onUnfolding(UnfoldableView unfoldableView) {
-                mListTouchInterceptor.setClickable(true);
-                mDetailsLayout.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onUnfolded(UnfoldableView unfoldableView) {
-                mListTouchInterceptor.setClickable(false);
-
-                // Check this out to unfold when grab down TODO: @MarcoBirck
-                unfoldableView.setGesturesEnabled(true);
-            }
-
-            @Override
-            public void onFoldingBack(UnfoldableView unfoldableView) {
-                mListTouchInterceptor.setClickable(true);
-            }
-
-            @Override
-            public void onFoldedBack(UnfoldableView unfoldableView) {
-                mListTouchInterceptor.setClickable(false);
-                mDetailsLayout.setVisibility(View.INVISIBLE);
-                mRVAdapter.getmUnfoldableTimer().cancel();
-            }
-        });
         //GET CURRENT SESSION
         //TODO REMOVE STATIC ASSOCIATION REFERENCE
-        mSessionEL = new com.google.firebase.firestore.EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                if (e != null) {
-                    Log.e(TAG, e.getMessage());
-                    return;
-                }
-                for (DocumentChange dc : documentSnapshots.getDocumentChanges()) {
-                    switch (dc.getType()) {
-                        case REMOVED:
-                            Log.e(TAG, "No current Session");
-                            mCurrentSessionId = null;
-                            mAgendasLR.remove();
-                            mAgendas.clear();
-                            mAgendasIds.clear();
-                            mRVAdapter.notifyDataSetChanged();
-                            mCurrentSession = null;
-                            break;
-                        //TODO MAY show message... there is no Session
-                        case ADDED:
-                            mCurrentSession = dc.getDocument().toObject(Session.class);
-                            mCurrentSessionId = dc.getDocument().getId();
-//                            Log.d(TAG, "ADDED current sesh " + dc.getDocument().toObject(Session.class).getStatus());
-                            mAgendasLR =
-                                    VotesHelper.getAgendas(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mCurrentSessionId)
-                                            .addSnapshotListener(mAgendasEL);
-                            mRVAdapter.setmCurrentSession(mCurrentSession);
-                            mRVAdapter.notifyDataSetChanged();
-                            break;
-                        case MODIFIED:
-                            mCurrentSession = dc.getDocument().toObject(Session.class);
-                            //TODO SHOULD UPDATE SOMETHING ELSE???
-                    }
-                }
 
-            }
-        };
         mSessionLR = VotesHelper.getCurrentSession(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s").addSnapshotListener(mSessionEL);
         //GET AGENDAS
-        mAgendas = new HashMap<>();
-        mAgendasIds = new ArrayList<>();
-        mAgendasScores = new HashMap<>();
-        mAgendasEL = new com.google.firebase.firestore.EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                if (e != null) {
-                    Log.e(TAG, e.getMessage());
-                    return;
-                }
-                for (DocumentChange dc : documentSnapshots.getDocumentChanges()) {
-                    switch (dc.getType()) {
-                        case ADDED:
-                            Agenda agenda = dc.getDocument().toObject(Agenda.class);
-//                            VotesHelper.setAgendas(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s"
-//                                    , mCurrentSessionId, agenda);
-                            String addedId = dc.getDocument().getId();
-                            mAgendas.put(addedId, agenda);
-                            mAgendasIds.add(addedId);
-                            mAgendas.get(addedId).getRequestRef().get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                @Override
-                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                    if (documentSnapshot.exists()) {
-                                        Request request = documentSnapshot.toObject(Request.class);
-                                        mAgendasScores.put(addedId, request.getScore());
-//                                    Log.d(TAG, mAgendas.toString());
-                                        mView.findViewById(R.id.agendasPB).setVisibility(View.GONE);
-                                        mRVAdapter.notifyDataSetChanged();
-
-                                    }
-                                }
-                            });
-                            break;
-                        case MODIFIED:
-                            String modifiedId = dc.getDocument().getId();
-                            mAgendas.remove(modifiedId);
-                            mAgendas.put(modifiedId, dc.getDocument().toObject(Agenda.class));
-                            //  Log.d(TAG, mAgendas.toString());
-                            mRVAdapter.notifyDataSetChanged();
-                            break;
-                        case REMOVED:
-                            String removedId = dc.getDocument().getId();
-                            mAgendas.remove(removedId);
-                            mAgendasIds.remove(removedId);
-                            mAgendasScores.remove(removedId);
-//                            Log.d(TAG, mAgendas.toString());
-                            mRVAdapter.notifyDataSetChanged();
-                            break;
-                    }
-                }
-
-            }
-        };
-
-        mRVAdapter = new CurrentAdapter(this.getContext(), mCurrentSession, mAgendas, mAgendasIds, mAgendasScores, mUnfoldableView, mDetailsLayout, view);
-        mRV = view.findViewById(R.id.cellRV);
-        mRV.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRV.setAdapter(mRVAdapter);
-
-        // TODO: Check this expandable element Height, since it has some workarounds, either than set it fixed;
-
-        expandableListView = view.findViewById(R.id.expandable_questionExpandableLV);
-        // Setting group indicator null for custom indicator
-        expandableListView.setGroupIndicator(null);
-
-
-        // Start Questions activity stuff
-        choseVoteBT.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(view.getContext(), QuestionFormActivity.class));
-
-            }
-        });
-
-        // Get scroll refence
-        detailsScrollView = view.findViewById(R.id.expandable_cardScroll);
-
-        // Solution by: https://github.com/alexvasilkov/FoldableLayout/issues/38#issuecomment-192814520
-        // Allows scroll
-        detailsScrollView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mUnfoldableView.requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
-        });
-        expandableListView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mUnfoldableView.requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
-        });
 
         return view;
     }
@@ -309,52 +146,291 @@ public class CurrentFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        //todo review this
         if (mSessionEL != null)
             mSessionLR.remove();
         if (mAgendasLR != null)
             mAgendasLR.remove();
     }
 
+    private void initViews(View view){
+        mAgendaPB = view.findViewById(R.id.agendasPB);
+
+    }
+    private void initExpandableViews(View view){
+
+        choseVoteBT = view.findViewById(R.id.expandable_choseVoteBT);
+        mHasVotedTV = view.findViewById(R.id.expandable_voteStatusTV);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void initUnfoldable(View view) {
+
+        //setting to right text
+        ((TextView) view.findViewById(R.id.expandable_partialResultsTV)).setText(getText(R.string.final_result));
+
+        // Temporary solution to unfold card, TODO: Check with the @guys
+        mTopClickableCardIV = view.findViewById(R.id.expandable_topCardIV);
+        mTopClickableCardIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mUnfoldableView != null && (mUnfoldableView.isUnfolded() || mUnfoldableView.isUnfolding())) {
+                    mUnfoldableView.foldBack();
+                }
+
+            }
+        });
+
+        mListTouchInterceptor = view.findViewById(R.id.touch_interceptor_view);
+        mListTouchInterceptor.setClickable(false);
+
+        //used to fold and unfold
+        mDetailsLayout = view.findViewById(R.id.details_layout);
+        mDetailsLayout.setVisibility(View.INVISIBLE);
+
+
+        mUnfoldableView = view.findViewById(R.id.unfoldable_view);
+
+        // Get scroll refence
+        detailsScrollView = view.findViewById(R.id.expandable_cardScroll);
+
+        // Solution by: https://github.com/alexvasilkov/FoldableLayout/issues/38#issuecomment-192814520
+        // Allows scroll
+        detailsScrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mUnfoldableView.requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+
+        expandableListView = view.findViewById(R.id.expandable_questionExpandableLV);
+        // Setting group indicator null for custom indicator
+        expandableListView.setGroupIndicator(null);
+
+        expandableListView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mUnfoldableView.requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+        UnfoldableSharedMethods.unfoldableListener(mUnfoldableView, mListTouchInterceptor, mDetailsLayout);
+
+    }
+
+    private void initStructures(){
+        mAgendas = new HashMap<>();
+        mAgendasIds = new ArrayList<>();
+        mAgendasScores = new HashMap<>();
+
+        mQuestions = new HashMap<>();
+        mQuestionsIds = new ArrayList<>();
+    }
+
+    private void initRecycler(View view){
+        mRVAdapter = new CurrentAdapter(this.getContext(), this,mCurrentSession,
+                mAgendas, mAgendasIds, mAgendasScores, mUnfoldableView, mDetailsLayout, view);
+        mRV = view.findViewById(R.id.cellRV);
+        mRV.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRV.setAdapter(mRVAdapter);
+
+    }
+    private void initOnClicks(View view){
+        // Start Questions activity stuff
+        choseVoteBT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(view.getContext(), QuestionFormActivity.class));
+
+            }
+        });
+    }
+    private void initEventListeners(){
+        mSessionEL = CurrentAgendaFirebaseHandle.sessionHandler(this);
+
+        mAgendasEL = CurrentAgendaFirebaseHandle.agendasHandler(this);
+
+        mQuestionsEL = CurrentAgendaFirebaseHandle.questionsHanderl(this);
+
+    }
+
+    public void addSession(String sessionId, Session session){
+        //sets current Session
+        mCurrentSession = session;
+        mCurrentSessionId = sessionId;
+
+        //call to get Agendas
+        mAgendasLR =
+                VotesHelper.getAgendas(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mCurrentSessionId)
+                        .addSnapshotListener(mAgendasEL);
+
+
+        //todo verify this shit
+        mRVAdapter.setmCurrentSession(mCurrentSession);
+        mRVAdapter.notifyDataSetChanged();
+
+    }
+
+    public void updateSession(String sessionId, Session session){
+        mCurrentSession = session;
+        mCurrentSessionId = sessionId;
+        //TODO SHOULD UPDATE SOMETHING ELSE???
+
+    }
+
+    public void removeSession(){
+        mCurrentSessionId = null;
+        mAgendasLR.remove();
+        mAgendas.clear();
+        mAgendasIds.clear();
+        mRVAdapter.notifyDataSetChanged();
+        mCurrentSession = null;
+    }
+
+    public void addAgenda(String agendaId, Agenda agenda){
+        mAgendasIds.add(agendaId);
+        mAgendas.put(agendaId, agenda);
+
+        getAgendaScore(agendaId);
+
+    }
+
+    public void updateAgenda(String agendaId, Agenda agenda){
+
+        mAgendas.put(agendaId, agenda);
+
+        mRVAdapter.notifyDataSetChanged();
+
+    }
+
+    public void removeAgenda(String agendaId){
+        mAgendas.remove(agendaId);
+        mAgendasIds.remove(agendaId);
+        mAgendasScores.remove(agendaId);
+
+        mRVAdapter.notifyDataSetChanged();
+    }
+
+    public void addQuestions(String questionId, Question question){
+        mQuestions.put(questionId, question);
+        mQuestionsIds.add(questionId);
+        setGridQuestionsItems(mQuestions, mQuestionsIds, CurrentAdapter.mCurrentAgendaId);
+
+    }
+
+    public void updateQuestions(String questionId, Question question){
+        mQuestions.put(questionId, question);
+
+        mExpandableQuestionsAdapter.notifyDataSetChanged();
+
+    }
+
+    public void removeQuestions(String questionId){
+        mQuestions.remove(questionId);
+        mQuestionsIds.remove(questionId);
+
+        setGridQuestionsItems(mQuestions, mQuestionsIds, CurrentAdapter.mCurrentAgendaId);
+
+    }
+
+    public void clearQuestions(){
+        //solves questions mExpandableQuestionsAdapter bug
+        try {
+            if (mExpandableQuestionsAdapter != null)
+                for (int i = 0; i < mExpandableQuestionsAdapter.getGroupCount(); i++)
+                    CurrentFragment.expandableListView.collapseGroup(i);
+            mQuestions.clear();
+            mQuestionsIds.clear();
+        }catch (NullPointerException e){
+            Log.e(TAG, e.getMessage());
+        }
+    }
+    public void changeUnfoldableQuestionsContent(String agendaId){
+        //todo check this
+        //check Listeners  Registration, removes if necessary
+        if(mHasVotedLR != null) mHasVotedLR.remove();
+        //TODO CHECK LAST ITEM CLICKED BEFORE RELOADING DATA
+        //IF CLICK IS DIFF
+        if(mQuestionsLR != null) //catches the first run
+            mQuestionsLR.remove();
+        //TODO REMOVE STATIC ASSOCIATION REFERENCE
+        if(mCurrentSessionId != null)// should'nt happen, but just to be sure
+            mQuestionsLR = VotesHelper.getQuestions(FirebaseFirestore.getInstance(),"gVw7dUkuw3SSZSYRXe8s",
+                    CurrentFragment.mCurrentSessionId, agendaId).addSnapshotListener(mQuestionsEL);
+
+    }
+    private void getAgendaScore(String agendaId){
+        mAgendas.get(agendaId).getRequestRef().get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    Request request = documentSnapshot.toObject(Request.class);
+
+                    mAgendasScores.put(agendaId, request.getScore());
+
+                    hideProgressBar();//got some Agendas to show, no need to show progress anymore
+
+                    mRVAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+    }
+
+    private void hideProgressBar(){
+       mAgendaPB.setVisibility(View.GONE);
+    }
+
+    private boolean first = true;//used to verify if there is need to create a adapter
+
     // Setting headers and childs to expandable listview
-    static boolean first = true;
-
-    public static void setGridQuestionsItems(final Context context, final HashMap<String, Question> questions, final ArrayList<String> questionsIds, final String agendaID) {
+    public void setGridQuestionsItems(final HashMap<String, Question> questions, final ArrayList<String> questionsIds, final String agendaID) {
         if (first) {
-            mExpandableQuestionsAdapter = new ExpandableListAdapter(context, questions, questionsIds);
-
+            mExpandableQuestionsAdapter = new ExpandableListAdapter(CurrentFragment.this.getContext(), questions, questionsIds);
             // Setting adpater over expandablelistview
             expandableListView.setAdapter(mExpandableQuestionsAdapter);
             first = false;
         } else mExpandableQuestionsAdapter.notifyDataSetChanged();
+
+
         choseVoteBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent it = new Intent(context, QuestionFormActivity.class);
-//                it.putExtra("questions", questions);
-//                it.putExtra("questionsIds", questionsIds);
-                //TODO STATIC ASSOCIATION ID
+                Intent it = new Intent(CurrentFragment.this.getContext(), QuestionFormActivity.class);
+
+             //TODO STATIC ASSOCIATION ID
+
                 it.putExtra("associationID", "gVw7dUkuw3SSZSYRXe8s");
                 it.putExtra("sessionID", mCurrentSessionId);
                 it.putExtra("agendaID", agendaID);
 
-                context.startActivity(it);
+                CurrentFragment.this.getContext().startActivity(it);
             }
         });
 
         //Verifing if user has already voted
+        verifyIfUserVoted(agendaID, questionsIds.get(0)); //uses firts if, because if user voted in one question, all questions in this agenda where answered
+
+        UnfoldableSharedMethods.unfoldableMagic(expandableListView, mExpandableQuestionsAdapter);
+
+    }
+
+
+
+    private void verifyIfUserVoted(String agendaId, String firstQuestionId){
         try {
             mHasVotedLR = VotesHelper.getVote(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mCurrentSessionId,
-                    agendaID, questionsIds.get(0), FirebaseAuth.getInstance().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    agendaId, firstQuestionId, FirebaseAuth.getInstance().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
                 public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
                     if (e != null)
                         Log.e(TAG, e.getMessage());
                     if (documentSnapshot.exists()) {
-                        mHasVotedTV.setText(context.getString(R.string.has_vote));
-                        mHasVotedTV.setTextColor(context.getResources().getColor(R.color.green_text));
+                        mHasVotedTV.setText(CurrentFragment.this.getString(R.string.has_vote));
+                        mHasVotedTV.setTextColor(CurrentFragment.this.getResources().getColor(R.color.green_text));
                     } else {
-                        mHasVotedTV.setText(context.getString(R.string.hasn_vote));
-                        mHasVotedTV.setTextColor(context.getResources().getColor(R.color.red_text));
+                        mHasVotedTV.setText(CurrentFragment.this.getString(R.string.hasn_vote));
+                        mHasVotedTV.setTextColor(CurrentFragment.this.getResources().getColor(R.color.red_text));
                     }
                 }
             });
@@ -362,14 +438,6 @@ public class CurrentFragment extends Fragment {
             Log.e(TAG, e.getMessage());
         }
 
-        UnfoldableSharedMethods.unfoldableMagic(expandableListView, mExpandableQuestionsAdapter);
-
-    }
-
-
-    // Updating headers and childs to expandable listview
-    public static void updateItems() {
-        mExpandableQuestionsAdapter.notifyDataSetChanged();
     }
 
 
