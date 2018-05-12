@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.CountDownTimer;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,8 +31,7 @@ import java.util.HashMap;
 public class CurrentAdapter extends RecyclerView.Adapter<AgendasViewHolder> {
     private String TAG = CurrentAdapter.class.getSimpleName();
     //-- Data
-    private HashMap<String, Agenda> mAgendas;
-    private ArrayList<String> mAgendaIds;
+    private Pair<ArrayList<String>, HashMap<String, Agenda>> mAgendas; //first its agenda ids, second its a map <agendaid, agenda>
     private HashMap<String, Integer> mAgendaScore;
     public  static String mCurrentAgendaId;
     private Session mCurrentSession;
@@ -51,13 +51,13 @@ public class CurrentAdapter extends RecyclerView.Adapter<AgendasViewHolder> {
     private Context mContext;
 
     private CurrentFragment mFragment;
-    public CurrentAdapter(Context context, CurrentFragment fragment, Session session, HashMap<String, Agenda> agendas, ArrayList<String> agendasIds, HashMap<String, Integer> agendaScore,
+    public CurrentAdapter(Context context, CurrentFragment fragment, Session session, Pair<ArrayList<String>, HashMap<String, Agenda>> agendas,
+                          HashMap<String, Integer> agendaScore,
                           UnfoldableView unfoldableView, FrameLayout detailsLayout, View view){
         this.mContext = context;
         this.mFragment = fragment;
         this.mCurrentSession = session;
         this.mAgendas = agendas;
-        this.mAgendaIds = agendasIds;
         this.mAgendaScore = agendaScore;
         this.mUnfoldableView = unfoldableView;
         this.mDetailsLayout = detailsLayout;
@@ -89,9 +89,9 @@ public class CurrentAdapter extends RecyclerView.Adapter<AgendasViewHolder> {
     @Override
     public void onBindViewHolder(final AgendasViewHolder holder, int position) {
         //get current agenda
-        final String[] agendaId = {mAgendaIds.get(position)};
+        final String[] agendaId = {mAgendas.first.get(position)};
 
-        final Agenda agenda = mAgendas.get(agendaId[0]);
+        final Agenda agenda = mAgendas.second.get(agendaId[0]);
 
         //populate views
         holder.getmTitle().setText(agenda.getTitle());
@@ -99,8 +99,8 @@ public class CurrentAdapter extends RecyclerView.Adapter<AgendasViewHolder> {
         holder.getmCategoryIcon().setImageResource(VotingUtils.getDrawable("services", mIconsDrawable));
 
         //sets Agenda Score
-        if(mAgendaScore != null && mAgendaIds.get(position) != null)
-            holder.getmRequestScore().setText(mAgendaScore.get(mAgendaIds.get(position)).toString());
+        if(mAgendaScore != null && mAgendas.first.get(position) != null)
+            holder.getmRequestScore().setText(mAgendaScore.get(mAgendas.first.get(position)).toString());
 
         //TODO USE RETURN FROM CLOCK TO STOP SHIT
         //loads agenda remaining time
@@ -114,7 +114,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<AgendasViewHolder> {
                 mFragment.clearQuestions();        //solves questions mExpandableQuestionsAdapter bug
 
 
-                agendaId[0] = mAgendaIds.get(position);
+                agendaId[0] = mAgendas.first.get(position);
 
                 changeUnfoldableContent(agenda, agendaId[0]);
 
@@ -127,7 +127,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<AgendasViewHolder> {
     }
     @Override
     public int getItemCount() {
-        return mAgendaIds.size();
+        return mAgendas.first.size();
     }
 
     private void changeUnfoldableContent(Agenda agenda, String agendaId){

@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -52,16 +53,16 @@ public class CurrentFragment extends Fragment {
     private static final String TAG = CurrentFragment.class.getSimpleName();
 
     //Session
+
     private Session mCurrentSession;
     public static String mCurrentSessionId;
     private com.google.firebase.firestore.EventListener<QuerySnapshot> mSessionEL;
     private ListenerRegistration mSessionLR;
 
     //Agendas
-    private HashMap<String, Agenda> mAgendas;
+    private Pair<ArrayList<String>, HashMap<String, Agenda>> mAgendas;  //first its agenda ids, second its a map <agendaid, agenda>
     private HashMap<String, Integer> mAgendasScores;
     public static ListenerRegistration mHasVotedLR;
-    private ArrayList<String> mAgendasIds;
     private com.google.firebase.firestore.EventListener<QuerySnapshot> mAgendasEL;
     private ListenerRegistration mAgendasLR;
 
@@ -220,8 +221,7 @@ public class CurrentFragment extends Fragment {
     }
 
     private void initStructures(){
-        mAgendas = new HashMap<>();
-        mAgendasIds = new ArrayList<>();
+        mAgendas = new Pair<>(new ArrayList<>(), new HashMap<>());
         mAgendasScores = new HashMap<>();
 
         mQuestions = new HashMap<>();
@@ -230,7 +230,7 @@ public class CurrentFragment extends Fragment {
 
     private void initRecycler(View view){
         mRVAdapter = new CurrentAdapter(this.getContext(), this,mCurrentSession,
-                mAgendas, mAgendasIds, mAgendasScores, mUnfoldableView, mDetailsLayout, view);
+                mAgendas, mAgendasScores, mUnfoldableView, mDetailsLayout, view);
         mRV = view.findViewById(R.id.cellRV);
         mRV.setLayoutManager(new LinearLayoutManager(getContext()));
         mRV.setAdapter(mRVAdapter);
@@ -282,15 +282,15 @@ public class CurrentFragment extends Fragment {
     public void removeSession(){
         mCurrentSessionId = null;
         mAgendasLR.remove();
-        mAgendas.clear();
-        mAgendasIds.clear();
+        mAgendas.first.clear();
+        mAgendas.second.clear();
         mRVAdapter.notifyDataSetChanged();
         mCurrentSession = null;
     }
 
     public void addAgenda(String agendaId, Agenda agenda){
-        mAgendasIds.add(agendaId);
-        mAgendas.put(agendaId, agenda);
+        mAgendas.first.add(agendaId);
+        mAgendas.second.put(agendaId, agenda);
 
         getAgendaScore(agendaId);
 
@@ -298,15 +298,15 @@ public class CurrentFragment extends Fragment {
 
     public void updateAgenda(String agendaId, Agenda agenda){
 
-        mAgendas.put(agendaId, agenda);
+        mAgendas.second.put(agendaId, agenda);
 
         mRVAdapter.notifyDataSetChanged();
 
     }
 
     public void removeAgenda(String agendaId){
-        mAgendas.remove(agendaId);
-        mAgendasIds.remove(agendaId);
+        mAgendas.first.remove(agendaId);
+        mAgendas.second.remove(agendaId);
         mAgendasScores.remove(agendaId);
 
         mRVAdapter.notifyDataSetChanged();
@@ -361,7 +361,7 @@ public class CurrentFragment extends Fragment {
 
     }
     private void getAgendaScore(String agendaId){
-        mAgendas.get(agendaId).getRequestRef().get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        mAgendas.second.get(agendaId).getRequestRef().get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
@@ -426,11 +426,11 @@ public class CurrentFragment extends Fragment {
                     if (e != null)
                         Log.e(TAG, e.getMessage());
                     if (documentSnapshot.exists()) {
-                        mHasVotedTV.setText(CurrentFragment.this.getString(R.string.has_vote));
-                        mHasVotedTV.setTextColor(CurrentFragment.this.getResources().getColor(R.color.green_text));
+                        mHasVotedTV.setText(CurrentFragment.this.getContext().getString(R.string.has_vote));
+                        mHasVotedTV.setTextColor(CurrentFragment.this.getContext().getResources().getColor(R.color.green_text));
                     } else {
-                        mHasVotedTV.setText(CurrentFragment.this.getString(R.string.hasn_vote));
-                        mHasVotedTV.setTextColor(CurrentFragment.this.getResources().getColor(R.color.red_text));
+                        mHasVotedTV.setText(CurrentFragment.this.getContext().getString(R.string.hasn_vote));
+                        mHasVotedTV.setTextColor(CurrentFragment.this.getContext().getResources().getColor(R.color.red_text));
                     }
                 }
             });
