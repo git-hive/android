@@ -11,9 +11,10 @@
         android:layout_marginHorizontal="20dp"
         android:layout_marginVertical="10dp"
         app:cardBackgroundColor="@color/colorWhite"
-        app:cardElevation="12dp"
-        android:padding="10dp"
-        app:cardCornerRadius="10dp"
+        app:cardElevation="4dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        app:cardCornerRadius="4dp"
         >
 
         <LinearLayout
@@ -36,25 +37,44 @@
                 >
 
                 <TextView
+                    android:textColor="@color/colorBlack"
                     android:id="@+id/textViewAssocTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Associação informa:"
-                    android:gravity="center"/>
+                    android:gravity="left"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Assembléia atual"
+                    android:gravity="left"/>
 
                 <TextView
                     android:id="@+id/textViewAssocMessage"
                     android:layout_width="match_parent"
+                    android:textColor="@color/colorBlack"
                     android:layout_height="wrap_content"
                     android:text="Mensagem"
-                    android:gravity="center"/>
+                    android:gravity="left"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Limitação de visitantes por lote"
+                    android:gravity="left"/>
 
                 <TextView
+                    android:textColor="@color/colorBlack"
                     android:id="@+id/textViewAssocSchedule"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Pauta"
-                    android:gravity="center"/>
+                    android:gravity="left"/>
+                <TextView
+                    android:id="@+id/textViewAssocMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Segunda do mês."
+                    android:gravity="left"/>
 
                 <android.support.v4.widget.Space
                     android:layout_width="match_parent"
