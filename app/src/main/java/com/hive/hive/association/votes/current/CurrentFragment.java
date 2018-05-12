@@ -2,7 +2,6 @@ package com.hive.hive.association.votes.current;
 
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -26,7 +25,6 @@ import com.alexvasilkov.foldablelayout.UnfoldableView;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -54,8 +52,7 @@ public class CurrentFragment extends Fragment {
 
     //Session
 
-    private Session mCurrentSession;
-    public static String mCurrentSessionId;
+    private Pair<String, Session> mCurrentSession;
     private com.google.firebase.firestore.EventListener<QuerySnapshot> mSessionEL;
     private ListenerRegistration mSessionLR;
 
@@ -70,29 +67,28 @@ public class CurrentFragment extends Fragment {
     //Questions
     private com.google.firebase.firestore.EventListener<QuerySnapshot> mQuestionsEL;
     private ListenerRegistration mQuestionsLR;
-    private HashMap<String, Question> mQuestions; //FROM CURRENT AGENDA
-    private ArrayList<String> mQuestionsIds; // FROM CURRENT AGENDA
+    private Pair<ArrayList<String>, HashMap<String, Question>> mQuestions; //FROM CURRENT AGENDA
 
     //Recycler Things
-    RecyclerView mRV;
-    CurrentAdapter mRVAdapter;
+    private RecyclerView mRV;
+    private CurrentAdapter mRVAdapter;
 
     //Views
-    View mListTouchInterceptor;
-    FrameLayout mDetailsLayout;
-    UnfoldableView mUnfoldableView;
-    ScrollView detailsScrollView;
-    ProgressBar mAgendaPB;
+    private View mListTouchInterceptor;
+    private FrameLayout mDetailsLayout;
+    private UnfoldableView mUnfoldableView;
+    private ScrollView detailsScrollView;
+    private ProgressBar mAgendaPB;
     // Temporary solution to unfold card, TODO: Check with the @guys
-    ImageView mTopClickableCardIV;
+    private ImageView mTopClickableCardIV;
 
     // Expandable List View
-    public static ExpandableListView expandableListView;
-    public static ExpandableListAdapter mExpandableQuestionsAdapter;
+    private ExpandableListView mExpandableListView;
+    private ExpandableListAdapter mExpandableQuestionsAdapter;
 
     // Unfoldable Views references
-    private static ImageButton choseVoteBT;
-    private static TextView mHasVotedTV;
+    private ImageButton mChoseVoteBT;
+    private TextView mHasVotedTV;
 
     public static CurrentFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -160,7 +156,7 @@ public class CurrentFragment extends Fragment {
     }
     private void initExpandableViews(View view){
 
-        choseVoteBT = view.findViewById(R.id.expandable_choseVoteBT);
+        mChoseVoteBT = view.findViewById(R.id.expandable_choseVoteBT);
         mHasVotedTV = view.findViewById(R.id.expandable_voteStatusTV);
     }
 
@@ -205,11 +201,11 @@ public class CurrentFragment extends Fragment {
             }
         });
 
-        expandableListView = view.findViewById(R.id.expandable_questionExpandableLV);
+        mExpandableListView = view.findViewById(R.id.expandable_questionExpandableLV);
         // Setting group indicator null for custom indicator
-        expandableListView.setGroupIndicator(null);
+        mExpandableListView.setGroupIndicator(null);
 
-        expandableListView.setOnTouchListener(new View.OnTouchListener() {
+        mExpandableListView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 mUnfoldableView.requestDisallowInterceptTouchEvent(true);
@@ -224,12 +220,11 @@ public class CurrentFragment extends Fragment {
         mAgendas = new Pair<>(new ArrayList<>(), new HashMap<>());
         mAgendasScores = new HashMap<>();
 
-        mQuestions = new HashMap<>();
-        mQuestionsIds = new ArrayList<>();
+        mQuestions = new Pair<>(new ArrayList<>(), new HashMap<>());
     }
 
     private void initRecycler(View view){
-        mRVAdapter = new CurrentAdapter(this.getContext(), this,mCurrentSession,
+        mRVAdapter = new CurrentAdapter(this.getContext(), this, mCurrentSession,
                 mAgendas, mAgendasScores, mUnfoldableView, mDetailsLayout, view);
         mRV = view.findViewById(R.id.cellRV);
         mRV.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -238,7 +233,7 @@ public class CurrentFragment extends Fragment {
     }
     private void initOnClicks(View view){
         // Start Questions activity stuff
-        choseVoteBT.setOnClickListener(new View.OnClickListener() {
+        mChoseVoteBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(view.getContext(), QuestionFormActivity.class));
@@ -257,30 +252,27 @@ public class CurrentFragment extends Fragment {
 
     public void addSession(String sessionId, Session session){
         //sets current Session
-        mCurrentSession = session;
-        mCurrentSessionId = sessionId;
+        mCurrentSession = new Pair<>(sessionId, session);
 
         //call to get Agendas
         mAgendasLR =
-                VotesHelper.getAgendas(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mCurrentSessionId)
+                VotesHelper.getAgendas(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mCurrentSession.first)
                         .addSnapshotListener(mAgendasEL);
 
 
-        //todo verify this shit
         mRVAdapter.setmCurrentSession(mCurrentSession);
         mRVAdapter.notifyDataSetChanged();
 
     }
 
     public void updateSession(String sessionId, Session session){
-        mCurrentSession = session;
-        mCurrentSessionId = sessionId;
+        mCurrentSession = new Pair<>(sessionId, session);
         //TODO SHOULD UPDATE SOMETHING ELSE???
 
     }
 
     public void removeSession(){
-        mCurrentSessionId = null;
+        mCurrentSession = null;
         mAgendasLR.remove();
         mAgendas.first.clear();
         mAgendas.second.clear();
@@ -313,24 +305,26 @@ public class CurrentFragment extends Fragment {
     }
 
     public void addQuestions(String questionId, Question question){
-        mQuestions.put(questionId, question);
-        mQuestionsIds.add(questionId);
-        setGridQuestionsItems(mQuestions, mQuestionsIds, CurrentAdapter.mCurrentAgendaId);
+        mQuestions.first.add(questionId);
+
+        mQuestions.second.put(questionId, question);
+
+        setGridQuestionsItems(CurrentAdapter.mCurrentAgendaId);
 
     }
 
     public void updateQuestions(String questionId, Question question){
-        mQuestions.put(questionId, question);
+        mQuestions.second.put(questionId, question);
 
         mExpandableQuestionsAdapter.notifyDataSetChanged();
 
     }
 
     public void removeQuestions(String questionId){
-        mQuestions.remove(questionId);
-        mQuestionsIds.remove(questionId);
+        mQuestions.first.remove(questionId);
+        mQuestions.second.remove(questionId);
 
-        setGridQuestionsItems(mQuestions, mQuestionsIds, CurrentAdapter.mCurrentAgendaId);
+        setGridQuestionsItems(CurrentAdapter.mCurrentAgendaId);
 
     }
 
@@ -339,9 +333,9 @@ public class CurrentFragment extends Fragment {
         try {
             if (mExpandableQuestionsAdapter != null)
                 for (int i = 0; i < mExpandableQuestionsAdapter.getGroupCount(); i++)
-                    CurrentFragment.expandableListView.collapseGroup(i);
-            mQuestions.clear();
-            mQuestionsIds.clear();
+                    mExpandableListView.collapseGroup(i);
+            mQuestions.first.clear();
+            mQuestions.second.clear();
         }catch (NullPointerException e){
             Log.e(TAG, e.getMessage());
         }
@@ -355,9 +349,9 @@ public class CurrentFragment extends Fragment {
         if(mQuestionsLR != null) //catches the first run
             mQuestionsLR.remove();
         //TODO REMOVE STATIC ASSOCIATION REFERENCE
-        if(mCurrentSessionId != null)// should'nt happen, but just to be sure
+        if(mCurrentSession.first != null)// should'nt happen, but just to be sure
             mQuestionsLR = VotesHelper.getQuestions(FirebaseFirestore.getInstance(),"gVw7dUkuw3SSZSYRXe8s",
-                    CurrentFragment.mCurrentSessionId, agendaId).addSnapshotListener(mQuestionsEL);
+                    mCurrentSession.first, agendaId).addSnapshotListener(mQuestionsEL);
 
     }
     private void getAgendaScore(String agendaId){
@@ -384,16 +378,16 @@ public class CurrentFragment extends Fragment {
     private boolean first = true;//used to verify if there is need to create a adapter
 
     // Setting headers and childs to expandable listview
-    public void setGridQuestionsItems(final HashMap<String, Question> questions, final ArrayList<String> questionsIds, final String agendaID) {
+    public void setGridQuestionsItems(final String agendaID) {
         if (first) {
-            mExpandableQuestionsAdapter = new ExpandableListAdapter(CurrentFragment.this.getContext(), questions, questionsIds);
+            mExpandableQuestionsAdapter = new ExpandableListAdapter(CurrentFragment.this.getContext(), mQuestions.second, mQuestions.first);
             // Setting adpater over expandablelistview
-            expandableListView.setAdapter(mExpandableQuestionsAdapter);
+            mExpandableListView.setAdapter(mExpandableQuestionsAdapter);
             first = false;
         } else mExpandableQuestionsAdapter.notifyDataSetChanged();
 
 
-        choseVoteBT.setOnClickListener(new View.OnClickListener() {
+        mChoseVoteBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent it = new Intent(CurrentFragment.this.getContext(), QuestionFormActivity.class);
@@ -401,7 +395,7 @@ public class CurrentFragment extends Fragment {
              //TODO STATIC ASSOCIATION ID
 
                 it.putExtra("associationID", "gVw7dUkuw3SSZSYRXe8s");
-                it.putExtra("sessionID", mCurrentSessionId);
+                it.putExtra("sessionID", mCurrentSession.first);
                 it.putExtra("agendaID", agendaID);
 
                 CurrentFragment.this.getContext().startActivity(it);
@@ -409,9 +403,9 @@ public class CurrentFragment extends Fragment {
         });
 
         //Verifing if user has already voted
-        verifyIfUserVoted(agendaID, questionsIds.get(0)); //uses firts if, because if user voted in one question, all questions in this agenda where answered
+        verifyIfUserVoted(agendaID, mQuestions.first.get(0)); //uses firts if, because if user voted in one question, all questions in this agenda where answered
 
-        UnfoldableSharedMethods.unfoldableMagic(expandableListView, mExpandableQuestionsAdapter);
+        UnfoldableSharedMethods.unfoldableMagic(mExpandableListView, mExpandableQuestionsAdapter);
 
     }
 
@@ -419,7 +413,7 @@ public class CurrentFragment extends Fragment {
 
     private void verifyIfUserVoted(String agendaId, String firstQuestionId){
         try {
-            mHasVotedLR = VotesHelper.getVote(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mCurrentSessionId,
+            mHasVotedLR = VotesHelper.getVote(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mCurrentSession.first,
                     agendaId, firstQuestionId, FirebaseAuth.getInstance().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
                 public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {

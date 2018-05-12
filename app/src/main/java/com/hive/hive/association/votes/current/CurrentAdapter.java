@@ -34,7 +34,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<AgendasViewHolder> {
     private Pair<ArrayList<String>, HashMap<String, Agenda>> mAgendas; //first its agenda ids, second its a map <agendaid, agenda>
     private HashMap<String, Integer> mAgendaScore;
     public  static String mCurrentAgendaId;
-    private Session mCurrentSession;
+    private Pair<String, Session> mCurrentSession;
 
     //-- Timer
     ArrayList<CountDownTimer> mTimers;
@@ -51,7 +51,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<AgendasViewHolder> {
     private Context mContext;
 
     private CurrentFragment mFragment;
-    public CurrentAdapter(Context context, CurrentFragment fragment, Session session, Pair<ArrayList<String>, HashMap<String, Agenda>> agendas,
+    public CurrentAdapter(Context context, CurrentFragment fragment, Pair<String, Session> session, Pair<ArrayList<String>, HashMap<String, Agenda>> agendas,
                           HashMap<String, Integer> agendaScore,
                           UnfoldableView unfoldableView, FrameLayout detailsLayout, View view){
         this.mContext = context;
@@ -72,7 +72,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<AgendasViewHolder> {
         return mUnfoldableTimer;
     }
 
-    public void setmCurrentSession(Session mCurrentSession) {
+    public void setmCurrentSession(Pair<String, Session> mCurrentSession) {
         this.mCurrentSession = mCurrentSession;
     }
 
@@ -104,7 +104,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<AgendasViewHolder> {
 
         //TODO USE RETURN FROM CLOCK TO STOP SHIT
         //loads agenda remaining time
-        mTimers.add(TimeUtils.clock(holder.getmTime(), mCurrentSession, mContext));
+        mTimers.add(TimeUtils.clock(holder.getmTime(), mCurrentSession.second, mContext));
 
 
         holder.getmAgendaCV().setOnClickListener(new View.OnClickListener() {
@@ -146,7 +146,7 @@ public class CurrentAdapter extends RecyclerView.Adapter<AgendasViewHolder> {
         VotingUtils.fillUnfoldableUser(agenda.getSuggestedByRef(), mView);
 
         //sets time
-        mUnfoldableTimer = TimeUtils.clock(timeTV, mCurrentSession, mContext);
+        mUnfoldableTimer = TimeUtils.clock(timeTV, mCurrentSession.second, mContext);
 
         //sets the current agenda, ExpandableListAdapter depends on it
         mCurrentAgendaId = agendaId;
