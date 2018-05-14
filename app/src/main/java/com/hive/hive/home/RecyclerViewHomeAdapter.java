@@ -1,14 +1,22 @@
 package com.hive.hive.home;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.hive.hive.R;
+import com.hive.hive.association.votes.AgendasViewHolder;
+import com.hive.hive.home.db_files.CurrentAgendasForHomeFirebaseHandle;
+import com.hive.hive.model.association.Agenda;
 import com.hive.hive.model.association.Request;
+import com.hive.hive.model.association.Session;
 import com.hive.hive.model.forum.ForumPost;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -17,23 +25,34 @@ import java.util.List;
 
 public class RecyclerViewHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
+    private final String TAG = this.getClass().getName().toString();
+    Pair<ArrayList<String>, HashMap<String, Agenda>> mAgendas;
+    private Pair<String, Session> mCurrentSession;
+
+
     private List<Object> items;
     private final int REQUEST = 0, ASSOCIATIONPOST = 1;
 
-    public RecyclerViewHomeAdapter(List<Object> items) {
+    public RecyclerViewHomeAdapter(Pair<ArrayList<String>, HashMap<String, Agenda>> agendas, HashMap<String, Integer> mAgendasScores, List<Object> items) {
         this.items = items;
+        mAgendas = agendas;
+
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+
+        Log.d(TAG, String.valueOf(mAgendas.second.size())+"++++++++++++++++++++++++++++++++++++++++++ THIS IS M GUY");
+        populateItems();
+
         switch (viewHolder.getItemViewType()) {
             case REQUEST:
                 RequestViewHolderOld requestViewHolderOld = (RequestViewHolderOld) viewHolder;
                 configureViewHolder1(requestViewHolderOld, position);
                 break;
             case ASSOCIATIONPOST:
-                AssociationViewHolder associationViewHolder = (AssociationViewHolder) viewHolder;
-                configureViewHolder2(associationViewHolder);
+                AgendasViewHolder agendasViewHolder = (AgendasViewHolder) viewHolder;
+                configureViewHolder2(agendasViewHolder, position);
                 break;
         }
     }
@@ -48,10 +67,14 @@ public class RecyclerViewHomeAdapter extends RecyclerView.Adapter<RecyclerView.V
             return REQUEST;
         else if(items.get(position) instanceof ForumPost)
             return ASSOCIATIONPOST;
+        else if(items.get(position) instanceof Agenda)
+            return ASSOCIATIONPOST;
         return -1;
     }
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+
+        Log.d(TAG, String.valueOf(mAgendas.second.size())+"++++++++++++++++++++++++++++++++++++++++++ THIS IS M GUY");
 
         RecyclerView.ViewHolder viewHolder;
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
@@ -63,7 +86,7 @@ public class RecyclerViewHomeAdapter extends RecyclerView.Adapter<RecyclerView.V
                 break;
             case ASSOCIATIONPOST:
                 View viewAPost = inflater.inflate(R.layout.item_association, viewGroup, false);
-                viewHolder = new AssociationViewHolder(viewAPost);
+                viewHolder = new AgendasViewHolder(viewAPost);
                 break;
         }
         return viewHolder;
@@ -77,7 +100,32 @@ public class RecyclerViewHomeAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
-    private void configureViewHolder2(AssociationViewHolder associationViewHolder) {
+    public void setmCurrentSession(Pair<String, Session> mCurrentSession) {
+        this.mCurrentSession = mCurrentSession;
+    }
 
+    private void configureViewHolder2(AgendasViewHolder agendasViewHolder, int position) {
+
+        if(mAgendas.first.size() > position) {
+
+            //get current agenda
+            final String[] agendaId = {mAgendas.first.get(position)};
+
+            final Agenda agenda = mAgendas.second.get(agendaId[0]);
+
+            agendasViewHolder.getmTitle().setText(agenda.getTitle());
+        }
+
+    }
+
+    public void populateItems(){
+        if(mAgendas.first.size() == 0)
+            return;
+        items = new ArrayList<>();
+        for (Object key:
+                mAgendas.first) {
+            items.add(mAgendas.second.get(key));
+            Log.d(TAG, String.valueOf(key.toString())+" ITERATING IN HERE");
+        }
     }
 }
