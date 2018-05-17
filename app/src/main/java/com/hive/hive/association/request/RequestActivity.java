@@ -119,6 +119,7 @@ public class RequestActivity extends AppCompatActivity {
     @Override
     public void onStop() {
         super.onStop();
+        mRecyclerAdapter.sendToFirebase();
     }
 
     @Override
@@ -126,6 +127,7 @@ public class RequestActivity extends AppCompatActivity {
         super.onDestroy();
         if (mRequestsListener != null)
             mRequestsListener.remove();
+        mRecyclerAdapter.sendToFirebase();
     }
 
     /**
