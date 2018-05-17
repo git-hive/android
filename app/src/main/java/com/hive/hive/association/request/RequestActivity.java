@@ -91,6 +91,18 @@ public class RequestActivity extends AppCompatActivity {
             }
         });
 
+        mRequestRefresh = findViewById(R.id.requestSR);
+        mRequestRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                requestDocs.clear();
+                addRequestSnapListenerAndCallSetupRecyclerView();
+            }
+        });
+        mRequestRefresh.setColorSchemeColors(getResources().getColor(R.color.colorOrange));
+        mRequestRefresh.setRefreshing(true);
+
+
         mAssociationRequestsRef = mDB
                 .collection("associations")
                 .document(associationID)
@@ -139,29 +151,6 @@ public class RequestActivity extends AppCompatActivity {
                 }
             }
         });
-//        mRequestsListener = associationRequestsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-//                for (DocumentChange dc : documentSnapshots.getDocumentChanges()) {
-//                    switch (dc.getType()) {
-//                        case MODIFIED:
-//                            requestDocs.remove(dc.getOldIndex());
-//                            // NOTICE: intentional fall through ADDED case
-//                        case ADDED:
-//                            // oldIndex is -1 because it's a new document
-//                            requestDocs.put(dc.getNewIndex(), dc.getDocument());
-//                            break;
-//                        case REMOVED:
-//                            // newIndex is -1 because the document was removed
-//                            requestDocs.remove(dc.getOldIndex());
-//                            break;
-//                        default:
-//                            break;
-//                    }
-//                }
-//                setupRecyclerView();
-//            }
-//        });
     }
 
     /**
@@ -242,17 +231,6 @@ public class RequestActivity extends AppCompatActivity {
         mRequestRV = findViewById(R.id.requestRV);
         mRequestRV.setAdapter(mRecyclerAdapter);
 
-        mRequestRefresh = findViewById(R.id.requestSR);
-
-        mRequestRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                requestDocs.clear();
-                addRequestSnapListenerAndCallSetupRecyclerView();
-            }
-        });
-
-        mRequestRefresh.setColorSchemeColors(getResources().getColor(R.color.colorOrange));
         mMenuRV = findViewById(R.id.recyclerMenu);
         mFilterTV = findViewById(R.id.menuFilterTV);
 
@@ -288,8 +266,7 @@ public class RequestActivity extends AppCompatActivity {
     private void disableProgressBarAndShowRecycler() {
         mFilterTV.setVisibility(View.VISIBLE);
         mRequestRV.setVisibility(View.VISIBLE);
-        mRequestRefresh.setVisibility(View.VISIBLE);
-        this.findViewById(R.id.requestPB).setVisibility(View.GONE);
+        mRequestRefresh.setRefreshing(false);
     }
 
 
