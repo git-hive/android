@@ -257,7 +257,7 @@ public class CommentsActivity extends AppCompatActivity {
         //mRequestCommentsCountTV.setText(mRequest.get);
         mRequestSupportsCountTV.setText(mRequest.getScore()+"");
         mRequestContentTV.setText(mRequest.getContent());
-
+        shouldFillSupport();
         //private ImageView mRequestAuthorIV;
         //private ImageView mRequestSupportsIV;
     }
