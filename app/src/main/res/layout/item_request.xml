@@ -52,6 +52,7 @@
 
                 <TextView
                     android:id="@+id/request_author_name_tv"
+                    android:text="@string/loading"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/request_author_name_font_size"/>
@@ -62,7 +63,8 @@
                     android:layout_height="wrap_content"
                     android:text="2º lugar no ranking"
                     android:textSize="@dimen/request_author_leaderboard_position_font_size"
-                    android:textColor="@color/colorOrange"/>
+                    android:textColor="@color/colorOrange"
+                    android:visibility="gone"/>
 
             </LinearLayout>
 

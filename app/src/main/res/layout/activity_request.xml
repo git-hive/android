@@ -60,7 +60,8 @@
                     android:layout_height="50dp"
                     android:layout_weight="0.15"
                     android:layout_marginEnd="10dp"
-                    app:srcCompat="@drawable/ic_search" />
+                    app:srcCompat="@drawable/ic_search"
+                    android:visibility="gone"/>
 
             </LinearLayout>
 
