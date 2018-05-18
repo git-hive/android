@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,11 +24,13 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
+import com.hive.hive.model.association.Request;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -58,7 +61,7 @@ public class RequestActivity extends AppCompatActivity {
 
     private CollectionReference mAssociationRequestsRef;
 
-    private Hashtable<Integer, DocumentSnapshot> requestDocs;
+    private Pair<ArrayList<String>, HashMap<String, Request>> requests;
 
     // Default category
     private String mCategoryName = "all";
@@ -68,7 +71,7 @@ public class RequestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request);
 
-        this.requestDocs = new Hashtable<>();
+        this.requests = new Pair<>(new ArrayList<>(), new HashMap<>());
 
         // Find and set toolbar
         Toolbar toolbar = findViewById(R.id.requestTB);
@@ -95,7 +98,8 @@ public class RequestActivity extends AppCompatActivity {
         mRequestRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                requestDocs.clear();
+                requests.first.clear();
+                requests.second.clear();
                 addRequestSnapListenerAndCallSetupRecyclerView();
             }
         });
@@ -139,11 +143,11 @@ public class RequestActivity extends AppCompatActivity {
         mAssociationRequestsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot documentSnapshots) {
-                int index = 0;
                 for (DocumentSnapshot dc : documentSnapshots) {
                     if (dc.exists()) {
-                        requestDocs.put(index, dc);
-                        index++;
+                        requests.first.add(dc.getId());
+                        requests.second.put(dc.getId(), dc.toObject(Request.class));
+
                     }
                 }
                 setupRecyclerView();
@@ -158,56 +162,54 @@ public class RequestActivity extends AppCompatActivity {
     /**
      * Check if the request snap belongs to the provided category name
      *
-     * @param requestSnap  Category snapshot to be matched against the category
+     * @param request  Category request to be matched against the category
      * @param categoryName Category name to match the request against
      * @return a boolean indicating weather or not the request belongs to the category
      */
     private boolean requestSnapBelongsToCategory(
-            DocumentSnapshot requestSnap,
+            Request request,
             String categoryName
     ) {
         if (categoryName.equals("all")) return true;
 
-        String requestCategoryName = requestSnap.getString("categoryName");
+        String requestCategoryName = request.getCategoryName();
         return requestCategoryName != null && requestCategoryName.equals(categoryName);
     }
 
     /**
      * Filter 'requestSnaps' requests by their category using the 'categoryName'
      *
-     * @param requestSnaps request snapshots to be filtered
      * @param categoryName category name to be used as filter
-     * @return request snapshots that passes the filter
+     * @return filtered requests
      */
-    private ArrayList<DocumentSnapshot> filterRequestDocsByCategory(
-            ArrayList<DocumentSnapshot> requestSnaps,
+    private Pair<ArrayList<String>, HashMap<String, Request>> filterRequestDocsByCategory(
             String categoryName
     ) {
-        ArrayList<DocumentSnapshot> filteredRequests = new ArrayList<>();
-        for (DocumentSnapshot snap : requestSnaps) {
-            if (requestSnapBelongsToCategory(snap, categoryName)) filteredRequests.add(snap);
+        Pair<ArrayList<String>, HashMap<String, Request>> filteredRequests= new Pair<>(new ArrayList<>(), new HashMap<>());
+
+        for (String reqId : requests.first) {
+            if (requestSnapBelongsToCategory(requests.second.get(reqId), categoryName)){
+                filteredRequests.first.add(reqId);
+                filteredRequests.second.put(reqId, requests.second.get(reqId));
+            }
         }
         return filteredRequests;
     }
 
     /**
-     * Sort requestsSnaps by rank (greater rank first)
+     * Sort requests by rank (greater rank first)
      *
-     * @param requestDocs
      */
-    private ArrayList<DocumentSnapshot> sortRequestSnapsByRank(
-            ArrayList<DocumentSnapshot> requestDocs
+    private Pair<ArrayList<String>, HashMap<String, Request>> sortRequestSnapsByRank(
+            Pair<ArrayList<String>, HashMap<String, Request>> filteredRequests
     ) {
-        ArrayList<DocumentSnapshot> sortedRequests = new ArrayList<>(requestDocs);
-        Collections.sort(sortedRequests, new Comparator<DocumentSnapshot>() {
+        ArrayList<String> sortedRequests = filteredRequests.first;
+        Pair<ArrayList<String>, HashMap<String, Request>> finalFilteredRequests = filteredRequests;
+        Collections.sort(sortedRequests, new Comparator<String>() {
             @Override
-            public int compare(DocumentSnapshot snap1, DocumentSnapshot snap2) {
-                Double request1Rank = snap1.getDouble("rank");
-                Double request2Rank = snap2.getDouble("rank");
-                if (request1Rank == null && request2Rank == null) return 0;
-
-                if (request1Rank == null) return 1;
-                if (request2Rank == null) return -1;
+            public int compare(String request1, String request2) {
+                Integer request1Rank = finalFilteredRequests.second.get(request1).getRank();
+                Integer request2Rank = finalFilteredRequests.second.get(request2).getRank();
 
                 if (request1Rank < request2Rank) return 1;
                 if (request1Rank > request2Rank) return -1;
@@ -215,17 +217,16 @@ public class RequestActivity extends AppCompatActivity {
                 return 0;
             }
         });
+        filteredRequests = new Pair<>(sortedRequests, filteredRequests.second);
 
-        return sortedRequests;
+        return filteredRequests;
     }
 
     private int scrollCount = 0;
 
     private void setupRecyclerView() {
-        ArrayList<DocumentSnapshot> requests = new ArrayList<>(requestDocs.values());
-
         mRecyclerAdapter = new RequestAdapter(
-                sortRequestSnapsByRank(filterRequestDocsByCategory(requests, mCategoryName)),
+                sortRequestSnapsByRank(filterRequestDocsByCategory(mCategoryName)),
                 this
         );
         mRecyclerAdapter.notifyDataSetChanged();
@@ -254,7 +255,7 @@ public class RequestActivity extends AppCompatActivity {
 
                         mRecyclerAdapter.setData(
                                 sortRequestSnapsByRank(
-                                        filterRequestDocsByCategory(requests, mCategoryName)
+                                        filterRequestDocsByCategory(mCategoryName)
                                 )
                         );
                         mRecyclerAdapter.notifyDataSetChanged();

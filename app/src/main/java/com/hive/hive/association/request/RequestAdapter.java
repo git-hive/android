@@ -44,8 +44,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     private String TAG = RequestAdapter.class.getSimpleName();
 
     //-- Data
-    ArrayList<DocumentSnapshot> requestSnaps;
-    private ArrayList<Request> requests;
+    private Pair<ArrayList<String>, HashMap<String, Request>> requests;
     private HashMap<Integer, Boolean> requestsSupport;
 
     private SupportMutex lock ;
@@ -65,10 +64,10 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     private String mAssociationID = "gVw7dUkuw3SSZSYRXe8s";
 
     public RequestAdapter(
-            ArrayList<DocumentSnapshot> requestSnaps,
+            Pair<ArrayList<String>, HashMap<String, Request>> requests,
             Context context
     ) {
-        this.requestSnaps = requestSnaps;
+        this.requests = requests;
         this.requestsSupport = new HashMap<>();
 
         this.changedSupportsRequestsIds = new ArrayList<>();
@@ -91,13 +90,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                 BudgetTransactionCategories.SAVINGS,
                 R.drawable.ic_budget_category_savings
         );
-
-        requests = new ArrayList<>();
-        for (DocumentSnapshot dc : requestSnaps) {
-            if (dc.exists()) {
-                requests.add(dc.toObject(Request.class));
-            }
-        }
     }
 
     @Override
@@ -113,7 +105,9 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
         this.lock = new SupportMutex(holder.mNumberOfSupportsTV, holder.mSupportsIV);
 
-        Request request = requestSnaps.get(position).toObject(Request.class);
+        String requestId = requests.first.get(position);
+
+        Request request = requests.second.get(requestId);
 
         holder.mItem = request;
 
@@ -156,8 +150,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
     @Override
     public int getItemCount() {
-        if (requestSnaps != null)
-            return requestSnaps.size();
+        if (requests != null)
+            return requests.first.size();
         return 0;
     }
 
@@ -212,7 +206,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     }
 
     private String getRequestID(int requestPosition) {
-        return requestSnaps.get(requestPosition).getId();
+        return requests.first.get(requestPosition);
     }
 
     private void shouldFillSupport(
@@ -333,26 +327,27 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                 .getResources()
                 .getDrawable(R.drawable.ic_support_borderline);
 
-        Request request = this.requests.get(position);
+        String requestId = requests.first.get(position);
+        Request request = this.requests.second.get(requestId);
         if (requestsSupport.get(position)) {
             supportIV.setImageDrawable(borderlineSupportIC);
             request.decrementScore();
-            if (changedSupportsRequestsIds.contains(requestSnaps.get(position).getId())) {
-                changedSupports.remove(requestSnaps.get(position).getId());
-                changedSupportsRequestsIds.remove(requestSnaps.get(position).getId());
+            if (changedSupportsRequestsIds.contains(requestId)) {
+                changedSupports.remove(requestId);
+                changedSupportsRequestsIds.remove(requestId);
             } else {
-                changedSupports.put(requestSnaps.get(position).getId(), false);
-                changedSupportsRequestsIds.add(requestSnaps.get(position).getId());
+                changedSupports.put(requestId, false);
+                changedSupportsRequestsIds.add(requestId);
             }
         } else {
             supportIV.setImageDrawable(filledSupportIC);
             request.incrementScore();
-            if(changedSupportsRequestsIds.contains(requestSnaps.get(position).getId())) {
-                changedSupports.remove(requestSnaps.get(position).getId());
-                changedSupportsRequestsIds.remove(requestSnaps.get(position).getId());
+            if(changedSupportsRequestsIds.contains(requestId)) {
+                changedSupports.remove(requestId);
+                changedSupportsRequestsIds.remove(requestId);
             }else{
-                changedSupports.put(requestSnaps.get(position).getId(), true);
-                changedSupportsRequestsIds.add(requestSnaps.get(position).getId());
+                changedSupports.put(requestId, true);
+                changedSupportsRequestsIds.add(requestId);
             }
         }
         numberOfSupportsTV.setText(String.valueOf(request.getScore()));
@@ -360,8 +355,9 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
     }
 
-    public void setData(ArrayList<DocumentSnapshot> requestSnaps) {
-        this.requestSnaps = requestSnaps;
+    public void setData(Pair<ArrayList<String> , HashMap<String, Request>> requests) {
+        sendToFirebase();
+        this.requests = requests;
     }
 
     /**

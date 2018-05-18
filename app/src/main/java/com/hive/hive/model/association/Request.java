@@ -19,7 +19,7 @@ public class Request extends AssociationAction {
     private String content;
     private int score;
     private int numComments;
-
+    private int rank;
     private String categoryName;
     private ArrayList<DocumentReference> categoriesRefs;
 
@@ -53,6 +53,7 @@ public class Request extends AssociationAction {
 
     //--- Getters
 
+
     public String getTitle() {
         return title;
     }
@@ -81,6 +82,10 @@ public class Request extends AssociationAction {
 
     public String getBudgetCategoryName() {
         return budgetCategoryName;
+    }
+
+    public int getRank() {
+        return rank;
     }
 
     //--- Setters
@@ -121,5 +126,9 @@ public class Request extends AssociationAction {
 
     public void setBudgetCategoryName(String budgetCategoryName) {
         this.budgetCategoryName = budgetCategoryName;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
     }
 }
