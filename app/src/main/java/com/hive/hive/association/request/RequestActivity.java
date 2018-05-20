@@ -3,14 +3,18 @@ package com.hive.hive.association.request;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -20,14 +24,18 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
+import com.hive.hive.model.association.Request;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
+import static android.widget.NumberPicker.OnScrollListener.SCROLL_STATE_IDLE;
+import static android.widget.NumberPicker.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL;
 import static com.hive.hive.utils.Utils.getHashMapFilter;
 
 public class RequestActivity extends AppCompatActivity {
@@ -43,11 +51,17 @@ public class RequestActivity extends AppCompatActivity {
     private RecyclerView mMenuRV;
     private TextView mFilterTV;
 
+    // recycler view
+    private SwipeRefreshLayout mRequestRefresh;
+    private RecyclerView mRequestRV;
+    private RequestAdapter mRecyclerAdapter;
     //--- Association
     // TODO: Change hardcoded associationID
     private String associationID = "gVw7dUkuw3SSZSYRXe8s";
 
-    private Hashtable<Integer, DocumentSnapshot> requestDocs;
+    private CollectionReference mAssociationRequestsRef;
+
+    private Pair<ArrayList<String>, HashMap<String, Request>> requests;
 
     // Default category
     private String mCategoryName = "all";
@@ -57,7 +71,7 @@ public class RequestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request);
 
-        this.requestDocs = new Hashtable<>();
+        this.requests = new Pair<>(new ArrayList<>(), new HashMap<>());
 
         // Find and set toolbar
         Toolbar toolbar = findViewById(R.id.requestTB);
@@ -70,7 +84,7 @@ public class RequestActivity extends AppCompatActivity {
             Log.e(TAG, "Action Bar not found");
         }
 
-        FloatingActionButton fab =  findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,113 +94,122 @@ public class RequestActivity extends AppCompatActivity {
             }
         });
 
-        CollectionReference associationRequestsRef = mDB
+        mRequestRefresh = findViewById(R.id.requestSR);
+        mRequestRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                requests.first.clear();
+                requests.second.clear();
+                addRequestSnapListenerAndCallSetupRecyclerView();
+            }
+        });
+        mRequestRefresh.setColorSchemeColors(getResources().getColor(R.color.colorOrange));
+        mRequestRefresh.setRefreshing(true);
+
+
+        mAssociationRequestsRef = mDB
                 .collection("associations")
                 .document(associationID)
                 .collection("requests");
 
-        addRequestSnapListenerAndCallSetupRecyclerView(associationRequestsRef);
+        addRequestSnapListenerAndCallSetupRecyclerView();
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         super.onStop();
+        mRecyclerAdapter.sendToFirebase();
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
-        mRequestsListener.remove();
+        if (mRequestsListener != null)
+            mRequestsListener.remove();
+        mRecyclerAdapter.sendToFirebase();
     }
 
     /**
      * Attaches a listener to 'associationRequestsRef',
      * handling it's changes and call setupRecyclerView
-     * @param associationRequestsRef ref to the collection where to get the requests from
+     *
      */
-    private void addRequestSnapListenerAndCallSetupRecyclerView(
-            CollectionReference associationRequestsRef
-    ) {
-        mRequestsListener = associationRequestsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+    private void addRequestSnapListenerAndCallSetupRecyclerView() {
+        mAssociationRequestsRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
-            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                for (DocumentChange dc : documentSnapshots.getDocumentChanges()) {
-                    switch (dc.getType()) {
-                        case MODIFIED:
-                            requestDocs.remove(dc.getOldIndex());
-                            // NOTICE: intentional fall through ADDED case
-                        case ADDED:
-                            // oldIndex is -1 because it's a new document
-                            requestDocs.put(dc.getNewIndex(), dc.getDocument());
-                            break;
-                        case REMOVED:
-                            // newIndex is -1 because the document was removed
-                            requestDocs.remove(dc.getOldIndex());
-                            break;
-                        default:
-                            break;
+            public void onSuccess(QuerySnapshot documentSnapshots) {
+                for (DocumentSnapshot dc : documentSnapshots) {
+                    if (dc.exists()) {
+                        requests.first.add(dc.getId());
+                        requests.second.put(dc.getId(), dc.toObject(Request.class));
+
                     }
                 }
                 setupRecyclerView();
+                if(mRequestRefresh.isRefreshing()){
+                    Log.d(TAG, "refreshing");
+                    mRequestRefresh.setRefreshing(false);
+                }
             }
         });
     }
 
     /**
      * Check if the request snap belongs to the provided category name
-     * @param requestSnap Category snapshot to be matched against the category
+     *
+     * @param request  Category request to be matched against the category
      * @param categoryName Category name to match the request against
      * @return a boolean indicating weather or not the request belongs to the category
      */
     private boolean requestSnapBelongsToCategory(
-            DocumentSnapshot requestSnap,
+            Request request,
             String categoryName
     ) {
         if (categoryName.equals("all")) return true;
 
-        String requestCategoryName = requestSnap.getString("categoryName");
+        String requestCategoryName = request.getCategoryName();
         return requestCategoryName != null && requestCategoryName.equals(categoryName);
     }
 
     /**
      * Filter 'requestSnaps' requests by their category using the 'categoryName'
-     * @param requestSnaps request snapshots to be filtered
+     *
      * @param categoryName category name to be used as filter
-     * @return request snapshots that passes the filter
+     * @return filtered requests
      */
-    private ArrayList<DocumentSnapshot> filterRequestDocsByCategory(
-            ArrayList<DocumentSnapshot> requestSnaps,
+    private Pair<ArrayList<String>, HashMap<String, Request>> filterRequestDocsByCategory(
             String categoryName
     ) {
-        ArrayList<DocumentSnapshot> filteredRequests = new ArrayList<>();
-        for (DocumentSnapshot snap : requestSnaps) {
-            if (requestSnapBelongsToCategory(snap, categoryName)) filteredRequests.add(snap);
+        Pair<ArrayList<String>, HashMap<String, Request>> filteredRequests= new Pair<>(new ArrayList<>(), new HashMap<>());
+
+        for (String reqId : requests.first) {
+            if (requestSnapBelongsToCategory(requests.second.get(reqId), categoryName)){
+                filteredRequests.first.add(reqId);
+                filteredRequests.second.put(reqId, requests.second.get(reqId));
+            }
         }
         return filteredRequests;
     }
 
     /**
-     * Sort requestsSnaps by rank (greater rank first)
-     * @param requestDocs
+     * Sort requests by rank (greater rank first)
+     *
      */
-    private ArrayList<DocumentSnapshot> sortRequestSnapsByRank(
-            ArrayList<DocumentSnapshot> requestDocs
+    private Pair<ArrayList<String>, HashMap<String, Request>> sortRequestSnapsByRank(
+            Pair<ArrayList<String>, HashMap<String, Request>> filteredRequests
     ) {
-        ArrayList<DocumentSnapshot> sortedRequests = new ArrayList<>(requestDocs);
-        Collections.sort(sortedRequests, new Comparator<DocumentSnapshot>() {
+        ArrayList<String> sortedRequests = filteredRequests.first;
+        Pair<ArrayList<String>, HashMap<String, Request>> finalFilteredRequests = filteredRequests;
+        Collections.sort(sortedRequests, new Comparator<String>() {
             @Override
-            public int compare(DocumentSnapshot snap1, DocumentSnapshot snap2) {
-                Double request1Rank = snap1.getDouble("rank");
-                Double request2Rank = snap2.getDouble("rank");
-                if (request1Rank == null && request2Rank == null) return 0;
-
-                if (request1Rank == null) return 1;
-                if (request2Rank == null) return -1;
+            public int compare(String request1, String request2) {
+                Integer request1Rank = finalFilteredRequests.second.get(request1).getRank();
+                Integer request2Rank = finalFilteredRequests.second.get(request2).getRank();
 
                 if (request1Rank < request2Rank) return 1;
                 if (request1Rank > request2Rank) return -1;
@@ -194,20 +217,21 @@ public class RequestActivity extends AppCompatActivity {
                 return 0;
             }
         });
+        filteredRequests = new Pair<>(sortedRequests, filteredRequests.second);
 
-        return sortedRequests;
+        return filteredRequests;
     }
 
-    private void setupRecyclerView() {
-        ArrayList<DocumentSnapshot> requests = new ArrayList<>(requestDocs.values());
+    private int scrollCount = 0;
 
-        RequestAdapter mRecyclerAdapter = new RequestAdapter(
-                sortRequestSnapsByRank(filterRequestDocsByCategory(requests, mCategoryName)),
+    private void setupRecyclerView() {
+        mRecyclerAdapter = new RequestAdapter(
+                sortRequestSnapsByRank(filterRequestDocsByCategory(mCategoryName)),
                 this
         );
         mRecyclerAdapter.notifyDataSetChanged();
 
-        RecyclerView mRequestRV = findViewById(R.id.requestRV);
+        mRequestRV = findViewById(R.id.requestRV);
         mRequestRV.setAdapter(mRecyclerAdapter);
 
         mMenuRV = findViewById(R.id.recyclerMenu);
@@ -231,7 +255,7 @@ public class RequestActivity extends AppCompatActivity {
 
                         mRecyclerAdapter.setData(
                                 sortRequestSnapsByRank(
-                                        filterRequestDocsByCategory(requests, mCategoryName)
+                                        filterRequestDocsByCategory(mCategoryName)
                                 )
                         );
                         mRecyclerAdapter.notifyDataSetChanged();
@@ -239,6 +263,14 @@ public class RequestActivity extends AppCompatActivity {
                 }
             }
         });
-        
+        disableProgressBarAndShowRecycler();
     }
+
+    private void disableProgressBarAndShowRecycler() {
+        mFilterTV.setVisibility(View.VISIBLE);
+        mRequestRV.setVisibility(View.VISIBLE);
+        mRequestRefresh.setRefreshing(false);
+    }
+
+
 }

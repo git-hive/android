@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,14 +37,20 @@ import com.hive.hive.utils.SupportMutex;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestViewHolder> {
     private String TAG = RequestAdapter.class.getSimpleName();
 
     //-- Data
-    ArrayList<DocumentSnapshot> requestSnaps;
+    private Pair<ArrayList<String>, HashMap<String, Request>> requests;
     private HashMap<Integer, Boolean> requestsSupport;
-    private ArrayList<SupportMutex> mLocks;
+
+    private SupportMutex lock ;
+    private ArrayList<String> changedSupportsRequestsIds; //requestId, supportId
+    private HashMap<String, Boolean> changedSupports; //requestId, supportId
+
     private Context context;
     private HashMap<String, Integer> budgetCategoryNameResource;
 
@@ -57,12 +64,15 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     private String mAssociationID = "gVw7dUkuw3SSZSYRXe8s";
 
     public RequestAdapter(
-            ArrayList<DocumentSnapshot> requestSnaps,
+            Pair<ArrayList<String>, HashMap<String, Request>> requests,
             Context context
     ) {
-        this.requestSnaps = requestSnaps;
-        this.mLocks = new ArrayList<>();
+        this.requests = requests;
         this.requestsSupport = new HashMap<>();
+
+        this.changedSupportsRequestsIds = new ArrayList<>();
+        this.changedSupports = new HashMap<>();
+
         this.usernames = new HashMap<>();
         this.userProfilePictures = new HashMap<>();
         this.context = context;
@@ -93,15 +103,11 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     @Override
     public void onBindViewHolder(final RequestViewHolder holder, final int position) {
 
-        try {
-            if (mLocks.get(position) == null) {
-                mLocks.add(new SupportMutex(holder.mNumberOfSupportsTV, holder.mSupportsIV));
-            }
-        } catch (IndexOutOfBoundsException e) {
-            mLocks.add(new SupportMutex(holder.mNumberOfSupportsTV, holder.mSupportsIV));
-        }
+        this.lock = new SupportMutex(holder.mNumberOfSupportsTV, holder.mSupportsIV);
 
-        Request request = requestSnaps.get(position).toObject(Request.class);
+        String requestId = requests.first.get(position);
+
+        Request request = requests.second.get(requestId);
 
         holder.mItem = request;
 
@@ -125,14 +131,15 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         shouldFillSupport(holder, getRequestID(position), position);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    context.startActivity(
-                            new Intent(context, CommentsActivity.class)
-                                    .putExtra(CommentsActivity.REQUEST_ID, getRequestID(position))
-                    );
-                }
-            }
+                                            @Override
+                                            public void onClick(View view) {
+                                                sendToFirebase();
+                                                context.startActivity(
+                                                        new Intent(context, CommentsActivity.class)
+                                                                .putExtra(CommentsActivity.REQUEST_ID, getRequestID(position))
+                                                );
+                                            }
+                                        }
         );
 
         holder.mSupportsIV
@@ -143,8 +150,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
     @Override
     public int getItemCount() {
-        if(requestSnaps != null)
-            return requestSnaps.size();
+        if (requests != null)
+            return requests.first.size();
         return 0;
     }
 
@@ -155,16 +162,12 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 toggleRequestSupport(position, holder.mNumberOfSupportsTV, holder.mSupportsIV);
 
                 // Lock the mutex as soon as the user clicks
-                SupportMutex mutex = mLocks.get(position);
-                mutex.lock();
-
-                getRequestSupportAndCallSupportActionHandler(
-                        getRequestID(position),
-                        mutex
-                );
+//                getRequestSupportAndCallSupportActionHandler(
+//                        getRequestID(position));
             }
         };
     }
@@ -203,7 +206,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     }
 
     private String getRequestID(int requestPosition) {
-        return requestSnaps.get(requestPosition).getId();
+        return requests.first.get(requestPosition);
     }
 
     private void shouldFillSupport(
@@ -250,50 +253,28 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                 });
     }
 
-    private void getRequestSupportAndCallSupportActionHandler(
-            String requestID,
-            final SupportMutex mutex
-    ) {
-        AssociationHelper.getRequestSupport(
-                mDB,
-                mAssociationID,
-                requestID,
-                mUser.getUid()
-        )
-                .addOnSuccessListener(
-                        new OnSuccessListener<DocumentSnapshot>() {
-                            @Override
-                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                supportActionHandler(
-                                        requestID,
-                                        documentSnapshot,
-                                        mutex
-                                );
-                            }
-                        }
-                );
+    public void sendToFirebase() {
+        lock.lock();
+        for (String changedSupportRequestId : changedSupportsRequestsIds) {
+            supportActionHandler(changedSupportRequestId, changedSupports.get(changedSupportRequestId));
+        }
+        changedSupports.clear();
+        changedSupportsRequestsIds.clear();
+        lock.unlock();
     }
 
     private void supportActionHandler(
             String requestID,
-            DocumentSnapshot supportSnap,
-            final SupportMutex mutex
-    ) {
+            Boolean addScore) {
         // Toggle request support
-        if (supportSnap.exists()) {
+        if (!addScore) {
             // Remove support
             AssociationHelper.removeRequestSupport(
                     mDB,
                     mAssociationID,
                     requestID,
-                    supportSnap.getId()
+                    FirebaseAuth.getInstance().getUid()
             )
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            mutex.unlock();
-                        }
-                    })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
@@ -324,12 +305,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                     supportId,
                     support
             )
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            mutex.unlock();
-                        }
-                    })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
@@ -352,26 +327,43 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                 .getResources()
                 .getDrawable(R.drawable.ic_support_borderline);
 
-        Request request = this.requestSnaps.get(position).toObject(Request.class);
+        String requestId = requests.first.get(position);
+        Request request = this.requests.second.get(requestId);
         if (requestsSupport.get(position)) {
             supportIV.setImageDrawable(borderlineSupportIC);
             request.decrementScore();
+            if (changedSupportsRequestsIds.contains(requestId)) {
+                changedSupports.remove(requestId);
+                changedSupportsRequestsIds.remove(requestId);
+            } else {
+                changedSupports.put(requestId, false);
+                changedSupportsRequestsIds.add(requestId);
+            }
         } else {
             supportIV.setImageDrawable(filledSupportIC);
             request.incrementScore();
+            if(changedSupportsRequestsIds.contains(requestId)) {
+                changedSupports.remove(requestId);
+                changedSupportsRequestsIds.remove(requestId);
+            }else{
+                changedSupports.put(requestId, true);
+                changedSupportsRequestsIds.add(requestId);
+            }
         }
         numberOfSupportsTV.setText(String.valueOf(request.getScore()));
         requestsSupport.put(position, !requestsSupport.get(position));
+
     }
 
-    public void setData(ArrayList<DocumentSnapshot> requestSnaps) {
-        this.requestSnaps = requestSnaps;
+    public void setData(Pair<ArrayList<String> , HashMap<String, Request>> requests) {
+        sendToFirebase();
+        this.requests = requests;
     }
 
     /**
      * Class to serve as ViewHolder for a Request model in this mExpandableQuestionsAdapter
      */
-    public class RequestViewHolder extends RecyclerView.ViewHolder{
+    public class RequestViewHolder extends RecyclerView.ViewHolder {
 
         final View mView;
 
@@ -392,7 +384,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
 
         Request mItem;
 
-        RequestViewHolder (View view) {
+        RequestViewHolder(View view) {
             super(view);
 
             mView = view;
@@ -416,7 +408,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         }
 
         @Override
-        public String toString(){
+        public String toString() {
             return "";
         }
     }

@@ -214,4 +214,5 @@
     <string name="role">Função: </string>
     <string name="lote">Lote: </string>
     <string name="logout">Logout</string>
+    <string name="loading">Carregando</string>
 </resources>
