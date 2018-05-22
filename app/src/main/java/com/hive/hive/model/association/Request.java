@@ -21,6 +21,8 @@ public class Request extends AssociationAction {
     private int numComments;
     private int rank;
     private String categoryName;
+    private double estimatedCost;
+
     private ArrayList<DocumentReference> categoriesRefs;
 
     private ArrayList<DocumentReference> budgetCategoriesRefs;
@@ -41,6 +43,7 @@ public class Request extends AssociationAction {
             String content,
             int score,
             int numComments,
+            double estimatedCost,
             ArrayList<DocumentReference> categoriesRefs
     ) {
         super(createdAt, updatedAt, authorRef, pointsTransactionRef, associationRef);
@@ -48,6 +51,7 @@ public class Request extends AssociationAction {
         this.content = content;
         this.score = score;
         this.numComments = numComments;
+        this.estimatedCost = estimatedCost;
         this.categoriesRefs = categoriesRefs;
     }
 
@@ -88,6 +92,9 @@ public class Request extends AssociationAction {
         return rank;
     }
 
+    public double getEstimatedCost() {
+        return estimatedCost;
+    }
     //--- Setters
 
     public void setTitle(String title) {
@@ -130,5 +137,9 @@ public class Request extends AssociationAction {
 
     public void setRank(int rank) {
         this.rank = rank;
+    }
+
+    public void setEstimatedCost(double estimatedCost) {
+        this.estimatedCost = estimatedCost;
     }
 }

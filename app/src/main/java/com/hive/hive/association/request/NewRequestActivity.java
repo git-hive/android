@@ -91,6 +91,7 @@ public class NewRequestActivity extends AppCompatActivity {
     private EditText titleET;
     private EditText descriptionET;
     private EditText locationET;
+    private EditText costET;
 
     // Firestore
     private FirebaseFirestore mDB = FirebaseFirestore.getInstance();
@@ -118,6 +119,7 @@ public class NewRequestActivity extends AppCompatActivity {
         titleET = findViewById(R.id.titleET);
         descriptionET = findViewById(R.id.descriptionET);
         locationET = findViewById(R.id.locationET);
+        costET = findViewById(R.id.costET);
         saveBT = findViewById(R.id.saveBT);
 
         //--- Budget categories
@@ -397,6 +399,27 @@ public class NewRequestActivity extends AppCompatActivity {
         long currentTimeMillis = System.currentTimeMillis();
 
         ArrayList<DocumentReference> categoriesRefs = new ArrayList<>();
+        if(titleET.getText().toString().equals("")){
+            titleET.setError(getResources().getString(R.string.new_request_should_have_title));
+            titleET.requestFocus();
+            return;
+        }
+
+        if(costET.getText().toString().equals("")){
+            costET.setError(getResources().getString(R.string.new_request_should_have_cost));
+            costET.requestFocus();
+            return;
+        }
+        if(locationET.getText().toString().equals("")){
+            locationET.setError(getResources().getString(R.string.new_request_should_have_location));
+            locationET.requestFocus();
+            return;
+        }
+        if(descriptionET.getText().toString().equals("")){
+            descriptionET.setError(getResources().getString(R.string.new_quest_should_have_description));
+            descriptionET.requestFocus();
+            return;
+        }
         if (selectedRequestCategoryPair == null) {
             Toast.makeText(
                     NewRequestActivity.this,
@@ -427,7 +450,7 @@ public class NewRequestActivity extends AppCompatActivity {
                 titleET.getText().toString(),
                 descriptionET.getText().toString(),
                 0,
-                0,
+                0, Double.parseDouble(costET.getText().toString()),
                 categoriesRefs
         );
 

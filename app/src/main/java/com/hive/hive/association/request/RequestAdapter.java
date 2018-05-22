@@ -1,5 +1,6 @@
 package com.hive.hive.association.request;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -100,6 +101,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         return new RequestViewHolder(itemView);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(final RequestViewHolder holder, final int position) {
 
@@ -119,7 +121,13 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         holder.mRequestContent.setText(request.getContent());
         holder.mNumberOfSupportsTV.setText(String.valueOf(request.getScore()));
         holder.mNumberOfCommentsTV.setText(String.valueOf(request.getNumComments()));
+        if(request.getEstimatedCost() > 0) {
+            holder.mRequestCost.setText(context.getResources().getString(R.string.estimated_cost) + String.valueOf(request.getEstimatedCost()));
 
+        }else{
+            holder.mRequestCost.setText(context.getResources().getString(R.string.no_cost));
+            holder.mRequestCategory.setVisibility(View.GONE);
+        }
         String budgetCategoryName = request.getBudgetCategoryName();
         if (budgetCategoryNameResource.containsKey(budgetCategoryName)) {
             holder
