@@ -146,7 +146,7 @@ public class QuestionFormActivity extends AppCompatActivity {
         findViewById(R.id.questionBackTV).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Next Question
+                //Prev Question
                 formAdapter.previousQuestion();
             }
         });
@@ -154,7 +154,7 @@ public class QuestionFormActivity extends AppCompatActivity {
         findViewById(R.id.questionBackBT).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Next Question
+                //Prev Question
                 formAdapter.previousQuestion();
             }
         });

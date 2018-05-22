@@ -52,7 +52,7 @@ public class GridListAdapter extends BaseAdapter {
         mContentTV.setText(mQuestions.get(mQuestionsIds.get(currentFormIndex)).getQuestion());
     }
 
- 
+
     @Override
     public int getCount() {
         return mOptions.size();
@@ -226,6 +226,8 @@ public class GridListAdapter extends BaseAdapter {
             refStorylineAdapter.notifyDataSetChanged();
 
             mOptions = mQuestions.get(mQuestionsIds.get(currentFormIndex+1)).getOptions();
+
+            mContentTV.setText(mQuestions.get(mQuestionsIds.get(currentFormIndex+1)).getQuestion());
 
             currentFormIndex +=1;
             selectedPosition = -1;//after removing selectedPosition set it back to -1
