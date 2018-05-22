@@ -1,5 +1,6 @@
 package com.hive.hive.association.request.comments;
 
+import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +33,7 @@ import com.hive.hive.association.AssociationHelper;
 import com.hive.hive.association.request.RequestAdapter;
 import com.hive.hive.model.association.AssociationComment;
 import com.hive.hive.model.association.AssociationSupport;
+import com.hive.hive.model.association.BudgetTransactionCategories;
 import com.hive.hive.model.association.Request;
 import com.hive.hive.model.user.User;
 import com.hive.hive.utils.DocReferences;
@@ -65,7 +67,9 @@ public class CommentsActivity extends AppCompatActivity {
     private TextView mRequestCommentsCountTV;
     private TextView mRequestSupportsCountTV;
     private TextView mRequestContentTV;
+    private TextView mRequestCost;
 
+    private ImageView mRequestCategory;
     private ImageView mRequestAuthorIV;
     private ImageView mRequestSupportsIV;
     //--- Data
@@ -75,6 +79,8 @@ public class CommentsActivity extends AppCompatActivity {
     private SupportMutex mSupportMutex;
     private LinkedList<Boolean> mSupportQueue;
     private boolean mLastSupport;
+    private HashMap<String, Integer> budgetCategoryNameResource;
+
     //--- Listeners
     private EventListener<QuerySnapshot> mCommentEL;
     private EventListener<DocumentSnapshot> mRequestEL;
@@ -88,69 +94,31 @@ public class CommentsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_comments);
 
 
-        Toolbar toolbar = findViewById(R.id.requestTB);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = this.getSupportActionBar();
-        if (actionBar != null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            Log.d(TAG, "Home as Up setted");
-        }
-        else
-            Log.e(TAG, "Home as Up not setted. Action Bar not found.");
+        initViews();
 
         //getting extra info from Request
         mRequestId = getIntent().getExtras().getString(REQUEST_ID);
 
-        //finding views
-        mCommentIV = findViewById(R.id.commentIV);
-        mCommentET = findViewById(R.id.commentET);
-
-        mRequestAuthorTV = findViewById(R.id.request_author_name_tv);
-        mRequestTitleTV = findViewById(R.id.request_title_tv);
-        mRequestCommentsCountTV = findViewById(R.id.request_number_of_comments_tv);
-        mRequestSupportsCountTV = findViewById(R.id.supportsTV);
-        mRequestContentTV = findViewById(R.id.request_content_tv);
-
-        mRequestAuthorIV = findViewById(R.id.request_author_photo_iv);
-        mRequestSupportsIV = findViewById(R.id.supportsIV);
         //creating support mutex
         mSupportMutex = new SupportMutex(mRequestSupportsCountTV, mRequestSupportsIV);
         mSupportQueue =  new LinkedList<>();
-        //onclick to save comment
-        mCommentIV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(mCommentET.getText().toString().trim().equals("")){
-                    mCommentET.setError(getString(R.string.should_text));
-                    mCommentET.requestFocus();
-                    return;
-                }
-                String commentID = UUID.randomUUID().toString();
-                String commentText = mCommentET.getText().toString();
-                AssociationComment comment = new AssociationComment( Calendar.getInstance().getTimeInMillis(),
-                        Calendar.getInstance().getTimeInMillis(),
-                        DocReferences.getUserRef(), null, DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s"),
-                        commentText, 0, DocReferences.getRequestRef("gVw7dUkuw3SSZSYRXe8s", mRequestId));
-                //TODO static associationId
-                AssociationHelper.setRequestComment(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mRequestId,
-                       commentID,  comment);
-                mCommentET.setText(null);
-                mCommentET.clearFocus();
-            }
-        });
-        //onclick support request
-        mRequestSupportsCountTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                scoreClick();
-            }
-        });
-        mRequestSupportsIV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                scoreClick();
-            }
-        });
+
+
+        budgetCategoryNameResource = new HashMap<>();
+        budgetCategoryNameResource.put(
+                BudgetTransactionCategories.EXTRAORDINARY,
+                R.drawable.ic_budget_category_extraordinary
+        );
+        budgetCategoryNameResource.put(
+                BudgetTransactionCategories.ORDINARY,
+                R.drawable.ic_budget_category_ordinary
+        );
+        budgetCategoryNameResource.put(
+                BudgetTransactionCategories.SAVINGS,
+                R.drawable.ic_budget_category_savings
+        );
+
+        onclicks();
         //GETTING REQUEST
         mRequestEL = new EventListener<DocumentSnapshot>() {
 
@@ -169,7 +137,9 @@ public class CommentsActivity extends AppCompatActivity {
                 }
             }
         };
+
         shouldFillSupport();
+
 
         mRequestLR = AssociationHelper.getRequest(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mRequestId)
                 .addSnapshotListener(mRequestEL);
@@ -270,16 +240,104 @@ public class CommentsActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private void initViews(){
+        Toolbar toolbar = findViewById(R.id.requestTB);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = this.getSupportActionBar();
+        if (actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            Log.d(TAG, "Home as Up setted");
+        }
+        else
+            Log.e(TAG, "Home as Up not setted. Action Bar not found.");
+
+        //finding views
+        mCommentIV = findViewById(R.id.commentIV);
+        mCommentET = findViewById(R.id.commentET);
+
+        mRequestAuthorTV = findViewById(R.id.request_author_name_tv);
+        mRequestTitleTV = findViewById(R.id.request_title_tv);
+        mRequestCommentsCountTV = findViewById(R.id.request_number_of_comments_tv);
+        mRequestSupportsCountTV = findViewById(R.id.supportsTV);
+        mRequestContentTV = findViewById(R.id.request_content_tv);
+        mRequestCost = findViewById(R.id.request_cost_tv);
+
+        mRequestCategory = findViewById(R.id.request_budget_category_iv);
+        mRequestAuthorIV = findViewById(R.id.request_author_photo_iv);
+        mRequestSupportsIV = findViewById(R.id.supportsIV);
+    }
+
+    private void onclicks(){
+        //onclick to save comment
+        mCommentIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mCommentET.getText().toString().trim().equals("")){
+                    mCommentET.setError(getString(R.string.should_text));
+                    mCommentET.requestFocus();
+                    return;
+                }
+                String commentID = UUID.randomUUID().toString();
+                String commentText = mCommentET.getText().toString();
+                AssociationComment comment = new AssociationComment( Calendar.getInstance().getTimeInMillis(),
+                        Calendar.getInstance().getTimeInMillis(),
+                        DocReferences.getUserRef(), null, DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s"),
+                        commentText, 0, DocReferences.getRequestRef("gVw7dUkuw3SSZSYRXe8s", mRequestId));
+                //TODO static associationId
+                AssociationHelper.setRequestComment(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mRequestId,
+                        commentID,  comment);
+                mCommentET.setText(null);
+                mCommentET.clearFocus();
+            }
+        });
+
+
+        //onclick support request
+        mRequestSupportsCountTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                scoreClick();
+            }
+        });
+        mRequestSupportsIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                scoreClick();
+            }
+        });
+
+
+
+    }
+    @SuppressLint("SetTextI18n")
     private void updateRequestUI(){
         //mRequestAuthorTV.setText(mRequest.get);
         mRequestTitleTV.setText(mRequest.getTitle());
         mRequestCommentsCountTV.setText(mRequest.getNumComments()+"");
         mRequestSupportsCountTV.setText(mRequest.getScore()+"");
         mRequestContentTV.setText(mRequest.getContent());
+
+
+        //sets cost if it has a cost
+        if(mRequest.getEstimatedCost() > 0) {
+            mRequestCost.setText(getResources().getString(R.string.estimated_cost) + String.valueOf(mRequest.getEstimatedCost()));
+
+        }else{
+            mRequestCost.setText(getResources().getString(R.string.no_cost));
+            mRequestCategory.setVisibility(View.GONE);
+        }
+
+        String budgetCategoryName = mRequest.getBudgetCategoryName();
+        if (budgetCategoryNameResource.containsKey(budgetCategoryName)){
+            mRequestCategory
+                    .setImageResource(budgetCategoryNameResource.get(budgetCategoryName));
+        }
         shouldFillSupport();
         //private ImageView mRequestAuthorIV;
         //private ImageView mRequestSupportsIV;
     }
+    @SuppressLint("SetTextI18n")
     private void scoreClick(){
         if(mLastSupport){//support already filled, decrease it then
             Log.d(TAG, "add support");
