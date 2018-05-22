@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -191,6 +192,7 @@ public class CommentsActivity extends AppCompatActivity {
                             mIds.add(dc.getDocument().getId());
                             mRecyclerAdapter.notifyDataSetChanged();
                             mCommentRV.smoothScrollToPosition(mIds.size()-1);
+                            mRequestCommentsCountTV.setText(mComments.size()+"");
                             Log.d(TAG, comment.getContent());
                             break;
                         case MODIFIED:
@@ -251,10 +253,27 @@ public class CommentsActivity extends AppCompatActivity {
         mCommentLR.remove();
         mRequestLR.remove();
     }
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                super.onBackPressed();
+                finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
     private void updateRequestUI(){
         //mRequestAuthorTV.setText(mRequest.get);
         mRequestTitleTV.setText(mRequest.getTitle());
-        //mRequestCommentsCountTV.setText(mRequest.get);
+        mRequestCommentsCountTV.setText(mRequest.getNumComments()+"");
         mRequestSupportsCountTV.setText(mRequest.getScore()+"");
         mRequestContentTV.setText(mRequest.getContent());
         shouldFillSupport();

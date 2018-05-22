@@ -106,7 +106,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
                 if(documentSnapshot.exists()){
                     Log.d(RequestAdapter.class.getSimpleName(), documentSnapshot.get("name").toString());
                     User user = documentSnapshot.toObject(User.class);
-                    holder.authorTV.setText(user.getName());
+                    holder.authorTV.setText(user.getName().split(" ")[0]);
                     ProfilePhotoHelper.loadImage(mContext.getApplicationContext(), holder.avatarIV, user.getPhotoUrl());
                 }
             }

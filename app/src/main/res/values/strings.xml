@@ -74,6 +74,7 @@
 
     <!-- Request Comments strings -->
     <string name="should_text">Qual é o seu comentário?</string>
+    <string name="your_comment">Escreva um comentário...</string>
     <!-- Facebook strings -->
     <string name="facebook_app_id">177801062854821</string>
     <string name="fb_login_protocol_scheme">fb165818667480912</string>
