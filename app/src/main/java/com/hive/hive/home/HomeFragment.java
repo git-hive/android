@@ -169,6 +169,7 @@ public class HomeFragment extends Fragment {
         mAgendas.first.add(agendaId);
         mAgendas.second.put(agendaId, agenda);
 
+        mRecyclerViewHomeAdapter.populateItems();
         getAgendaScore(agendaId);
 
     }
@@ -271,13 +272,6 @@ public class HomeFragment extends Fragment {
 
     public  void initDummy(){
         DUMMYARRAY = new ArrayList<>();
-
-        ForumPost post = new ForumPost();
-        post.setTitle("Evento Beneficiente para o Inverno");
-        post.setContent("Estava pensando em fazermo um evento beneficiente interno...");
-        post.setNumComments(2);
-        post.setSupportScore(5);
-        DUMMYARRAY.add(post);
         DUMMYARRAY.add(new Request());
     }
 

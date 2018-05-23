@@ -29,21 +29,24 @@ public class RecyclerViewHomeAdapter extends RecyclerView.Adapter<RecyclerView.V
     Pair<ArrayList<String>, HashMap<String, Agenda>> mAgendas;
     private Pair<String, Session> mCurrentSession;
 
-
+    private List<Object> mRequests;
     private List<Object> items;
     private final int REQUEST = 0, ASSOCIATIONPOST = 1;
 
     public RecyclerViewHomeAdapter(Pair<ArrayList<String>, HashMap<String, Agenda>> agendas, HashMap<String, Integer> mAgendasScores, List<Object> items) {
-        this.items = items;
+        this.items = new ArrayList<>();
         mAgendas = agendas;
+        mRequests = items;
 
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 
-        Log.d(TAG, String.valueOf(mAgendas.second.size())+"++++++++++++++++++++++++++++++++++++++++++ THIS IS M GUY");
         populateItems();
+
+        if(items.isEmpty())
+            return;
 
         switch (viewHolder.getItemViewType()) {
             case REQUEST:
@@ -106,12 +109,11 @@ public class RecyclerViewHomeAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     private void configureViewHolder2(AgendasViewHolder agendasViewHolder, int position) {
 
-        if(mAgendas.first.size() > position) {
+        if(items.size() > position) {
 
             //get current agenda
-            final String[] agendaId = {mAgendas.first.get(position)};
 
-            final Agenda agenda = mAgendas.second.get(agendaId[0]);
+            final Agenda agenda = (Agenda) items.get(position);
 
             agendasViewHolder.getmTitle().setText(agenda.getTitle());
         }
@@ -119,13 +121,18 @@ public class RecyclerViewHomeAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public void populateItems(){
-        if(mAgendas.first.size() == 0)
-            return;
         items = new ArrayList<>();
         for (Object key:
                 mAgendas.first) {
             items.add(mAgendas.second.get(key));
             Log.d(TAG, String.valueOf(key.toString())+" ITERATING IN HERE");
         }
+
+        for (Object key:
+                mRequests) {
+            items.add(key);
+            //Log.d(TAG, String.valueOf(key.toString())+" ITERATING IN HERE");
+        }
+
     }
 }
