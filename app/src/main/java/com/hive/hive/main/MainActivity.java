@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationViewEx mBottomNavigationViewEx;
     ViewPager mViewPager;
 
-    private PagerAdapter mPagerAdapter;
+    private ViewPagerAdapter mPagerAdapter;
 
 
 
@@ -61,12 +61,16 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.action_home:
+                        //saving supports when leaving feed
+                        mPagerAdapter.getmFeedFragment().getmRecyclerAdapter().sendToFirebase();
                         mViewPager.setCurrentItem(0);
                         break;
                     case R.id.action_feed:
                         mViewPager.setCurrentItem(1);
                         break;
                     case R.id.action_association:
+                        //save supports, when leaving feed
+                        mPagerAdapter.getmFeedFragment().getmRecyclerAdapter().sendToFirebase();
                         mViewPager.setCurrentItem(2);
                         break;
 //                    case R.id.action_shop:
@@ -81,4 +85,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        mPagerAdapter.getmFeedFragment().getmRecyclerAdapter().sendToFirebase();
+    }
+
 }

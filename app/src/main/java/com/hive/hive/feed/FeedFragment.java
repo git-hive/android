@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +21,14 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 
+import com.hive.hive.model.association.Request;
 import com.hive.hive.model.forum.ForumPost;
 
 import static android.content.ContentValues.TAG;
@@ -41,35 +45,32 @@ import java.util.HashMap;
 
 public class FeedFragment extends Fragment {
 
-    // Firestore
+    private final String TAG = FeedFragment.class.getSimpleName();
+
+    //--- Firestore
     private FirebaseFirestore mDB = FirebaseFirestore.getInstance();
 
-    // Association
-    final String associationID = "gVw7dUkuw3SSZSYRXe8s";
-
-
-    // Data
-    private RecyclerView mRecyclerViewFeed;
-    private RecyclerViewFeedAdapter mRecyclerViewFeedAdapter;
-    private ArrayList<Object> mFeedPosts;
-    private HashMap<ForumPost, String> mFeedPostHashIDs;
-    private ArrayList<String> mFeedPostIds;
-    private FloatingActionButton feedFab;
+    // recycler view
+    private SwipeRefreshLayout mFeedRefresh;
+    private RecyclerView mFeedRV;
+    private RecyclerViewFeedAdapter mRecyclerAdapter;
 
     // Views
-    ImageView mUserPhoto;
-    TextView mUserScore;
-    View mView;
+    private View mView;
 
-    //Settings
-    Context mContext;
+
+    //--- Association
+    // TODO: Change hardcoded associationID
+    private String associationID = "gVw7dUkuw3SSZSYRXe8s";
+    private CollectionReference mAssociationFeedRef;
+
+    //--- Data
+    private Pair<ArrayList<String>, HashMap<String, ForumPost>> posts;
 
     public FeedFragment() {
         // Required empty public constructor
-        mFeedPosts = new ArrayList<>();
-        mFeedPostIds = new ArrayList<>();
-        mFeedPostHashIDs = new HashMap<>();
     }
+
 
     public static FeedFragment newInstance() {
         FeedFragment fragment = new FeedFragment();
@@ -78,133 +79,81 @@ public class FeedFragment extends Fragment {
         return fragment;
     }
 
+    public RecyclerViewFeedAdapter getmRecyclerAdapter() {
+        return mRecyclerAdapter;
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_feed, container, false);
-
         mView = v;
 
-        mContext = getContext();
-
-        // User Views references
-
-        mUserScore = v.findViewById(R.id.score);
-        mUserPhoto = v.findViewById(R.id.userAvatar);
-
-        fillLoggedUserView();
-        getAllFeedPostsAndCallJoinFeedPostsCategories();
+        posts = new Pair<>(new ArrayList<>(), new HashMap<>());
 
 
-        feedFab = v.findViewById(R.id.fab);
-
-        feedFab.setOnClickListener(view -> startActivity(
-                new Intent(view.getContext(), NewPostActivity.class)
-        ));
-
-        mUserPhoto.setOnClickListener(new View.OnClickListener() {
+        mFeedRefresh = v.findViewById(R.id.feedSR);
+        mFeedRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onClick(View view) {
-                startActivity(new Intent(mContext, UserProfileActivity.class));
-
+            public void onRefresh() {
+                posts.first.clear();
+                posts.second.clear();
+                addRequestSnapListenerAndCallSetupRecyclerView();
             }
         });
+        mFeedRefresh.setColorSchemeColors(getResources().getColor(R.color.colorOrange));
+        mFeedRefresh.setRefreshing(true);
+
+
+        mAssociationFeedRef = mDB
+                .collection("associations")
+                .document(associationID)
+                .collection("forum");
+
+        addRequestSnapListenerAndCallSetupRecyclerView();
 
         return v;
     }
 
-    private void getAllFeedPostsAndCallJoinFeedPostsCategories() {
-        FeedHelper.getAllForumPosts(mDB, associationID)
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot documentSnapshots) {
+    /**
+     * Attaches a listener to 'associationRequestsRef',
+     * handling it's changes and call setupRecyclerView
+     *
+     */
+    private void addRequestSnapListenerAndCallSetupRecyclerView() {
+        mAssociationFeedRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot documentSnapshots) {
+                for (DocumentSnapshot dc : documentSnapshots) {
+                    if (dc.exists()) {
+                        posts.first.add(dc.getId());
+                        posts.second.put(dc.getId(), dc.toObject(ForumPost.class));
 
-                        if (documentSnapshots.isEmpty()) {
-                            Toast.makeText(
-                                    mContext,
-                                    "Falha ao pegar requisições",
-                                    Toast.LENGTH_SHORT
-                            ).show();
-                            return;
-                        }
-
-
-                        for (DocumentSnapshot snap : documentSnapshots) {
-                            ForumPost post = snap.toObject(ForumPost.class);
-                            Log.d(TAG, post.getAuthorRef().toString()+"???????????????BEFORE CONTINUE?????????????????"+post.getForumId());
-                            if (post.getAuthorRef() == null) continue;
-                            Log.d(TAG, post.getAuthorRef().toString()+"???????????????AFTER CONTINUE?????????????????"+post.getForumId());
-
-                            mFeedPosts.add(post);
-                            mFeedPostHashIDs.put(post, snap.getId());
-
-                            Log.d(TAG, snap.getId()+"+++++++++++++++++++++++++");
-
-                        }
-                        setupRecyclerView();
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, e.toString());
-                    }
-                });
-    }
-
-    public void getFeedPosts(){
-
-        getAllForumPosts(mDB, associationID).addOnSuccessListener(documentSnapshots -> {
-            if (documentSnapshots.isEmpty()) {
-                Toast.makeText(getContext(), "Falha ao pegar ForumPosts", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            for (DocumentSnapshot doc : documentSnapshots)
-                mFeedPosts.add(doc.toObject(ForumPost.class));
-
-        }).addOnFailureListener(e -> Log.e(TAG, e.toString()));
-    }
-
-    public void fillLoggedUserView(){
-        try {
-            DocumentReference userRef = DocReferences.getUserRef();
-            userRef.get().addOnSuccessListener(documentSnapshot -> {
-                if (documentSnapshot.exists()) {
-                    User user = documentSnapshot.toObject(User.class);
-                    //mUserScore.setText(user.getScore());
-                    ProfilePhotoHelper.loadImage(mContext, mUserPhoto, user.getPhotoUrl());
                 }
-            });
-        }catch(NullPointerException e){
-            Log.e(TAG, e.getMessage());
-        }
+                setupRecyclerView();
+                if(mFeedRefresh.isRefreshing()){
+                    mFeedRefresh.setRefreshing(false);
+                }
+            }
+        });
     }
 
-    private ArrayList<String> getFeedPostIDs(ArrayList<Object> feedPosts) {
-        ArrayList<String> newFeedPostIDs = new ArrayList<>();
-        Log.d(TAG, mFeedPostHashIDs.size()+"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        for (Object post : feedPosts) {
-            newFeedPostIDs.add(mFeedPostHashIDs.get((ForumPost) post));
-            Log.d(TAG, mFeedPostHashIDs.get(post).toString()+"????????????????????????????????");
+    private void setupRecyclerView() {
+        mRecyclerAdapter = new RecyclerViewFeedAdapter(posts, getContext().getApplicationContext());
+        mRecyclerAdapter.notifyDataSetChanged();
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        mFeedRV = mView.findViewById(R.id.feedRV);
+        mFeedRV.setLayoutManager(linearLayoutManager);
+        mFeedRV.setAdapter(mRecyclerAdapter);
 
-        }
-        return newFeedPostIDs;
+        disableProgressBarAndShowRecycler();
     }
 
-    private void setupRecyclerView(){
-        mFeedPostIds = getFeedPostIDs(mFeedPosts);
-
-        mRecyclerViewFeed = mView.findViewById(R.id.recyclerViewFeed);
-
-        mRecyclerViewFeedAdapter = new RecyclerViewFeedAdapter(mFeedPosts, mFeedPostIds, mContext);
-
-        mRecyclerViewFeed.setAdapter(mRecyclerViewFeedAdapter);
-        mRecyclerViewFeed.setLayoutManager(new LinearLayoutManager(mView.getContext()));
-
+    private void disableProgressBarAndShowRecycler() {
+        mFeedRV.setVisibility(View.VISIBLE);
+        mFeedRefresh.setRefreshing(false);
     }
-
-
 
 }

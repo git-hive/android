@@ -15,11 +15,20 @@ import com.hive.hive.store.StoreFragment;
  */
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
-//    private static int NUM_ITEMS = 5;
-private static int NUM_ITEMS = 3;
+    //    private static int NUM_ITEMS = 5;
+    private static int NUM_ITEMS = 3;
+    private FeedFragment mFeedFragment;
+    private HomeFragment mHomeFragment;
+    private AssociationFragment mAssociationFragment;
     public ViewPagerAdapter(FragmentManager fragmentManager) {
+
         super(fragmentManager);
+
+        mHomeFragment = HomeFragment.newInstance();
+        mFeedFragment = FeedFragment.newInstance();
+        mAssociationFragment = AssociationFragment.newInstance();
     }
+
 
     // Returns total number of pages
     @Override
@@ -32,12 +41,12 @@ private static int NUM_ITEMS = 3;
     public Fragment getItem(int position) {
         switch (position) {
             case 0: // Fragment # 0 - This will show FirstFragment
-                return HomeFragment.newInstance();
+                return mHomeFragment;
             case 1: // Fragment # 0 - This will show FirstFragment different title
-                return FeedFragment.newInstance();
+                return mFeedFragment;
 
             case 2: // Fragment # 1 - This will show SecondFragment
-                return AssociationFragment.newInstance();
+                return mAssociationFragment;
 
 //            case 3: // Fragment # 1 - This will show SecondFragment
 //                return StoreFragment.newInstance();
@@ -54,4 +63,15 @@ private static int NUM_ITEMS = 3;
         return "Page " + position;
     }
 
+    public FeedFragment getmFeedFragment() {
+        return mFeedFragment;
+    }
+
+    public HomeFragment getmHomeFragment() {
+        return mHomeFragment;
+    }
+
+    public AssociationFragment getmAssociationFragment() {
+        return mAssociationFragment;
+    }
 }

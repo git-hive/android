@@ -3,58 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@null"
-    tools:context="com.hive.hive.FeedFragment">
-    <LinearLayout
-        android:orientation="horizontal"
-        android:id="@+id/topContainer"
+    android:background="@null">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/feedSR"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/userAvatar"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="5dp"
-            app:srcCompat="@drawable/ic_profile_photo"
-            android:layout_gravity="top|left"
-            android:layout_width="75dp"
-            android:layout_height="65dp" />
-
-        <ImageView
-            android:layout_marginLeft="150dp"
-            android:layout_marginTop="30dp"
-            app:srcCompat="@drawable/coin"
-            android:layout_gravity="top|right"
-            android:layout_width="45dp"
-            android:layout_height="45dp" />
-
-
-        <TextView
-            android:id="@+id/score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorBlack"
-            android:textSize="20sp"
-            android:text="0000"
-            android:layout_marginTop="35dp"
-            app:srcCompat="@drawable/coin"
-            android:layout_gravity="top|right"
-            />
-
-
-    </LinearLayout>
-
+        android:layout_height="match_parent"
+        >
     <android.support.v7.widget.RecyclerView
         android:layout_below="@+id/topContainer"
-        android:id="@+id/recyclerViewFeed"
+        android:id="@+id/feedRV"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
 
-
+    </android.support.v4.widget.SwipeRefreshLayout>
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
-            android:layout_alignRight="@id/recyclerViewFeed"
+            android:layout_alignRight="@id/feedSR"
             android:layout_alignParentBottom="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

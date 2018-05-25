@@ -73,7 +73,6 @@ public class FeedHelper {
             String forumID,
             String supportID
     ) {
-        Log.d(TAG, String.valueOf(forumID)+"((((((())))))))) &&&& ***** ¨¨¨¨ %%%%% $$$$ #### @@@@ !!!!");
 
         return db
                 .collection(ASSOCIATION_COLLECTION)
@@ -108,8 +107,8 @@ public class FeedHelper {
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                 // Update forumPost score
                 DocumentSnapshot forumPostSnap = transaction.get(forumPostRef);
-                Double newScore = forumPostSnap.getDouble("score") + 1;
-                transaction.update(forumPostRef, "score", newScore);
+                Double newScore = forumPostSnap.getDouble("supportScore") + 1;
+                transaction.update(forumPostRef, "supportScore", newScore);
 
                 // Create the actual support
                 transaction.set(supportRef, support);
@@ -140,8 +139,8 @@ public class FeedHelper {
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                 // Update score
                 DocumentSnapshot requestSnap = transaction.get(forumPostRef);
-                Double newScore = requestSnap.getDouble("score") - 1;
-                transaction.update(forumPostRef, "score", newScore);
+                Double newScore = requestSnap.getDouble("supportScore") - 1;
+                transaction.update(forumPostRef, "supportScore", newScore);
 
                 // Remove support
                 transaction.delete(supportRef);
