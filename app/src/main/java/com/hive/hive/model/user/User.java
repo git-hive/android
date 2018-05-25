@@ -14,11 +14,10 @@ public class User {
     private String birthday, cpf, email, name, photoUrl;
     private HashSet<DocumentReference> roles;
     private ArrayList<CollectionReference> actions;
-
-
+    private ArrayList<DocumentReference> associationsRef;
 // --- Constructors
 
-    public User(String birthday, String cpf, String email, String name, HashSet roles, ArrayList actions, String photoUrl) {
+    public User(String birthday, String cpf, String email, String name, HashSet roles, ArrayList actions, String photoUrl){
         this.birthday = birthday;
         this.cpf = cpf;
         this.email = email;
@@ -49,6 +48,11 @@ public class User {
     public String getName() { return name; }
 
     public String getPhotoUrl(){ return photoUrl; }
+
+    public ArrayList<DocumentReference> getAssociationsRef() {
+        return associationsRef;
+    }
+
     //--- Setters
 
     public void setActions(ArrayList<CollectionReference> actions) {
@@ -66,4 +70,8 @@ public class User {
     public void setBirthday(String birthday) { this.birthday = birthday; }
 
     public void setPhotoUrl(String photoUrl) { this.photoUrl = photoUrl; }
+
+    public void setAssociationsRef(ArrayList<DocumentReference> associationsRef) {
+        this.associationsRef = associationsRef;
+    }
 }

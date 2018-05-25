@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -47,6 +48,7 @@ import com.hive.hive.R;
 import com.hive.hive.main.MainActivity;
 import com.hive.hive.utils.ProfilePhotoHelper;
 import com.hive.hive.utils.Utils;
+import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -77,7 +79,8 @@ public class LoginActivity extends AppCompatActivity {
     private TextView mTextViewForgotPass;
     private Button mButtonSignIn;
     private Button mButtonEmailLogin;
-    private ProgressBar mPBLogin;
+
+    private CircleProgressBar mProgress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,7 +114,7 @@ public class LoginActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
-        mPBLogin = findViewById(R.id.progress_bar_login);
+        mProgress = findViewById(R.id.loginPB);
         mTextViewPassword = findViewById(R.id.textViewPassword);
         mTextViewUser = findViewById(R.id.textViewUser);
         mTextViewForgotPass = findViewById(R.id.textViewForgotPassword);
@@ -123,6 +126,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // get common sign up button
         mTextViewSignUp = findViewById(R.id.mSignUp);
+
         // register click listener on email method
         mButtonEmailLogin.setOnClickListener(new OnClickListener() {
             @Override
@@ -430,7 +434,7 @@ public class LoginActivity extends AppCompatActivity {
     //used to show login progress
     private void progressUser(){
         //progressBar
-        mPBLogin.setVisibility(View.VISIBLE);
+        mProgress.setVisibility(View.VISIBLE);
         //buttons
 //        mFacebookSignInBtn.setVisibility(View.GONE);
         mGoogleSignInBT.setVisibility(View.GONE);
@@ -450,7 +454,7 @@ public class LoginActivity extends AppCompatActivity {
 //        mFacebookSignInBtn.setVisibility(View.VISIBLE);
         mGoogleSignInBT.setVisibility(View.VISIBLE);
         mButtonEmailLogin.setVisibility(View.VISIBLE);
-        mPBLogin.setVisibility(View.GONE);
+        mProgress.setVisibility(View.GONE);
     }
 }
 

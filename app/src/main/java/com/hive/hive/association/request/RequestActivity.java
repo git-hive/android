@@ -27,15 +27,11 @@ import com.hive.hive.R;
 import com.hive.hive.model.association.Request;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
-import static android.widget.NumberPicker.OnScrollListener.SCROLL_STATE_IDLE;
-import static android.widget.NumberPicker.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL;
 import static com.hive.hive.utils.Utils.getHashMapFilter;
 
 public class RequestActivity extends AppCompatActivity {
@@ -43,7 +39,6 @@ public class RequestActivity extends AppCompatActivity {
 
     //--- Firestore
     private FirebaseFirestore mDB = FirebaseFirestore.getInstance();
-    ListenerRegistration mRequestsListener;
 
     private Map<String, String> mmap = getHashMapFilter();
 
@@ -129,8 +124,6 @@ public class RequestActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mRequestsListener != null)
-            mRequestsListener.remove();
         mRecyclerAdapter.sendToFirebase();
     }
 
