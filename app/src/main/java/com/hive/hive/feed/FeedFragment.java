@@ -22,12 +22,17 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 
+import com.hive.hive.model.association.AssociationComment;
 import com.hive.hive.model.association.Request;
 import com.hive.hive.model.forum.ForumPost;
 
@@ -49,7 +54,7 @@ public class FeedFragment extends Fragment {
 
     //--- Firestore
     private FirebaseFirestore mDB = FirebaseFirestore.getInstance();
-
+    private ListenerRegistration mFeedPostsLR;
     // recycler view
     private SwipeRefreshLayout mFeedRefresh;
     private RecyclerView mFeedRV;
@@ -116,25 +121,67 @@ public class FeedFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onStop(){
+        super.onStop();
+    }
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+    }
     /**
      * Attaches a listener to 'associationRequestsRef',
      * handling it's changes and call setupRecyclerView
      *
      */
     private void addRequestSnapListenerAndCallSetupRecyclerView() {
-        mAssociationFeedRef.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        setupRecyclerView();
+        mFeedPostsLR = mAssociationFeedRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onSuccess(QuerySnapshot documentSnapshots) {
-                for (DocumentSnapshot dc : documentSnapshots) {
-                    if (dc.exists()) {
-                        posts.first.add(dc.getId());
-                        posts.second.put(dc.getId(), dc.toObject(ForumPost.class));
-
-                    }
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.e(TAG, e.getMessage());
+                    return;
                 }
-                setupRecyclerView();
-                if(mFeedRefresh.isRefreshing()){
-                    mFeedRefresh.setRefreshing(false);
+                for (DocumentChange dc : documentSnapshots.getDocumentChanges()) {
+                    switch (dc.getType()) {
+                        case ADDED:
+                            posts.first.add(dc.getDocument().getId());
+                            posts.second.put(dc.getDocument().getId(), dc.getDocument().toObject(ForumPost.class));
+                            mRecyclerAdapter.notifyDataSetChanged();
+                            break;
+                        case MODIFIED:
+                            String modifiedId = dc.getDocument().getId();
+                            posts.second.put(modifiedId, dc.getDocument().toObject(ForumPost.class));
+                            //verify if it has a like or not
+                            if (mRecyclerAdapter.getChangedSupportsPostsIds().contains(modifiedId)) {
+                                if (mRecyclerAdapter.getChangedSupports().get(modifiedId)) {//has changed and it is a like
+                                    posts.second.get(modifiedId).incrementScore();
+                                } else {// has changed but it itsn a like
+                                    posts.second.get(modifiedId).decrementScore();
+                                }
+                            }
+                            mRecyclerAdapter.notifyDataSetChanged();
+                            break;
+                        case REMOVED:
+                            String removedId = dc.getDocument().getId();
+                            posts.first.remove(removedId);
+                            posts.second.remove(removedId);
+                            //remove like if needed
+                            mRecyclerAdapter.getChangedSupports().remove(removedId);
+                            mRecyclerAdapter.getChangedSupportsPostsIds().remove(removedId);
+                            mRecyclerAdapter.notifyDataSetChanged();
+                            break;
+                    }
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            disableProgressBarAndShowRecycler();
+
                 }
             }
         });
@@ -142,13 +189,12 @@ public class FeedFragment extends Fragment {
 
     private void setupRecyclerView() {
         mRecyclerAdapter = new RecyclerViewFeedAdapter(posts, getContext().getApplicationContext());
-        mRecyclerAdapter.notifyDataSetChanged();
+        //mRecyclerAdapter.notifyDataSetChanged();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         mFeedRV = mView.findViewById(R.id.feedRV);
         mFeedRV.setLayoutManager(linearLayoutManager);
         mFeedRV.setAdapter(mRecyclerAdapter);
 
-        disableProgressBarAndShowRecycler();
     }
 
     private void disableProgressBarAndShowRecycler() {

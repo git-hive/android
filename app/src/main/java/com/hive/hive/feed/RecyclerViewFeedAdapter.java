@@ -56,8 +56,8 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerViewFe
     private HashMap<Integer, Boolean> postsSupport;
 
     private SupportMutex lock ;
-    private ArrayList<String> changedSupportsPostsIds; //postId, supportId
-    private HashMap<String, Boolean> changedSupports; //postId, supportId
+    private ArrayList<String> changedSupportsPostsIds; //postId
+    private HashMap<String, Boolean> changedSupports; //postId, changedTo
 
     private Context context;
 
@@ -85,6 +85,14 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerViewFe
         this.context = context;
 
         }
+
+    public ArrayList<String> getChangedSupportsPostsIds() {
+        return changedSupportsPostsIds;
+    }
+
+    public HashMap<String, Boolean> getChangedSupports() {
+        return changedSupports;
+    }
 
     @Override
     public FeedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
