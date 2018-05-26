@@ -1,6 +1,7 @@
 package com.hive.hive.association.request.comments;
 
 import android.annotation.SuppressLint;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -60,7 +61,6 @@ public class CommentsActivity extends AppCompatActivity {
 
     private EditText mCommentET;
     private ImageView mCommentIV;
-    private String mRequestId;
 
     private TextView mRequestAuthorTV;
     private TextView mRequestTitleTV;
@@ -75,10 +75,13 @@ public class CommentsActivity extends AppCompatActivity {
     //--- Data
     private ArrayList<String> mIds;
     private HashMap<String, AssociationComment> mComments;
+
+    private String mRequestId;
     private Request mRequest;
-    private SupportMutex mSupportMutex;
-    private LinkedList<Boolean> mSupportQueue;
-    private boolean mLastSupport;
+    private SupportMutex lock;
+    private boolean requestSupport;
+    private boolean requestSupportHasChanged = false;
+
     private HashMap<String, Integer> budgetCategoryNameResource;
 
     //--- Listeners
@@ -98,11 +101,7 @@ public class CommentsActivity extends AppCompatActivity {
 
         //getting extra info from Request
         mRequestId = getIntent().getExtras().getString(REQUEST_ID);
-
-        //creating support mutex
-        mSupportMutex = new SupportMutex(mRequestSupportsCountTV, mRequestSupportsIV);
-        mSupportQueue =  new LinkedList<>();
-
+        lock = new SupportMutex(mRequestSupportsCountTV, mRequestSupportsIV);
 
         budgetCategoryNameResource = new HashMap<>();
         budgetCategoryNameResource.put(
@@ -124,15 +123,15 @@ public class CommentsActivity extends AppCompatActivity {
 
             @Override
             public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
-                if(e != null){
+                if (e != null) {
                     Log.e(TAG, e.getMessage());
                     return;
                 }
-                if(documentSnapshot.exists()) {
+                if (documentSnapshot.exists()) {
                     mRequest = documentSnapshot.toObject(Request.class);
                     updateRequestUI();
                     fillUser(mRequest.getAuthorRef());
-                }else{
+                } else {
                     finish();
                 }
             }
@@ -150,7 +149,7 @@ public class CommentsActivity extends AppCompatActivity {
         mCommentEL = new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                if(e != null){
+                if (e != null) {
                     Log.e(TAG, e.getMessage());
                     return;
                 }
@@ -161,8 +160,8 @@ public class CommentsActivity extends AppCompatActivity {
                             mComments.put(dc.getDocument().getId(), comment);
                             mIds.add(dc.getDocument().getId());
                             mRecyclerAdapter.notifyDataSetChanged();
-                            mCommentRV.smoothScrollToPosition(mIds.size()-1);
-                            mRequestCommentsCountTV.setText(mComments.size()+"");
+                            mCommentRV.smoothScrollToPosition(mIds.size() - 1);
+                            mRequestCommentsCountTV.setText(mComments.size() + "");
                             Log.d(TAG, comment.getContent());
                             break;
                         case MODIFIED:
@@ -205,26 +204,29 @@ public class CommentsActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         GlideApp.with(getApplicationContext()).resumeRequestsRecursive();
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         super.onStop();
+        sendToFirebase();
         GlideApp.with(getApplication()).pauseRequestsRecursive();
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
+        sendToFirebase();
         //removing db listeners
         mCommentLR.remove();
         mRequestLR.remove();
     }
+
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         super.onBackPressed();
     }
 
@@ -241,15 +243,14 @@ public class CommentsActivity extends AppCompatActivity {
         }
     }
 
-    private void initViews(){
+    private void initViews() {
         Toolbar toolbar = findViewById(R.id.requestTB);
         setSupportActionBar(toolbar);
         ActionBar actionBar = this.getSupportActionBar();
-        if (actionBar != null){
+        if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             Log.d(TAG, "Home as Up setted");
-        }
-        else
+        } else
             Log.e(TAG, "Home as Up not setted. Action Bar not found.");
 
         //finding views
@@ -268,25 +269,25 @@ public class CommentsActivity extends AppCompatActivity {
         mRequestSupportsIV = findViewById(R.id.supportsIV);
     }
 
-    private void onclicks(){
+    private void onclicks() {
         //onclick to save comment
         mCommentIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mCommentET.getText().toString().trim().equals("")){
+                if (mCommentET.getText().toString().trim().equals("")) {
                     mCommentET.setError(getString(R.string.should_text));
                     mCommentET.requestFocus();
                     return;
                 }
                 String commentID = UUID.randomUUID().toString();
                 String commentText = mCommentET.getText().toString();
-                AssociationComment comment = new AssociationComment( Calendar.getInstance().getTimeInMillis(),
+                AssociationComment comment = new AssociationComment(Calendar.getInstance().getTimeInMillis(),
                         Calendar.getInstance().getTimeInMillis(),
                         DocReferences.getUserRef(), null, DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s"),
                         commentText, 0, DocReferences.getRequestRef("gVw7dUkuw3SSZSYRXe8s", mRequestId));
                 //TODO static associationId
                 AssociationHelper.setRequestComment(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mRequestId,
-                        commentID,  comment);
+                        commentID, comment);
                 mCommentET.setText(null);
                 mCommentET.clearFocus();
             }
@@ -297,39 +298,39 @@ public class CommentsActivity extends AppCompatActivity {
         mRequestSupportsCountTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                scoreClick();
+                toggleRequestSupport();
             }
         });
         mRequestSupportsIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                scoreClick();
+                toggleRequestSupport();
             }
         });
 
 
-
     }
+
     @SuppressLint("SetTextI18n")
-    private void updateRequestUI(){
+    private void updateRequestUI() {
         //mRequestAuthorTV.setText(mRequest.get);
         mRequestTitleTV.setText(mRequest.getTitle());
-        mRequestCommentsCountTV.setText(mRequest.getNumComments()+"");
-        mRequestSupportsCountTV.setText(mRequest.getScore()+"");
+        mRequestCommentsCountTV.setText(mRequest.getNumComments() + "");
+        mRequestSupportsCountTV.setText(mRequest.getScore() + "");
         mRequestContentTV.setText(mRequest.getContent());
 
 
         //sets cost if it has a cost
-        if(mRequest.getEstimatedCost() > 0) {
+        if (mRequest.getEstimatedCost() > 0) {
             mRequestCost.setText(getResources().getString(R.string.estimated_cost) + String.valueOf(mRequest.getEstimatedCost()));
 
-        }else{
+        } else {
             mRequestCost.setText(getResources().getString(R.string.no_cost));
             mRequestCategory.setVisibility(View.GONE);
         }
 
         String budgetCategoryName = mRequest.getBudgetCategoryName();
-        if (budgetCategoryNameResource.containsKey(budgetCategoryName)){
+        if (budgetCategoryNameResource.containsKey(budgetCategoryName)) {
             mRequestCategory
                     .setImageResource(budgetCategoryNameResource.get(budgetCategoryName));
         }
@@ -337,67 +338,83 @@ public class CommentsActivity extends AppCompatActivity {
         //private ImageView mRequestAuthorIV;
         //private ImageView mRequestSupportsIV;
     }
-    @SuppressLint("SetTextI18n")
-    private void scoreClick(){
-        if(mLastSupport){//support already filled, decrease it then
-            Log.d(TAG, "add support");
-            mRequestSupportsIV.setImageDrawable(getResources().getDrawable(R.drawable.ic_support_borderline));
-            mRequestSupportsCountTV.setText(mRequest.getScore()-1 +"");
-            mSupportQueue.add(false);
-            mLastSupport = false;
-//            score();
-        }else{
-            Log.d(TAG, "remove support");
-            mRequestSupportsIV.setImageDrawable(getResources().getDrawable(R.drawable.ic_support_filled));
-            mRequestSupportsCountTV.setText(mRequest.getScore()+1 +"");
-            mSupportQueue.add(true);
-            mLastSupport = true;
-//            score();
-        }
 
+
+    private void toggleRequestSupport() {
+        Drawable filledSupportIC = this
+                .getResources()
+                .getDrawable(R.drawable.ic_support_filled);
+
+        Drawable borderlineSupportIC = this
+                .getResources()
+                .getDrawable(R.drawable.ic_support_borderline);
+
+        if (requestSupport) {// if im supporting
+            mRequestSupportsIV.setImageDrawable(borderlineSupportIC);
+            mRequest.decrementScore();
+            if (requestSupportHasChanged) { //if im changing my mind
+                requestSupportHasChanged = false;
+            } else {
+                requestSupportHasChanged = true;
+            }
+        } else {
+            mRequestSupportsIV.setImageDrawable(filledSupportIC);
+            mRequest.incrementScore();
+            if (requestSupportHasChanged) {// if im changing my mind
+                requestSupportHasChanged = false;
+            } else {
+                requestSupportHasChanged = true;
+            }
+        }
+        mRequestSupportsCountTV.setText(String.valueOf(mRequest.getScore()));
+        requestSupport = !requestSupport;
     }
-//    private void score(){
-//        mSupportMutex.lock();
-//        if(!mSupportQueue.getFirst()){//decrease score
-//            AssociationHelper.removeRequestSupport(FirebaseFirestore.getInstance(),
-//                    "gVw7dUkuw3SSZSYRXe8s", mRequestId, FirebaseAuth.getInstance().getUid())
-//                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                        @Override
-//                        public void onSuccess(Void aVoid) {
-//                            mSupportQueue.removeFirst();
-//                            mSupportMutex.unlock();
-//                            if(!mSupportQueue.isEmpty()) score();
-//                        }
-//                    }).addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception e) {// try again
-//                    if(!mSupportQueue.isEmpty()) score();
-//                }
-//            });
-//
-//        }else{//increase score
-//            DocumentReference userRef = DocReferences.getUserRef();
-//            DocumentReference assocRef = DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s");
-//            String supportId = FirebaseAuth.getInstance().getUid();
-//
-//            AssociationSupport support = new AssociationSupport( Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
-//                    userRef, null, assocRef, null);
-//            AssociationHelper.setRequestSupport(FirebaseFirestore.getInstance(),
-//                    "gVw7dUkuw3SSZSYRXe8s", mRequestId, supportId, support).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                @Override
-//                public void onSuccess(Void aVoid) {
-//                    mSupportQueue.removeFirst();
-//                    mSupportMutex.unlock();
-//                    if(!mSupportQueue.isEmpty()) score();
-//                }
-//            }).addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception e) {
-//                    if(!mSupportQueue.isEmpty()) score();
-//                }
-//            });
-//        }
-//    }
+
+
+    public void sendToFirebase() {
+        lock.lock();
+        if (requestSupportHasChanged) {
+            supportActionHandler(mRequestId);
+            requestSupportHasChanged = false;
+        }
+        lock.unlock();
+    }
+
+
+    private void supportActionHandler(
+            String requestID) {
+
+        // Create or remove support
+        DocumentReference userRef = DocReferences.getUserRef();
+        DocumentReference assocRef = DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s");
+        String supportId = FirebaseAuth.getInstance().getUid();
+
+        // TODO: Add missing refs
+        Long currentTimeInMillis = Calendar.getInstance().getTimeInMillis();
+        AssociationSupport support = new AssociationSupport(
+                currentTimeInMillis,
+                currentTimeInMillis,
+                userRef,
+                null,
+                assocRef,
+                null
+        );
+
+        AssociationHelper.setRequestSupport(
+                FirebaseFirestore.getInstance(),
+                "gVw7dUkuw3SSZSYRXe8s",
+                requestID,
+                supportId,
+                support
+        )
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, e.toString());
+                    }
+                });
+    }
+
     private void shouldFillSupport(){
         //if exists support, then should be IV filled
         AssociationHelper.getRequestSupport(FirebaseFirestore.getInstance(),
@@ -407,10 +424,10 @@ public class CommentsActivity extends AppCompatActivity {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if(documentSnapshot.exists()) {
                             mRequestSupportsIV.setImageDrawable(CommentsActivity.this.getResources().getDrawable(R.drawable.ic_support_filled));
-                            mLastSupport = true;
+                            requestSupport = true;
                         }else {
                             mRequestSupportsIV.setImageDrawable(CommentsActivity.this.getResources().getDrawable(R.drawable.ic_support_borderline));
-                            mLastSupport = false;
+                            requestSupport = false;
                         }
                     }
                 });
