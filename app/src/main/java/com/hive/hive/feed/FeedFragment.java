@@ -62,7 +62,7 @@ public class FeedFragment extends Fragment {
 
     // Views
     private View mView;
-
+    private FloatingActionButton mFab;
 
     //--- Association
     // TODO: Change hardcoded associationID
@@ -99,17 +99,9 @@ public class FeedFragment extends Fragment {
 
 
         mFeedRefresh = v.findViewById(R.id.feedSR);
-//        mFeedRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                posts.first.clear();
-//                posts.second.clear();
-//                addRequestSnapListenerAndCallSetupRecyclerView();
-//            }
-//        });
-//        mFeedRefresh.setColorSchemeColors(getResources().getColor(R.color.colorOrange));
-//        mFeedRefresh.setRefreshing(true);
+        mFab = v.findViewById(R.id.fab);
 
+        onClicks();
 
         mAssociationFeedRef = mDB
                 .collection("associations")
@@ -134,6 +126,15 @@ public class FeedFragment extends Fragment {
     public void onResume(){
         super.onResume();
 
+    }
+
+    private void onClicks(){
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), NewPostActivity.class));
+            }
+        });
     }
     /**
      * Attaches a listener to 'associationRequestsRef',
