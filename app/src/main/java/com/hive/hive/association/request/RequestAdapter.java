@@ -274,23 +274,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     private void supportActionHandler(
             String requestID,
             Boolean addScore) {
-        // Toggle request support
-        if (!addScore) {
-            // Remove support
-            AssociationHelper.removeRequestSupport(
-                    mDB,
-                    mAssociationID,
-                    requestID,
-                    FirebaseAuth.getInstance().getUid()
-            )
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.e(TAG, e.toString());
-                        }
-                    });
-        } else {
-            // Create and save support
+
+            // Create or remove support
             DocumentReference userRef = DocReferences.getUserRef();
             DocumentReference assocRef = DocReferences.getAssociationRef(mAssociationID);
             String supportId = FirebaseAuth.getInstance().getUid();
@@ -319,7 +304,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                             Log.e(TAG, e.toString());
                         }
                     });
-        }
     }
 
     private void toggleRequestSupport(

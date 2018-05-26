@@ -106,12 +106,17 @@ public class AssociationHelper {
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                 // Update request score
                 DocumentSnapshot requestSnap = transaction.get(requestRef);
-                Double newScore = requestSnap.getDouble("score") + 1;
+                DocumentSnapshot supportSnap = transaction.get(supportRef);
+                Double newScore;
+                if(supportSnap.exists()){//should delete vote
+                    newScore = requestSnap.getDouble("score") - 1;
+                    transaction.delete(supportRef);
+                }else{//should add vote
+                    newScore = requestSnap.getDouble("score") + 1;
+                    // Create the actual support
+                    transaction.set(supportRef, support);
+                }
                 transaction.update(requestRef, "score", newScore);
-
-                // Create the actual support
-                transaction.set(supportRef, support);
-
                 return null;
             }
         });

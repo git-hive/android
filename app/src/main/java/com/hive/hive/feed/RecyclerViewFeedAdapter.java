@@ -265,22 +265,7 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerViewFe
             String postID,
             Boolean addScore) {
         // Toggle post support
-        if (!addScore) {
-            // Remove support
-            FeedHelper.removeForumPostSupport(
-                    mDB,
-                    mAssociationID,
-                    postID,
-                    FirebaseAuth.getInstance().getUid()
-            )
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.e(TAG, e.toString());
-                        }
-                    });
-        } else {
-            // Create and save support
+        // Create or delete  support
             DocumentReference userRef = DocReferences.getUserRef();
             DocumentReference assocRef = DocReferences.getAssociationRef(mAssociationID);
             String supportId = FirebaseAuth.getInstance().getUid();
@@ -314,7 +299,6 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerViewFe
                     Log.d(TAG, "SUCESSO");
                 }
             });
-        }
     }
 
     private void togglePostSupport(

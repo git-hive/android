@@ -107,11 +107,18 @@ public class FeedHelper {
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                 // Update forumPost score
                 DocumentSnapshot forumPostSnap = transaction.get(forumPostRef);
-                Double newScore = forumPostSnap.getDouble("supportScore") + 1;
+                DocumentSnapshot supportPostSnap = transaction.get(supportRef);
+                Double newScore;
+                if(supportPostSnap.exists()){//shoul delete support
+                    newScore = forumPostSnap.getDouble("supportScore") - 1;
+                    transaction.delete(supportRef);
+                }else{//should add support
+                    newScore = forumPostSnap.getDouble("supportScore") + 1;
+                    // Create the actual support
+                    transaction.set(supportRef, support);
+                }
                 transaction.update(forumPostRef, "supportScore", newScore);
 
-                // Create the actual support
-                transaction.set(supportRef, support);
 
                 return null;
             }

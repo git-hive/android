@@ -99,16 +99,16 @@ public class FeedFragment extends Fragment {
 
 
         mFeedRefresh = v.findViewById(R.id.feedSR);
-        mFeedRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                posts.first.clear();
-                posts.second.clear();
-                addRequestSnapListenerAndCallSetupRecyclerView();
-            }
-        });
-        mFeedRefresh.setColorSchemeColors(getResources().getColor(R.color.colorOrange));
-        mFeedRefresh.setRefreshing(true);
+//        mFeedRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                posts.first.clear();
+//                posts.second.clear();
+//                addRequestSnapListenerAndCallSetupRecyclerView();
+//            }
+//        });
+//        mFeedRefresh.setColorSchemeColors(getResources().getColor(R.color.colorOrange));
+//        mFeedRefresh.setRefreshing(true);
 
 
         mAssociationFeedRef = mDB

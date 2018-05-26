@@ -345,59 +345,59 @@ public class CommentsActivity extends AppCompatActivity {
             mRequestSupportsCountTV.setText(mRequest.getScore()-1 +"");
             mSupportQueue.add(false);
             mLastSupport = false;
-            score();
+//            score();
         }else{
             Log.d(TAG, "remove support");
             mRequestSupportsIV.setImageDrawable(getResources().getDrawable(R.drawable.ic_support_filled));
             mRequestSupportsCountTV.setText(mRequest.getScore()+1 +"");
             mSupportQueue.add(true);
             mLastSupport = true;
-            score();
+//            score();
         }
 
     }
-    private void score(){
-        mSupportMutex.lock();
-        if(!mSupportQueue.getFirst()){//decrease score
-            AssociationHelper.removeRequestSupport(FirebaseFirestore.getInstance(),
-                    "gVw7dUkuw3SSZSYRXe8s", mRequestId, FirebaseAuth.getInstance().getUid())
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            mSupportQueue.removeFirst();
-                            mSupportMutex.unlock();
-                            if(!mSupportQueue.isEmpty()) score();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {// try again
-                    if(!mSupportQueue.isEmpty()) score();
-                }
-            });
-
-        }else{//increase score
-            DocumentReference userRef = DocReferences.getUserRef();
-            DocumentReference assocRef = DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s");
-            String supportId = FirebaseAuth.getInstance().getUid();
-
-            AssociationSupport support = new AssociationSupport( Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
-                    userRef, null, assocRef, null);
-            AssociationHelper.setRequestSupport(FirebaseFirestore.getInstance(),
-                    "gVw7dUkuw3SSZSYRXe8s", mRequestId, supportId, support).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    mSupportQueue.removeFirst();
-                    mSupportMutex.unlock();
-                    if(!mSupportQueue.isEmpty()) score();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    if(!mSupportQueue.isEmpty()) score();
-                }
-            });
-        }
-    }
+//    private void score(){
+//        mSupportMutex.lock();
+//        if(!mSupportQueue.getFirst()){//decrease score
+//            AssociationHelper.removeRequestSupport(FirebaseFirestore.getInstance(),
+//                    "gVw7dUkuw3SSZSYRXe8s", mRequestId, FirebaseAuth.getInstance().getUid())
+//                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                        @Override
+//                        public void onSuccess(Void aVoid) {
+//                            mSupportQueue.removeFirst();
+//                            mSupportMutex.unlock();
+//                            if(!mSupportQueue.isEmpty()) score();
+//                        }
+//                    }).addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull Exception e) {// try again
+//                    if(!mSupportQueue.isEmpty()) score();
+//                }
+//            });
+//
+//        }else{//increase score
+//            DocumentReference userRef = DocReferences.getUserRef();
+//            DocumentReference assocRef = DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s");
+//            String supportId = FirebaseAuth.getInstance().getUid();
+//
+//            AssociationSupport support = new AssociationSupport( Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
+//                    userRef, null, assocRef, null);
+//            AssociationHelper.setRequestSupport(FirebaseFirestore.getInstance(),
+//                    "gVw7dUkuw3SSZSYRXe8s", mRequestId, supportId, support).addOnSuccessListener(new OnSuccessListener<Void>() {
+//                @Override
+//                public void onSuccess(Void aVoid) {
+//                    mSupportQueue.removeFirst();
+//                    mSupportMutex.unlock();
+//                    if(!mSupportQueue.isEmpty()) score();
+//                }
+//            }).addOnFailureListener(new OnFailureListener() {
+//                @Override
+//                public void onFailure(@NonNull Exception e) {
+//                    if(!mSupportQueue.isEmpty()) score();
+//                }
+//            });
+//        }
+//    }
     private void shouldFillSupport(){
         //if exists support, then should be IV filled
         AssociationHelper.getRequestSupport(FirebaseFirestore.getInstance(),
