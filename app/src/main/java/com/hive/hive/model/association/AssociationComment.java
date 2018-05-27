@@ -38,6 +38,13 @@ public class AssociationComment extends AssociationAction {
         this.requestRef = requestRef;
     }
 
+    public void decrementScore(){
+        this.score = this.score-1;
+    }
+
+    public void incrementScore(){
+        this.score = this.score+1;
+    }
     //--- Getters
 
     public String getContent() {

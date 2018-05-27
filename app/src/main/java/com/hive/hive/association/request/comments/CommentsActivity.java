@@ -169,12 +169,24 @@ public class CommentsActivity extends AppCompatActivity {
                             mComments.get(modifiedId).setUpdatedAt(dc.getDocument().getLong("updatedAt"));
                             mComments.remove(modifiedId);
                             mComments.put(modifiedId, dc.getDocument().toObject(AssociationComment.class));
+                            if (mRecyclerAdapter.getChangedSupportsCommentsIds().contains(modifiedId)) {
+                                if (mRecyclerAdapter.getChangedSupports().get(modifiedId)) {//has changed and it is a like
+                                    mComments.get(modifiedId).incrementScore();
+                                } else {// has changed but it itsn a like
+                                    mComments.get(modifiedId).decrementScore();
+                                }
+                            }
                             mRecyclerAdapter.notifyDataSetChanged();
                             break;
                         case REMOVED:
                             String removedId = dc.getDocument().getId();
                             mComments.remove(removedId);
                             mIds.remove(removedId);
+
+                            //remove like if needed
+                            mRecyclerAdapter.getChangedSupports().remove(removedId);
+                            mRecyclerAdapter.getChangedSupportsCommentsIds().remove(removedId);
+
                             mRecyclerAdapter.notifyDataSetChanged();
                             break;
                     }
@@ -213,12 +225,14 @@ public class CommentsActivity extends AppCompatActivity {
     public void onStop() {
         super.onStop();
         sendToFirebase();
+        mRecyclerAdapter.sendToFirebase();
         GlideApp.with(getApplication()).pauseRequestsRecursive();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mRecyclerAdapter.sendToFirebase();
         sendToFirebase();
         //removing db listeners
         mCommentLR.remove();

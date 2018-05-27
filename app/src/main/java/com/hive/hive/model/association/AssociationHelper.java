@@ -567,12 +567,16 @@ AssociationHelper {
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                 // Get and update comment score
                 DocumentSnapshot commentSnap = transaction.get(commentRef);
-                Double newScore = commentSnap.getDouble(AssociationComment.SCORE_FIELD);
-                newScore += AssociationSupport.SUPPORT_ACTION_VALUE;
+                DocumentSnapshot supportSnap = transaction.get(supportRef);
+                Double newScore;
+                if(supportSnap.exists()){//should decrease score and remove support
+                    newScore = commentSnap.getDouble(AssociationComment.SCORE_FIELD) - 1;
+                    transaction.delete(supportRef);
+                }else{//should increaseScore and add support
+                    newScore = commentSnap.getDouble(AssociationComment.SCORE_FIELD) + 1;
+                    transaction.set(supportRef, support);
+                }
                 transaction.update(commentRef, AssociationComment.SCORE_FIELD, newScore);
-
-                // Set comment support
-                transaction.set(supportRef, support);
 
                 return null;
             }

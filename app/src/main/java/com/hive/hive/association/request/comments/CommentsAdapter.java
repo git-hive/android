@@ -1,6 +1,7 @@
 package com.hive.hive.association.request.comments;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,9 +19,13 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
 import com.hive.hive.association.request.RequestAdapter;
+import com.hive.hive.feed.FeedHelper;
+import com.hive.hive.feed.RecyclerViewFeedAdapter;
 import com.hive.hive.model.association.AssociationComment;
 import com.hive.hive.model.association.AssociationHelper;
 import com.hive.hive.model.association.AssociationSupport;
+import com.hive.hive.model.forum.ForumPost;
+import com.hive.hive.model.forum.ForumSupport;
 import com.hive.hive.model.user.User;
 import com.hive.hive.utils.DocReferences;
 import com.hive.hive.utils.ProfilePhotoHelper;
@@ -36,23 +41,40 @@ import java.util.LinkedList;
  */
 
 public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.CommentaryViewHolder>  {
+    private final String TAG = CommentsAdapter.class.getSimpleName();
+
+    private Context mContext;
+    //--Data
+    private String mAssociationID = "gVw7dUkuw3SSZSYRXe8s";
     private HashMap<String,  AssociationComment> mComments;
     private ArrayList<String> mIds;
-    private Context mContext;
+    private HashMap<Integer, Boolean> commentsSupport;
     private String mRequestId;
-    private ArrayList<SupportMutex> mLocks;
-    private ArrayList<LinkedList<Boolean>> mSupportQueues;
-    private ArrayList<Boolean> mLastSupports;
+
+    //Supports Data
+    //control like send
+    private SupportMutex lock ;
+    private ArrayList<String> changedSupportsCommentsIds; //commentId
+    private HashMap<String, Boolean> changedSupports; //CommentId
 
     public CommentsAdapter(Context context, HashMap<String, AssociationComment> comments, ArrayList<String> ids, String requestId){
         this.mContext = context;
         this.mComments = comments;
         this.mIds = ids;
         this.mRequestId = requestId;
-        this.mLocks = new ArrayList<>();
-        this.mSupportQueues = new ArrayList<>();
-        this.mLastSupports = new ArrayList<>();
+        this.commentsSupport = new HashMap<>();
+        this.changedSupports = new HashMap<>();
+        this.changedSupportsCommentsIds = new ArrayList<>();
     }
+
+    public ArrayList<String> getChangedSupportsCommentsIds() {
+        return changedSupportsCommentsIds;
+    }
+
+    public HashMap<String, Boolean> getChangedSupports() {
+        return changedSupports;
+    }
+
     @Override
     public CommentsAdapter.CommentaryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_commentary, parent, false);
@@ -63,42 +85,25 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
     @Override
     public void onBindViewHolder(final CommentsAdapter.CommentaryViewHolder holder, final int position) {
         //SUPPORT LOCK
-//        try{
-//            if(mLocks.get(position) == null) mLocks.add(new SupportMutex(holder.supportTV, holder.supportIV));
-//        }catch(java.lang.IndexOutOfBoundsException e){
-//            mLocks.add(new SupportMutex(holder.supportTV, holder.supportIV));
-//        }
-
+        lock = new SupportMutex(holder.supportTV, holder.supportIV);
         final AssociationComment comment = mComments.get(mIds.get(position));
-//        try {
-//            mLastSupports.get(position); //if it exists then do nothing
-//        }catch (IndexOutOfBoundsException e){
-//            shouldFillSupport(holder, mRequestId, mIds.get(position), position);// if doesnt should be verified
-//        }
+
         fillUser(holder, comment.getAuthorRef());
         holder.contentTV.setText(comment.getContent());
         holder.supportTV.setText(comment.getScore()+"");
-        holder.supportIV.setVisibility(View.INVISIBLE);
-        holder.supportTV.setVisibility(View.INVISIBLE);
-//        holder.supportIV.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                scoreClick(holder, mIds.get(position), position);
-//            }
-//        });
-//
-//        holder.supportTV.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                scoreClick(holder, mIds.get(position), position);
-//            }
-//        });
+        shouldFillSupport(holder, position);
+        holder.supportTV
+                .setOnClickListener(createToggleSupportOnClickListener(position, holder));
+        holder.supportIV
+                .setOnClickListener(createToggleSupportOnClickListener(position, holder));
     }
 
     @Override
     public int getItemCount() {
         return mComments.size();
     }
+
+
     private void fillUser(final CommentsAdapter.CommentaryViewHolder holder, DocumentReference userRef){
         userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -112,93 +117,153 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
             }
         });
     }
-//    private void shouldFillSupport(final CommentaryViewHolder holder, String requestId, String commentId, int position){
-//        //if exists support, then should be IV filled
-//        AssociationHelper.getRequestCommentSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s",
-//                requestId, commentId, FirebaseAuth.getInstance().getUid() )
-//                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                        if(documentSnapshot.exists()) {
-//                            holder.supportIV.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_support_filled));
-//                            try {
-//                                mLastSupports.set(position, true);
-//                                mSupportQueues.set(position, new LinkedList<>());
-//                            }catch (IndexOutOfBoundsException e){
-//                                mLastSupports.add(true);
-//                                mSupportQueues.add(new LinkedList<>());
-//                            }
-//                        }else {
-//                            holder.supportIV.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_support_borderline));
-//                            try {
-//                                mLastSupports.set(position, false);
-//                                mSupportQueues.set(position, new LinkedList<>());
-//                            }catch (IndexOutOfBoundsException e){
-//                                mLastSupports.add(false);
-//                                mSupportQueues.add(new LinkedList<>());
-//                            }
-//                        }
-//                    }
-//                });
-//    }
-//    private void scoreClick(final CommentaryViewHolder holder, final String commentId,  int position){
-//        if(mLastSupports.get(position)){//support already filled, decrease it then
-//            holder.supportIV.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_support_borderline));
-//            holder.supportTV.setText(mComments.get(commentId).getScore()-1 +"");
-//            mSupportQueues.get(position).add(false);
-//            mLastSupports.set(position,  false);
-//            score(commentId, position);
-//        }else{
-//            holder.supportIV.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_support_filled));
-//            holder.supportTV.setText(mComments.get(commentId).getScore()+1 +"");
-//            mSupportQueues.get(position).add(true);
-//            mLastSupports.set(position, true);
-//            score(commentId, position);
-//        }
-//
-//    }
-//    private void score(final String commentId,  int position){
-//        mLocks.get(position).lock();
-//        if(!mSupportQueues.get(position).getFirst()){//decrease score
-//            AssociationHelper.deleteRequestCommentSupport(FirebaseFirestore.getInstance(),
-//                    "gVw7dUkuw3SSZSYRXe8s", mRequestId, commentId, FirebaseAuth.getInstance().getUid())
-//                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                        @Override
-//                        public void onSuccess(Void aVoid) {
-//                            mSupportQueues.get(position).removeFirst();
-//                            mLocks.get(position).unlock();
-//                            if(!mSupportQueues.get(position).isEmpty()) score(commentId, position);
-//                        }
-//                    }).addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception e) {// try again
-//                    if(!mSupportQueues.get(position).isEmpty()) score(commentId, position);
-//                }
-//            });
-//
-//        }else{//increase score
-//            DocumentReference userRef = DocReferences.getUserRef();
-//            DocumentReference assocRef = DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s");
-//            String supportId = FirebaseAuth.getInstance().getUid();
-//
-//            AssociationSupport support = new AssociationSupport( Calendar.getInstance().getTimeInMillis(), Calendar.getInstance().getTimeInMillis(),
-//                    userRef, null, assocRef, null);
-//            AssociationHelper.setRequestCommentSupport(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s",
-//                    mRequestId, commentId, supportId, support).addOnSuccessListener(new OnSuccessListener<Void>() {
-//                @Override
-//                public void onSuccess(Void aVoid) {
-//                    mSupportQueues.get(position).removeFirst();
-//                    mLocks.get(position).unlock();
-//                    if(!mSupportQueues.get(position).isEmpty()) score(commentId, position);
-//                }
-//            }).addOnFailureListener(new OnFailureListener() {
-//                @Override
-//                public void onFailure(@NonNull Exception e) {
-//                    if(!mSupportQueues.get(position).isEmpty()) score(commentId, position);
-//                }
-//            });
-//        }
-//    }
+    private void shouldFillSupport(
+            final CommentaryViewHolder holder,
+            final int position
+    ) {
+        // Check if it has on memory
+        if (commentsSupport.containsKey(position)) {
+            if (commentsSupport.get(position)) {
+                holder.supportIV.setImageDrawable(
+                        mContext.getResources().getDrawable(R.drawable.ic_support_filled)
+                );
+            } else {
+                holder.supportIV.setImageDrawable(
+                        mContext.getResources().getDrawable(R.drawable.ic_support_borderline)
+                );
+            }
+            return;
+        }
+        // If it doesn't, fetch it
+
+        AssociationHelper.getRequestCommentSupport(
+                FirebaseFirestore.getInstance(),
+                mAssociationID,
+                mRequestId,
+                mIds.get(position),
+                FirebaseAuth.getInstance().getUid()
+        )
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            commentsSupport.put(position, true);
+                            holder.supportIV.setImageDrawable(
+                                    mContext.getResources().getDrawable(R.drawable.ic_support_filled)
+                            );
+                        } else {
+                            commentsSupport.put(position, false);
+                            holder.supportIV.setImageDrawable(
+                                    mContext.getResources().getDrawable(R.drawable.ic_support_borderline)
+                            );
+                        }
+                    }
+                });
+    }
+
+    public void sendToFirebase() {
+        lock.lock();
+        for (String changedSupportCommentId : changedSupportsCommentsIds) {
+            supportActionHandler(changedSupportCommentId);
+        }
+        changedSupports.clear();
+        changedSupportsCommentsIds.clear();
+        lock.unlock();
+    }
+
+    private void supportActionHandler(String commentId) {
+        // Toggle post support
+        // Create or delete  support
+        DocumentReference userRef = DocReferences.getUserRef();
+        DocumentReference assocRef = DocReferences.getAssociationRef(mAssociationID);
+        String supportId = FirebaseAuth.getInstance().getUid();
+
+        // TODO: Add missing refs
+        Long currentTimeInMillis = Calendar.getInstance().getTimeInMillis();
+        AssociationSupport support = new AssociationSupport(
+                currentTimeInMillis,
+                currentTimeInMillis,
+                userRef,
+                null,
+                null,
+                null
+        );
+
+        AssociationHelper.setRequestCommentSupport(
+                FirebaseFirestore.getInstance(),
+                mAssociationID,
+                mRequestId,
+                commentId,
+                supportId,
+                support
+        )
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, e.toString());
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "SUCESSO");
+            }
+        });
+    }
+
+    private View.OnClickListener createToggleSupportOnClickListener(
+            int position,
+            final CommentsAdapter.CommentaryViewHolder holder
+    ) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                togglePostSupport(position, holder.supportTV, holder.supportIV);
+            }
+        };
+    }
+
+    private void togglePostSupport(
+            int position,
+            TextView numberOfSupportsTV,
+            ImageView supportIV
+    ) {
+        Drawable filledSupportIC = mContext
+                .getResources()
+                .getDrawable(R.drawable.ic_support_filled);
+
+        Drawable borderlineSupportIC = mContext
+                .getResources()
+                .getDrawable(R.drawable.ic_support_borderline);
+
+        String commentId = mIds.get(position);
+        AssociationComment comment = this.mComments.get(commentId);
+        if (commentsSupport.get(position)) {// in case youve supported
+            supportIV.setImageDrawable(borderlineSupportIC);
+            comment.decrementScore();
+            if (changedSupportsCommentsIds.contains(commentId)) { //if there was a change you should undo it
+                changedSupports.remove(commentId);
+                changedSupportsCommentsIds.remove(commentId);
+            } else {
+                changedSupports.put(commentId, false);
+                changedSupportsCommentsIds.add(commentId);
+            }
+        } else {
+            supportIV.setImageDrawable(filledSupportIC);
+            comment.incrementScore();
+            if(changedSupportsCommentsIds.contains(commentId)) {
+                changedSupports.remove(commentId);
+                changedSupportsCommentsIds.remove(commentId);
+            }else{
+                changedSupports.put(commentId, true);
+                changedSupportsCommentsIds.add(commentId);
+            }
+        }
+        numberOfSupportsTV.setText(String.valueOf(comment.getScore()));
+        commentsSupport.put(position, !commentsSupport.get(position));
+
+    }
+
+
     public class CommentaryViewHolder extends RecyclerView.ViewHolder{
         //ImageViews
         final ImageView avatarIV;
