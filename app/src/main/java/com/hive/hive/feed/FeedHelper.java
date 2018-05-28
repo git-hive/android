@@ -57,12 +57,12 @@ public class FeedHelper {
                 .get();
     }
 
-    public static DocumentReference getForumPost(FirebaseFirestore db, String associationID, String requisitionID) {
+    public static DocumentReference getForumPost(FirebaseFirestore db, String associationID, String postID) {
         return db
                 .collection(ASSOCIATION_COLLECTION)
                 .document(associationID)
                 .collection(FORUM_COLLECTION)
-                .document(requisitionID);
+                .document(postID);
     }
 
     //--- Support ForumPost
@@ -317,12 +317,18 @@ public class FeedHelper {
             public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
                 // Get and update comment score
                 DocumentSnapshot commentSnap = transaction.get(commentRef);
+                DocumentSnapshot supportPostSnap = transaction.get(supportRef);
                 Double newScore = commentSnap.getDouble(ForumComment.SCORE_FIELD);
-                newScore += ForumSupport.SUPPORT_ACTION_VALUE;
-                transaction.update(commentRef, ForumComment.SCORE_FIELD, newScore);
 
-                // Set comment support
-                transaction.set(supportRef, support);
+                if(supportPostSnap.exists()){//shoul delete support
+                    newScore = commentSnap.getDouble("supportScore") - 1;
+                    transaction.delete(supportRef);
+                }else{//should add support
+                    newScore = commentSnap.getDouble("supportScore") + 1;
+                    // Create the actual support
+                    transaction.set(supportRef, support);
+                }
+                transaction.update(commentRef, "supportScore", newScore);
 
                 return null;
             }

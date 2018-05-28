@@ -9,29 +9,14 @@ import com.hive.hive.model.user.UserAction;
 
 public abstract class ForumAction extends UserAction {
 
-    private String forumId;
-
     //--- Constructors
 
 
     public ForumAction() {
     }
 
-    public ForumAction(long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId, String forumId) {
+    public ForumAction(long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId) {
         super(createdAt, updatedAt, authorId, pointsTransactionId);
-        this.forumId = forumId;
     }
 
-
-    //--- Getters
-
-    public String getForumId() {
-        return forumId;
-    }
-
-    //--- Setters
-
-    public void setForumId(String forumId) {
-        this.forumId = forumId;
-    }
 }

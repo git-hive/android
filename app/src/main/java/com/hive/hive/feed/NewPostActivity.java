@@ -81,14 +81,10 @@ public class NewPostActivity extends AppCompatActivity {
                 currentTimeMillis,
                 DocReferences.getUserRef(),
                 null,
-                forumUUID,
                 mTitleED.getText().toString(),
                 mDescriptionED.getText().toString(),
-                0,
                 null,
-                null,
-                null
-        );
+                null);
 
         setForumPost(mDB,associationID, forumUUID, forumPost);
         finish();

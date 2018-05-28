@@ -18,6 +18,7 @@ public class DocReferences {
     private static String AGENDAS_COLLECTION = "agendas";
     private static String QUESTIONS_COLLECTION = "questions";
     private static String VOTES_COLLECTION = "votes";
+    private static String FORUM_COLLECTION = "forum";
 
 
     public static DocumentReference getUserRef(){
@@ -41,6 +42,14 @@ public class DocReferences {
                 .document(associationId)
                 .collection(REQUESTS_COLLECTION)
                 .document(requestId);
+    }
+    public static DocumentReference getPostRef(String associationId, String postId){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        return db
+                .collection(ASSOCIATIONS_COLLECTION)
+                .document(associationId)
+                .collection(FORUM_COLLECTION)
+                .document(postId);
     }
     public static CollectionReference getVotersRef(String associationId, String sessionId, String agendaId, String questionId){
         FirebaseFirestore db = FirebaseFirestore.getInstance();

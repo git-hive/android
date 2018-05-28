@@ -13,12 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -27,8 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
 
 
-import com.hive.hive.feed.comments.CommentsActivity;
-import com.hive.hive.model.association.AssociationSupport;
+import com.hive.hive.feed.comments.FeedCommentsActivity;
 import com.hive.hive.model.forum.ForumPost;
 import com.hive.hive.model.forum.ForumSupport;
 import com.hive.hive.model.user.User;
@@ -39,9 +35,6 @@ import com.hive.hive.utils.SupportMutex;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by Birck.
@@ -128,17 +121,17 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerViewFe
         shouldFillSupport(holder, getPostID(position), position);
 
         //todo onclick to comments
-//        holder.mView.setOnClickListener(new View.OnClickListener() {
-//                                            @Override
-//                                            public void onClick(View view) {
-//                                                sendToFirebase();
-//                                                context.startActivity(
-//                                                        new Intent(context, CommentsActivity.class)
-//                                                                .putExtra(CommentsActivity.post_ID, getpostID(position))
-//                                                );
-//                                            }
-//                                        }
-//        );
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                sendToFirebase();
+                                                context.startActivity(
+                                                        new Intent(context, FeedCommentsActivity.class)
+                                                                .putExtra(FeedCommentsActivity.Post_ID, getPostID(position))
+                                                );
+                                            }
+                                        }
+        );
 
         holder.mSupportsIV
                 .setOnClickListener(createToggleSupportOnClickListener(position, holder));
@@ -276,10 +269,7 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerViewFe
                     currentTimeInMillis,
                     currentTimeInMillis,
                     userRef,
-                    null,
-                    null,
-                    null
-            );
+                    null);
 
             FeedHelper.setForumPostSupport(
                     FirebaseFirestore.getInstance(),

@@ -18,7 +18,6 @@ public class ForumPost extends ForumAction {
 
     private HashMap<String, ForumCategory> categories;
     private HashMap<String, ForumComment> comments;
-    private HashMap<String, ForumSupport> supports;
 
     //--- Constructors
 
@@ -28,18 +27,16 @@ public class ForumPost extends ForumAction {
 
     public ForumPost(
             long createdAt, long updatedAt, DocumentReference authorId, DocumentReference pointsTransactionId,
-            String forumId, String title, String content, int supportScore,
-            HashMap<String, ForumCategory> categories, HashMap<String, ForumComment> comments,
-            HashMap<String, ForumSupport> supports)
+            String title, String content,
+            HashMap<String, ForumCategory> categories, HashMap<String, ForumComment> comments)
     {
-        super(createdAt, updatedAt, authorId, pointsTransactionId, forumId);
+        super(createdAt, updatedAt, authorId, pointsTransactionId);
         this.title = title;
         this.content = content;
-        this.supportScore = supportScore;
+        this.supportScore = 0;
         this.numComments = 0; //TODO:Verify constructor
         this.categories = categories;
         this.comments = comments;
-        this.supports = supports;
     }
 
 
@@ -67,9 +64,6 @@ public class ForumPost extends ForumAction {
         return comments;
     }
 
-    public HashMap<String, ForumSupport> getSupports() {
-        return supports;
-    }
 
     //--- Setters
 
@@ -104,7 +98,4 @@ public class ForumPost extends ForumAction {
         this.comments = comments;
     }
 
-    public void setSupports(HashMap<String, ForumSupport> supports) {
-        this.supports = supports;
-    }
 }

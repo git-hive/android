@@ -81,7 +81,7 @@
             android:name=".association.request.comments.CommentsActivity" />
         <activity
             android:screenOrientation="portrait"
-            android:name=".feed.comments.CommentsActivity" />
+            android:name=".feed.comments.FeedCommentsActivity" />
 
         <activity
             android:screenOrientation="portrait"
