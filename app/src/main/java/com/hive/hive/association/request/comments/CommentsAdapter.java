@@ -65,6 +65,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         this.commentsSupport = new HashMap<>();
         this.changedSupports = new HashMap<>();
         this.changedSupportsCommentsIds = new ArrayList<>();
+        this.lock = new SupportMutex();
     }
 
     public ArrayList<String> getChangedSupportsCommentsIds() {
@@ -84,8 +85,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
 
     @Override
     public void onBindViewHolder(final CommentsAdapter.CommentaryViewHolder holder, final int position) {
-        //SUPPORT LOCK
-        lock = new SupportMutex(holder.supportTV, holder.supportIV);
         final AssociationComment comment = mComments.get(mIds.get(position));
 
         fillUser(holder, comment.getAuthorRef());

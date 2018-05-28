@@ -83,6 +83,7 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerViewFe
         this.usernames = new HashMap<>();
         this.userProfilePictures = new HashMap<>();
         this.context = context;
+        this.lock = new SupportMutex();
 
         }
 
@@ -107,7 +108,6 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerViewFe
     @Override
     public void onBindViewHolder(final FeedViewHolder holder, final int position) {
 
-        this.lock = new SupportMutex(holder.mNumberOfSupportsTV, holder.mSupportsIV);
 
         String postId = posts.first.get(position);
 

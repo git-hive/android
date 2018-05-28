@@ -101,7 +101,7 @@ public class CommentsActivity extends AppCompatActivity {
 
         //getting extra info from Request
         mRequestId = getIntent().getExtras().getString(REQUEST_ID);
-        lock = new SupportMutex(mRequestSupportsCountTV, mRequestSupportsIV);
+        lock = new SupportMutex();
 
         budgetCategoryNameResource = new HashMap<>();
         budgetCategoryNameResource.put(
@@ -223,6 +223,7 @@ public class CommentsActivity extends AppCompatActivity {
 
     @Override
     public void onStop() {
+
         super.onStop();
         sendToFirebase();
         mRecyclerAdapter.sendToFirebase();

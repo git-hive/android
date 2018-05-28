@@ -226,5 +226,7 @@
     <string name="no_cost">Sem custo</string>
     <!-- Feed-->
     <string name="new_content"> Novo assunto</string>
+    <string name="feed_should_have_description"> Por favor descreva o assunto do post</string>
+    <string name="feed_should_have_title">Por favor digite um titulo para o post</string>
 
 </resources>

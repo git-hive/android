@@ -64,9 +64,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
     public void onBindViewHolder(final CommentsAdapter.CommentaryViewHolder holder, final int position) {
         //SUPPORT LOCK
         try{
-            if(mLocks.get(position) == null) mLocks.add(new SupportMutex(holder.supportTV, holder.supportIV));
+            if(mLocks.get(position) == null) mLocks.add(new SupportMutex());
         }catch(java.lang.IndexOutOfBoundsException e){
-            mLocks.add(new SupportMutex(holder.supportTV, holder.supportIV));
+            mLocks.add(new SupportMutex());
         }
 
         final ForumComment comment = mComments.get(mIds.get(position));

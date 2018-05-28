@@ -43,6 +43,7 @@ import com.hive.hive.model.user.User;
 import com.hive.hive.profiles.UserProfileActivity;
 import com.hive.hive.utils.DocReferences;
 import com.hive.hive.utils.ProfilePhotoHelper;
+import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 
 
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class FeedFragment extends Fragment {
     private FirebaseFirestore mDB = FirebaseFirestore.getInstance();
     private ListenerRegistration mFeedPostsLR;
     // recycler view
-    private SwipeRefreshLayout mFeedRefresh;
+    private CircleProgressBar mProgressBar;
     private RecyclerView mFeedRV;
     private RecyclerViewFeedAdapter mRecyclerAdapter;
 
@@ -98,7 +99,7 @@ public class FeedFragment extends Fragment {
         posts = new Pair<>(new ArrayList<>(), new HashMap<>());
 
 
-        mFeedRefresh = v.findViewById(R.id.feedSR);
+        mProgressBar = v.findViewById(R.id.feedPB);
         mFab = v.findViewById(R.id.fab);
 
         onClicks();
@@ -200,7 +201,7 @@ public class FeedFragment extends Fragment {
 
     private void disableProgressBarAndShowRecycler() {
         mFeedRV.setVisibility(View.VISIBLE);
-        mFeedRefresh.setRefreshing(false);
+        mProgressBar.setVisibility(View.GONE);
     }
 
 }

@@ -63,6 +63,16 @@ public class NewPostActivity extends AppCompatActivity {
     }
 
     public  void addNewForumPost(){
+        if(mTitleED.getText().toString().equals("")){
+            mTitleED.setError(getResources().getString(R.string.feed_should_have_title));
+            mTitleED.requestFocus();
+            return;
+        }
+        if(mDescriptionED.getText().toString().equals("")){
+            mDescriptionED.setError(getResources().getString(R.string.feed_should_have_description));
+            mTitleED.requestFocus();
+            return;
+        }
         String forumUUID = UUID.randomUUID().toString();
         long currentTimeMillis = System.currentTimeMillis();
 

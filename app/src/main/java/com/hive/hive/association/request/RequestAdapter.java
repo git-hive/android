@@ -77,7 +77,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         this.usernames = new HashMap<>();
         this.userProfilePictures = new HashMap<>();
         this.context = context;
-
+        this.lock = new SupportMutex();
         budgetCategoryNameResource = new HashMap<>();
         budgetCategoryNameResource.put(
                 BudgetTransactionCategories.EXTRAORDINARY,
@@ -104,8 +104,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(final RequestViewHolder holder, final int position) {
-
-        this.lock = new SupportMutex(holder.mNumberOfSupportsTV, holder.mSupportsIV);
 
         String requestId = requests.first.get(position);
 

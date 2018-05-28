@@ -18,18 +18,9 @@ import java.util.concurrent.locks.Lock;
 
 public class SupportMutex implements Lock{
 
-    TextView nroSupportsTV;
-    ImageView supportsIV;
-
-    public SupportMutex(TextView nroSupportsTV, ImageView supportsIV){
-        this.nroSupportsTV = nroSupportsTV;
-        this.supportsIV = supportsIV;
-    }
+    public SupportMutex(){ }
     @Override
-    public void lock() {
-        nroSupportsTV.setEnabled(false);
-        supportsIV.setEnabled(false);
-    }
+    public void lock() { }
 
     @Override
     public void lockInterruptibly() throws InterruptedException {
@@ -47,10 +38,7 @@ public class SupportMutex implements Lock{
     }
 
     @Override
-    public void unlock() {
-        nroSupportsTV.setEnabled(true);
-        supportsIV.setEnabled(true);
-    }
+    public void unlock() {}
 
     @NonNull
     @Override

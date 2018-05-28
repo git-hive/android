@@ -114,7 +114,7 @@ public class CommentsActivity extends AppCompatActivity {
         mRequestAuthorIV = findViewById(R.id.request_author_photo_iv);
         mRequestSupportsIV = findViewById(R.id.supportsIV);
         //creating support mutex
-        mSupportMutex = new SupportMutex(mRequestSupportsCountTV, mRequestSupportsIV);
+        mSupportMutex = new SupportMutex();
         mSupportQueue =  new LinkedList<>();
         //onclick to save comment
         mCommentIV.setOnClickListener(new View.OnClickListener() {
