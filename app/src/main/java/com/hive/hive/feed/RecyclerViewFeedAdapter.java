@@ -205,21 +205,8 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerViewFe
             String postId,
             final int position
     ) {
-        // Check if it has on memory
-        if (postsSupport.containsKey(position)) {
-            if (postsSupport.get(position)) {
-                holder.mSupportsIV.setImageDrawable(
-                        context.getResources().getDrawable(R.drawable.ic_support_filled)
-                );
-            } else {
-                holder.mSupportsIV.setImageDrawable(
-                        context.getResources().getDrawable(R.drawable.ic_support_borderline)
-                );
-            }
-            return;
-        }
-        // If it doesn't, fetch it
-
+        //has to load it everytime
+        holder.mSupportsIV.setVisibility(View.INVISIBLE);
         FeedHelper.getForumPostSupport(
                 mDB,
                 mAssociationID,
@@ -234,11 +221,15 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerViewFe
                             holder.mSupportsIV.setImageDrawable(
                                     context.getResources().getDrawable(R.drawable.ic_support_filled)
                             );
+                            holder.mSupportsIV.setVisibility(View.VISIBLE);
+
                         } else {
                             postsSupport.put(position, false);
                             holder.mSupportsIV.setImageDrawable(
                                     context.getResources().getDrawable(R.drawable.ic_support_borderline)
                             );
+                            holder.mSupportsIV.setVisibility(View.VISIBLE);
+
                         }
                     }
                 });
