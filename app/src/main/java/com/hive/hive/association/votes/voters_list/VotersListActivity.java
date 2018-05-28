@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.hive.hive.R;
 import com.hive.hive.model.user.User;
-import com.hive.hive.utils.GlideApp;
 import com.hive.hive.utils.Utils;
 
 import java.util.ArrayList;
@@ -76,13 +75,11 @@ public class VotersListActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
-        GlideApp.with(getApplicationContext()).resumeRequestsRecursive();
     }
 
     @Override
     public void onStop(){
         super.onStop();
-        GlideApp.with(getApplication()).pauseRequestsRecursive();
     }
 
 }

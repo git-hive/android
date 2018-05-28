@@ -40,7 +40,6 @@ import com.hive.hive.model.forum.ForumSupport;
 import com.hive.hive.model.user.User;
 import com.hive.hive.utils.DocReferences;
 
-import com.hive.hive.utils.GlideApp;
 import com.hive.hive.utils.ProfilePhotoHelper;
 import com.hive.hive.utils.SupportMutex;
 
@@ -217,7 +216,6 @@ public class FeedCommentsActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        GlideApp.with(getApplicationContext()).resumeRequestsRecursive();
     }
 
     @Override
@@ -226,7 +224,6 @@ public class FeedCommentsActivity extends AppCompatActivity {
         super.onStop();
         sendToFirebase();
         mRecyclerAdapter.sendToFirebase();
-        GlideApp.with(getApplication()).pauseRequestsRecursive();
     }
 
     @Override

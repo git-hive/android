@@ -71,9 +71,8 @@ dependencies {
     // Layout viewPager
     compile 'rouchuan.viewpagerlayoutmanager:viewpagerlayoutmanager:2.0.12'
 
-    // Glide
-    implementation 'com.github.bumptech.glide:glide:4.6.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
+    //Picasso
+    compile 'com.squareup.picasso:picasso:2.5.2'
 
     // Butterknife for convenience
     compile 'com.jakewharton:butterknife:8.1.0'

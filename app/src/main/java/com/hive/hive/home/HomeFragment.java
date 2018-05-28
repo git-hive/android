@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -24,14 +23,11 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.VotesHelper;
-import com.hive.hive.association.votes.current.CurrentAdapter;
-import com.hive.hive.association.votes.current.CurrentAgendaFirebaseHandle;
 import com.hive.hive.home.db_files.CurrentAgendasForHomeFirebaseHandle;
 import com.hive.hive.model.association.Agenda;
 import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.Request;
 import com.hive.hive.model.association.Session;
-import com.hive.hive.model.forum.Forum;
 import com.hive.hive.model.forum.ForumPost;
 import com.hive.hive.model.user.User;
 import com.hive.hive.profiles.UserProfileActivity;
@@ -124,13 +120,11 @@ public class HomeFragment extends Fragment {
     public void onResume() {
         super.onResume();
         first = true;
-        Glide.with(getContext().getApplicationContext()).resumeRequestsRecursive();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Glide.with(getContext().getApplicationContext()).pauseRequestsRecursive();
     }
 
 

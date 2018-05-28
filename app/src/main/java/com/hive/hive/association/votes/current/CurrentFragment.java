@@ -22,7 +22,6 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.alexvasilkov.foldablelayout.UnfoldableView;
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -131,13 +130,11 @@ public class CurrentFragment extends Fragment {
     public void onResume() {
         super.onResume();
         first = true;
-        Glide.with(getContext().getApplicationContext()).resumeRequestsRecursive();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Glide.with(getContext().getApplicationContext()).pauseRequestsRecursive();
     }
 
     @Override

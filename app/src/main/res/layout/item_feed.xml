@@ -55,6 +55,7 @@
                     android:id="@+id/post_author_name_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:textSize="@dimen/request_author_name_font_size"/>
 
                 <TextView
@@ -63,6 +64,7 @@
                     android:layout_height="wrap_content"
                     android:text="2º lugar no ranking"
                     android:textSize="@dimen/request_author_leaderboard_position_font_size"
+                    android:visibility="invisible"
                     android:textColor="@color/colorOrange"/>
 
             </LinearLayout>

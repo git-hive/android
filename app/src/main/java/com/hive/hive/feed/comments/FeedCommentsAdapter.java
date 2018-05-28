@@ -53,6 +53,10 @@ public class FeedCommentsAdapter extends RecyclerView.Adapter<FeedCommentsAdapte
     private ArrayList<String> changedSupportsCommentsIds; //commentId
     private HashMap<String, Boolean> changedSupports; //CommentId
 
+    private HashMap<DocumentReference, String> usernames;
+    private HashMap<DocumentReference, String> userProfilePictures;
+
+
     @SuppressLint("UseSparseArrays")
     FeedCommentsAdapter(Context context, HashMap<String, ForumComment> comments, ArrayList<String> ids, String requestId){
         this.mContext = context;
@@ -63,6 +67,8 @@ public class FeedCommentsAdapter extends RecyclerView.Adapter<FeedCommentsAdapte
         this.changedSupports = new HashMap<>();
         this.changedSupportsCommentsIds = new ArrayList<>();
         this.lock = new SupportMutex();
+        usernames = new HashMap<>();
+        userProfilePictures = new HashMap<>();
     }
 
     public ArrayList<String> getChangedSupportsCommentsIds() {
@@ -102,10 +108,28 @@ public class FeedCommentsAdapter extends RecyclerView.Adapter<FeedCommentsAdapte
 
 
     private void fillUser(final FeedCommentaryViewHolder holder, DocumentReference userRef){
+
+        // Check if it has on memory
+        if (usernames.containsKey(userRef) && userProfilePictures.containsKey(userRef)) {
+            String username = usernames.get(userRef);
+            String userPhoto = userProfilePictures.get(userRef);
+
+            holder.authorTV.setText(username);
+            ProfilePhotoHelper.loadImage(mContext, holder.avatarIV, userPhoto);
+
+            return;
+        }
+
         userRef.get().addOnSuccessListener(documentSnapshot -> {
             if(documentSnapshot.exists()){
                 Log.d(RequestAdapter.class.getSimpleName(), documentSnapshot.get("name").toString());
                 User user = documentSnapshot.toObject(User.class);
+
+                // Save data to local "cache"
+                usernames.put(userRef, user.getName());
+                userProfilePictures.put(userRef, user.getPhotoUrl());
+
+
                 holder.authorTV.setText(user.getName().split(" ")[0]);
                 ProfilePhotoHelper.loadImage(mContext.getApplicationContext(), holder.avatarIV, user.getPhotoUrl());
             }
