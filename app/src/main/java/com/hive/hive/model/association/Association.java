@@ -6,95 +6,58 @@ import java.util.ArrayList;
 
 public class Association {
 
-    //--- Collections
-    public static String ROLES_COLLECTIONS = "roles";
-    public static String BUDGET_TRANSACTIONS_COLLECTION = "budgetTransactions";
-    public static String SESSIONS_COLLECTION = "sessions";
-    public static String REQUESTS_COLLECTION = "requests";
-    public static String REQUEST_CATEGORIES_COLLECTION = "requestCategories";
-    public static String BUDGET_CATEGORIES_COLLECTION = "budgetCategories";
-    public static String LOCATIONS_COLLECTION = "locations";
-
-    //--- Base attributes
-    private String id;
     private String name;
+    private Integer totalNumberOfAssociates;
+    private String cnpj;
+    private String type; // condominio// bairros planejados// bairros abertos// empresa // encubadora
 
-    //--- Forum Related
-    private ArrayList<DocumentReference> forumsIDs;
-
-    //--- Association related
-    private int totalNumberOfAssociates;
-
-    //--- Requests related
-    private ArrayList<DocumentReference> requests;
-    private ArrayList<DocumentReference> requestCategories;
 
     //--- Constructor
 
-    public Association(
-            String id,
-            String name,
-            int totalNumberOfAssociates,
-            ArrayList<DocumentReference> forumsIDs
-    ) {
-        this.id = id;
+    public Association(String name, Integer totalNumberOfAssociates, String cnpj, String type) {
         this.name = name;
         this.totalNumberOfAssociates = totalNumberOfAssociates;
-        this.forumsIDs = forumsIDs;
+        this.cnpj = cnpj;
+        this.type = type;
+    }
+
+    public Association() {
     }
 
 
     //--- Getters
 
-    public String getId() {
-        return id;
-    }
-
     public String getName() {
         return name;
     }
 
-    public ArrayList<DocumentReference> getForumsIDs() {
-        return forumsIDs;
-    }
-
-    public int getTotalNumberOfAssociates() {
+    public Integer getTotalNumberOfAssociates() {
         return totalNumberOfAssociates;
     }
 
+    public String getCnpj() {
+        return cnpj;
+    }
+
+    public String getType() {
+        return type;
+    }
 
     //--- Setters
-
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setForumsIDs(ArrayList<DocumentReference> forumsIDs) {
-        this.forumsIDs = forumsIDs;
-    }
-
-    public void setTotalNumberOfAssociates(int totalNumberOfAssociates) {
+    public void setTotalNumberOfAssociates(Integer totalNumberOfAssociates) {
         this.totalNumberOfAssociates = totalNumberOfAssociates;
     }
 
-    public ArrayList<DocumentReference> getRequests() {
-        return requests;
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj;
     }
 
-    public void setRequests(ArrayList<DocumentReference> requests) {
-        this.requests = requests;
-    }
-
-    public ArrayList<DocumentReference> getRequestCategories() {
-        return requestCategories;
-    }
-
-    public void setRequestCategories(ArrayList<DocumentReference> requestCategories) {
-        this.requestCategories = requestCategories;
+    public void setType(String type) {
+        this.type = type;
     }
 }

@@ -24,7 +24,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
-import com.hive.hive.model.association.AssociationHelper;
+import com.hive.hive.association.AssociationHelper;
 import com.hive.hive.model.association.BudgetTransactionCategories;
 import com.hive.hive.model.association.Request;
 import com.hive.hive.model.association.RequestCategory;

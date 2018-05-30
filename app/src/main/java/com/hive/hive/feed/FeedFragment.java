@@ -1,6 +1,7 @@
 package com.hive.hive.feed;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -31,7 +32,6 @@ import java.util.Objects;
 public class FeedFragment extends Fragment {
 
     private final String TAG = FeedFragment.class.getSimpleName();
-
     //--- Firestore
     private FirebaseFirestore mDB = FirebaseFirestore.getInstance();
     // private ListenerRegistration mFeedPostsLR;
@@ -52,7 +52,6 @@ public class FeedFragment extends Fragment {
     public FeedFragment() {
         // Required empty public constructor
     }
-
 
     public static FeedFragment newInstance() {
         FeedFragment fragment = new FeedFragment();
@@ -161,7 +160,7 @@ public class FeedFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-        mRecyclerAdapter = new RecyclerViewFeedAdapter(posts, Objects.requireNonNull(getContext()).getApplicationContext());
+        mRecyclerAdapter = new RecyclerViewFeedAdapter(posts, getContext());
         //mRecyclerAdapter.notifyDataSetChanged();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         mFeedRV = mView.findViewById(R.id.feedRV);

@@ -31,9 +31,6 @@ public class AssociationFragment extends Fragment {
     // Configs
     Context mContext;
 
-    // Views
-    ImageView mUserPhoto;
-
     // Menu Buttons
     ImageButton requestBT;
     ImageButton votesBT;
@@ -65,7 +62,6 @@ public class AssociationFragment extends Fragment {
         votesBT = v.findViewById(R.id.voteBT);
         transparencyBT = v.findViewById(R.id.trasnparencyBT);
 
-        mUserPhoto = v.findViewById(R.id.userAvatar);
 
 
         requestBT.setOnClickListener(new View.OnClickListener() {
@@ -89,30 +85,8 @@ public class AssociationFragment extends Fragment {
             }
         });
 
-        fillLoggedUserView();
-
-        mUserPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(mContext, UserProfileActivity.class));
-
-            }
-        });
         return v;
     }
 
-    public void fillLoggedUserView(){
-        try {
-            DocumentReference userRef = DocReferences.getUserRef();
-            userRef.get().addOnSuccessListener(documentSnapshot -> {
-                if (documentSnapshot.exists()) {
-                    User user = documentSnapshot.toObject(User.class);
-                    //mUserScore.setText(user.getScore());
-                    ProfilePhotoHelper.loadImage(mContext, mUserPhoto, user.getPhotoUrl());
-                }
-            });
-        }catch(NullPointerException e){
-            Log.e(TAG, e.getMessage());
-        }
-    }
+
 }
