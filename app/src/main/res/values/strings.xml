@@ -47,7 +47,8 @@
     <string name="today">O que você deseja fazer hoje?</string>
     <string name='hello'>Olá mundo</string>
     <string name="signup_problem">Houve algum problema para enviar os seus dados, por favor faça o login novamente</string>
-
+    <string name="select_associations">Selecione as associações que você participa, enviaremos um pedido de ingresso para você :)</string>
+    <string name="should_select_one_association">Por favor selecione pelo menos uma associação que você participe</string>
     <!-- Association Strings -->
     <string name="req">Propostas</string>
     <string name="vote">Votações</string>

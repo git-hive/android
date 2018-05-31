@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 
 import com.hive.hive.R;
 import com.hive.hive.association.votes.AgendasViewHolder;
-import com.hive.hive.home.db_files.CurrentAgendasForHomeFirebaseHandle;
 import com.hive.hive.model.association.Agenda;
 import com.hive.hive.model.association.Request;
 import com.hive.hive.model.association.Session;
@@ -85,7 +84,7 @@ public class RecyclerViewHomeAdapter extends RecyclerView.Adapter<RecyclerView.V
                 viewHolder = new RequestViewHolderOld(viewRequisition);
                 break;
             case ASSOCIATIONPOST:
-                View viewAPost = inflater.inflate(R.layout.item_association, viewGroup, false);
+                View viewAPost = inflater.inflate(R.layout.item_association_report, viewGroup, false);
                 viewHolder = new AgendasViewHolder(viewAPost);
                 break;
         }

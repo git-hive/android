@@ -11,7 +11,10 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -28,13 +31,16 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
 import com.hive.hive.main.MainActivity;
+import com.hive.hive.model.association.Association;
 import com.hive.hive.model.user.User;
 import com.hive.hive.utils.Mask;
 import com.hive.hive.utils.Utils;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 import android.text.TextWatcher;
 import android.widget.EditText;
@@ -60,6 +66,9 @@ public class SignupActivity extends AppCompatActivity {
     private TextView mHelloTV;
     private TextView mTermAgrementsTV;
 
+    // Associations recycler
+    private RecyclerView mAssociationsRecyclerView;
+    private AssociationsAdapter mAssociationsAdapter; //recycler adapter
     // Sign up form inputs
     private User newUser;
     private TextWatcher cpfMask;
@@ -82,6 +91,7 @@ public class SignupActivity extends AppCompatActivity {
         mFullNameTV = findViewById(R.id.textViewSignUpFullName);
         mCPF = findViewById(R.id.textViewSignUpCPF);
         mEmailTV = findViewById(R.id.textViewSignUpEmail);
+        mEmailTV.setEnabled(false);
         mTermsAgreementRB = findViewById(R.id.radioButtonSignUpTermsAgreement);
         mSignupPB = findViewById(R.id.progress_bar_signup);
         mHelloTV = findViewById(R.id.helloTV);
@@ -168,6 +178,8 @@ public class SignupActivity extends AppCompatActivity {
                 }
             }
         });
+
+        LoginAndSignUpFirebaseHandler.getAllAssoctiationsHandler(this);
     }
 
     @Override
@@ -192,6 +204,12 @@ public class SignupActivity extends AppCompatActivity {
         }
     }
 
+    public void setupRecyclerView(Pair<ArrayList<String>, HashMap<String, Association>> associations){
+        mAssociationsRecyclerView = findViewById(R.id.associationsRV);
+        mAssociationsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mAssociationsAdapter = new AssociationsAdapter(associations);
+        mAssociationsRecyclerView.setAdapter(mAssociationsAdapter);
+    }
     /**
      * Configures and displays a date picker used in the birth day field
      */
@@ -246,15 +264,7 @@ public class SignupActivity extends AppCompatActivity {
         }
 
         newUser.setCpf(cpf);
-// TODO verify if email is really a needed field
-//        // Check user email
-//        String email = getText(mEmailTV);
-//        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-//            mEmailTV.setError("Invalid email address");
-//            mEmailTV.requestFocus();
-//
-//            return false;
-//        }
+
         if(FirebaseAuth.getInstance().getCurrentUser() != null)
             newUser.setEmail(FirebaseAuth.getInstance().getCurrentUser().getEmail());
 
@@ -266,9 +276,17 @@ public class SignupActivity extends AppCompatActivity {
             return false;
         }
 
+        if(!verifySelectedAssociations()){
+            Toast.makeText(this, getResources().getString(R.string.should_select_one_association), Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
     }
 
+    private boolean verifySelectedAssociations(){
+        if(mAssociationsAdapter.getmSelectedAssociationsIds().isEmpty()) return false;
+        return  true;
+    }
     /**
      * Stores field data into firestore
      */
@@ -277,30 +295,15 @@ public class SignupActivity extends AppCompatActivity {
         if (user != null) {
             if(user.getPhotoUrl() != null)
                 newUser.setPhotoUrl(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString());
-            db
-                    .collection("users")
-                    .document(mAuth.getUid())
-                    .set(newUser)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            startHome();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // TODO: handle firestore failure properly
-                            Toast.makeText(SignupActivity.this, "Failed to insert user", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+            LoginAndSignUpFirebaseHandler
+                    .saveUserDataAndSendSelectedIngressesRequests(this, newUser, mAssociationsAdapter.getmSelectedAssociationsIds());
         }else{
             Toast.makeText(this, getString(R.string.signup_problem), Toast.LENGTH_SHORT).show();
             startLogin();
         }
     }
 
-    private void startHome() {
+    public void startHome() {
         Context ctx = SignupActivity.this.getApplicationContext();
         Intent startMainActivity = new Intent(ctx, MainActivity.class);
         startActivity(startMainActivity);
@@ -308,7 +311,7 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
-    private void startLogin() {
+    public void startLogin() {
         Context ctx = SignupActivity.this.getApplicationContext();
         Intent startMainActivity = new Intent(ctx, LoginActivity.class);
         startActivity(startMainActivity);
@@ -359,7 +362,6 @@ public class SignupActivity extends AppCompatActivity {
         mTermsAgreementRB.setVisibility(View.VISIBLE);
         mSignUpComplete.setVisibility(View.VISIBLE);
     }
-
 
 }
 
