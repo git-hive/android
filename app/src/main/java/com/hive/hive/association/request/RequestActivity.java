@@ -24,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
+import com.hive.hive.home.HomeFragment;
 import com.hive.hive.model.association.Request;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class RequestActivity extends AppCompatActivity {
     private RequestAdapter mRecyclerAdapter;
     //--- Association
     // TODO: Change hardcoded associationID
-    private String associationID = "gVw7dUkuw3SSZSYRXe8s";
+    private String associationID = HomeFragment.mCurrentAssociationId;
 
     private CollectionReference mAssociationRequestsRef;
 

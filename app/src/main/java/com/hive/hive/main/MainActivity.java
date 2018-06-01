@@ -26,9 +26,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottom_tab);
 
+        MainFirebaseHandle.getCurrentAssociation(this);
+
+
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        mPagerAdapter.getmFeedFragment().getmRecyclerAdapter().sendToFirebase();
+    }
+
+    public void initViews(){
         mBottomNavigationViewEx = findViewById(R.id.bottom_navigation);
         mViewPager = findViewById(R.id.view_pager);
-
 
         mPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         mViewPager.setOffscreenPageLimit(0);
@@ -83,13 +94,5 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
     }
-
-    @Override
-    public void onStop(){
-        super.onStop();
-        mPagerAdapter.getmFeedFragment().getmRecyclerAdapter().sendToFirebase();
-    }
-
 }

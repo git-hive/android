@@ -115,7 +115,7 @@ public class HomeFragment extends Fragment {
         initEventListeners();
 
 
-        mSessionLR = VotesHelper.getCurrentSession(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s").addSnapshotListener(mSessionEL);
+        mSessionLR = VotesHelper.getCurrentSession(FirebaseFirestore.getInstance(), HomeFragment.mCurrentAssociationId).addSnapshotListener(mSessionEL);
 
 
         return v;
@@ -194,7 +194,7 @@ public class HomeFragment extends Fragment {
 
         //call to get Agendas
         mAgendasLR =
-                VotesHelper.getAgendas(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mCurrentSession.first)
+                VotesHelper.getAgendas(FirebaseFirestore.getInstance(), HomeFragment.mCurrentAssociationId, mCurrentSession.first)
                         .addSnapshotListener(mAgendasEL);
 
 

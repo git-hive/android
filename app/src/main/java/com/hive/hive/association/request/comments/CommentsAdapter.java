@@ -22,6 +22,7 @@ import com.hive.hive.association.AssociationHelper;
 import com.hive.hive.association.request.RequestAdapter;
 import com.hive.hive.feed.FeedHelper;
 import com.hive.hive.feed.RecyclerViewFeedAdapter;
+import com.hive.hive.home.HomeFragment;
 import com.hive.hive.model.association.AssociationComment;
 import com.hive.hive.model.association.AssociationSupport;
 import com.hive.hive.model.forum.ForumPost;
@@ -45,7 +46,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
 
     private Context mContext;
     //--Data
-    private String mAssociationID = "gVw7dUkuw3SSZSYRXe8s";
+    private String mAssociationID = HomeFragment.mCurrentAssociationId;
     private HashMap<String,  AssociationComment> mComments;
     private ArrayList<String> mIds;
     private HashMap<Integer, Boolean> commentsSupport;

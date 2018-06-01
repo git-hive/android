@@ -19,6 +19,7 @@ import com.alexvasilkov.foldablelayout.UnfoldableView;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.future_and_past.FutureAndPastAgendasRVAdapter;
 import com.hive.hive.association.votes.future_and_past.FutureAndPastQuestionsExpandableAdapter;
+import com.hive.hive.home.HomeFragment;
 import com.hive.hive.model.association.Agenda;
 import com.hive.hive.model.association.Question;
 import com.hive.hive.utils.unfoldable.UnfoldableSharedMethods;
@@ -72,7 +73,7 @@ public class OldFragment extends Fragment {
         initUnfoldable();
 
         //TODO change ASSOCIATIONID
-        OldAgendasFirebaseHandle.getPastSessions("gVw7dUkuw3SSZSYRXe8s", this);
+        OldAgendasFirebaseHandle.getPastSessions(HomeFragment.mCurrentAssociationId, this);
 
         return mView;
     }

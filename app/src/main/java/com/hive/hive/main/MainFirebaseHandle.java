@@ -1,5 +1,6 @@
 package com.hive.hive.main;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -21,6 +22,57 @@ import com.hive.hive.utils.UserHelper;
 public class MainFirebaseHandle {
 
     private final static String TAG = MainFirebaseHandle.class.getSimpleName();
+
+    public static void getCurrentAssociation(Activity activity) {
+        UserHelper.getUserData().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    User user = documentSnapshot.toObject(User.class);
+                    //update
+                    updateAssociation(user, activity);
+
+                }
+//                else{
+//                    //Logout then
+//                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG, e.getMessage());
+                //Logout then
+            }
+        });
+    }
+
+    private static void updateAssociation(User user, Activity activity) {
+        if(user.getLastAccessAssociationRef() == null) {
+            if (user.getAssociationsRef() != null && !user.getAssociationsRef().isEmpty()) {//if there is no one selected, use first association
+                user.setLastAccessAssociationRef(user.getAssociationsRef().get(0)); //uses the firts ref
+                updateAssociation(user, activity);
+            } else {//there is no associations, should tell user and logout
+                Toast.makeText(activity,
+                        activity.getResources().getString(R.string.no_association), Toast.LENGTH_LONG).show();
+                FirebaseAuth.getInstance().signOut();
+                activity.startActivity(new Intent(activity, LoginActivity.class));
+                return;
+                //logout
+            }
+        }
+        LoginAndSignupHelper.getAssociation(user.getLastAccessAssociationRef()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {//if there is a selected association use it
+                    HomeFragment.mCurrentAssociationId = documentSnapshot.getId();
+                    if(activity instanceof MainActivity)
+                        ((MainActivity) activity).initViews();
+                }
+
+            }
+        });
+    }
+
 
     public static void getCurrentAssociation(HomeFragment fragment) {
         UserHelper.getUserData().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -65,7 +117,8 @@ public class MainFirebaseHandle {
                 if (documentSnapshot.exists()) {//if there is a selected association use it
                     HomeFragment.mCurrentAssociationId = documentSnapshot.getId();
                     Association association = documentSnapshot.toObject(Association.class);
-                    fragment.updateCurrentAssociationUI(association);
+                    if(fragment != null)
+                        fragment.updateCurrentAssociationUI(association);
                 }
 
             }

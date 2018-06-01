@@ -27,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
 import com.hive.hive.association.AssociationHelper;
 import com.hive.hive.association.request.comments.CommentsActivity;
+import com.hive.hive.home.HomeFragment;
 import com.hive.hive.model.association.AssociationSupport;
 import com.hive.hive.model.association.BudgetTransactionCategories;
 import com.hive.hive.model.association.Request;
@@ -62,7 +63,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser mUser = mAuth.getCurrentUser();
     private FirebaseFirestore mDB = FirebaseFirestore.getInstance();
-    private String mAssociationID = "gVw7dUkuw3SSZSYRXe8s";
+    private String mAssociationID = HomeFragment.mCurrentAssociationId;
 
     public RequestAdapter(
             Pair<ArrayList<String>, HashMap<String, Request>> requests,

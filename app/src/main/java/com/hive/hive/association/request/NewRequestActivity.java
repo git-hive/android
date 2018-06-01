@@ -25,6 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 import com.hive.hive.association.AssociationHelper;
+import com.hive.hive.home.HomeFragment;
 import com.hive.hive.model.association.BudgetTransactionCategories;
 import com.hive.hive.model.association.Request;
 import com.hive.hive.model.association.RequestCategory;
@@ -97,7 +98,7 @@ public class NewRequestActivity extends AppCompatActivity {
     private FirebaseFirestore mDB = FirebaseFirestore.getInstance();
 
     // Association
-    final String associationID = "gVw7dUkuw3SSZSYRXe8s";
+    final String associationID = HomeFragment.mCurrentAssociationId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

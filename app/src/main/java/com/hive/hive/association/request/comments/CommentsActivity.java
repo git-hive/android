@@ -32,6 +32,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 import com.hive.hive.association.AssociationHelper;
 import com.hive.hive.association.request.RequestAdapter;
+import com.hive.hive.home.HomeFragment;
 import com.hive.hive.model.association.AssociationComment;
 import com.hive.hive.model.association.AssociationSupport;
 import com.hive.hive.model.association.BudgetTransactionCategories;
@@ -139,7 +140,7 @@ public class CommentsActivity extends AppCompatActivity {
         shouldFillSupport();
 
 
-        mRequestLR = AssociationHelper.getRequest(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mRequestId)
+        mRequestLR = AssociationHelper.getRequest(FirebaseFirestore.getInstance(), HomeFragment.mCurrentAssociationId, mRequestId)
                 .addSnapshotListener(mRequestEL);
 
         //GETTING ALL Comments
@@ -197,7 +198,7 @@ public class CommentsActivity extends AppCompatActivity {
         //TODO change associationID and LIMIT
         //getting the 10 newest comments
         mCommentLR = AssociationHelper.getAllRequestComments(FirebaseFirestore.getInstance(),
-                "gVw7dUkuw3SSZSYRXe8s", mRequestId).orderBy("createdAt", Query.Direction.ASCENDING).limit(10)
+                HomeFragment.mCurrentAssociationId, mRequestId).orderBy("createdAt", Query.Direction.ASCENDING).limit(10)
                 .addSnapshotListener(mCommentEL);
 
         //--- Recycle View Setup
@@ -295,10 +296,10 @@ public class CommentsActivity extends AppCompatActivity {
                 String commentText = mCommentET.getText().toString();
                 AssociationComment comment = new AssociationComment(Calendar.getInstance().getTimeInMillis(),
                         Calendar.getInstance().getTimeInMillis(),
-                        DocReferences.getUserRef(), null, DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s"),
-                        commentText, 0, DocReferences.getRequestRef("gVw7dUkuw3SSZSYRXe8s", mRequestId));
+                        DocReferences.getUserRef(), null, DocReferences.getAssociationRef(HomeFragment.mCurrentAssociationId),
+                        commentText, 0, DocReferences.getRequestRef(HomeFragment.mCurrentAssociationId, mRequestId));
                 //TODO static associationId
-                AssociationHelper.setRequestComment(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mRequestId,
+                AssociationHelper.setRequestComment(FirebaseFirestore.getInstance(), HomeFragment.mCurrentAssociationId, mRequestId,
                         commentID, comment);
                 mCommentET.setText(null);
                 mCommentET.clearFocus();
@@ -398,7 +399,7 @@ public class CommentsActivity extends AppCompatActivity {
 
         // Create or remove support
         DocumentReference userRef = DocReferences.getUserRef();
-        DocumentReference assocRef = DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s");
+        DocumentReference assocRef = DocReferences.getAssociationRef(HomeFragment.mCurrentAssociationId);
         String supportId = FirebaseAuth.getInstance().getUid();
 
         // TODO: Add missing refs
@@ -414,7 +415,7 @@ public class CommentsActivity extends AppCompatActivity {
 
         AssociationHelper.setRequestSupport(
                 FirebaseFirestore.getInstance(),
-                "gVw7dUkuw3SSZSYRXe8s",
+                HomeFragment.mCurrentAssociationId,
                 requestID,
                 supportId,
                 support
@@ -430,7 +431,7 @@ public class CommentsActivity extends AppCompatActivity {
     private void shouldFillSupport(){
         //if exists support, then should be IV filled
         AssociationHelper.getRequestSupport(FirebaseFirestore.getInstance(),
-                "gVw7dUkuw3SSZSYRXe8s", mRequestId, FirebaseAuth.getInstance().getUid())
+                HomeFragment.mCurrentAssociationId, mRequestId, FirebaseAuth.getInstance().getUid())
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {

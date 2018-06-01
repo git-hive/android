@@ -22,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
+import com.hive.hive.home.HomeFragment;
 import com.hive.hive.model.forum.ForumPost;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 
@@ -79,7 +80,7 @@ public class FeedFragment extends Fragment {
 
         onClicks();
 
-        String associationID = "gVw7dUkuw3SSZSYRXe8s";
+        String associationID = HomeFragment.mCurrentAssociationId;
         mAssociationFeedRef = mDB
                 .collection("associations")
                 .document(associationID)

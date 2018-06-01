@@ -31,6 +31,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 
 import com.hive.hive.feed.FeedHelper;
+import com.hive.hive.home.HomeFragment;
 import com.hive.hive.model.association.AssociationComment;
 import com.hive.hive.model.association.BudgetTransactionCategories;
 import com.hive.hive.model.forum.Forum;
@@ -138,7 +139,7 @@ public class FeedCommentsActivity extends AppCompatActivity {
         shouldFillSupport();
 
 
-        mPostLR = FeedHelper.getForumPost(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mPostId)
+        mPostLR = FeedHelper.getForumPost(FirebaseFirestore.getInstance(), HomeFragment.mCurrentAssociationId, mPostId)
                 .addSnapshotListener(mPostEL);
 
         //GETTING ALL Comments
@@ -196,7 +197,7 @@ public class FeedCommentsActivity extends AppCompatActivity {
         //TODO change associationID and LIMIT
         //getting the 10 newest comments
         mCommentLR = FeedHelper.getAllForumPostComments(FirebaseFirestore.getInstance(),
-                "gVw7dUkuw3SSZSYRXe8s", mPostId).orderBy("createdAt", Query.Direction.ASCENDING).limit(10)
+                HomeFragment.mCurrentAssociationId, mPostId).orderBy("createdAt", Query.Direction.ASCENDING).limit(10)
                 .addSnapshotListener(mCommentEL);
 
         //--- Recycle View Setup
@@ -296,7 +297,7 @@ public class FeedCommentsActivity extends AppCompatActivity {
                         Calendar.getInstance().getTimeInMillis(),
                         DocReferences.getUserRef(), null, commentText);
                 //TODO static associationId
-                FeedHelper.setForumPostComment(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mPostId,
+                FeedHelper.setForumPostComment(FirebaseFirestore.getInstance(), HomeFragment.mCurrentAssociationId, mPostId,
                         commentID, comment);
                 mCommentET.setText(null);
                 mCommentET.clearFocus();
@@ -386,7 +387,7 @@ public class FeedCommentsActivity extends AppCompatActivity {
 
         // Create or remove support
         DocumentReference userRef = DocReferences.getUserRef();
-        DocumentReference assocRef = DocReferences.getAssociationRef("gVw7dUkuw3SSZSYRXe8s");
+        DocumentReference assocRef = DocReferences.getAssociationRef(HomeFragment.mCurrentAssociationId);
         String supportId = FirebaseAuth.getInstance().getUid();
 
         // TODO: Add missing refs
@@ -399,7 +400,7 @@ public class FeedCommentsActivity extends AppCompatActivity {
 
         FeedHelper.setForumPostSupport(
                 FirebaseFirestore.getInstance(),
-                "gVw7dUkuw3SSZSYRXe8s",
+                HomeFragment.mCurrentAssociationId,
                 PostID,
                 supportId,
                 support
@@ -415,7 +416,7 @@ public class FeedCommentsActivity extends AppCompatActivity {
     private void shouldFillSupport(){
         //if exists support, then should be IV filled
         FeedHelper.getForumPostSupport(FirebaseFirestore.getInstance(),
-                "gVw7dUkuw3SSZSYRXe8s", mPostId, FirebaseAuth.getInstance().getUid())
+                HomeFragment.mCurrentAssociationId, mPostId, FirebaseAuth.getInstance().getUid())
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {

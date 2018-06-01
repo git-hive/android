@@ -21,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
 import com.hive.hive.association.request.RequestAdapter;
 import com.hive.hive.feed.FeedHelper;
+import com.hive.hive.home.HomeFragment;
 import com.hive.hive.model.forum.ForumComment;
 import com.hive.hive.model.forum.ForumSupport;
 import com.hive.hive.model.user.User;
@@ -41,7 +42,7 @@ public class FeedCommentsAdapter extends RecyclerView.Adapter<FeedCommentsAdapte
 
     private Context mContext;
     //--Data
-    private String mAssociationID = "gVw7dUkuw3SSZSYRXe8s";
+    private String mAssociationID = HomeFragment.mCurrentAssociationId;
     private HashMap<String, ForumComment> mComments;
     private ArrayList<String> mIds;
     private HashMap<Integer, Boolean> commentsSupport;

@@ -9,6 +9,7 @@ import android.widget.EditText;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
+import com.hive.hive.home.HomeFragment;
 import com.hive.hive.model.forum.ForumPost;
 import com.hive.hive.utils.DocReferences;
 
@@ -23,7 +24,7 @@ public class NewPostActivity extends AppCompatActivity {
     private FirebaseFirestore mDB = FirebaseFirestore.getInstance();
 
     // Association
-    final String associationID = "gVw7dUkuw3SSZSYRXe8s";
+    final String associationID = HomeFragment.mCurrentAssociationId;
 
     // Settings
     Context mContext;

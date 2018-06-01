@@ -34,6 +34,7 @@ import com.hive.hive.R;
 import com.hive.hive.association.votes.VotesHelper;
 import com.hive.hive.association.votes.question_answering.QuestionFormActivity;
 import com.hive.hive.association.votes.questions.adapters.ExpandableListAdapter;
+import com.hive.hive.home.HomeFragment;
 import com.hive.hive.model.association.Agenda;
 import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.Request;
@@ -120,7 +121,7 @@ public class CurrentFragment extends Fragment {
         //GET CURRENT SESSION
         //TODO REMOVE STATIC ASSOCIATION REFERENCE
 
-        mSessionLR = VotesHelper.getCurrentSession(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s").addSnapshotListener(mSessionEL);
+        mSessionLR = VotesHelper.getCurrentSession(FirebaseFirestore.getInstance(), HomeFragment.mCurrentAssociationId).addSnapshotListener(mSessionEL);
         //GET AGENDAS
 
         return view;
@@ -253,7 +254,7 @@ public class CurrentFragment extends Fragment {
 
         //call to get Agendas
         mAgendasLR =
-                VotesHelper.getAgendas(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mCurrentSession.first)
+                VotesHelper.getAgendas(FirebaseFirestore.getInstance(), HomeFragment.mCurrentAssociationId, mCurrentSession.first)
                         .addSnapshotListener(mAgendasEL);
 
 
@@ -347,7 +348,7 @@ public class CurrentFragment extends Fragment {
             mQuestionsLR.remove();
         //TODO REMOVE STATIC ASSOCIATION REFERENCE
         if(mCurrentSession.first != null)// should'nt happen, but just to be sure
-            mQuestionsLR = VotesHelper.getQuestions(FirebaseFirestore.getInstance(),"gVw7dUkuw3SSZSYRXe8s",
+            mQuestionsLR = VotesHelper.getQuestions(FirebaseFirestore.getInstance(),HomeFragment.mCurrentAssociationId,
                     mCurrentSession.first, agendaId).addSnapshotListener(mQuestionsEL);
 
     }
@@ -391,7 +392,7 @@ public class CurrentFragment extends Fragment {
 
              //TODO STATIC ASSOCIATION ID
 
-                it.putExtra("associationID", "gVw7dUkuw3SSZSYRXe8s");
+                it.putExtra("associationID", HomeFragment.mCurrentAssociationId);
                 it.putExtra("sessionID", mCurrentSession.first);
                 it.putExtra("agendaID", agendaID);
 
@@ -410,7 +411,7 @@ public class CurrentFragment extends Fragment {
 
     private void verifyIfUserVoted(String agendaId, String firstQuestionId){
         try {
-            mHasVotedLR = VotesHelper.getVote(FirebaseFirestore.getInstance(), "gVw7dUkuw3SSZSYRXe8s", mCurrentSession.first,
+            mHasVotedLR = VotesHelper.getVote(FirebaseFirestore.getInstance(), HomeFragment.mCurrentAssociationId, mCurrentSession.first,
                     agendaId, firstQuestionId, FirebaseAuth.getInstance().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
                 public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
