@@ -15,9 +15,11 @@ public class User {
     private HashSet<DocumentReference> roles;
     private ArrayList<CollectionReference> actions;
     private ArrayList<DocumentReference> associationsRef;
+    private DocumentReference lastAccessAssociationRef;
 // --- Constructors
 
-    public User(String birthday, String cpf, String email, String name, HashSet roles, ArrayList actions, String photoUrl){
+    public User(String birthday, String cpf, String email, String name, HashSet roles, ArrayList actions, String photoUrl,
+                DocumentReference lastAccessAssociationRef){
         this.birthday = birthday;
         this.cpf = cpf;
         this.email = email;
@@ -25,6 +27,7 @@ public class User {
         this.roles = roles;
         this.actions = actions;
         this.photoUrl = photoUrl;
+        this.lastAccessAssociationRef = lastAccessAssociationRef;
     }
 
     public User() {
@@ -53,7 +56,11 @@ public class User {
         return associationsRef;
     }
 
-    //--- Setters
+    public DocumentReference getLastAccessAssociationRef() {
+        return lastAccessAssociationRef;
+    }
+
+//--- Setters
 
     public void setActions(ArrayList<CollectionReference> actions) {
         this.actions = actions;
@@ -73,5 +80,9 @@ public class User {
 
     public void setAssociationsRef(ArrayList<DocumentReference> associationsRef) {
         this.associationsRef = associationsRef;
+    }
+
+    public void setLastAccessAssociationRef(DocumentReference lastAccessAssociationRef) {
+        this.lastAccessAssociationRef = lastAccessAssociationRef;
     }
 }

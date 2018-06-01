@@ -55,6 +55,7 @@
     <string name="trans">Transparência</string>
     <string name="assembleia">Assembléias</string>
     <string name="transparency_activity_title">Transparência</string>
+    <string name="no_association">Você ainda não está vinculado a nenhuma associação, espere a associação aprová-lo ou contate a mesma se o problema persistir</string>
 
 
     <!-- New requests strings -->

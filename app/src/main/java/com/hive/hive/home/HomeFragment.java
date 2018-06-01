@@ -24,7 +24,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.VotesHelper;
 import com.hive.hive.home.db_files.CurrentAgendasForHomeFirebaseHandle;
+import com.hive.hive.main.MainFirebaseHandle;
 import com.hive.hive.model.association.Agenda;
+import com.hive.hive.model.association.Association;
 import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.Request;
 import com.hive.hive.model.association.Session;
@@ -41,12 +43,15 @@ import java.util.HashMap;
 public class HomeFragment extends Fragment {
     private boolean first = true;//used to verify if there is need to create a adapter
 
+    public static String mCurrentAssociationId;
+
     private RecyclerView mRecyclerViewHome;
     private RecyclerViewHomeAdapter mRecyclerViewHomeAdapter;
     private String TAG = HomeFragment.class.getSimpleName();
     // Views
     ImageView mUserAvatar;
-    TextView mGreetingsTV;
+    TextView mGreetingsTV, mCurrentAssociationTV;
+
 
     // Settings
     View mView;
@@ -96,7 +101,7 @@ public class HomeFragment extends Fragment {
         // Set settings
         mView = v;
         mContext = getContext();
-
+        MainFirebaseHandle.getCurrentAssociation(this);
         setCurrentUserInfo();
 
         initStructures();
@@ -283,7 +288,10 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-
+    public void updateCurrentAssociationUI(Association association){
+        mCurrentAssociationTV = mView.findViewById(R.id.currentAssociationTV);
+        mCurrentAssociationTV.setText(association.getName());
+    }
     private void getAgendaScore(String agendaId){
         mAgendas.second.get(agendaId).getRequestRef().get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
