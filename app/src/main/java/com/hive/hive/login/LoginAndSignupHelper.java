@@ -18,7 +18,7 @@ public class LoginAndSignupHelper {
 
     public static String ASSOCIATION_COLLECTION = "associations";
 
-    public static String INGRESS_REQUEST_COLLECTION = "ingress_requests";
+    public static String INGRESS_REQUEST_COLLECTION = "ingressRequests";
 
 
     public static Task<DocumentSnapshot> getAssociation(DocumentReference associationRef){
