@@ -5,7 +5,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,16 +13,11 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -46,6 +40,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
 import com.hive.hive.main.MainActivity;
+import com.hive.hive.main.MainFirebaseHandle;
 import com.hive.hive.utils.ProfilePhotoHelper;
 import com.hive.hive.utils.Utils;
 import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
@@ -91,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                checkUserAndSwitchActivity();
+                verifyUserAndCheckout();
             }
         };
         // For debugging purposes
@@ -259,14 +254,14 @@ public class LoginActivity extends AppCompatActivity {
 //                Log.e(TAG, error.getMessage());
 //            }
 //        });
-        checkUserAndSwitchActivity();
+        verifyUserAndCheckout();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
-        checkUserAndSwitchActivity();
+        verifyUserAndCheckout();
     }
     @Override
     protected  void onDestroy(){
@@ -326,7 +321,7 @@ public class LoginActivity extends AppCompatActivity {
             mAuth.signInWithEmailAndPassword(email, pwd).addOnSuccessListener(new OnSuccessListener<AuthResult>(){
                 @Override
                 public void onSuccess(AuthResult authResult) {
-                    checkUserAndSwitchActivity();
+                    verifyUserAndCheckout();
 
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -368,7 +363,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithCredential: success");
-                            checkUserAndSwitchActivity();
+                            verifyUserAndCheckout();
                         } else {
                             Log.w(TAG, "signInWithCredential: failure", task.getException());
                             Snackbar.make(findViewById(R.id.activity_main), R.string.auth_failure, Snackbar.LENGTH_SHORT).show();
@@ -388,15 +383,9 @@ public class LoginActivity extends AppCompatActivity {
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential);
     }
-
-    private void checkUserAndSwitchActivity() {
-        final FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null) {
-            //used to show user progress
-            progressUser();
-            ProfilePhotoHelper.updateProfileUrl();
-            // Try to retrieve firestore data
-            db
+    public void checkout(){
+        // Try to retrieve firestore data
+        db
                 .collection("users")
                 .document(mAuth.getUid())
                 .get()
@@ -412,12 +401,20 @@ public class LoginActivity extends AppCompatActivity {
                                 intent = new Intent(LoginActivity.this, MainActivity.class);
                             }
                         }
-
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         finish();
                     }
                 });
+    }
+    private void verifyUserAndCheckout() {
+        final FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            //used to show user progress
+            progressUser();
+            ProfilePhotoHelper.updateProfileUrl();
+            MainFirebaseHandle.getCurrentAssociation(LoginActivity.this);
+
         }
     }
     private void hideEmailFields(){
