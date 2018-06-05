@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.util.Pair;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.hive.hive.R;
 import com.hive.hive.home.HomeFragment;
@@ -19,6 +21,9 @@ import com.hive.hive.model.user.User;
 import com.hive.hive.profiles.UserProfileActivity;
 import com.hive.hive.utils.DocReferences;
 import com.hive.hive.utils.UserHelper;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainFirebaseHandle {
 
@@ -66,6 +71,7 @@ public class MainFirebaseHandle {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {//if there is a selected association use it
                     HomeFragment.mCurrentAssociationId = documentSnapshot.getId();
+                    HomeFragment.mUser = user;
                     if(activity instanceof LoginActivity)
                         ((LoginActivity) activity).checkout();
                 }
@@ -74,19 +80,45 @@ public class MainFirebaseHandle {
         });
     }
 
+//
+//    public static void getCurrentAssociation(HomeFragment fragment) {
+//        LoginAndSignupHelper.getAssociation(DocReferences.getAssociationRef(HomeFragment.mCurrentAssociationId)).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//            @Override
+//            public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                if (documentSnapshot.exists()) {//if there is a selected association use it
+//                    HomeFragment.mCurrentAssociationId = documentSnapshot.getId();
+//                    Association association = documentSnapshot.toObject(Association.class);
+//                    if(fragment != null)
+//                        fragment.updateCurrentAssociationUI(association);
+//                }
+//
+//            }
+//        });
+//    }
 
-    public static void getCurrentAssociation(HomeFragment fragment) {
-        LoginAndSignupHelper.getAssociation(DocReferences.getAssociationRef(HomeFragment.mCurrentAssociationId)).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {//if there is a selected association use it
-                    HomeFragment.mCurrentAssociationId = documentSnapshot.getId();
-                    Association association = documentSnapshot.toObject(Association.class);
-                    if(fragment != null)
-                        fragment.updateCurrentAssociationUI(association);
+    public static void getAssociations(User user, HomeFragment fragment){
+        ArrayList<Pair<String, String>> associations = new ArrayList<>();//id and name
+        for(DocumentReference ref : user.getAssociationsRef()){
+            LoginAndSignupHelper.getAssociation(ref).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if (documentSnapshot.exists()) {
+                        String associationId = documentSnapshot.getId();
+                        Association association = documentSnapshot.toObject(Association.class);
+                        associations.add(new Pair<>(associationId, association.getName()));
+                        callUI(associations, user, fragment);
+                    }
+
                 }
+            });
+        }
 
-            }
-        });
+    }
+
+    private static void callUI(ArrayList<Pair<String, String>> associations, User user, HomeFragment fragment){
+        if(associations.size() == user.getAssociationsRef().size())
+            if(fragment != null)
+                fragment.updateCurrentAssociationUI(associations);
+
     }
 }

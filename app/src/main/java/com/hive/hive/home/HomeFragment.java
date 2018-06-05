@@ -12,7 +12,10 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,6 +27,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.VotesHelper;
 import com.hive.hive.home.db_files.CurrentAgendasForHomeFirebaseHandle;
+import com.hive.hive.main.MainActivity;
 import com.hive.hive.main.MainFirebaseHandle;
 import com.hive.hive.model.association.Agenda;
 import com.hive.hive.model.association.Association;
@@ -39,18 +43,21 @@ import com.hive.hive.utils.ProfilePhotoHelper;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
+
 
 public class HomeFragment extends Fragment {
     private boolean first = true;//used to verify if there is need to create a adapter
 
     public static String mCurrentAssociationId;
-
+    public static  User mUser;
     private RecyclerView mRecyclerViewHome;
     private RecyclerViewHomeAdapter mRecyclerViewHomeAdapter;
     private String TAG = HomeFragment.class.getSimpleName();
     // Views
     ImageView mUserAvatar;
-    TextView mGreetingsTV, mCurrentAssociationTV;
+    TextView mGreetingsTV;
+    Spinner mCurrentAssociationSpinner;
 
 
     // Settings
@@ -101,7 +108,7 @@ public class HomeFragment extends Fragment {
         // Set settings
         mView = v;
         mContext = getContext();
-        MainFirebaseHandle.getCurrentAssociation(this);
+        MainFirebaseHandle.getAssociations(mUser,this);
         setCurrentUserInfo();
 
         initStructures();
@@ -288,9 +295,44 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-    public void updateCurrentAssociationUI(Association association){
-        mCurrentAssociationTV = mView.findViewById(R.id.currentAssociationTV);
-        mCurrentAssociationTV.setText(association.getName());
+    public void updateCurrentAssociationUI(ArrayList<Pair<String, String>> associations){
+
+
+        ArrayList<String> associationNames = new ArrayList<>();
+        for(Pair<String, String> association : associations){
+            if(association.first.equals(mCurrentAssociationId))//the first item is the current association
+                associationNames.add(0, association.second);
+            else{
+                associationNames.add(association.second);}
+
+        }
+        mCurrentAssociationSpinner = mView.findViewById(R.id.currentAssociationSpinner);
+
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<String>(getApplicationContext(),  android.R.layout.simple_spinner_dropdown_item, associationNames);
+        adapter.setDropDownViewResource( android.R.layout.simple_spinner_dropdown_item);
+
+        mCurrentAssociationSpinner.setAdapter(adapter);
+
+        mCurrentAssociationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String selected = mCurrentAssociationSpinner.getSelectedItem().toString();
+                for(Pair<String, String> association : associations){
+                    if(association.second.equals(selected))
+                       if(!association.first.equals(mCurrentAssociationId)) {
+                           mCurrentAssociationId = association.first;
+                           startActivity(new Intent(HomeFragment.this.getContext(), MainActivity.class));
+                       }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
     }
     private void getAgendaScore(String agendaId){
         mAgendas.second.get(agendaId).getRequestRef().get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
