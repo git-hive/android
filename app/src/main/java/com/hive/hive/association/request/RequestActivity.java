@@ -246,13 +246,17 @@ public class RequestActivity extends AppCompatActivity {
                     if (!categoryName.equals(mCategoryName)) {
                         mCategoryName = categoryName;
                         mFilterTV.setText(mmap.get(filterName.getText()));
-
-                        mRecyclerAdapter.setData(
-                                sortRequestSnapsByRank(
-                                        filterRequestDocsByCategory(mCategoryName)
-                                )
-                        );
-                        mRecyclerAdapter.notifyDataSetChanged();
+                        mRecyclerAdapter.sendToFirebase();
+                        mRecyclerAdapter = new RequestAdapter(
+                                sortRequestSnapsByRank(filterRequestDocsByCategory(mCategoryName)),
+                                RequestActivity.this);
+                        mRequestRV.setAdapter(mRecyclerAdapter);
+//                        mRecyclerAdapter.setData(
+//                                sortRequestSnapsByRank(
+//                                        filterRequestDocsByCategory(mCategoryName)
+//                                )
+//                        );
+//                        mRecyclerAdapter.notifyDataSetChanged();
                     }
                 }
             }

@@ -16,7 +16,7 @@ import com.hive.hive.R;
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     private int[] images = {R.drawable.ic_category_gardening, R.drawable.ic_category_cleaning, R.drawable.ic_category_all,
-            R.drawable.ic_category_security, R.drawable.ic_category_services};
+            R.drawable.ic_category_security, R.drawable.ic_category_services, R.drawable.ic_outros_laranja};
 
     @Override
     public DataAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

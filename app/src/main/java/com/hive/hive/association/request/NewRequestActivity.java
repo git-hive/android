@@ -83,6 +83,11 @@ public class NewRequestActivity extends AppCompatActivity {
     private ImageView requestCategoryCleaningIV;
     private CheckBox requestCategoryCleaningCB;
 
+    // Others category
+    private LinearLayout requestCategoryOthersLL;
+    private ImageView requestCategoryOthersIV;
+    private CheckBox requestCategoryOthersCB;
+
     private TextView selectedRequestCategoryTV;
     private Pair<DocumentReference, RequestCategory> selectedRequestCategoryPair;
     private ArrayList<Pair<DocumentReference, RequestCategory>> requestCategoriesPairs;
@@ -196,10 +201,15 @@ public class NewRequestActivity extends AppCompatActivity {
         // Cleaning
         requestCategoryCleaningLL = findViewById(R.id.new_request_request_category_cleaning_ll);
         requestCategoryCleaningLL.setOnClickListener(requestCategoriesOnClickListener());
-
         requestCategoryCleaningIV = findViewById(R.id.new_request_request_category_cleaning_iv);
         requestCategoryCleaningCB = findViewById(R.id.new_request_request_category_cleaning_cb);
 
+
+        // Others
+        requestCategoryOthersLL = findViewById(R.id.new_request_request_category_others_ll);
+        requestCategoryOthersLL.setOnClickListener(requestCategoriesOnClickListener());
+        requestCategoryOthersIV = findViewById(R.id.new_request_request_category_others_iv);
+        requestCategoryOthersCB = findViewById(R.id.new_request_request_category_others_cb);
 
         // OnClick Listeners
         saveBT.setOnClickListener(new View.OnClickListener() {
@@ -350,6 +360,13 @@ public class NewRequestActivity extends AppCompatActivity {
                         requestCategoryCleaningCB.setSelected(true);
                         searchAndSetRequestCategory("cleaning");
                         break;
+
+                    case R.id.new_request_request_category_others_ll:
+                        selectedRequestCategoryTV.setText(R.string.request_category_others);
+                        requestCategoryOthersIV.setImageResource(R.drawable.ic_outros_laranja);
+                        requestCategoryOthersCB.setSelected(true);
+                        searchAndSetRequestCategory("others");
+                        break;
                     default:
                         break;
                 }
@@ -372,7 +389,6 @@ public class NewRequestActivity extends AppCompatActivity {
         budgetCategoryExtraordinaryIV.setImageResource(R.drawable.ic_budget_category_extraordinary_disabled);
         budgetCategoryExtraordinaryCB.setSelected(false);
 
-
         budgetCategoryNoCostIV.setImageResource(R.drawable.ic_sem_custo_gray);
         budgetCategoryNoCostCB.setSelected(false);
     }
@@ -394,6 +410,9 @@ public class NewRequestActivity extends AppCompatActivity {
 
         requestCategoryCleaningIV.setImageResource(R.drawable.ic_category_cleaning_disabled);
         requestCategoryCleaningCB.setSelected(false);
+
+        requestCategoryOthersIV.setImageResource(R.drawable.ic_category_cleaning_disabled);
+        requestCategoryOthersCB.setSelected(false);
     }
 
     /**

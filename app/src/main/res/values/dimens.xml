@@ -28,7 +28,7 @@
 
     <!-- New Request -->
     <dimen name="new_request_category_icon_size">70dp</dimen>
-    <dimen name="new_request_budget_category_font_size">12sp</dimen>
+    <dimen name="new_request_budget_category_font_size">11sp</dimen>
     <dimen name="new_request_budget_category_icon_size">70dp</dimen>
 
     <!-- Hexagonal bar-->

@@ -71,6 +71,8 @@ public abstract class Utils {
         mmap.put("res/drawable/ic_category_cleaning.xml", "Cleaning");
         mmap.put("res/drawable/ic_category_all.xml", "All");
         mmap.put("res/drawable/ic_category_security.xml", "Security");
+        mmap.put("res/drawable/ic_outros_laranja.xml", "Others");
+
         return mmap;
     }
 

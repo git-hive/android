@@ -228,7 +228,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="0.25"
+                android:layout_weight="0.2"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -260,7 +260,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="0.25"
+                android:layout_weight="0.2"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -293,7 +293,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="0.25"
+                android:layout_weight="0.2"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -320,13 +320,14 @@
 
             </LinearLayout>
 
+
             <!-- Cleaning request category -->
             <LinearLayout
                 android:id="@+id/new_request_request_category_cleaning_ll"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="0.25"
+                android:layout_weight="0.2"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -350,6 +351,41 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="gone" />
+
+
+            </LinearLayout>
+
+            <!-- Cleaning request category -->
+            <LinearLayout
+                android:id="@+id/new_request_request_category_others_ll"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.2"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/new_request_request_category_others_iv"
+                    android:layout_width="@dimen/new_request_budget_category_icon_size"
+                    android:layout_height="@dimen/new_request_budget_category_icon_size"
+                    app:srcCompat="@drawable/ic_outros_gray" />
+
+                <TextView
+                    android:id="@+id/new_request_request_category_others_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/request_category_others"
+                    android:textAlignment="center"
+                    android:textColor="@color/gray_text"
+                    android:textSize="@dimen/new_request_budget_category_font_size" />
+
+                <CheckBox
+                    android:id="@+id/new_request_request_category_others_cb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
 
             </LinearLayout>
 
