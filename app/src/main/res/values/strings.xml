@@ -94,6 +94,8 @@
     <string name="budget_category_ordinary">Orinária</string>
     <string name="budget_category_savings">Fundo de Reserva</string>
     <string name="budget_category_extraordinary">Extraordinária</string>
+    <string name="budget_category_no_cost">Sem custo</string>
+
 
     <!-- Image Description Strings -->
     <string name="ic_budget_category_savings">Ícone de cofrinho</string>

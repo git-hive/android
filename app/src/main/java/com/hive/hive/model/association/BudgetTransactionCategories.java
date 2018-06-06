@@ -8,7 +8,7 @@ public class BudgetTransactionCategories {
     public static String ORDINARY = "ordinary";
     public static String EXTRAORDINARY = "extraordinary";
     public static String SAVINGS = "savings";
-
+    public static String NO_COST = "no cost";
     private String id;
     private String name;
 

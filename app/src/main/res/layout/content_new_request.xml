@@ -68,7 +68,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="0.33"
+                android:layout_weight="0.25"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -100,7 +100,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="0.33"
+                android:layout_weight="0.25"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -133,7 +133,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="0.33"
+                android:layout_weight="0.25"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -154,6 +154,39 @@
 
                 <CheckBox
                     android:id="@+id/new_request_budget_category_extraordinary_cb"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <!-- Extraordinary Budget Category -->
+            <LinearLayout
+                android:id="@+id/new_request_budget_category_no_cost_ll"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="0.25"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/new_request_budget_category_no_cost_iv"
+                    android:layout_width="@dimen/new_request_budget_category_icon_size"
+                    android:layout_height="@dimen/new_request_budget_category_icon_size"
+                    app:srcCompat="@drawable/ic_sem_custo_gray" />
+
+                <TextView
+                    android:id="@+id/new_request_budget_category_no_cost_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no_cost"
+                    android:textAlignment="center"
+                    android:textColor="@color/gray_text"
+                    android:textSize="@dimen/new_request_budget_category_font_size" />
+
+                <CheckBox
+                    android:id="@+id/new_request_budget_category_no_cost_cb"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="gone" />

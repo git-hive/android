@@ -54,6 +54,11 @@ public class NewRequestActivity extends AppCompatActivity {
     private ImageView budgetCategoryExtraordinaryIV;
     private CheckBox budgetCategoryExtraordinaryCB;
 
+    // No cost
+    private LinearLayout budgetCategoryNoCostLL;
+    private ImageView budgetCategoryNoCostIV;
+    private CheckBox budgetCategoryNoCostCB;
+
     private TextView selectedBudgetCategoryTV;
 
     //--- Request categories
@@ -149,6 +154,17 @@ public class NewRequestActivity extends AppCompatActivity {
                 findViewById(R.id.new_request_budget_category_extraordinary_iv);
         budgetCategoryExtraordinaryCB =
                 findViewById(R.id.new_request_budget_category_extraordinary_cb);
+
+
+        // No cost
+        budgetCategoryNoCostLL =
+                findViewById(R.id.new_request_budget_category_no_cost_ll);
+        budgetCategoryNoCostLL.setOnClickListener(budgetCategoriesOnClickListener());
+
+        budgetCategoryNoCostIV =
+                findViewById(R.id.new_request_budget_category_no_cost_iv);
+        budgetCategoryNoCostCB =
+                findViewById(R.id.new_request_budget_category_no_cost_cb);
 
         //--- Request categories
         selectedRequestCategoryTV = findViewById(R.id.new_request_selected_request_category_tv);
@@ -272,19 +288,30 @@ public class NewRequestActivity extends AppCompatActivity {
                         selectedBudgetCategoryTV.setText(R.string.budget_category_ordinary);
                         budgetCategoryOrdinaryIV.setImageResource(R.drawable.ic_budget_category_ordinary);
                         budgetCategoryOrdinaryCB.setSelected(true);
+                        costET.setEnabled(true);
                         searchAndSetBudgetCategory("ordinary");
                         break;
                     case R.id.new_request_budget_category_savings_ll:
                         selectedBudgetCategoryTV.setText(R.string.budget_category_savings);
                         budgetCategorySavingsIV.setImageResource(R.drawable.ic_budget_category_savings);
                         budgetCategorySavingsCB.setSelected(true);
+                        costET.setEnabled(true);
                         searchAndSetBudgetCategory("savings");
                         break;
                     case R.id.new_request_budget_category_extraordinary_ll:
                         selectedBudgetCategoryTV.setText(R.string.budget_category_extraordinary);
                         budgetCategoryExtraordinaryIV.setImageResource(R.drawable.ic_budget_category_extraordinary);
                         budgetCategoryExtraordinaryCB.setSelected(true);
+                        costET.setEnabled(true);
                         searchAndSetBudgetCategory("extraordinary");
+                        break;
+                    case R.id.new_request_budget_category_no_cost_ll:
+                        selectedBudgetCategoryTV.setText(R.string.budget_category_no_cost);
+                        budgetCategoryNoCostIV.setImageResource(R.drawable.ic_sem_custo_laranja);
+                        budgetCategoryNoCostCB.setSelected(true);
+                        costET.setText("0");
+                        costET.setEnabled(false);
+                        searchAndSetBudgetCategory("no cost");
                         break;
                     default:
                         break;
@@ -344,6 +371,10 @@ public class NewRequestActivity extends AppCompatActivity {
 
         budgetCategoryExtraordinaryIV.setImageResource(R.drawable.ic_budget_category_extraordinary_disabled);
         budgetCategoryExtraordinaryCB.setSelected(false);
+
+
+        budgetCategoryNoCostIV.setImageResource(R.drawable.ic_sem_custo_gray);
+        budgetCategoryNoCostCB.setSelected(false);
     }
 
     /**

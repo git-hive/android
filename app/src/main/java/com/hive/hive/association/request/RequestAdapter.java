@@ -92,6 +92,10 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                 BudgetTransactionCategories.SAVINGS,
                 R.drawable.ic_budget_category_savings
         );
+        budgetCategoryNameResource.put(
+                BudgetTransactionCategories.NO_COST,
+                R.drawable.ic_sem_custo_laranja
+        );
     }
 
     @Override
@@ -120,13 +124,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         holder.mRequestContent.setText(request.getContent());
         holder.mNumberOfSupportsTV.setText(String.valueOf(request.getScore()));
         holder.mNumberOfCommentsTV.setText(String.valueOf(request.getNumComments()));
-        if(request.getEstimatedCost() > 0) {
-            holder.mRequestCost.setText(context.getResources().getString(R.string.estimated_cost) + String.valueOf(request.getEstimatedCost()));
-
-        }else{
-            holder.mRequestCost.setText(context.getResources().getString(R.string.no_cost));
-            holder.mRequestCategory.setVisibility(View.GONE);
-        }
         String budgetCategoryName = request.getBudgetCategoryName();
         if (budgetCategoryNameResource.containsKey(budgetCategoryName)) {
             holder
