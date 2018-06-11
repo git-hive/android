@@ -17,8 +17,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.facebook.login.Login;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -27,6 +30,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.VotesHelper;
 import com.hive.hive.home.db_files.CurrentAgendasForHomeFirebaseHandle;
+import com.hive.hive.login.LoginActivity;
 import com.hive.hive.main.MainActivity;
 import com.hive.hive.main.MainFirebaseHandle;
 import com.hive.hive.model.association.Agenda;
@@ -108,21 +112,22 @@ public class HomeFragment extends Fragment {
         // Set settings
         mView = v;
         mContext = getContext();
+
         MainFirebaseHandle.getAssociations(mUser,this);
         setCurrentUserInfo();
 
-        initStructures();
+//        initStructures();
 
-        initDummy();
+//        initDummy();
 
-        initRecycler();
+//        initRecycler();
 
         initOnClicks();
 
-        initEventListeners();
+//        initEventListeners();
 
 
-        mSessionLR = VotesHelper.getCurrentSession(FirebaseFirestore.getInstance(), HomeFragment.mCurrentAssociationId).addSnapshotListener(mSessionEL);
+//        mSessionLR = VotesHelper.getCurrentSession(FirebaseFirestore.getInstance(), HomeFragment.mCurrentAssociationId).addSnapshotListener(mSessionEL);
 
 
         return v;
@@ -252,11 +257,11 @@ public class HomeFragment extends Fragment {
 
 
     private void initEventListeners(){
-        mSessionEL = CurrentAgendasForHomeFirebaseHandle.sessionHandler(this);
+//        mSessionEL = CurrentAgendasForHomeFirebaseHandle.sessionHandler(this);
 
-        mAgendasEL = CurrentAgendasForHomeFirebaseHandle.agendasHandler(this);
+//        mAgendasEL = CurrentAgendasForHomeFirebaseHandle.agendasHandler(this);
 
-        mQuestionsEL = CurrentAgendasForHomeFirebaseHandle.questionsHanderl(this);
+//        mQuestionsEL = CurrentAgendasForHomeFirebaseHandle.questionsHanderl(this);
 
     }
 

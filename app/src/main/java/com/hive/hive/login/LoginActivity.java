@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // Layout Elements
     private SignInButton mGoogleSignInBT;
-//    private LoginButton mFacebookSignInBtn;
+    //    private LoginButton mFacebookSignInBtn;
     private EditText mEditTextPassword;
     private EditText mEditTextUser;
     private TextView mTextViewPassword;
@@ -76,6 +76,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button mButtonEmailLogin;
 
     private CircleProgressBar mProgress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
         mButtonEmailLogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mTextViewUser.getVisibility() == View.GONE) {
+                if (mTextViewUser.getVisibility() == View.GONE) {
                     mTextViewUser.setVisibility(View.VISIBLE);
                     mTextViewPassword.setVisibility(View.VISIBLE);
                     mTextViewForgotPass.setVisibility(View.VISIBLE);
@@ -137,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
                     mButtonEmailLogin.setText(R.string.other_login_methods);
 //                    mFacebookSignInBtn.setVisibility(View.GONE);
                     mGoogleSignInBT.setVisibility(View.GONE);
-                }else{
+                } else {
                     mTextViewUser.setVisibility(View.GONE);
                     mTextViewPassword.setVisibility(View.GONE);
                     mTextViewForgotPass.setVisibility(View.GONE);
@@ -170,17 +171,17 @@ public class LoginActivity extends AppCompatActivity {
                     mEditTextPassword.requestFocus();
                 }
 
-                if((!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pwd))) {
+                if ((!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pwd))) {
                     progressUser();
                     hideEmailFields();
                     email = mEditTextUser.getText().toString().trim();
                     pwd = mEditTextPassword.getText().toString().trim();
-                  //  System.out.println(email+pwd);
+                    //  System.out.println(email+pwd);
                     // TODO: validate email and pwd
-                    mAuth.createUserWithEmailAndPassword(email, pwd).addOnSuccessListener(new OnSuccessListener<AuthResult>(){
+                    mAuth.createUserWithEmailAndPassword(email, pwd).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
-                           emailLogin();
+                            emailLogin();
                             //finish();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -263,11 +264,13 @@ public class LoginActivity extends AppCompatActivity {
         mAuth.addAuthStateListener(mAuthListener);
         verifyUserAndCheckout();
     }
+
     @Override
-    protected  void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
         mAuth.removeAuthStateListener(mAuthListener);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -290,15 +293,16 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
 
     }
-    private void emailLogin(){
-        if(mEditTextUser.getText().equals(null)){
+
+    private void emailLogin() {
+        if (mEditTextUser.getText().equals(null)) {
             mEditTextUser.requestFocus();
             return;
         }
-        if(mEditTextPassword.getText().equals(null)){
+        if (mEditTextPassword.getText().equals(null)) {
             mEditTextPassword.requestFocus();
             return;
         }
@@ -306,19 +310,19 @@ public class LoginActivity extends AppCompatActivity {
         String pwd = mEditTextPassword.getText().toString().trim();
 
         // Checking if fields are empty or wrong
-        if( mEditTextUser.getText().toString().trim().equals("")){
+        if (mEditTextUser.getText().toString().trim().equals("")) {
 
-            mEditTextUser.setError( "Username name is required!" );
+            mEditTextUser.setError("Username name is required!");
             mEditTextUser.setHint("please enter a username");
 
-        }else if(mEditTextPassword.getText().toString().trim().equals("")) {
+        } else if (mEditTextPassword.getText().toString().trim().equals("")) {
 
-            mEditTextPassword.setError( "Password is required!" );
+            mEditTextPassword.setError("Password is required!");
             mEditTextPassword.setHint("please enter a password");
 
-        }else{
+        } else {
 
-            mAuth.signInWithEmailAndPassword(email, pwd).addOnSuccessListener(new OnSuccessListener<AuthResult>(){
+            mAuth.signInWithEmailAndPassword(email, pwd).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                 @Override
                 public void onSuccess(AuthResult authResult) {
                     verifyUserAndCheckout();
@@ -330,17 +334,17 @@ public class LoginActivity extends AppCompatActivity {
                 public void onFailure(@NonNull Exception e) {
                     if (e instanceof FirebaseAuthInvalidUserException) {
                         mEditTextUser.requestFocus();
-                        mEditTextUser.setError( "A valid User is required!" );
+                        mEditTextUser.setError("A valid User is required!");
                         mEditTextUser.setHint("please enter a user");
-                    }else if(e instanceof FirebaseAuthInvalidCredentialsException){
+                    } else if (e instanceof FirebaseAuthInvalidCredentialsException) {
                         mEditTextPassword.requestFocus();
-                        mEditTextPassword.setError( "A valid password is required!" );
+                        mEditTextPassword.setError("A valid password is required!");
                         mEditTextPassword.setHint("please enter a password");
                         Toast.makeText(LoginActivity.this, "Authentication failed." + e.getMessage(),
                                 Toast.LENGTH_SHORT).show();
 
 
-                    }else{
+                    } else {
                         Toast.makeText(LoginActivity.this, "Authentication failed." + e.getMessage(),
                                 Toast.LENGTH_SHORT).show();
                     }
@@ -348,13 +352,14 @@ public class LoginActivity extends AppCompatActivity {
             });
         }
     }
+
     /**
      * Authenticates in Firebase with Google Account
      *
      * @param account - google account to authenticate
      */
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
-            Log.d(TAG, "firebaseAuthWithGoogle: " + account.getId());
+        Log.d(TAG, "firebaseAuthWithGoogle: " + account.getId());
 
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         mAuth.signInWithCredential(credential)
@@ -383,30 +388,23 @@ public class LoginActivity extends AppCompatActivity {
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential);
     }
-    public void checkout(){
-        // Try to retrieve firestore data
-        db
-                .collection("users")
-                .document(mAuth.getUid())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        // Switch to SignUpActivity by default
-                        Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot snap = task.getResult();
-                            if (snap.exists()) {
-                                // If user data exists on Firestore switch to UserProfileActivity
-                                intent = new Intent(LoginActivity.this, MainActivity.class);
-                            }
-                        }
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        finish();
-                    }
-                });
+
+    public void checkoutSignUp() {
+        Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
+        startActivity(intent);
+        finish();
     }
+
+    public void checkoutMain() {
+        // If user data exists on Firestore switch to UserProfileActivity
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
+
+
+
     private void verifyUserAndCheckout() {
         final FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
@@ -417,19 +415,22 @@ public class LoginActivity extends AppCompatActivity {
 
         }
     }
-    private void hideEmailFields(){
+
+    private void hideEmailFields() {
         mTextViewUser.setVisibility(View.GONE);
         mTextViewPassword.setVisibility(View.GONE);
         mTextViewForgotPass.setVisibility(View.GONE);
         mTextViewSignUp.setVisibility(View.GONE);
         mEditTextUser.setVisibility(View.GONE);
         mEditTextPassword.setVisibility(View.GONE);
-        mButtonSignIn.setVisibility(View.GONE);;
+        mButtonSignIn.setVisibility(View.GONE);
+        ;
         mButtonEmailLogin.setText(R.string.email_login);
 
     }
+
     //used to show login progress
-    private void progressUser(){
+    private void progressUser() {
         //progressBar
         mProgress.setVisibility(View.VISIBLE);
         //buttons
@@ -446,8 +447,9 @@ public class LoginActivity extends AppCompatActivity {
         mTextViewForgotPass.setVisibility(View.GONE);
         mTextViewUser.setVisibility(View.GONE);
     }
+
     //reshow buttons
-    private void returnFromProgress(){
+    private void returnFromProgress() {
 //        mFacebookSignInBtn.setVisibility(View.VISIBLE);
         mGoogleSignInBT.setVisibility(View.VISIBLE);
         mButtonEmailLogin.setVisibility(View.VISIBLE);

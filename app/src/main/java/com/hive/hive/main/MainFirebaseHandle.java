@@ -16,6 +16,7 @@ import com.hive.hive.R;
 import com.hive.hive.home.HomeFragment;
 import com.hive.hive.login.LoginActivity;
 import com.hive.hive.login.LoginAndSignupHelper;
+import com.hive.hive.login.SignupActivity;
 import com.hive.hive.model.association.Association;
 import com.hive.hive.model.user.User;
 import com.hive.hive.profiles.UserProfileActivity;
@@ -39,9 +40,10 @@ public class MainFirebaseHandle {
                     updateAssociation(user, activity);
 
                 }
-//                else{
-//                    //Logout then
-//                }
+                else{
+                    if(activity instanceof LoginActivity)
+                        ((LoginActivity) activity).checkoutSignUp();
+                }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -72,8 +74,9 @@ public class MainFirebaseHandle {
                 if (documentSnapshot.exists()) {//if there is a selected association use it
                     HomeFragment.mCurrentAssociationId = documentSnapshot.getId();
                     HomeFragment.mUser = user;
-                    if(activity instanceof LoginActivity)
-                        ((LoginActivity) activity).checkout();
+                    Intent intent = new Intent(activity, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    activity.startActivity(intent);
                 }
 
             }
