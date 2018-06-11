@@ -63,26 +63,7 @@ public class HomeFragment extends Fragment {
     Context mContext;
 
     // Data
-    ArrayList<Object> DUMMYARRAY;
-
-
-    //Questions
-    private com.google.firebase.firestore.EventListener<QuerySnapshot> mQuestionsEL;
-    private ListenerRegistration mQuestionsLR;
-    private Pair<ArrayList<String>, HashMap<String, Question>> mQuestions; //FROM CURRENT AGENDA
-
-    // Agenda
-    private Pair<ArrayList<String>, HashMap<String, Agenda>> mAgendas;  //first its agenda ids, second its a map <agendaid, agenda>
-    private HashMap<String, Integer> mAgendasScores;
-    private com.google.firebase.firestore.EventListener<QuerySnapshot> mAgendasEL;
-    private ListenerRegistration mAgendasLR;
-
-
-    // Session
-
-    private Pair<String, Session> mCurrentSession;
-    private com.google.firebase.firestore.EventListener<QuerySnapshot> mSessionEL;
-    private ListenerRegistration mSessionLR;
+    ArrayList<Object> mRecyclerObjects;
 
 
 
@@ -109,9 +90,8 @@ public class HomeFragment extends Fragment {
 
         MainFirebaseHandle.getAssociations(mUser,this);
         setCurrentUserInfo();
-        HomeFirebaseHandle.getReports(this);
 
-//        initStructures();
+        initStructures();
 
 //        initDummy();
 
@@ -123,6 +103,8 @@ public class HomeFragment extends Fragment {
 
 
 //        mSessionLR = VotesHelper.getCurrentSession(FirebaseFirestore.getInstance(), HomeFragment.mCurrentAssociationId).addSnapshotListener(mSessionEL);
+
+        HomeFirebaseHandle.getSession(this, mRecyclerObjects);
 
 
         return v;
@@ -143,11 +125,10 @@ public class HomeFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //todo review this
-        if (mSessionEL != null)
-            mSessionLR.remove();
-        if (mAgendasLR != null)
-            mAgendasLR.remove();
+    }
+
+    public void initStructures(){
+        mRecyclerObjects = new ArrayList<>();
     }
 
     public void setCurrentUserInfo(){
@@ -171,120 +152,11 @@ public class HomeFragment extends Fragment {
 
     }
 
-    public void addAgenda(String agendaId, Agenda agenda){
-        mAgendas.first.add(agendaId);
-        mAgendas.second.put(agendaId, agenda);
-
-        getAgendaScore(agendaId);
-
-    }
-
-    public void updateAgenda(String agendaId, Agenda agenda){
-
-        mAgendas.second.put(agendaId, agenda);
-
-        mRecyclerViewHomeAdapter.notifyDataSetChanged();
-
-    }
-
-    public void removeAgenda(String agendaId){
-        mAgendas.first.remove(agendaId);
-        mAgendas.second.remove(agendaId);
-        mAgendasScores.remove(agendaId);
-
-        mRecyclerViewHomeAdapter.notifyDataSetChanged();
-    }
-
-    public void addSession(String sessionId, Session session){
-        //sets current Session
-        mCurrentSession = new Pair<>(sessionId, session);
-
-        //call to get Agendas
-        mAgendasLR =
-                VotesHelper.getAgendas(FirebaseFirestore.getInstance(), HomeFragment.mCurrentAssociationId, mCurrentSession.first)
-                        .addSnapshotListener(mAgendasEL);
-
-
-        mRecyclerViewHomeAdapter.setmCurrentSession(mCurrentSession);
-        mRecyclerViewHomeAdapter.notifyDataSetChanged();
-
-    }
-
-    public void updateSession(String sessionId, Session session){
-        mCurrentSession = new Pair<>(sessionId, session);
-        //TODO SHOULD UPDATE SOMETHING ELSE???
-
-    }
-
-    public void removeSession(){
-        mCurrentSession = null;
-        mAgendasLR.remove();
-        mAgendas.first.clear();
-        mAgendas.second.clear();
-        mRecyclerViewHomeAdapter.notifyDataSetChanged();
-        mCurrentSession = null;
-    }
-
-    public void addQuestions(String questionId, Question question){
-        mQuestions.first.add(questionId);
-
-        mQuestions.second.put(questionId, question);
-
-        //setGridQuestionsItems(CurrentAdapter.mCurrentAgendaId);
-
-    }
-
-    public void updateQuestions(String questionId, Question question){
-        mQuestions.second.put(questionId, question);
-
-        //mExpandableQuestionsAdapter.notifyDataSetChanged();
-
-    }
-
-    public void removeQuestions(String questionId){
-        mQuestions.first.remove(questionId);
-        mQuestions.second.remove(questionId);
-
-        //setGridQuestionsItems(CurrentAdapter.mCurrentAgendaId);
-
-    }
-
-
-
-    private void initEventListeners(){
-//        mSessionEL = CurrentAgendasForHomeFirebaseHandle.sessionHandler(this);
-
-//        mAgendasEL = CurrentAgendasForHomeFirebaseHandle.agendasHandler(this);
-
-//        mQuestionsEL = CurrentAgendasForHomeFirebaseHandle.questionsHanderl(this);
-
-    }
-
-    private void initStructures() {
-        mAgendas = new Pair<>(new ArrayList<>(), new HashMap<>());
-        mAgendasScores = new HashMap<>();
-        mQuestions = new Pair<>(new ArrayList<>(), new HashMap<>());
-
-
-    }
-
-    public void initRecycler(ArrayList<Report> reports){
-        ReportsAdapter adapter = new ReportsAdapter(reports);
+    public void initRecycler(ArrayList<Object> objects){
+        RecyclerViewHomeAdapter adapter = new RecyclerViewHomeAdapter(objects);
         mRecyclerViewHome = mView.findViewById(R.id.recyclerViewFeed);
         mRecyclerViewHome.setLayoutManager(new LinearLayoutManager(mView.getContext()));
         mRecyclerViewHome.setAdapter(adapter);
-    }
-
-    public  void initDummy(){
-        DUMMYARRAY = new ArrayList<>();
-
-        ForumPost post = new ForumPost();
-        post.setTitle("Evento Beneficiente para o Inverno");
-        post.setContent("Estava pensando em fazermo um evento beneficiente interno...");
-        post.setNumComments(2);
-        post.setSupportScore(5);
-        DUMMYARRAY.add(post);
-        DUMMYARRAY.add(new Request());
     }
 
     public void initOnClicks(){
@@ -333,21 +205,5 @@ public class HomeFragment extends Fragment {
             }
         });
 
-    }
-    private void getAgendaScore(String agendaId){
-        mAgendas.second.get(agendaId).getRequestRef().get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    Request request = documentSnapshot.toObject(Request.class);
-
-                    mAgendasScores.put(agendaId, request.getScore());
-
-                    //hideProgressBar();//got some Agendas to show, no need to show progress anymore
-
-                    mRecyclerViewHomeAdapter.notifyDataSetChanged();
-                }
-            }
-        });
     }
 }
