@@ -17,11 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.facebook.login.Login;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -29,13 +25,11 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.VotesHelper;
-import com.hive.hive.home.db_files.CurrentAgendasForHomeFirebaseHandle;
-import com.hive.hive.login.LoginActivity;
 import com.hive.hive.main.MainActivity;
 import com.hive.hive.main.MainFirebaseHandle;
 import com.hive.hive.model.association.Agenda;
-import com.hive.hive.model.association.Association;
 import com.hive.hive.model.association.Question;
+import com.hive.hive.model.association.Report;
 import com.hive.hive.model.association.Request;
 import com.hive.hive.model.association.Session;
 import com.hive.hive.model.forum.ForumPost;
@@ -115,6 +109,7 @@ public class HomeFragment extends Fragment {
 
         MainFirebaseHandle.getAssociations(mUser,this);
         setCurrentUserInfo();
+        HomeFirebaseHandle.getReports(this);
 
 //        initStructures();
 
@@ -273,11 +268,11 @@ public class HomeFragment extends Fragment {
 
     }
 
-    public void initRecycler(){
-        mRecyclerViewHomeAdapter = new RecyclerViewHomeAdapter(mAgendas, mAgendasScores, DUMMYARRAY);
+    public void initRecycler(ArrayList<Report> reports){
+        ReportsAdapter adapter = new ReportsAdapter(reports);
         mRecyclerViewHome = mView.findViewById(R.id.recyclerViewFeed);
         mRecyclerViewHome.setLayoutManager(new LinearLayoutManager(mView.getContext()));
-        mRecyclerViewHome.setAdapter(mRecyclerViewHomeAdapter);
+        mRecyclerViewHome.setAdapter(adapter);
     }
 
     public  void initDummy(){

@@ -41,7 +41,6 @@ public class RecyclerViewHomeAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 
-        Log.d(TAG, String.valueOf(mAgendas.second.size())+"++++++++++++++++++++++++++++++++++++++++++ THIS IS M GUY");
         populateItems();
 
         switch (viewHolder.getItemViewType()) {
@@ -72,8 +71,6 @@ public class RecyclerViewHomeAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-
-        Log.d(TAG, String.valueOf(mAgendas.second.size())+"++++++++++++++++++++++++++++++++++++++++++ THIS IS M GUY");
 
         RecyclerView.ViewHolder viewHolder;
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
@@ -124,7 +121,6 @@ public class RecyclerViewHomeAdapter extends RecyclerView.Adapter<RecyclerView.V
         for (Object key:
                 mAgendas.first) {
             items.add(mAgendas.second.get(key));
-            Log.d(TAG, String.valueOf(key.toString())+" ITERATING IN HERE");
         }
     }
 }

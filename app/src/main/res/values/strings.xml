@@ -233,5 +233,6 @@
     <string name="new_content"> Novo assunto</string>
     <string name="feed_should_have_description"> Por favor descreva o assunto do post</string>
     <string name="feed_should_have_title">Por favor digite um titulo para o post</string>
-
+    <!-- Home-->
+    <string name="no_reports"> Não há informes da associação</string>
 </resources>

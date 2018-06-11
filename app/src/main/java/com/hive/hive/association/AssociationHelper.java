@@ -11,7 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
-import com.hive.hive.model.association.Association;
+import com.hive.hive.home.HomeFragment;
 import com.hive.hive.model.association.AssociationComment;
 import com.hive.hive.model.association.AssociationSupport;
 import com.hive.hive.model.association.Request;
@@ -27,6 +27,7 @@ public class AssociationHelper {
     public static String SUPPORTS_COLLECTION = "supports";
     public static String BUDGET_CATEGORIES_COLLECTION = "budgetCategories";
     public static String REQUEST_CATEGORIES_COLLECTION = "requestCategories";
+    public static String REPORTS_COLLECTION = "reports";
 
     //--- Request
 
@@ -432,5 +433,10 @@ public class AssociationHelper {
                 .get();
     }
 
-
+    //--- Reports
+    public static Task<QuerySnapshot> getActiveReports(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        return db.collection(ASSOCIATION_COLLECTION).document(HomeFragment.mCurrentAssociationId)
+                .collection(REPORTS_COLLECTION).whereEqualTo("showing", true).get();
+    }
 }
