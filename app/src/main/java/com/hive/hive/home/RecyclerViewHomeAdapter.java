@@ -1,5 +1,6 @@
 package com.hive.hive.home;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import com.hive.hive.model.association.Report;
 import com.hive.hive.model.association.Request;
 import com.hive.hive.model.association.Session;
 import com.hive.hive.model.forum.ForumPost;
+import com.hive.hive.utils.TimeUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,12 +30,13 @@ public class RecyclerViewHomeAdapter extends RecyclerView.Adapter<RecyclerView.V
     private final String TAG = this.getClass().getName();
 
     private List<Object> items;
+    private Context context;
     private final int SESSION = 0, REPORT = 1;
 
-    public RecyclerViewHomeAdapter(List<Object> items) {
+    public RecyclerViewHomeAdapter(List<Object> items, Context context) {
         this.items = items;
+        this.context = context;
     }
-
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -87,11 +90,10 @@ public class RecyclerViewHomeAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     private void configureSessionsViewHolder(SessionViewHolder sessionViewHolder, int position) {
         Session session = (Session) items.get(position);
-//        if (session != null) {
-//            sessionViewHolder
-//            //vh1.getLabel1().setText("Name: " + user.name);
-//            //vh1.getLabel2().setText("Hometown: " + user.hometown);
-//        }
+        if (session != null) {
+            sessionViewHolder.agendasNum.setText(context.getResources().getString(R.string.agendas_num) + session.getAgendasNum() + " pautas");
+            TimeUtils.clock(sessionViewHolder.endsAt, session, context);
+        }
     }
 
     private void configureReportsViewHolder(ReportsViewHolder reportsViewHolder, int position) {
@@ -112,9 +114,12 @@ public class RecyclerViewHomeAdapter extends RecyclerView.Adapter<RecyclerView.V
 //    }
 
     public class SessionViewHolder extends RecyclerView.ViewHolder {
-
+        TextView agendasNum;
+        TextView endsAt;
         public SessionViewHolder(View itemView) {
             super(itemView);
+            agendasNum = itemView.findViewById(R.id.agendasNumTV);
+            endsAt = itemView.findViewById(R.id.endsAtTV);
         }
     }
 

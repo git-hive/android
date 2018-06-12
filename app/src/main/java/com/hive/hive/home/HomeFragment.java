@@ -155,7 +155,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void initRecycler(ArrayList<Object> objects){
-        RecyclerViewHomeAdapter adapter = new RecyclerViewHomeAdapter(objects);
+        RecyclerViewHomeAdapter adapter = new RecyclerViewHomeAdapter(objects, mContext);
         mRecyclerViewHome = mView.findViewById(R.id.recyclerViewFeed);
         mRecyclerViewHome.setLayoutManager(new LinearLayoutManager(mView.getContext()));
         mRecyclerViewHome.setAdapter(adapter);

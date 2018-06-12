@@ -110,7 +110,7 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerViewFe
         holder.mItem = post;
 
         // fill user
-        fillUser(holder, post.getAuthorRef());
+            fillUser(holder, post.getAuthorRef());
 
         // fill post
         holder.title.setText(post.getTitle());
@@ -165,6 +165,7 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerViewFe
     }
 
     private void fillUser(final FeedViewHolder holder, DocumentReference userRef) {
+        if(userRef == null) return ;
         // Check if it has on memory
         if (usernames.containsKey(userRef) && userProfilePictures.containsKey(userRef)) {
             String username = usernames.get(userRef);
