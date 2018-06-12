@@ -20,6 +20,8 @@ public class LoginAndSignupHelper {
 
     public static String INGRESS_REQUEST_COLLECTION = "ingressRequests";
 
+    public static String USER_COLLECTION = "users";
+
 
     public static Task<DocumentSnapshot> getAssociation(DocumentReference associationRef){
         return associationRef.get();
@@ -51,5 +53,10 @@ public class LoginAndSignupHelper {
 
 
         return batch.commit();
+    }
+
+    public static void saveUserLastAssociation(User user){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(USER_COLLECTION).document(FirebaseAuth.getInstance().getUid()).set(user);
     }
 }

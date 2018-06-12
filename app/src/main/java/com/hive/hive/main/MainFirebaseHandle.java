@@ -59,6 +59,7 @@ public class MainFirebaseHandle {
             if (user.getAssociationsRef() != null && !user.getAssociationsRef().isEmpty()) {//if there is no one selected, use first association
                 user.setLastAccessAssociationRef(user.getAssociationsRef().get(0)); //uses the firts ref
                 updateAssociation(user, activity);
+                return;
             } else {//there is no associations, should tell user and logout
                 Toast.makeText(activity,
                         activity.getResources().getString(R.string.no_association), Toast.LENGTH_LONG).show();
@@ -122,6 +123,6 @@ public class MainFirebaseHandle {
         if(associations.size() == user.getAssociationsRef().size())
             if(fragment != null)
                 fragment.updateCurrentAssociationUI(associations);
-
     }
+
 }

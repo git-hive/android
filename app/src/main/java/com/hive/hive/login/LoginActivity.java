@@ -255,14 +255,14 @@ public class LoginActivity extends AppCompatActivity {
 //                Log.e(TAG, error.getMessage());
 //            }
 //        });
-        verifyUserAndCheckout();
+     //   verifyUserAndCheckout();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
-        verifyUserAndCheckout();
+      //  verifyUserAndCheckout();
     }
 
     @Override

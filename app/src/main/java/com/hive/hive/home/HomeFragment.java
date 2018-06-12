@@ -25,6 +25,8 @@ import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 import com.hive.hive.association.votes.VotesHelper;
+import com.hive.hive.login.LoginAndSignUpFirebaseHandler;
+import com.hive.hive.login.LoginAndSignupHelper;
 import com.hive.hive.main.MainActivity;
 import com.hive.hive.main.MainFirebaseHandle;
 import com.hive.hive.model.association.Agenda;
@@ -194,7 +196,10 @@ public class HomeFragment extends Fragment {
                     if(association.second.equals(selected))
                        if(!association.first.equals(mCurrentAssociationId)) {
                            mCurrentAssociationId = association.first;
+                           mUser.setLastAccessAssociationRef(DocReferences.getAssociationRef(mCurrentAssociationId));
+                           LoginAndSignupHelper.saveUserLastAssociation(mUser);
                            startActivity(new Intent(HomeFragment.this.getContext(), MainActivity.class));
+
                        }
                 }
             }
