@@ -18,20 +18,32 @@ import java.util.List;
 public class VotingUtils {
 
     //loads user data, and fill some views
-    public static void fillUnfoldableUser(DocumentReference userRef, View view){
-        userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if(documentSnapshot.exists()){
-                    TextView suggestedByTV = view.findViewById(R.id.expandable_suggestedByTV);
-                    ImageView suggestedByIV = view.findViewById(R.id.expandable_suggestedByIV);
-                    User user = documentSnapshot.toObject(User.class);
-                    suggestedByTV.setText(user.getName());
-                    ProfilePhotoHelper.loadImage(view.getContext().getApplicationContext(), suggestedByIV, user.getPhotoUrl());
-                    //Log.d(RequestAdapter.class.getSimpleName(), user.getPhotoUrl());
+    public static void fillUnfoldableUser(DocumentReference userRef, View view, Context context){
+        TextView suggestedByTV = view.findViewById(R.id.expandable_suggestedByTV);
+        ImageView suggestedByIV = view.findViewById(R.id.expandable_suggestedByIV);
+        TextView suggestedTV = view.findViewById(R.id.expandable_content_avatar_title);
+
+        if(userRef != null) {
+            suggestedByIV.setVisibility(View.VISIBLE);
+            suggestedByTV.setVisibility(View.VISIBLE);
+            suggestedTV.setText(context.getResources().getString(R.string.suggested));
+
+            userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if (documentSnapshot.exists()) {
+                        User user = documentSnapshot.toObject(User.class);
+                        suggestedByTV.setText(user.getName());
+                        ProfilePhotoHelper.loadImage(view.getContext().getApplicationContext(), suggestedByIV, user.getPhotoUrl());
+                        //Log.d(RequestAdapter.class.getSimpleName(), user.getPhotoUrl());
+                    }
                 }
-            }
-        });
+            });
+        }else {
+            suggestedByIV.setVisibility(View.GONE);
+            suggestedByTV.setVisibility(View.GONE);
+            suggestedTV.setText(context.getResources().getString(R.string.created_by_association));
+        }
     }
 
     // Use to get the drawables programmatically

@@ -13,6 +13,7 @@ public class AgendasViewHolder extends RecyclerView.ViewHolder{
     TextView mTitle;
     TextView mTime;
     TextView mRequestScore;
+    ImageView mRequestScoreIV;
     ImageView mCategoryIcon;
     ImageView mTimeIV;
 
@@ -26,6 +27,7 @@ public class AgendasViewHolder extends RecyclerView.ViewHolder{
         mRequestScore = view.findViewById(R.id.budgetTotalAppliedTV);
         mCategoryIcon = view.findViewById(R.id.category_IV);
         mTimeIV = view.findViewById(R.id.timeIV);
+        mRequestScoreIV = view.findViewById(R.id.supportsIV);
     }
 
     public CardView getmAgendaCV() {
@@ -50,6 +52,10 @@ public class AgendasViewHolder extends RecyclerView.ViewHolder{
 
     public ImageView getmCategoryIcon() {
         return mCategoryIcon;
+    }
+
+    public ImageView getmRequestScoreIV() {
+        return mRequestScoreIV;
     }
 
     @Override

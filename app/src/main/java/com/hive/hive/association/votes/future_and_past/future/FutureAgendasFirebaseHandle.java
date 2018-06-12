@@ -115,21 +115,23 @@ public class FutureAgendasFirebaseHandle{
         HashMap<String, String> scoreMap = new HashMap<>(); //maps a request score into an agendaId
         for(String agendaId : agendasPair.first){
             Agenda agenda = agendasPair.second.get(agendaId);
-            agenda.getRequestRef().get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    if(documentSnapshot.exists()) {
-                        scoreMap.put(agendaId, documentSnapshot.getLong("score").toString());
-                        fragment.updateAgendas();
+            if(agenda.getRequestRef() != null) {
+                agenda.getRequestRef().get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            scoreMap.put(agendaId, documentSnapshot.getLong("score").toString());
+                            fragment.updateAgendas();
+                        }
                     }
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.e(TAG, e.getMessage());
-                    //TODO should do something else?!
-                }
-            });
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, e.getMessage());
+                        //TODO should do something else?!
+                    }
+                });
+            }
         }
         fragment.setAgendas(agendasPair, scoreMap);
     }

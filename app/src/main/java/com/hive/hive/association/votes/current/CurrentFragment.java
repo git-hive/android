@@ -353,20 +353,27 @@ public class CurrentFragment extends Fragment {
 
     }
     private void getAgendaScore(String agendaId){
-        mAgendas.second.get(agendaId).getRequestRef().get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    Request request = documentSnapshot.toObject(Request.class);
+        if(mAgendas.second.get(agendaId).getRequestRef()!= null) {
+            mAgendas.second.get(agendaId).getRequestRef().get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if (documentSnapshot.exists()) {
+                        Request request = documentSnapshot.toObject(Request.class);
 
-                    mAgendasScores.put(agendaId, request.getScore());
+                        mAgendasScores.put(agendaId, request.getScore());
 
-                    hideProgressBar();//got some Agendas to show, no need to show progress anymore
+                        hideProgressBar();//got some Agendas to show, no need to show progress anymore
 
-                    mRVAdapter.notifyDataSetChanged();
+                        mRVAdapter.notifyDataSetChanged();
+                    }
+                    else{
+                        hideProgressBar();//got some Agendas to show, no need to show progress anymore
+
+                        mRVAdapter.notifyDataSetChanged();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     private void hideProgressBar(){

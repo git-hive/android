@@ -126,7 +126,7 @@ public class FutureAndPastAgendasRVAdapter extends RecyclerView.Adapter<AgendasV
         descriptionTV.setText(agenda.getContent());
         requestScoreTV.setText(mScores.get(agendaId));
         //load suggested by info
-        VotingUtils.fillUnfoldableUser(agenda.getSuggestedByRef(), mView);
+        VotingUtils.fillUnfoldableUser(agenda.getSuggestedByRef(), mView, mContext);
 
         //TODO REMOVE STATIC ASSOCIATION REFERENCE
         if(mOldFragment != null)
