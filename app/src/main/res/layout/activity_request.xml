@@ -13,60 +13,48 @@
         android:theme="@style/AppTheme.AppBarOverlay"
         app:elevation="0dp">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/requestTB"
+        <FrameLayout
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:theme="@style/CustomActionBar"
-            app:titleTextColor="@color/colorOrange"
-            >
-
+            android:layout_height="70dp">
+            <ImageView
+                android:id="@+id/request_back_button_IV"
+                android:layout_gravity="left"
+                app:srcCompat="@drawable/ic_back"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center_vertical|center_horizontal">
-
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.85"
-                    android:paddingStart="0dp"
-                    android:paddingEnd="15dp"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/textView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/title_activity_requests"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/toolbar_title_font_size" />
-
-                    <View
-                        android:layout_width="80dp"
-                        android:layout_height="2dp"
-                        android:background="@color/colorOrange" />
-
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/request_search"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="0.15"
-                    android:layout_marginEnd="10dp"
-                    app:srcCompat="@drawable/ic_search"
-                    android:visibility="gone"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center_horizontal">
+                <TextView
+                    android:id="@+id/request_activity_title_TV"
+                    android:textColor="@color/colorBlack"
+                    android:paddingTop="10dp"
+                    android:textSize="20sp"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/req"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <View
+                    android:layout_width="95dp"
+                    android:layout_height="2dp"
+                    android:background="@color/colorOrange"/>
 
             </LinearLayout>
-
-        </android.support.v7.widget.Toolbar>
-
+            <ImageView
+                android:id="@+id/search_transparency_IV"
+                android:layout_gravity="right"
+                app:srcCompat="@drawable/ic_search"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:visibility="invisible"/>
+        </FrameLayout>
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_request" />

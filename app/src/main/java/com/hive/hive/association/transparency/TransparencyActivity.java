@@ -92,16 +92,8 @@ public class TransparencyActivity extends AppCompatActivity implements StaffFrag
             }
         });
 
-        // Set Style and Make up things
-        styleThings();
-
     }
 
-    public void styleThings(){
-        SpannableString content = new SpannableString(getResources().getString(R.string.transparency_activity_title));
-        content.setSpan(new UnderlineSpan(), 0+1, content.length()-1, 0);
-        mTitleTV.setText(content);
-    }
 
     @Override // android recommended class to handle permissions
     public void onRequestPermissionsResult(int requestCode,

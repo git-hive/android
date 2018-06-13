@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -67,18 +68,14 @@ public class RequestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request);
 
+        //back button behavior
+        ((ImageView) findViewById(R.id.request_back_button_IV)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         this.requests = new Pair<>(new ArrayList<>(), new HashMap<>());
-
-        // Find and set toolbar
-        Toolbar toolbar = findViewById(R.id.requestTB);
-        setSupportActionBar(toolbar);
-
-        ActionBar actionBar = this.getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        } else {
-            Log.e(TAG, "Action Bar not found");
-        }
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

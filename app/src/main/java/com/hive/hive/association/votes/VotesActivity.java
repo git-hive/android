@@ -59,14 +59,7 @@ public class VotesActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
             }
         });
-        // Set Style and Make up things
-        styleThings();
 
     }
 
-    public void styleThings(){
-        SpannableString content = new SpannableString(getResources().getString(R.string.assembleia));
-        content.setSpan(new UnderlineSpan(), 0+1, content.length()-1, 0);
-        mHeaderAssembleia.setText(content);
-    }
 }
