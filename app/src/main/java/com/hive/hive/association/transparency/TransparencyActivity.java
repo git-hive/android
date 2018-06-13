@@ -28,9 +28,6 @@ public class TransparencyActivity extends AppCompatActivity implements StaffFrag
     private ImageView mUpButtonIV;
     private ImageView mSearchIV;
 
-    //Fab
-    private FloatingActionButton transparencyFAB;
-
     // Tab components
     private TabLayout transparencyTL;
     private ViewPager transparencyVP;
@@ -49,14 +46,11 @@ public class TransparencyActivity extends AppCompatActivity implements StaffFrag
         mUpButtonIV = findViewById(R.id.up_button_transparency_IV);
         mSearchIV = findViewById(R.id.search_transparency_IV);
 
-        transparencyFAB = findViewById(R.id.transparency_FAB);
-
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         transparencyVP = (ViewPager) findViewById(R.id.transparency_VP);
         mViewPagerAdapter = new TransparencyFragmentPagerAdapter(
                 getSupportFragmentManager(),
                 TransparencyActivity.this,
-                transparencyFAB,
                 this
         );
         transparencyVP.setAdapter(mViewPagerAdapter);
@@ -69,7 +63,7 @@ public class TransparencyActivity extends AppCompatActivity implements StaffFrag
 
             @Override
             public void onPageSelected(int position) {
-                  ref.updateFAB(position);
+//                  ref.updateFAB(position);
             }
 
             @Override

@@ -22,7 +22,7 @@
             <ImageView
                 android:id="@+id/up_button_transparency_IV"
                 android:layout_gravity="left"
-                android:src="@drawable/ic_back"
+                app:srcCompat="@drawable/ic_back"
                 android:layout_width="40dp"
                 android:layout_height="40dp" />
             <TextView
@@ -37,7 +37,7 @@
             <ImageView
                 android:id="@+id/search_transparency_IV"
                 android:layout_gravity="right"
-                android:src="@drawable/ic_search"
+                app:srcCompat="@drawable/ic_search"
                 android:layout_width="40dp"
                 android:layout_height="40dp" />
         </FrameLayout>
@@ -57,14 +57,4 @@
 
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/transparency_FAB"
-        android:layout_width="@dimen/fab_size"
-        android:layout_height="@dimen/fab_size"
-        android:src="@android:drawable/ic_input_add"
-        android:tint="@color/colorWhite"
-        android:layout_margin="@dimen/fab_margin"
-        app:layout_anchorGravity="bottom|right|end"
-        android:layout_gravity="end|bottom"
-        />
 </android.support.design.widget.CoordinatorLayout>

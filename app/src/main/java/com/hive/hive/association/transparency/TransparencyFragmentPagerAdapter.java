@@ -25,20 +25,17 @@ public class TransparencyFragmentPagerAdapter extends FragmentPagerAdapter {
     private static final String TAG = TransparencyFragmentPagerAdapter.class.getSimpleName();
 
     //--- Parameters
-    final int PAGE_COUNT = 3;
-    private String tabTitles[] = new String[] { "Resumo", "Documentos", "Funcionários" };
+    final int PAGE_COUNT = 1;
+    private String tabTitles[] = new String[]{"Documentos"};
 
-    //--- Views
-    private FloatingActionButton FAB;
 
     //--- Context
     private Context context;
     private Activity activity;
 
-    TransparencyFragmentPagerAdapter(FragmentManager fm, Context context, FloatingActionButton FAB, Activity activity) {
+    TransparencyFragmentPagerAdapter(FragmentManager fm, Context context, Activity activity) {
         super(fm);
         this.context = context;
-        this.FAB = FAB;
         this.activity = activity;
     }
 
@@ -51,11 +48,11 @@ public class TransparencyFragmentPagerAdapter extends FragmentPagerAdapter {
     public android.support.v4.app.Fragment getItem(int position) {
         switch (position) {
             case 0: // Fragment # 0 - This will show FirstFragment
-                return OverviewFragment.newInstance(position+1);
-            case 1: // Fragment # 0 - This will show SecondFragment different title
-                return DocumentFragment.newInstance(position+1);
-            case 2: // Fragment # 1 - This will show ThirdFragment
-                return StaffFragment.newInstance(position+1);
+                return DocumentFragment.newInstance(position + 1);
+//            case 1: // Fragment # 0 - This will show SecondFragment different title
+//                return DocumentFragment.newInstance(position + 1);
+//            case 2: // Fragment # 1 - This will show ThirdFragment
+//                return StaffFragment.newInstance(position + 1);
             default:
                 return null;
         }
@@ -67,36 +64,4 @@ public class TransparencyFragmentPagerAdapter extends FragmentPagerAdapter {
         return tabTitles[position];
     }
 
-
-    void updateFAB(int position){
-
-        switch (position){
-            case 0:
-                FAB.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(context, "On Click Caixa", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                FAB.setVisibility(View.GONE);
-                break;
-            case 1:
-                FAB.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Toast.makeText(context, "On Click Documentos", Toast.LENGTH_SHORT).show();
-                        FileUtils.downloadFile(activity, context, "big_file", "pdf");
-                    }
-                });
-                FAB.setVisibility(View.GONE);
-                break;
-            case 2:
-                FAB.setVisibility(View.GONE);
-                break;
-            default:
-                Log.e(TAG, "Erro ao receber tab position inesperada - " + Integer.toString(position));
-                break;
-        }
-
-    }
 }
