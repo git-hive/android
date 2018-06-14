@@ -30,21 +30,23 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    >
                     <TextView
                         android:text="@string/client_name_mock"
                         android:gravity="start"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight=".80"
+                        android:layout_marginTop="10dp"
                         android:id="@+id/document_name_TV"
                         android:textColor="@color/colorBlack"
                         />
                     <ImageView
-                        android:layout_gravity="end"
                         app:srcCompat="@drawable/ic_downloads"
                         android:tint="@color/colorOrange"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
                         android:id="@+id/ic_download_IV" />
 
 
