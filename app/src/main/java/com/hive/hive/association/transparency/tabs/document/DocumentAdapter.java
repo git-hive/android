@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hive.hive.R;
 import com.hive.hive.utils.FileUtils;
@@ -42,10 +44,12 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.BillVi
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(mActivity, mActivity.getResources().getString(R.string.downloading), Toast.LENGTH_SHORT).show();
                 FileUtils.downloadFile(
                         mActivity, mActivity,
                         mDocuments.get(aux).billName,
-                        mDocuments.get(aux).extension
+                        mDocuments.get(aux).extension,
+                        holder.downloadPB
                 );
             }
         });
@@ -66,6 +70,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.BillVi
         ImageView imageView;
         CardView cv;
         TextView budgetName;
+        ProgressBar downloadPB;
         DocumentFragment.Document item;
 
 
@@ -74,6 +79,7 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.BillVi
             cv = (CardView)itemView.findViewById(R.id.document_CV);
             budgetName = (TextView)itemView.findViewById(R.id.document_name_TV);
             imageView = (ImageView) itemView.findViewById(R.id.ic_download_IV);
+            downloadPB = itemView.findViewById(R.id.downloadPB);
         }
     }
 

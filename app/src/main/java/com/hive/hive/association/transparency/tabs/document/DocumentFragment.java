@@ -119,13 +119,13 @@ public class DocumentFragment extends Fragment {
 // you want to use the same images.
     private void initializeData(){
         documents = new ArrayList<>();
-        documents.add(new Document("Computer-graphics", "pdf", 0));
-        documents.add(new Document("context_systems", "pdf", 0));
-        documents.add(new Document("Human-Behaviour.", "pdf", 0));
-        documents.add(new Document("Mechanics-of-Fluids-Fourth-Edition-", "pdf", 0));
-        documents.add(new Document("ocean_shader", "pdf", 0));
-        documents.add(new Document("Point-Based-Surface", "pdf", 0));
-        documents.add(new Document("tcc", "pdf", 0));
+        documents.add(new Document("Computer-graphics", ".pdf", 0));
+        documents.add(new Document("context_systems", ".pdf", 0));
+        documents.add(new Document("Human-Behaviour.", ".pdf", 0));
+        documents.add(new Document("Mechanics-of-Fluids-Fourth-Edition-", ".pdf", 0));
+        documents.add(new Document("ocean_shader", ".pdf", 0));
+        documents.add(new Document("Point-Based-Surface", ".pdf", 0));
+        documents.add(new Document("tcc", ".pdf", 0));
     }
 
 

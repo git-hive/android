@@ -3,19 +3,29 @@ package com.hive.hive.utils;
 import android.Manifest;
 import android.app.Activity;
 import android.app.DownloadManager;
+import android.app.NotificationManager;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -25,8 +35,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static android.support.v4.content.FileProvider.getUriForFile;
+import static com.facebook.FacebookSdk.getApplicationContext;
+
 /**
- *
  * Class with file upload and download methods
  * Created by Nícolas Oreques de Araujo on 4/2/18.
  */
@@ -41,158 +53,63 @@ public abstract class FileUtils {
     /**
      * Empty private constructor
      */
-    private FileUtils(){}
-
-
-
+    private FileUtils() {
+    }
 
 
     public static void downloadFile(
             @NonNull final Activity activity,
             @NonNull final Context context,
             @NonNull final String fileName,
-            @NonNull final String fileExtension)
-    {
-
+            @NonNull final String fileExtension,
+            @NonNull final ProgressBar progressBar) {
 
 
         //--- Gets instace of Firebase storage
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
         //--- Gets ref to desired file
-        StorageReference storageRef = storage.getReferenceFromUrl(basePath).child(fileName + "." + fileExtension);
+        StorageReference storageRef = storage.getReference().child(fileName + fileExtension);
 
+        File docPath = new File(context.getFilesDir(), "files");
+        if (!docPath.exists()) docPath.mkdir();
         try {
-            final File localFile = new File(
-                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString(),
-                    fileName + "." + fileExtension
-            );
-
-            //- Activity Log
-            Log.d(TAG, "Starting download of file \"" + localFile.getAbsolutePath() + "\"...");
-
-            storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            File newFile = File.createTempFile(fileName, fileExtension, docPath);
+            storageRef.getFile(newFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Uri contentUri = getUriForFile(context, "com.hive.hive.fileprovider", newFile);
 
-                    //DO SOMETHING
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(contentUri, "application/pdf");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-                    //--- File Stream
-                    FileOutputStream outputStream;
-
-                    try {
-
-                        //-- Gets stream to write to internal directory
-                        outputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE);
-
-                        //-- Write contents to stream
-                        outputStream.write(taskSnapshot.toString().getBytes());
-
-                        //-- Close stream
-                        outputStream.close();
-
-                        //- Activity log
-                        Log.d(TAG, "File \"" + fileName + "." + fileExtension + "\" sucessfully downloaded.");
-
-                        Log.d(TAG, "Downloaded " + Long.toString(taskSnapshot.getBytesTransferred() / (1024 * 1024)) + " Mbytes");
-
-                        DownloadManager manager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
-                        if (manager != null){
-                            manager.addCompletedDownload(fileName + "." + fileExtension, "PDF", false, "pdf", localFile.getAbsolutePath(), localFile.length(), true);
-                            Log.d(TAG, "Download adicionado no manager");
-                        }
-                        else{
-                            Log.d(TAG, "Download Manager == null");
-                        }
-
-                    } catch (Exception e){
-                        e.printStackTrace();
-                    }
-
+                    activity.startActivity(intent);
+                    // Local temp file has been created
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
-
-                    //-- System log
-                    Log.e(TAG, "Error downloading file \"" + fileName + "." + fileExtension + "\" - ");
-                    exception.printStackTrace();
+                    // Handle any errors
+                }
+            }).addOnProgressListener(new OnProgressListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    progressBar.setVisibility(View.VISIBLE);
+                    int fprogress = (int) ((100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount());
+                    progressBar.setProgress(fprogress);
+                    Log.d(TAG, "progress " + fprogress);
+                    if (fprogress == 100) {
+                        progressBar.setVisibility(View.GONE);
+                    }
 
                 }
             });
-        } catch (Exception e ) {
+        } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    /**
-     * Upload File to Firebase Storage
-     * @param context - context used to open FileOutputStream
-     * @param fileName - name of the file
-     * @param fileExtension - extension of the file
-     */
-    public static void uploadFile(final Context context, final String fileName, final String fileExtension){
-
-        //- Activity Log
-        Log.d(TAG, "Starting to upload file \"" + fileName + "." + fileExtension + "\"...");
-
-        //--- Gets instace of Firebase storage
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-
-        //--- Gets ref to desired file
-        StorageReference storageRef = storage.getReferenceFromUrl(basePath).child(fileName + "." + fileExtension);
-
-        //--- File Stream
-        FileInputStream inputStream;
-
-        try{
-            //-- Gets stream to read from internal directory
-            Log.d(TAG, "Nome: " + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + "/" + fileName + "." + fileExtension );
-            inputStream = new FileInputStream(
-                    new File(
-                            Environment.getExternalStoragePublicDirectory(
-                                    Environment.DIRECTORY_DOWNLOADS).toString() +
-                                    "/" +
-                                    fileName +
-                                    "." +
-                                    fileExtension
-                    )
-            );
-
-            //-- Byte array to store data
-            byte[] data = new byte[inputStream.available()];
-
-            //-- Read contents from stream to array
-            int bytesRead = inputStream.read(data);
-
-            //-- Close input stream
-            inputStream.close();
-
-            //-- Uploads array of read bytes
-            UploadTask uploadTask = storageRef.putBytes(data);
-            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                    //- Activity log
-                    Log.d(TAG, "File \"" + fileName + "." + fileExtension + "\" sucessfully uploaded.");
-
-                    Toast.makeText(context, "Uploaded " + Long.toString(taskSnapshot.getBytesTransferred()/(1024*1024)) + " Mbytes" , Toast.LENGTH_SHORT).show();
-
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    //- Activity log
-                    Log.e(TAG, "Error uploading file \"" + fileName + "." + fileExtension + "\".");
-                }
-            });
-        } catch (Exception e){
-            e.printStackTrace();
-            Log.wtf(TAG, "Error uploading file");
         }
 
 
     }
-
 }

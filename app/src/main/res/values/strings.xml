@@ -144,7 +144,7 @@
     <string name="total_applied"><i>Total investido:</i></string>
     <string name="initial_money">R$ 000,000,000</string>
     <string name="details">Detalhes</string>
-
+    <string name="downloading">Iniciando o download do arquivo</string>
 
     <!-- Circular Menu-->
     <string name="setting">Setting</string>
