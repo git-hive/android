@@ -1,42 +1,23 @@
 package com.hive.hive.utils;
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.DownloadManager;
-import android.app.NotificationManager;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
+import com.hive.hive.home.HomeFragment;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-
 import static android.support.v4.content.FileProvider.getUriForFile;
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Class with file upload and download methods
@@ -69,7 +50,7 @@ public abstract class FileUtils {
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
         //--- Gets ref to desired file
-        StorageReference storageRef = storage.getReference().child(fileName + fileExtension);
+        StorageReference storageRef = storage.getReference().child(HomeFragment.mCurrentAssociationId).child(fileName + fileExtension);
 
         File docPath = new File(context.getFilesDir(), "files");
         if (!docPath.exists()) docPath.mkdir();

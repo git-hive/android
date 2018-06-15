@@ -10,24 +10,27 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.hive.hive.R;
 import com.hive.hive.association.transparency.TransparencyActivity;
+import com.hive.hive.association.transparency.TransparencyFirebaseHandler;
+import com.hive.hive.model.association.AssociationFile;
 import com.hive.hive.utils.FileUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DocumentFragment extends Fragment {
 
     private static final String TAG = DocumentFragment.class.getSimpleName();
     public static final String ARG_PAGE = "Documentos";
 
-    //--- Data
-    private ArrayList<Document> documents;
-
+    //Recycler
+    private RecyclerView mFilesRV;
     //--- Context
     private TransparencyActivity mActivity;
 
@@ -53,16 +56,12 @@ public class DocumentFragment extends Fragment {
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_document, container, false);
-        RecyclerView rv = (RecyclerView)view.findViewById(R.id.bills_RV);
-        rv.setHasFixedSize(true);
-
-        LinearLayoutManager llm = new LinearLayoutManager(getContext());
-        rv.setLayoutManager(llm);
-        initializeData();
-        DocumentAdapter mAdapter = new DocumentAdapter(documents, getActivity());
-        rv.setAdapter(mAdapter);
 
         mActivity = (TransparencyActivity) getActivity();
+
+        initViews(view);
+
+        TransparencyFirebaseHandler.getAllAssociationStorageFiles(this);
 
         return  view;
     }
@@ -73,7 +72,20 @@ public class DocumentFragment extends Fragment {
         isStoragePermissionGranted(getActivity());
 
     }
+    private void initViews(View view){
+        mFilesRV =  view.findViewById(R.id.bills_RV);
 
+    }
+    public void initRecycler(Pair<ArrayList<String>, HashMap<String, AssociationFile>> associationFiles){
+        mFilesRV.setHasFixedSize(true);
+
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        mFilesRV.setLayoutManager(llm);
+
+        DocumentAdapter mAdapter = new DocumentAdapter(associationFiles, getActivity());
+        mFilesRV.setAdapter(mAdapter);
+
+    }
     private boolean isStoragePermissionGranted(Activity activity){
         if(Build.VERSION.SDK_INT >= 23){
             //Sdk>=23 needs to ask permission at runtime
@@ -96,37 +108,6 @@ public class DocumentFragment extends Fragment {
     }
 
 
-
-    // Dummy Content
-    class Document {
-        String billName;
-        int origin;
-        String extension;
-
-
-        Document(String name, String extension,  int origin) {
-            this.billName = name;
-            this.origin = origin;
-            this.extension = extension;
-
-        }
-    }
-
-
-
-    // This method creates an ArrayList that has three Person objects
-// Checkout the project associated with this tutorial on Github if
-// you want to use the same images.
-    private void initializeData(){
-        documents = new ArrayList<>();
-        documents.add(new Document("Computer-graphics", ".pdf", 0));
-        documents.add(new Document("context_systems", ".pdf", 0));
-        documents.add(new Document("Human-Behaviour.", ".pdf", 0));
-        documents.add(new Document("Mechanics-of-Fluids-Fourth-Edition-", ".pdf", 0));
-        documents.add(new Document("ocean_shader", ".pdf", 0));
-        documents.add(new Document("Point-Based-Surface", ".pdf", 0));
-        documents.add(new Document("tcc", ".pdf", 0));
-    }
 
 
 

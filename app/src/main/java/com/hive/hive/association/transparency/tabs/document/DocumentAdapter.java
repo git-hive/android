@@ -3,6 +3,7 @@ package com.hive.hive.association.transparency.tabs.document;
 import android.app.Activity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hive.hive.R;
+import com.hive.hive.model.association.AssociationFile;
 import com.hive.hive.utils.FileUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -23,13 +26,14 @@ import java.util.List;
 
 public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.BillViewHolder>{
 
-    private ArrayList<DocumentFragment.Document> mDocuments;
+    private Pair<ArrayList<String>, HashMap<String, AssociationFile>> mDocuments;
     private Activity mActivity;
 
-    DocumentAdapter(ArrayList<DocumentFragment.Document> bills, Activity activity){
-        mDocuments = bills;
-        mActivity = activity;
+    public DocumentAdapter(Pair<ArrayList<String>, HashMap<String, AssociationFile>> mDocuments, Activity mActivity) {
+        this.mDocuments = mDocuments;
+        this.mActivity = mActivity;
     }
+
     @Override
     public BillViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_document, parent, false);
@@ -39,26 +43,25 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.BillVi
 
     @Override
     public void onBindViewHolder(BillViewHolder holder, int position) {
-        holder.budgetName.setText(mDocuments.get(position).billName);
-        final int aux = position;
+        String fileId = mDocuments.first.get(position);
+        holder.budgetName.setText(mDocuments.second.get(fileId).getName());
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(mActivity, mActivity.getResources().getString(R.string.downloading), Toast.LENGTH_SHORT).show();
                 FileUtils.downloadFile(
                         mActivity, mActivity,
-                        mDocuments.get(aux).billName,
-                        mDocuments.get(aux).extension,
+                        fileId,
+                        ".pdf",
                         holder.downloadPB
                 );
             }
         });
-        holder.item = mDocuments.get(position);
     }
 
     @Override
     public int getItemCount() {
-        return mDocuments.size();
+        return mDocuments.first.size();
     }
 
     @Override
@@ -71,7 +74,6 @@ public class DocumentAdapter extends RecyclerView.Adapter<DocumentAdapter.BillVi
         CardView cv;
         TextView budgetName;
         ProgressBar downloadPB;
-        DocumentFragment.Document item;
 
 
         BillViewHolder(View itemView) {
