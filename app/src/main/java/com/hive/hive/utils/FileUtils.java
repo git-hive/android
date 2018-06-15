@@ -21,21 +21,12 @@ import static android.support.v4.content.FileProvider.getUriForFile;
 
 /**
  * Class with file upload and download methods
- * Created by Nícolas Oreques de Araujo on 4/2/18.
  */
 
 public abstract class FileUtils {
 
     private final static String TAG = FileUtils.class.getSimpleName();
     public final static int STORAGE_REQUEST_CODE = 99;
-
-    private final static String basePath = "gs://hive-mvp.appspot.com/";
-
-    /**
-     * Empty private constructor
-     */
-    private FileUtils() {
-    }
 
 
     public static void downloadFile(

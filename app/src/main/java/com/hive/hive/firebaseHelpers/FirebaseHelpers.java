@@ -8,5 +8,5 @@ public class FirebaseHelpers {
     public static String BUDGET_CATEGORIES_COLLECTION = "budgetCategories";
     public static String REQUEST_CATEGORIES_COLLECTION = "requestCategories";
     public static String REPORTS_COLLECTION = "reports";
-    public static String FILES_COLLECTION = "documents";
+    public static String FILES_COLLECTION = "files";
 }
