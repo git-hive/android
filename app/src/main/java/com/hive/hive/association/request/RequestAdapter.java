@@ -27,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
 import com.hive.hive.association.AssociationHelper;
 import com.hive.hive.association.request.comments.CommentsActivity;
+import com.hive.hive.firebaseHelpers.RequestsHelper;
 import com.hive.hive.home.HomeFragment;
 import com.hive.hive.model.association.AssociationSupport;
 import com.hive.hive.model.association.BudgetTransactionCategories;
@@ -233,9 +234,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         }
         // If it doesn't, fetch it
 
-        AssociationHelper.getRequestSupport(
-                mDB,
-                mAssociationID,
+        RequestsHelper.getRequestSupport(
                 requestId,
                 mUser.getUid()
         )
@@ -287,9 +286,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                     null
             );
 
-            AssociationHelper.setRequestSupport(
-                    FirebaseFirestore.getInstance(),
-                    mAssociationID,
+            RequestsHelper.setRequestSupport(
                     requestID,
                     supportId,
                     support

@@ -25,6 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 import com.hive.hive.association.AssociationHelper;
+import com.hive.hive.firebaseHelpers.RequestsHelper;
 import com.hive.hive.home.HomeFragment;
 import com.hive.hive.model.association.BudgetTransactionCategories;
 import com.hive.hive.model.association.Request;
@@ -227,10 +228,7 @@ public class NewRequestActivity extends AppCompatActivity {
      * Fetches all association request categories from Firestore and add them to requestCategoriesPairs
      */
     private void fetchAndSetRequestCategories() {
-        AssociationHelper.getAllRequestCategories(
-                mDB,
-                associationID
-        )
+        RequestsHelper.getAllRequestCategories()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot documentSnapshots) {
@@ -258,10 +256,7 @@ public class NewRequestActivity extends AppCompatActivity {
     }
 
     private void fetchAndSetBudgetTransactionCategories() {
-        AssociationHelper.getAllBudgetTransactionCategories(
-                mDB,
-                associationID
-        )
+        RequestsHelper.getAllBudgetTransactionCategories()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot documentSnapshots) {
@@ -510,9 +505,7 @@ public class NewRequestActivity extends AppCompatActivity {
 
         request.setBudgetCategoriesRefs(budgetCategoriesRefs);
 
-        AssociationHelper.setRequest(
-                mDB,
-                associationID,
+        RequestsHelper.setRequest(
                 requestUUID,
                 request
         )

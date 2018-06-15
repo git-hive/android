@@ -22,6 +22,7 @@ import com.hive.hive.association.AssociationHelper;
 import com.hive.hive.association.request.RequestAdapter;
 import com.hive.hive.feed.FeedHelper;
 import com.hive.hive.feed.RecyclerViewFeedAdapter;
+import com.hive.hive.firebaseHelpers.RequestsHelper;
 import com.hive.hive.home.HomeFragment;
 import com.hive.hive.model.association.AssociationComment;
 import com.hive.hive.model.association.AssociationSupport;
@@ -136,9 +137,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         }
         // If it doesn't, fetch it
 
-        AssociationHelper.getRequestCommentSupport(
-                FirebaseFirestore.getInstance(),
-                mAssociationID,
+        RequestsHelper.getRequestCommentSupport(
                 mRequestId,
                 mIds.get(position),
                 FirebaseAuth.getInstance().getUid()
@@ -189,9 +188,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
                 null
         );
 
-        AssociationHelper.setRequestCommentSupport(
-                FirebaseFirestore.getInstance(),
-                mAssociationID,
+        RequestsHelper.setRequestCommentSupport(
                 mRequestId,
                 commentId,
                 supportId,
