@@ -102,7 +102,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         return new RequestViewHolder(itemView);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     @Override
     public void onBindViewHolder(final RequestViewHolder holder, final int position) {
 
@@ -126,7 +126,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                     .mRequestCategory
                     .setImageResource(budgetCategoryNameResource.get(budgetCategoryName));
         }
-
+        holder.mRequestCost.setText("R$ " + String.format("%.2f", request.getEstimatedCost()));
         // fill support if necessary
         shouldFillSupport(holder, getRequestID(position), position);
 
