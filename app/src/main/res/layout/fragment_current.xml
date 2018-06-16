@@ -34,10 +34,10 @@
 
     </com.alexvasilkov.foldablelayout.UnfoldableView>
 
-    <ProgressBar
-        android:id="@+id/agendasPB"
-        style="?android:attr/progressBarStyle"
-        android:layout_gravity="center"
+    <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/agendasPB"
+        app:mlpb_progress_color="@color/colorOrange"/>
 </FrameLayout>

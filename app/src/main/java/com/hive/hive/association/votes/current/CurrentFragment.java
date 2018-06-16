@@ -40,6 +40,7 @@ import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.Request;
 import com.hive.hive.model.association.Session;
 import com.hive.hive.utils.unfoldable.UnfoldableSharedMethods;
+import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,7 +79,7 @@ public class CurrentFragment extends Fragment {
     private FrameLayout mDetailsLayout;
     private UnfoldableView mUnfoldableView;
     private ScrollView detailsScrollView;
-    private ProgressBar mAgendaPB;
+    private CircleProgressBar mAgendaPB;
     // Temporary solution to unfold card, TODO: Check with the @guys
     private ImageView mTopClickableCardIV;
 
