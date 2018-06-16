@@ -405,7 +405,7 @@ public class NewRequestActivity extends AppCompatActivity {
         requestCategoryCleaningIV.setImageResource(R.drawable.ic_category_cleaning_disabled);
         requestCategoryCleaningCB.setSelected(false);
 
-        requestCategoryOthersIV.setImageResource(R.drawable.ic_category_cleaning_disabled);
+        requestCategoryOthersIV.setImageResource(R.drawable.ic_outros_gray);
         requestCategoryOthersCB.setSelected(false);
     }
 

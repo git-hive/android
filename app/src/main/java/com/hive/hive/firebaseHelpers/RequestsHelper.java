@@ -64,25 +64,21 @@ public class RequestsHelper extends FirebaseHelpers{
                 .collection(SUPPORTS_COLLECTION)
                 .document(supportID);
 
-        return FirebaseFirestore.getInstance().runTransaction(new Transaction.Function<Void>() {
-            @Nullable
-            @Override
-            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                // Update request score
-                DocumentSnapshot requestSnap = transaction.get(requestRef);
-                DocumentSnapshot supportSnap = transaction.get(supportRef);
-                Double newScore;
-                if(supportSnap.exists()){//should delete vote
-                    newScore = requestSnap.getDouble("score") - 1;
-                    transaction.delete(supportRef);
-                }else{//should add vote
-                    newScore = requestSnap.getDouble("score") + 1;
-                    // Create the actual support
-                    transaction.set(supportRef, support);
-                }
-                transaction.update(requestRef, "score", newScore);
-                return null;
+        return FirebaseFirestore.getInstance().runTransaction(transaction -> {
+            // Update request score
+            DocumentSnapshot requestSnap = transaction.get(requestRef);
+            DocumentSnapshot supportSnap = transaction.get(supportRef);
+            Double newScore;
+            if(supportSnap.exists()){//should delete vote
+                newScore = requestSnap.getDouble("score") - 1;
+                transaction.delete(supportRef);
+            }else{//should add vote
+                newScore = requestSnap.getDouble("score") + 1;
+                // Create the actual support
+                transaction.set(supportRef, support);
             }
+            transaction.update(requestRef, "score", newScore);
+            return null;
         });
     }
 
@@ -97,30 +93,26 @@ public class RequestsHelper extends FirebaseHelpers{
                 .collection(COMMENTS_COLLECTION);
     }
 
-    public static Task<Void> incrementRequestNumComments(String requestID) {
+    private static void incrementRequestNumComments(String requestID) {
         final DocumentReference requestRef = FirebaseFirestore.getInstance()
                 .collection(ASSOCIATION_COLLECTION)
                 .document(HomeFragment.mCurrentAssociationId)
                 .collection(REQUESTS_COLLECTION)
                 .document(requestID);
-        return FirebaseFirestore.getInstance().runTransaction(new Transaction.Function<Void>() {
-            @Nullable
-            @Override
-            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                DocumentSnapshot snap = transaction.get(requestRef);
-                Double newNumComments = snap.getDouble("numComments") + 1;
-                transaction.update(requestRef, "numComments", newNumComments);
-                return null;
-            }
+        FirebaseFirestore.getInstance().runTransaction(transaction -> {
+            DocumentSnapshot snap = transaction.get(requestRef);
+            Double newNumComments = snap.getDouble("numComments") + 1;
+            transaction.update(requestRef, "numComments", newNumComments);
+            return null;
         });
     }
-    public static Task<Void> setRequestComment(
+    public static void setRequestComment(
             String requestID,
             String commentID,
             AssociationComment comment
     ) {
         incrementRequestNumComments(requestID);
-        return FirebaseFirestore.getInstance()
+        FirebaseFirestore.getInstance()
                 .collection(ASSOCIATION_COLLECTION)
                 .document(HomeFragment.mCurrentAssociationId)
                 .collection(REQUESTS_COLLECTION)
@@ -165,25 +157,21 @@ public class RequestsHelper extends FirebaseHelpers{
                 .document(supportID);
 
         // Set the comment support and increment the comment score
-        return FirebaseFirestore.getInstance().runTransaction(new Transaction.Function<Void>() {
-            @Nullable
-            @Override
-            public Void apply(@NonNull Transaction transaction) throws FirebaseFirestoreException {
-                // Get and update comment score
-                DocumentSnapshot commentSnap = transaction.get(commentRef);
-                DocumentSnapshot supportSnap = transaction.get(supportRef);
-                Double newScore;
-                if(supportSnap.exists()){//should decrease score and remove support
-                    newScore = commentSnap.getDouble(AssociationComment.SCORE_FIELD) - 1;
-                    transaction.delete(supportRef);
-                }else{//should increaseScore and add support
-                    newScore = commentSnap.getDouble(AssociationComment.SCORE_FIELD) + 1;
-                    transaction.set(supportRef, support);
-                }
-                transaction.update(commentRef, AssociationComment.SCORE_FIELD, newScore);
-
-                return null;
+        return FirebaseFirestore.getInstance().runTransaction(transaction -> {
+            // Get and update comment score
+            DocumentSnapshot commentSnap = transaction.get(commentRef);
+            DocumentSnapshot supportSnap = transaction.get(supportRef);
+            Double newScore;
+            if(supportSnap.exists()){//should decrease score and remove support
+                newScore = commentSnap.getDouble(AssociationComment.SCORE_FIELD) - 1;
+                transaction.delete(supportRef);
+            }else{//should increaseScore and add support
+                newScore = commentSnap.getDouble(AssociationComment.SCORE_FIELD) + 1;
+                transaction.set(supportRef, support);
             }
+            transaction.update(commentRef, AssociationComment.SCORE_FIELD, newScore);
+
+            return null;
         });
     }
 

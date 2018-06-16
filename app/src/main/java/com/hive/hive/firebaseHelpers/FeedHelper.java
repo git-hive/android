@@ -176,7 +176,7 @@ public class FeedHelper extends FirebaseHelpers{
             // Get and update comment score
             DocumentSnapshot commentSnap = transaction.get(commentRef);
             DocumentSnapshot supportPostSnap = transaction.get(supportRef);
-            Double newScore = commentSnap.getDouble(ForumComment.SCORE_FIELD);
+            Double newScore;
 
             if(supportPostSnap.exists()){//shoul delete support
                 newScore = commentSnap.getDouble("supportScore") - 1;
