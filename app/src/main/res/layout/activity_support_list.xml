@@ -18,7 +18,7 @@
         <ImageView
             android:id="@+id/exitVotesIV"
             android:layout_gravity="left"
-            android:src="@drawable/ic_back"
+            app:srcCompat="@drawable/ic_back"
             android:layout_width="40dp"
             android:layout_height="40dp" />
         <TextView
@@ -32,8 +32,9 @@
             android:layout_height="wrap_content" />
         <ImageView
             android:id="@+id/searchVotesIV"
+            android:visibility="invisible"
             android:layout_gravity="right"
-            android:src="@drawable/ic_search"
+            app:srcCompat="@drawable/ic_search"
             android:layout_width="40dp"
             android:layout_height="40dp" />
     </FrameLayout>

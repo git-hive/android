@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 
 
 import com.hive.hive.R;
@@ -24,6 +26,8 @@ public class VotersListActivity extends AppCompatActivity {
 
     RecyclerView mSupportProfileRV;
     RecyclerView mSupportFilterRV;
+
+    ImageView mBackArrowIV;
 
     //Adapters
     ProfileFilterAdapter mFilterListAdapter;
@@ -52,7 +56,13 @@ public class VotersListActivity extends AppCompatActivity {
         mSupportFilterRV = findViewById(R.id.superiorFilterRV);
         mSupportProfileRV = findViewById(R.id.supportProfileListRV);
 
-
+        mBackArrowIV = findViewById(R.id.exitVotesIV);
+        mBackArrowIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         LinearLayoutManager horizontalLayoutManager
                 = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
 
