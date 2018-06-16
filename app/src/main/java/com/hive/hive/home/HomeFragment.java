@@ -27,6 +27,7 @@ import com.hive.hive.model.user.User;
 import com.hive.hive.profiles.UserProfileActivity;
 import com.hive.hive.utils.DocReferences;
 import com.hive.hive.utils.ProfilePhotoHelper;
+import com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar;
 
 import java.util.ArrayList;
 
@@ -45,7 +46,7 @@ public class HomeFragment extends Fragment {
     ImageView mUserAvatar;
     TextView mGreetingsTV;
     Spinner mCurrentAssociationSpinner;
-
+    CircleProgressBar mHomePB;
 
     // Settings
     View mView;
@@ -77,21 +78,18 @@ public class HomeFragment extends Fragment {
         mView = v;
         mContext = getContext();
 
+        initViews();
+
         MainFirebaseHandle.getAssociations(mUser,this);
+
         setCurrentUserInfo();
+
 
         initStructures();
 
-//        initDummy();
-
-//        initRecycler();
-
         initOnClicks();
 
-//        initEventListeners();
-
-
-//        mSessionLR = VotesHelper.getCurrentSession(FirebaseFirestore.getInstance(), HomeFragment.mCurrentAssociationId).addSnapshotListener(mSessionEL);
+        showProgress();
 
         HomeFirebaseHandle.getSession(this, mRecyclerObjects);
 
@@ -116,13 +114,19 @@ public class HomeFragment extends Fragment {
         super.onDestroy();
     }
 
+    private void initViews(){
+        mHomePB = mView.findViewById(R.id.homePB);
+        mCurrentAssociationSpinner = mView.findViewById(R.id.currentAssociationSpinner);
+        mRecyclerViewHome = mView.findViewById(R.id.recyclerViewFeed);
+        mUserAvatar = mView.findViewById(R.id.userAvatar);
+        mGreetingsTV = mView.findViewById(R.id.textViewGreetings);
+
+    }
     public void initStructures(){
         mRecyclerObjects = new ArrayList<>();
     }
 
     public void setCurrentUserInfo(){
-        mUserAvatar = mView.findViewById(R.id.userAvatar);
-        mGreetingsTV = mView.findViewById(R.id.textViewGreetings);
         try {
             DocumentReference userRef = DocReferences.getUserRef();
             userRef.get().addOnSuccessListener(documentSnapshot -> {
@@ -143,9 +147,9 @@ public class HomeFragment extends Fragment {
 
     public void initRecycler(ArrayList<Object> objects){
         RecyclerViewHomeAdapter adapter = new RecyclerViewHomeAdapter(objects, mContext);
-        mRecyclerViewHome = mView.findViewById(R.id.recyclerViewFeed);
         mRecyclerViewHome.setLayoutManager(new LinearLayoutManager(mView.getContext()));
         mRecyclerViewHome.setAdapter(adapter);
+        hideProgress();
     }
 
     public void initOnClicks(){
@@ -156,6 +160,7 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+
     public void updateCurrentAssociationUI(ArrayList<Pair<String, String>> associations){
 
 
@@ -167,7 +172,6 @@ public class HomeFragment extends Fragment {
                 associationNames.add(association.second);}
 
         }
-        mCurrentAssociationSpinner = mView.findViewById(R.id.currentAssociationSpinner);
 
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<String>(getApplicationContext(),  android.R.layout.simple_spinner_dropdown_item, associationNames);
@@ -197,5 +201,19 @@ public class HomeFragment extends Fragment {
             }
         });
 
+    }
+
+    private void showProgress(){
+        mHomePB.setVisibility(View.VISIBLE);
+        mCurrentAssociationSpinner.setVisibility(View.GONE);
+        mGreetingsTV.setVisibility(View.GONE);
+        mRecyclerViewHome.setVisibility(View.GONE);
+    }
+
+    private void hideProgress(){
+        mHomePB.setVisibility(View.GONE);
+        mCurrentAssociationSpinner.setVisibility(View.VISIBLE);
+        mGreetingsTV.setVisibility(View.VISIBLE);
+        mRecyclerViewHome.setVisibility(View.VISIBLE);
     }
 }
