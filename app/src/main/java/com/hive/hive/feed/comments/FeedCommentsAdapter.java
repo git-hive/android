@@ -20,7 +20,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
 import com.hive.hive.association.request.RequestAdapter;
-import com.hive.hive.feed.FeedHelper;
+import com.hive.hive.firebaseHelpers.FeedHelper;
 import com.hive.hive.home.HomeFragment;
 import com.hive.hive.model.forum.ForumComment;
 import com.hive.hive.model.forum.ForumSupport;
@@ -156,8 +156,6 @@ public class FeedCommentsAdapter extends RecyclerView.Adapter<FeedCommentsAdapte
         // If it doesn't, fetch it
 
         FeedHelper.getForumPostCommentSupport(
-                FirebaseFirestore.getInstance(),
-                mAssociationID,
                 mPostId,
                 mIds.get(position),
                 FirebaseAuth.getInstance().getUid()
@@ -207,8 +205,6 @@ public class FeedCommentsAdapter extends RecyclerView.Adapter<FeedCommentsAdapte
         );
 
         FeedHelper.setSupportForumPostComment(
-                FirebaseFirestore.getInstance(),
-                mAssociationID,
                 mPostId,
                 commentId,
                 supportId,

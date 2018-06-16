@@ -1,11 +1,10 @@
-package com.hive.hive.login;
+package com.hive.hive.firebaseHelpers;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 import com.hive.hive.model.association.IngressRequest;
 import com.hive.hive.model.user.User;
@@ -13,23 +12,13 @@ import com.hive.hive.utils.DocReferences;
 
 import java.util.ArrayList;
 
+public class UserHelper extends FirebaseHelpers {
 
-public class LoginAndSignupHelper {
-
-    public static String ASSOCIATION_COLLECTION = "associations";
-
-    public static String INGRESS_REQUEST_COLLECTION = "ingressRequests";
-
-    public static String USER_COLLECTION = "users";
-
-
-    public static Task<DocumentSnapshot> getAssociation(DocumentReference associationRef){
-        return associationRef.get();
-    }
-    public static Task<QuerySnapshot> getAllAssociations() {
-        return FirebaseFirestore.getInstance().collection(ASSOCIATION_COLLECTION).get();
+    public static Task<DocumentSnapshot> getUserData(){
+        return FirebaseFirestore.getInstance().collection(USER_COLLECTION).document(FirebaseAuth.getInstance().getUid()).get();
     }
 
+    //saves user signupData and its associations ingress requests
     public static Task<Void> saveUserAndSendRequestIngress(User newUser, ArrayList<String> selectedAssociationsIds) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         //user data
@@ -55,6 +44,7 @@ public class LoginAndSignupHelper {
         return batch.commit();
     }
 
+    //save the last association
     public static void saveUserLastAssociation(User user){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(USER_COLLECTION).document(FirebaseAuth.getInstance().getUid()).set(user);

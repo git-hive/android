@@ -9,7 +9,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.hive.hive.association.votes.VotesHelper;
+import com.hive.hive.firebaseHelpers.VotesHelper;
 import com.hive.hive.association.votes.question_answering.QuestionFormActivity;
 import com.hive.hive.model.association.Question;
 

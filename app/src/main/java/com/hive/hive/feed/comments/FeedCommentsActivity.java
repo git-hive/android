@@ -30,11 +30,9 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
 
-import com.hive.hive.feed.FeedHelper;
+import com.hive.hive.firebaseHelpers.FeedHelper;
 import com.hive.hive.home.HomeFragment;
-import com.hive.hive.model.association.AssociationComment;
 import com.hive.hive.model.association.BudgetTransactionCategories;
-import com.hive.hive.model.forum.Forum;
 import com.hive.hive.model.forum.ForumComment;
 import com.hive.hive.model.forum.ForumPost;
 import com.hive.hive.model.forum.ForumSupport;
@@ -139,7 +137,7 @@ public class FeedCommentsActivity extends AppCompatActivity {
         shouldFillSupport();
 
 
-        mPostLR = FeedHelper.getForumPost(FirebaseFirestore.getInstance(), HomeFragment.mCurrentAssociationId, mPostId)
+        mPostLR = FeedHelper.getForumPost(mPostId)
                 .addSnapshotListener(mPostEL);
 
         //GETTING ALL Comments
@@ -196,8 +194,7 @@ public class FeedCommentsActivity extends AppCompatActivity {
 
         //TODO change associationID and LIMIT
         //getting the 10 newest comments
-        mCommentLR = FeedHelper.getAllForumPostComments(FirebaseFirestore.getInstance(),
-                HomeFragment.mCurrentAssociationId, mPostId).orderBy("createdAt", Query.Direction.ASCENDING).limit(10)
+        mCommentLR = FeedHelper.getAllForumPostComments(mPostId).orderBy("createdAt", Query.Direction.ASCENDING).limit(10)
                 .addSnapshotListener(mCommentEL);
 
         //--- Recycle View Setup
@@ -297,7 +294,7 @@ public class FeedCommentsActivity extends AppCompatActivity {
                         Calendar.getInstance().getTimeInMillis(),
                         DocReferences.getUserRef(), null, commentText);
                 //TODO static associationId
-                FeedHelper.setForumPostComment(FirebaseFirestore.getInstance(), HomeFragment.mCurrentAssociationId, mPostId,
+                FeedHelper.setForumPostComment(mPostId,
                         commentID, comment);
                 mCommentET.setText(null);
                 mCommentET.clearFocus();
@@ -399,8 +396,6 @@ public class FeedCommentsActivity extends AppCompatActivity {
                 null);
 
         FeedHelper.setForumPostSupport(
-                FirebaseFirestore.getInstance(),
-                HomeFragment.mCurrentAssociationId,
                 PostID,
                 supportId,
                 support
@@ -415,8 +410,7 @@ public class FeedCommentsActivity extends AppCompatActivity {
 
     private void shouldFillSupport(){
         //if exists support, then should be IV filled
-        FeedHelper.getForumPostSupport(FirebaseFirestore.getInstance(),
-                HomeFragment.mCurrentAssociationId, mPostId, FirebaseAuth.getInstance().getUid())
+        FeedHelper.getForumPostSupport(mPostId, FirebaseAuth.getInstance().getUid())
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {

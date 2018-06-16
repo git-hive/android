@@ -25,6 +25,7 @@ import com.hive.hive.R;
 
 
 import com.hive.hive.feed.comments.FeedCommentsActivity;
+import com.hive.hive.firebaseHelpers.FeedHelper;
 import com.hive.hive.home.HomeFragment;
 import com.hive.hive.model.forum.ForumPost;
 import com.hive.hive.model.forum.ForumSupport;
@@ -210,8 +211,6 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerViewFe
         //has to load it everytime
         holder.mSupportsIV.setVisibility(View.INVISIBLE);
         FeedHelper.getForumPostSupport(
-                mDB,
-                mAssociationID,
                 postId,
                 mUser.getUid()
         )
@@ -265,8 +264,6 @@ public class RecyclerViewFeedAdapter extends RecyclerView.Adapter<RecyclerViewFe
                     null);
 
             FeedHelper.setForumPostSupport(
-                    FirebaseFirestore.getInstance(),
-                    mAssociationID,
                     postID,
                     supportId,
                     support

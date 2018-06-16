@@ -2,55 +2,39 @@ package com.hive.hive.main;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.util.Pair;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.hive.hive.R;
+import com.hive.hive.firebaseHelpers.AssociationHelper;
 import com.hive.hive.home.HomeFragment;
 import com.hive.hive.login.LoginActivity;
-import com.hive.hive.login.LoginAndSignupHelper;
-import com.hive.hive.login.SignupActivity;
 import com.hive.hive.model.association.Association;
 import com.hive.hive.model.user.User;
-import com.hive.hive.profiles.UserProfileActivity;
-import com.hive.hive.utils.DocReferences;
-import com.hive.hive.utils.UserHelper;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class MainFirebaseHandle {
 
     private final static String TAG = MainFirebaseHandle.class.getSimpleName();
 
     public static void getCurrentAssociation(Activity activity) {
-        UserHelper.getUserData().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    User user = documentSnapshot.toObject(User.class);
-                    //update
-                    updateAssociation(user, activity);
+        com.hive.hive.firebaseHelpers.UserHelper.getUserData().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                User user = documentSnapshot.toObject(User.class);
+                //update
+                updateAssociation(user, activity);
 
-                }
-                else{
-                    if(activity instanceof LoginActivity)
-                        ((LoginActivity) activity).checkoutSignUp();
-                }
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e(TAG, e.getMessage());
-                //Logout then
+            else{
+                if(activity instanceof LoginActivity)
+                    ((LoginActivity) activity).checkoutSignUp();
             }
+        }).addOnFailureListener(e -> {
+            Log.e(TAG, e.getMessage());
+            //Logout then
         });
     }
 
@@ -69,18 +53,15 @@ public class MainFirebaseHandle {
                 //logout
             }
         }
-        LoginAndSignupHelper.getAssociation(user.getLastAccessAssociationRef()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {//if there is a selected association use it
-                    HomeFragment.mCurrentAssociationId = documentSnapshot.getId();
-                    HomeFragment.mUser = user;
-                    Intent intent = new Intent(activity, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    activity.startActivity(intent);
-                }
-
+        AssociationHelper.getAssociation(user.getLastAccessAssociationRef()).addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {//if there is a selected association use it
+                HomeFragment.mCurrentAssociationId = documentSnapshot.getId();
+                HomeFragment.mUser = user;
+                Intent intent = new Intent(activity, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                activity.startActivity(intent);
             }
+
         });
     }
 
@@ -103,17 +84,14 @@ public class MainFirebaseHandle {
     public static void getAssociations(User user, HomeFragment fragment){
         ArrayList<Pair<String, String>> associations = new ArrayList<>();//id and name
         for(DocumentReference ref : user.getAssociationsRef()){
-            LoginAndSignupHelper.getAssociation(ref).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    if (documentSnapshot.exists()) {
-                        String associationId = documentSnapshot.getId();
-                        Association association = documentSnapshot.toObject(Association.class);
-                        associations.add(new Pair<>(associationId, association.getName()));
-                        callUI(associations, user, fragment);
-                    }
-
+            AssociationHelper.getAssociation(ref).addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    String associationId = documentSnapshot.getId();
+                    Association association = documentSnapshot.toObject(Association.class);
+                    associations.add(new Pair<>(associationId, association.getName()));
+                    callUI(associations, user, fragment);
                 }
+
             });
         }
 

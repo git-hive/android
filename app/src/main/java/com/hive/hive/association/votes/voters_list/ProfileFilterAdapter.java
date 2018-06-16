@@ -25,7 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
-import com.hive.hive.association.votes.VotesHelper;
+import com.hive.hive.firebaseHelpers.VotesHelper;
 import com.hive.hive.model.association.Vote;
 import com.hive.hive.model.user.User;
 import com.hive.hive.utils.Utils;

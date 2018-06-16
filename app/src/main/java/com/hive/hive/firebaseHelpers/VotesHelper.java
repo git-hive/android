@@ -1,4 +1,4 @@
-package com.hive.hive.association.votes;
+package com.hive.hive.firebaseHelpers;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -16,7 +16,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.Transaction;
 import com.hive.hive.R;
-import com.hive.hive.model.association.Agenda;
 import com.hive.hive.model.association.Question;
 import com.hive.hive.model.association.QuestionOptions;
 import com.hive.hive.model.association.Vote;
@@ -27,17 +26,8 @@ import java.util.ArrayList;
  * Created by vplentz on 22/03/18.
  */
 
-public class VotesHelper {
+public class VotesHelper extends FirebaseHelpers{
     private static String TAG = VotesHelper.class.getSimpleName();
-    public static String ASSOCIATION_COLLECTION = "associations";
-
-    public static String SESSIONS_COLLECTION = "sessions";
-
-    public static String AGENDAS_COLLECTION = "agendas";
-
-    public static String QUESTIONS_COLLECTION = "questions";
-
-    public static String VOTES_COLLECTION = "votes";
 
     //--- Sessions
 
@@ -73,17 +63,6 @@ public class VotesHelper {
                 .collection(AGENDAS_COLLECTION);
     }
 
-    //--- Agendas
-    public static void setAgendas(FirebaseFirestore db, String associationID, String sessionID, Agenda agenda){
-        db
-                .collection(ASSOCIATION_COLLECTION)
-                .document(associationID)
-                .collection(SESSIONS_COLLECTION)
-                .document(sessionID)
-                .collection(AGENDAS_COLLECTION)
-                .add(agenda);
-    }
-
     //--- Questions
     public static CollectionReference getQuestions(FirebaseFirestore db, String associationID, String sessionID, String agendaID){
         return db
@@ -94,18 +73,6 @@ public class VotesHelper {
                 .collection(AGENDAS_COLLECTION)
                 .document(agendaID)
                 .collection((QUESTIONS_COLLECTION));
-    }
-
-    public static void setQuestions(FirebaseFirestore db, String associationID, String sessionID, String agendaID, Question question){
-         db
-                .collection(ASSOCIATION_COLLECTION)
-                .document(associationID)
-                .collection(SESSIONS_COLLECTION)
-                .document(sessionID)
-                .collection(AGENDAS_COLLECTION)
-                .document(agendaID)
-                .collection((QUESTIONS_COLLECTION))
-         .add(question);
     }
 
 

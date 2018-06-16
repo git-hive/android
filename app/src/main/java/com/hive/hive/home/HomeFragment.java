@@ -17,31 +17,18 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import com.google.android.gms.tasks.OnSuccessListener;
+
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
-import com.hive.hive.association.votes.VotesHelper;
-import com.hive.hive.login.LoginAndSignUpFirebaseHandler;
-import com.hive.hive.login.LoginAndSignupHelper;
+import com.hive.hive.firebaseHelpers.UserHelper;
 import com.hive.hive.main.MainActivity;
 import com.hive.hive.main.MainFirebaseHandle;
-import com.hive.hive.model.association.Agenda;
-import com.hive.hive.model.association.Question;
-import com.hive.hive.model.association.Report;
-import com.hive.hive.model.association.Request;
-import com.hive.hive.model.association.Session;
-import com.hive.hive.model.forum.ForumPost;
 import com.hive.hive.model.user.User;
 import com.hive.hive.profiles.UserProfileActivity;
 import com.hive.hive.utils.DocReferences;
 import com.hive.hive.utils.ProfilePhotoHelper;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -197,7 +184,7 @@ public class HomeFragment extends Fragment {
                        if(!association.first.equals(mCurrentAssociationId)) {
                            mCurrentAssociationId = association.first;
                            mUser.setLastAccessAssociationRef(DocReferences.getAssociationRef(mCurrentAssociationId));
-                           LoginAndSignupHelper.saveUserLastAssociation(mUser);
+                           UserHelper.saveUserLastAssociation(mUser);
                            startActivity(new Intent(HomeFragment.this.getContext(), MainActivity.class));
 
                        }

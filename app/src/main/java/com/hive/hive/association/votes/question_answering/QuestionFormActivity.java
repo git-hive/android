@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
-import com.hive.hive.association.votes.VotesHelper;
+import com.hive.hive.firebaseHelpers.VotesHelper;
 import com.hive.hive.association.votes.question_answering.adapters.GridListAdapter;
 import com.hive.hive.association.votes.question_answering.adapters.TimeLineAdapter;
 import com.hive.hive.association.votes.question_answering.firebase_handlers.QuestionAnsweringHandle;

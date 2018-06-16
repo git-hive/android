@@ -16,18 +16,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.hive.hive.R;
-import com.hive.hive.association.AssociationHelper;
 import com.hive.hive.association.request.RequestAdapter;
-import com.hive.hive.feed.FeedHelper;
-import com.hive.hive.feed.RecyclerViewFeedAdapter;
 import com.hive.hive.firebaseHelpers.RequestsHelper;
 import com.hive.hive.home.HomeFragment;
 import com.hive.hive.model.association.AssociationComment;
 import com.hive.hive.model.association.AssociationSupport;
-import com.hive.hive.model.forum.ForumPost;
-import com.hive.hive.model.forum.ForumSupport;
 import com.hive.hive.model.user.User;
 import com.hive.hive.utils.DocReferences;
 import com.hive.hive.utils.ProfilePhotoHelper;
@@ -36,7 +30,6 @@ import com.hive.hive.utils.SupportMutex;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 /**
  * Created by vplentz on 15/02/18.

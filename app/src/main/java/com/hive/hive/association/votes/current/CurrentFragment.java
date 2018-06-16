@@ -31,7 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hive.hive.R;
-import com.hive.hive.association.votes.VotesHelper;
+import com.hive.hive.firebaseHelpers.VotesHelper;
 import com.hive.hive.association.votes.question_answering.QuestionFormActivity;
 import com.hive.hive.association.votes.questions.adapters.ExpandableListAdapter;
 import com.hive.hive.home.HomeFragment;

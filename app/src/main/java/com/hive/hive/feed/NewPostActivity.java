@@ -15,7 +15,7 @@ import com.hive.hive.utils.DocReferences;
 
 import java.util.UUID;
 
-import static com.hive.hive.feed.FeedHelper.setForumPost;
+import static com.hive.hive.firebaseHelpers.FeedHelper.setForumPost;
 
 
 public class NewPostActivity extends AppCompatActivity {
@@ -87,7 +87,7 @@ public class NewPostActivity extends AppCompatActivity {
                 null,
                 null);
 
-        setForumPost(mDB,associationID, forumUUID, forumPost);
+        setForumPost(forumUUID, forumPost);
         finish();
     }
 

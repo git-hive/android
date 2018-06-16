@@ -10,6 +10,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.hive.hive.R;
+import com.hive.hive.firebaseHelpers.AssociationHelper;
+import com.hive.hive.firebaseHelpers.UserHelper;
 import com.hive.hive.model.association.Association;
 import com.hive.hive.model.user.User;
 
@@ -20,7 +22,7 @@ public class LoginAndSignUpFirebaseHandler {
     private final static String TAG = LoginAndSignUpFirebaseHandler.class.getSimpleName();
 
     public static void getAllAssoctiationsHandler(Activity activity){
-        LoginAndSignupHelper.getAllAssociations().addOnSuccessListener(documentSnapshots -> {
+        AssociationHelper.getAllAssociations().addOnSuccessListener(documentSnapshots -> {
             Pair<ArrayList<String>, HashMap<String, Association>> associations = new Pair<>(new ArrayList<>(), new HashMap<>());
             for (DocumentSnapshot dc:documentSnapshots) {
                 if(dc.exists()){
@@ -44,7 +46,7 @@ public class LoginAndSignUpFirebaseHandler {
 
     public static void saveUserDataAndSendSelectedIngressesRequests(Activity activity, User user, ArrayList<String> selectedAssociationsIds) {
             try {
-                LoginAndSignupHelper.saveUserAndSendRequestIngress(user, selectedAssociationsIds)
+                UserHelper.saveUserAndSendRequestIngress(user, selectedAssociationsIds)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
