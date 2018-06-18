@@ -24,7 +24,8 @@ public class UserHelper extends FirebaseHelpers {
         //user data
         DocumentReference userRef = DocReferences.getUserRef();
         //ingressRequest data
-        IngressRequest ingressRequest = new IngressRequest(DocReferences.getUserRef(), System.currentTimeMillis());
+        IngressRequest ingressRequest = new IngressRequest(DocReferences.getUserRef(), System.currentTimeMillis(),
+                newUser.getCpf(), newUser.getName(), newUser.getEmail(), newUser.getPhotoUrl());
         String ingressRequestId = FirebaseAuth.getInstance().getUid();
 
         //Write Batch
