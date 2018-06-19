@@ -14,6 +14,7 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.hive.hive.R;
 import com.hive.hive.home.HomeFragment;
 import java.io.File;
 import java.io.IOException;
@@ -57,7 +58,7 @@ public abstract class FileUtils {
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-                    activity.startActivity(intent);
+                    activity.startActivity(Intent.createChooser(intent, activity.getResources().getString(R.string.chooseApp)));
                     // Local temp file has been created
                 }
             }).addOnFailureListener(new OnFailureListener() {

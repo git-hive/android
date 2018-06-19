@@ -80,7 +80,7 @@
 
     <!-- Request Comments strings -->
     <string name="should_text">Qual é o seu comentário?</string>
-    <string name="your_comment">Escreva um comentário...</string>
+    <string name="your_comment">Escreva um comentário…</string>
     <!-- Facebook strings -->
     <string name="facebook_app_id">177801062854821</string>
     <string name="fb_login_protocol_scheme">fb165818667480912</string>
@@ -145,7 +145,7 @@
     <string name="initial_money">R$ 000,000,000</string>
     <string name="details">Detalhes</string>
     <string name="downloading">Iniciando o download do arquivo</string>
-
+    <string name="chooseApp">Escolha um app para visualização do pdf.</string>
     <!-- Circular Menu-->
     <string name="setting">Setting</string>
     <string name="circle_layout_manger">Circle LayoutManager</string>
