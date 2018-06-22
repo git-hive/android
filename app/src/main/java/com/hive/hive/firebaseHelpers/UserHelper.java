@@ -23,6 +23,15 @@ public class UserHelper extends FirebaseHelpers {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         //user data
         DocumentReference userRef = DocReferences.getUserRef();
+
+        //TODO ONLY TO FOR TESTING
+//        ArrayList<DocumentReference> acceptedRefs = new ArrayList<>();
+//        for(String selectedAssociationId : selectedAssociationsIds) {
+//            acceptedRefs.add(DocReferences.getAssociationRef(selectedAssociationId));
+//        }
+//        newUser.setAssociationsRefs(acceptedRefs);
+
+
         //ingressRequest data
         IngressRequest ingressRequest = new IngressRequest(DocReferences.getUserRef(), System.currentTimeMillis(),
                 newUser.getCpf(), newUser.getName(), newUser.getEmail(), newUser.getPhotoUrl());

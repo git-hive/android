@@ -14,7 +14,7 @@ public class User {
     private String birthday, cpf, email, name, photoUrl;
     private HashSet<DocumentReference> roles;
     private ArrayList<CollectionReference> actions;
-    private ArrayList<DocumentReference> associationsRef;
+    private ArrayList<DocumentReference> associationsRefs;
     private DocumentReference lastAccessAssociationRef;
 // --- Constructors
 
@@ -52,8 +52,8 @@ public class User {
 
     public String getPhotoUrl(){ return photoUrl; }
 
-    public ArrayList<DocumentReference> getAssociationsRef() {
-        return associationsRef;
+    public ArrayList<DocumentReference> getAssociationsRefs() {
+        return associationsRefs;
     }
 
     public DocumentReference getLastAccessAssociationRef() {
@@ -78,8 +78,8 @@ public class User {
 
     public void setPhotoUrl(String photoUrl) { this.photoUrl = photoUrl; }
 
-    public void setAssociationsRef(ArrayList<DocumentReference> associationsRef) {
-        this.associationsRef = associationsRef;
+    public void setAssociationsRefs(ArrayList<DocumentReference> associationsRefs) {
+        this.associationsRefs = associationsRefs;
     }
 
     public void setLastAccessAssociationRef(DocumentReference lastAccessAssociationRef) {

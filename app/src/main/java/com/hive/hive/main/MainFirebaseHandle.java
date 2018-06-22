@@ -40,8 +40,8 @@ public class MainFirebaseHandle {
 
     private static void updateAssociation(User user, Activity activity) {
         if(user.getLastAccessAssociationRef() == null) {
-            if (user.getAssociationsRef() != null && !user.getAssociationsRef().isEmpty()) {//if there is no one selected, use first association
-                user.setLastAccessAssociationRef(user.getAssociationsRef().get(0)); //uses the firts ref
+            if (user.getAssociationsRefs() != null && !user.getAssociationsRefs().isEmpty()) {//if there is no one selected, use first association
+                user.setLastAccessAssociationRef(user.getAssociationsRefs().get(0)); //uses the firts ref
                 updateAssociation(user, activity);
                 return;
             } else {//there is no associations, should tell user and logout
@@ -83,7 +83,7 @@ public class MainFirebaseHandle {
 
     public static void getAssociations(User user, HomeFragment fragment){
         ArrayList<Pair<String, String>> associations = new ArrayList<>();//id and name
-        for(DocumentReference ref : user.getAssociationsRef()){
+        for(DocumentReference ref : user.getAssociationsRefs()){
             AssociationHelper.getAssociation(ref).addOnSuccessListener(documentSnapshot -> {
                 if (documentSnapshot.exists()) {
                     String associationId = documentSnapshot.getId();
@@ -98,7 +98,7 @@ public class MainFirebaseHandle {
     }
 
     private static void callUI(ArrayList<Pair<String, String>> associations, User user, HomeFragment fragment){
-        if(associations.size() == user.getAssociationsRef().size())
+        if(associations.size() == user.getAssociationsRefs().size())
             if(fragment != null)
                 fragment.updateCurrentAssociationUI(associations);
     }
