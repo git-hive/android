@@ -12,19 +12,17 @@ import java.util.HashSet;
 
 public class User {
     private String birthday, cpf, email, name, photoUrl;
-    private HashSet<DocumentReference> roles;
     private ArrayList<CollectionReference> actions;
-    private ArrayList<DocumentReference> associationsRefs;
+    private ArrayList<AssociationRef> associations;
     private DocumentReference lastAccessAssociationRef;
 // --- Constructors
 
-    public User(String birthday, String cpf, String email, String name, HashSet roles, ArrayList actions, String photoUrl,
+    public User(String birthday, String cpf, String email, String name, ArrayList actions, String photoUrl,
                 DocumentReference lastAccessAssociationRef){
         this.birthday = birthday;
         this.cpf = cpf;
         this.email = email;
         this.name = name;
-        this.roles = roles;
         this.actions = actions;
         this.photoUrl = photoUrl;
         this.lastAccessAssociationRef = lastAccessAssociationRef;
@@ -34,10 +32,6 @@ public class User {
     }
 
     //--- Getters
-    public HashSet<DocumentReference> getRoles() {
-        return roles;
-    }
-
     public ArrayList<CollectionReference> getActions() {
         return actions;
     }
@@ -52,8 +46,8 @@ public class User {
 
     public String getPhotoUrl(){ return photoUrl; }
 
-    public ArrayList<DocumentReference> getAssociationsRefs() {
-        return associationsRefs;
+    public ArrayList<AssociationRef> getAssociations() {
+        return associations;
     }
 
     public DocumentReference getLastAccessAssociationRef() {
@@ -66,8 +60,6 @@ public class User {
         this.actions = actions;
     }
 
-    public void setRoles(HashSet<DocumentReference> roles) { this.roles = roles; }
-
     public void setName(String name) { this.name = name; }
 
     public void setEmail(String email) { this.email = email; }
@@ -78,8 +70,8 @@ public class User {
 
     public void setPhotoUrl(String photoUrl) { this.photoUrl = photoUrl; }
 
-    public void setAssociationsRefs(ArrayList<DocumentReference> associationsRefs) {
-        this.associationsRefs = associationsRefs;
+    public void setAssociations(ArrayList<AssociationRef> associations) {
+        this.associations = associations;
     }
 
     public void setLastAccessAssociationRef(DocumentReference lastAccessAssociationRef) {

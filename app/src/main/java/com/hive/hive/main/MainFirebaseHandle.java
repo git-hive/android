@@ -12,6 +12,7 @@ import com.hive.hive.firebaseHelpers.AssociationHelper;
 import com.hive.hive.home.HomeFragment;
 import com.hive.hive.login.LoginActivity;
 import com.hive.hive.model.association.Association;
+import com.hive.hive.model.user.AssociationRef;
 import com.hive.hive.model.user.User;
 
 import java.util.ArrayList;
@@ -40,8 +41,8 @@ public class MainFirebaseHandle {
 
     private static void updateAssociation(User user, Activity activity) {
         if(user.getLastAccessAssociationRef() == null) {
-            if (user.getAssociationsRefs() != null && !user.getAssociationsRefs().isEmpty()) {//if there is no one selected, use first association
-                user.setLastAccessAssociationRef(user.getAssociationsRefs().get(0)); //uses the firts ref
+            if (user.getAssociations() != null && !user.getAssociations().isEmpty()) {//if there is no one selected, use first association
+                user.setLastAccessAssociationRef(user.getAssociations().get(0).getAssociationRef()); //uses the firts ref
                 updateAssociation(user, activity);
                 return;
             } else {//there is no associations, should tell user and logout
@@ -83,8 +84,8 @@ public class MainFirebaseHandle {
 
     public static void getAssociations(User user, HomeFragment fragment){
         ArrayList<Pair<String, String>> associations = new ArrayList<>();//id and name
-        for(DocumentReference ref : user.getAssociationsRefs()){
-            AssociationHelper.getAssociation(ref).addOnSuccessListener(documentSnapshot -> {
+        for(AssociationRef ref : user.getAssociations()){
+            AssociationHelper.getAssociation(ref.getAssociationRef()).addOnSuccessListener(documentSnapshot -> {
                 if (documentSnapshot.exists()) {
                     String associationId = documentSnapshot.getId();
                     Association association = documentSnapshot.toObject(Association.class);
@@ -98,7 +99,7 @@ public class MainFirebaseHandle {
     }
 
     private static void callUI(ArrayList<Pair<String, String>> associations, User user, HomeFragment fragment){
-        if(associations.size() == user.getAssociationsRefs().size())
+        if(associations.size() == user.getAssociations().size())
             if(fragment != null)
                 fragment.updateCurrentAssociationUI(associations);
     }

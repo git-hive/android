@@ -6,43 +6,35 @@ package com.hive.hive.model.user;
 
 public abstract class Role {
 
-   private String id;
-   private String name;
-   private String associationId;
+    private String description;
+    //   private String key;
+    private String name;
 
     // --- Constructors
 
-    public Role(String id, String name, String associationId) {
-        this.id = id;
+    public Role(String description, String name) {
+        this.description = description;
         this.name = name;
-        this.associationId = associationId;
     }
 
 
     // --- Getters
 
-    public String getId() {
-        return id;
+    public String getDescription() {
+        return description;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getAssociationId() {
-        return associationId;
-    }
 // --- Setters
 
-    public void setId(String id) {
-        this.id = id;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setAssociationId(String associationId) {
-        this.associationId = associationId;
     }
 }
