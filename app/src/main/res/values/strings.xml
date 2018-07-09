@@ -244,4 +244,5 @@
     <!-- Home-->
     <string name="no_reports"> Não há informes da associação</string>
     <string name="agendas_num">Essa assembléia possui: </string>
+
 </resources>

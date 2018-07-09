@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -46,7 +47,8 @@ public class HomeFragment extends Fragment {
     ImageView mUserAvatar;
     TextView mGreetingsTV;
     Spinner mCurrentAssociationSpinner;
-    CircleProgressBar mHomePB;
+    SwipeRefreshLayout mHomePB;
+    TextView mNoReportsOrAgendasTV;
 
     // Settings
     View mView;
@@ -84,7 +86,6 @@ public class HomeFragment extends Fragment {
 
         setCurrentUserInfo();
 
-
         initStructures();
 
         initOnClicks();
@@ -116,10 +117,20 @@ public class HomeFragment extends Fragment {
 
     private void initViews(){
         mHomePB = mView.findViewById(R.id.homePB);
+        mHomePB.setColorSchemeColors(getResources().getColor(R.color.colorOrange));
+        mHomePB.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mNoReportsOrAgendasTV.setVisibility(View.GONE);
+                mRecyclerObjects.clear();
+                HomeFirebaseHandle.getSession(HomeFragment.this, mRecyclerObjects);
+            }
+        });
         mCurrentAssociationSpinner = mView.findViewById(R.id.currentAssociationSpinner);
         mRecyclerViewHome = mView.findViewById(R.id.recyclerViewFeed);
         mUserAvatar = mView.findViewById(R.id.userAvatar);
         mGreetingsTV = mView.findViewById(R.id.textViewGreetings);
+        mNoReportsOrAgendasTV = mView.findViewById(R.id.noReportsorAgendasTV);
 
     }
     public void initStructures(){
@@ -146,10 +157,15 @@ public class HomeFragment extends Fragment {
     }
 
     public void initRecycler(ArrayList<Object> objects){
+        hideProgress();
+        if(mRecyclerObjects.isEmpty()){
+            //should have a message
+            mNoReportsOrAgendasTV.setVisibility(View.VISIBLE);
+            return;
+        }
         RecyclerViewHomeAdapter adapter = new RecyclerViewHomeAdapter(objects, mContext);
         mRecyclerViewHome.setLayoutManager(new LinearLayoutManager(mView.getContext()));
         mRecyclerViewHome.setAdapter(adapter);
-        hideProgress();
     }
 
     public void initOnClicks(){
@@ -204,14 +220,14 @@ public class HomeFragment extends Fragment {
     }
 
     private void showProgress(){
-        mHomePB.setVisibility(View.VISIBLE);
+        mHomePB.setRefreshing(true);
         mCurrentAssociationSpinner.setVisibility(View.GONE);
         mGreetingsTV.setVisibility(View.GONE);
         mRecyclerViewHome.setVisibility(View.GONE);
     }
 
     private void hideProgress(){
-        mHomePB.setVisibility(View.GONE);
+        mHomePB.setRefreshing(false);
         mCurrentAssociationSpinner.setVisibility(View.VISIBLE);
         mGreetingsTV.setVisibility(View.VISIBLE);
         mRecyclerViewHome.setVisibility(View.VISIBLE);
