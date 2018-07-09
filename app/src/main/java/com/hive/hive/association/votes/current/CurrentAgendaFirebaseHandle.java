@@ -21,6 +21,8 @@ public class CurrentAgendaFirebaseHandle {
                     Log.e(TAG, e.getMessage());
                     return;
                 }
+                if(documentSnapshots.isEmpty())
+                    fragment.noAgendas();
                 for (DocumentChange dc : documentSnapshots.getDocumentChanges()) {
                     switch (dc.getType()) {
                         case REMOVED:

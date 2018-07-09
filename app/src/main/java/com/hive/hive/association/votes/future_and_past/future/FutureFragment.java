@@ -69,7 +69,7 @@ public class FutureFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_current, container, false);
+        mView = inflater.inflate(R.layout.fragment_future, container, false);
 
         initUnfoldable();
         UnfoldableSharedMethods.unfoldableListener(mUnfoldableView, mListTouchInterceptor, mDetailsLayout);
@@ -160,6 +160,10 @@ public class FutureFragment extends Fragment {
         mRVAdapter.notifyDataSetChanged();
     }
 
+    public void noAgendas(){
+        mView.findViewById(R.id.noAgendasTV).setVisibility(View.VISIBLE);
+        mView.findViewById(R.id.agendasPB).setVisibility(View.GONE);
+    }
     public void updateQuestionsUI(ArrayList<Pair<String, Question>> questions){
         mExpandableQuestionsAdapter = new FutureAndPastQuestionsExpandableAdapter(this.getContext(), questions, true);
 

@@ -202,6 +202,9 @@
     <string name="days"> dias </string>
     <string name="hours"> horas </string>
     <string name="minutes"> minutos</string>
+    <string name="current_no_agendas">Não há pautas nesse momento</string>
+    <string name="future_no_agendas">Ainda não há nenhuma pauta planejada para o futuro</string>
+    <string name="past_no_agendas">Sua associação ainda não possui nenhuma votação finalizada.</string>
     <!-- Question Answering -->
     <string name="should_answer"> Dê a sua opnião nesta questão para visualizar a próxima. :)</string>
     <string name="all_questions">Por favor dê sua opinião em todas questões.</string>

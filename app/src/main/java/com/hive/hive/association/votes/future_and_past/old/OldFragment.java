@@ -68,7 +68,7 @@ public class OldFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_current, container, false);
+        mView = inflater.inflate(R.layout.fragment_old, container, false);
 
         initUnfoldable();
 
@@ -150,7 +150,10 @@ public class OldFragment extends Fragment {
         mRV.setAdapter(mRVAdapter);
 
     }
-
+    public void noAgendas(){
+        mView.findViewById(R.id.noAgendasTV).setVisibility(View.VISIBLE);
+        mView.findViewById(R.id.agendasPB).setVisibility(View.GONE);
+    }
     public void setAgendas(Pair<ArrayList<String>, HashMap<String, Agenda>> agendasPair, HashMap<String, String> scoreMap) {
         mAgendasPair = agendasPair;
         mScoreMap = scoreMap;

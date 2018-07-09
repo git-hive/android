@@ -28,6 +28,10 @@ public class FutureAgendasFirebaseHandle{
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot documentSnapshots) {
+                        if(documentSnapshots.isEmpty()) {
+                            fragment.noAgendas();
+                            return;
+                        }
                         for(DocumentSnapshot dc : documentSnapshots){
                             if(dc.exists()){
                                 String id = dc.getId();

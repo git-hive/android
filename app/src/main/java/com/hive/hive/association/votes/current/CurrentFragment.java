@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alexvasilkov.foldablelayout.UnfoldableView;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -80,6 +81,7 @@ public class CurrentFragment extends Fragment {
     private UnfoldableView mUnfoldableView;
     private ScrollView detailsScrollView;
     private CircleProgressBar mAgendaPB;
+    private TextView mNoAgendasTV;
     // Temporary solution to unfold card, TODO: Check with the @guys
     private ImageView mTopClickableCardIV;
 
@@ -151,6 +153,7 @@ public class CurrentFragment extends Fragment {
 
     private void initViews(View view){
         mAgendaPB = view.findViewById(R.id.agendasPB);
+        mNoAgendasTV = view.findViewById(R.id.noAgendasTV);
 
     }
     private void initExpandableViews(View view){
@@ -285,6 +288,7 @@ public class CurrentFragment extends Fragment {
 
         getAgendaScore(agendaId);
 
+        mNoAgendasTV.setVisibility(View.GONE);
     }
 
     public void updateAgenda(String agendaId, Agenda agenda){
@@ -293,6 +297,7 @@ public class CurrentFragment extends Fragment {
 
         mRVAdapter.notifyDataSetChanged();
 
+        mNoAgendasTV.setVisibility(View.GONE);
     }
 
     public void removeAgenda(String agendaId){
@@ -301,6 +306,12 @@ public class CurrentFragment extends Fragment {
         mAgendasScores.remove(agendaId);
 
         mRVAdapter.notifyDataSetChanged();
+        if(mAgendas.first.isEmpty())
+            mNoAgendasTV.setVisibility(View.VISIBLE);
+    }
+    public void noAgendas(){
+        hideProgressBar();
+        mNoAgendasTV.setVisibility(View.VISIBLE);
     }
 
     public void addQuestions(String questionId, Question question){
