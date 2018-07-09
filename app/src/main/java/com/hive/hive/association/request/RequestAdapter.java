@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -120,12 +121,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
         holder.mRequestContent.setText(request.getContent());
         holder.mNumberOfSupportsTV.setText(String.valueOf(request.getScore()));
         holder.mNumberOfCommentsTV.setText(String.valueOf(request.getNumComments()));
-        String budgetCategoryName = request.getBudgetCategoryName();
-        if (budgetCategoryNameResource.containsKey(budgetCategoryName)) {
-            holder
-                    .mRequestCategory
-                    .setImageResource(budgetCategoryNameResource.get(budgetCategoryName));
-        }
+
         holder.mRequestCost.setText("R$ " + String.format("%.2f", request.getEstimatedCost()));
         // fill support if necessary
         shouldFillSupport(holder, getRequestID(position), position);
@@ -141,7 +137,26 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestV
                                             }
                                         }
         );
+        String budgetCategoryName = request.getBudgetCategoryName();
 
+        if (budgetCategoryNameResource.containsKey(budgetCategoryName)) {
+            holder
+                    .mRequestCategory
+                    .setImageResource(budgetCategoryNameResource.get(budgetCategoryName));
+            holder.mRequestCategory.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(budgetCategoryName.equals("extraordinary"))
+                        Toast.makeText(context, context.getResources().getString(R.string.extraordinary), Toast.LENGTH_SHORT).show();
+                    else if(budgetCategoryName.equals("no cost"))
+                        Toast.makeText(context, context.getResources().getString(R.string.no_cost), Toast.LENGTH_SHORT).show();
+                    else if(budgetCategoryName.equals("saving"))
+                        Toast.makeText(context, context.getResources().getString(R.string.savings), Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(context, context.getResources().getString(R.string.ordinary), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
         holder.mSupportsIV
                 .setOnClickListener(createToggleSupportOnClickListener(position, holder));
         holder.mNumberOfSupportsTV

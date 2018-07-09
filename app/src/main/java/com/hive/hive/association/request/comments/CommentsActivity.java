@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -340,6 +341,24 @@ public class CommentsActivity extends AppCompatActivity {
         if (budgetCategoryNameResource.containsKey(budgetCategoryName)) {
             mRequestCategory
                     .setImageResource(budgetCategoryNameResource.get(budgetCategoryName));
+            mRequestCategory.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(budgetCategoryName.equals("extraordinary"))
+                        Toast.makeText(CommentsActivity.this, CommentsActivity.this
+                                .getResources().getString(R.string.extraordinary), Toast.LENGTH_SHORT).show();
+                    else if(budgetCategoryName.equals("no cost"))
+                        Toast.makeText(CommentsActivity.this,
+                                CommentsActivity.this.getResources().getString(R.string.no_cost), Toast.LENGTH_SHORT).show();
+                    else if(budgetCategoryName.equals("saving"))
+                        Toast.makeText(CommentsActivity.this,
+                                CommentsActivity.this.getResources().getString(R.string.savings), Toast.LENGTH_SHORT).show();
+                    else
+                        Toast.makeText(CommentsActivity.this, CommentsActivity.this
+                                .getResources().getString(R.string.ordinary), Toast.LENGTH_SHORT).show();
+                }
+            });
+
         }
         shouldFillSupport();
         //private ImageView mRequestAuthorIV;

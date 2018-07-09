@@ -40,7 +40,8 @@
                 android:layout_marginEnd="5dp"
                 android:orientation="vertical"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:gravity="center_horizontal|top">
+                android:gravity="center_horizontal|top"
+                android:layout_marginRight="5dp">
 
                 <ImageView
                     android:layout_marginTop="10dp"
@@ -53,6 +54,7 @@
                 <TextView
                     android:id="@+id/request_author_name_tv"
                     android:text="@string/loading"
+                    android:gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/request_author_name_font_size"/>
@@ -77,7 +79,8 @@
                 android:layout_marginStart="5dp"
                 android:orientation="vertical"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:gravity="start|top">
+                android:gravity="start|top"
+                android:layout_marginLeft="5dp">
 
                 <TextView
                     android:id="@+id/request_title_tv"
@@ -113,7 +116,8 @@
                         android:layout_height="26dp"
                         android:layout_marginEnd="30dp"
                        app:srcCompat="@drawable/ic_budget_category_savings"
-                        android:contentDescription="@string/ic_budget_category_savings"/>
+                        android:contentDescription="@string/ic_budget_category_savings"
+                        android:layout_marginRight="30dp" />
 
                 </LinearLayout>
 
@@ -127,7 +131,9 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/request_content_font_size"
                     android:maxLength="200"
-                    android:text="Proponho a reforma do parquinho. Testando tamanho diferente de texto. Temos que testar. Testá-los eu testarei."/>
+                    android:text="Proponho a reforma do parquinho. Testando tamanho diferente de texto. Temos que testar. Testá-los eu testarei."
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="1dp" />
 
                 <!-- Comments and Supports Layout -->
                 <LinearLayout
@@ -145,7 +151,8 @@
                         android:layout_height="30dp"
                         android:layout_marginEnd="5dp"
                         app:srcCompat="@drawable/ic_comment"
-                        android:contentDescription="@string/ic_comment"/>
+                        android:contentDescription="@string/ic_comment"
+                        android:layout_marginRight="5dp" />
 
                     <TextView
                         android:id="@+id/request_number_of_comments_tv"
@@ -156,7 +163,7 @@
                         android:text="10"
                         android:layout_marginEnd="20dp"
                         android:paddingBottom="12dp"
-                        />
+                        android:layout_marginRight="20dp" />
 
                     <ImageView
                         android:id="@+id/supportsIV"
@@ -164,7 +171,8 @@
                         android:layout_height="30dp"
                         android:layout_marginEnd="5dp"
                         app:srcCompat="@drawable/ic_support_borderline"
-                        android:contentDescription="@string/ic_support"/>
+                        android:contentDescription="@string/ic_support"
+                        android:layout_marginRight="5dp" />
 
                     <TextView
                         android:id="@+id/supportsTV"
@@ -175,7 +183,7 @@
                         android:paddingBottom="12dp"
                         android:layout_marginEnd="20dp"
                         android:text="34"
-                        />
+                        android:layout_marginRight="20dp" />
 
                 </LinearLayout>
 

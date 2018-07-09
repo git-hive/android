@@ -230,6 +230,10 @@
     <!-- Requests-->
     <string name="estimated_cost">Custo estimado R$</string>
     <string name="no_cost">Sem custo</string>
+    <string name="ordinary">Despesa Ordinária</string>
+    <string name="extraordinary">Despesa Extraordinária</string>
+    <string name="savings">Desepesa para o Fundo de Reserva</string>
+
     <!-- Feed-->
     <string name="new_content"> Novo assunto</string>
     <string name="feed_should_have_description"> Por favor descreva o assunto do post</string>
