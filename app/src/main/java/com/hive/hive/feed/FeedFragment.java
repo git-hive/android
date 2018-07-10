@@ -14,6 +14,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
@@ -44,6 +45,7 @@ public class FeedFragment extends Fragment {
     // Views
     private View mView;
     private FloatingActionButton mFab;
+    private TextView mNoForumTV;
 
     private CollectionReference mAssociationFeedRef;
 
@@ -77,7 +79,7 @@ public class FeedFragment extends Fragment {
 
         mProgressBar = v.findViewById(R.id.feedPB);
         mFab = v.findViewById(R.id.fab);
-
+        mNoForumTV = v.findViewById(R.id.noForumTV);
         onClicks();
 
         String associationID = HomeFragment.mCurrentAssociationId;
@@ -128,6 +130,7 @@ public class FeedFragment extends Fragment {
                     case ADDED:
                         posts.first.add(dc.getDocument().getId());
                         posts.second.put(dc.getDocument().getId(), dc.getDocument().toObject(ForumPost.class));
+                        mNoForumTV.setVisibility(View.GONE);
                         mRecyclerAdapter.notifyDataSetChanged();
                         break;
                     case MODIFIED:
@@ -151,11 +154,15 @@ public class FeedFragment extends Fragment {
                         mRecyclerAdapter.getChangedSupports().remove(removedId);
                         mRecyclerAdapter.getChangedSupportsPostsIds().remove(removedId);
                         mRecyclerAdapter.notifyDataSetChanged();
+                        if(posts.first.isEmpty())
+                            mNoForumTV.setVisibility(View.VISIBLE);
                         break;
                 }
-
                 disableProgressBarAndShowRecycler();
-
+            }
+            if(posts.first.isEmpty()){
+                mNoForumTV.setVisibility(View.VISIBLE);
+                mProgressBar.setVisibility(View.GONE);
             }
         });
     }

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Activity Titles -->
     <string name="title_activity_requests">Propostas</string>
@@ -202,7 +202,7 @@
     <string name="days"> dias </string>
     <string name="hours"> horas </string>
     <string name="minutes"> minutos</string>
-    <string name="current_no_agendas">Não há pautas nesse momento</string>
+    <string name="current_no_agendas" tools:ignore="Typos">Não há pautas nesse momento</string>
     <string name="future_no_agendas">Ainda não há nenhuma pauta planejada para o futuro</string>
     <string name="past_no_agendas">Sua associação ainda não possui nenhuma votação finalizada.</string>
     <!-- Question Answering -->
@@ -241,6 +241,7 @@
     <string name="new_content"> Novo assunto</string>
     <string name="feed_should_have_description"> Por favor descreva o assunto do post</string>
     <string name="feed_should_have_title">Por favor digite um titulo para o post</string>
+    <string name="no_forum">Não há nenhum assunto sendo discutido, crie o primeiro e converse com os outros associados!! :)</string>
     <!-- Home-->
     <string name="no_reports"> Não há informes da associação</string>
     <string name="agendas_num">Essa assembléia possui: </string>
