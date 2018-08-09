@@ -83,7 +83,11 @@ public class FutureAndPastAgendasRVAdapter extends RecyclerView.Adapter<AgendasV
 
         //populate views
         holder.getmTitle().setText(agenda.getTitle());
+        if(!mScores.containsKey(agendaID[0])) {
+            holder.getmRequestScoreIV().setVisibility(View.GONE);
+        }
         holder.getmRequestScore().setText(mScores.get(agendaID[0]));
+
         //TODO:Change this line to get from server
         holder.getmCategoryIcon().setImageResource(VotingUtils.getDrawable("services", mIconsDrawable));
 
@@ -118,12 +122,15 @@ public class FutureAndPastAgendasRVAdapter extends RecyclerView.Adapter<AgendasV
         TextView requestScoreTV = mView.findViewById(R.id.expandable_supportTV);
 
         ImageView timeIV = mView.findViewById(R.id.expandable_timerIV);
+        ImageView requestScoreIV = mView.findViewById(R.id.expandable_supportIV);
 
         timeTV.setVisibility(View.GONE);
         timeIV.setVisibility(View.GONE);
         //set agenda texts
         titleTV.setText(agenda.getTitle());
         descriptionTV.setText(agenda.getContent());
+        if(!mScores.containsKey(agendaId))
+            requestScoreIV.setVisibility(View.GONE);
         requestScoreTV.setText(mScores.get(agendaId));
         //load suggested by info
         VotingUtils.fillUnfoldableUser(agenda.getSuggestedByRef(), mView, mContext);

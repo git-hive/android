@@ -33,7 +33,7 @@ public class CurrentAgendaFirebaseHandle {
                             break;
                         //TODO MAY show message... there is no Session
                         case ADDED:
-
+                            Log.d(TAG, "addin a session");
                             fragment.addSession(dc.getDocument().getId(), dc.getDocument().toObject(Session.class));
 
                             break;
@@ -63,7 +63,7 @@ public class CurrentAgendaFirebaseHandle {
                         case ADDED:
                             Agenda addedAgenda = dc.getDocument().toObject(Agenda.class);
                             String addedId = dc.getDocument().getId();
-
+                            Log.d(TAG, "added agenda");
                             fragment.addAgenda(addedId, addedAgenda);
 
                             break;

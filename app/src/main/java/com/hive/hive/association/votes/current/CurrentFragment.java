@@ -385,6 +385,9 @@ public class CurrentFragment extends Fragment {
                     }
                 }
             });
+        }else{//there is no score but u have to show it anyway
+            hideProgressBar();//got some Agendas to show, no need to show progress anymore
+            mRVAdapter.notifyDataSetChanged();
         }
     }
 
